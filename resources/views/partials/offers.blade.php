@@ -1,0 +1,20 @@
+<!-- предложение для гравной DAO -->
+<div class="windows-new">
+
+
+    <div class="windows-new-images">
+        <img src="/img/post_img/<?php echo $offer->img; ?>" alt="" />
+    </div>
+    <div class="windows-string" >        
+        <a href="/page/offers/<?php echo $offer->id; ?>">        
+            <div class="windows-new-title">
+                <h3><?php echo $offer->title; ?></h3>
+          </div>
+            </a>
+            <div class="windows-new-text">
+                <p>
+                    <?php echo html_entity_decode(substr($offer->text, 0, 500), ENT_QUOTES, 'utf-8'); ?>
+                </p>
+            </div>
+</div>
+</div>

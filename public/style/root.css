@@ -1,0 +1,440 @@
+
+/* меню */
+.adm_menu {
+  width: 40%;
+border-bottom: 1px solid #ffffff;
+margin-left: auto;
+margin-right: auto;
+
+}
+/* верхняя полоса с написанием */
+
+#top_adm {
+  background-color: rgba(37, 255, 8, 0.733);
+  width: 98%;
+  height: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #fff;
+  border-radius: 0 0 30px 30px;
+}
+.name_adm {
+  font-family: stamp;
+  font-weight: bold;
+  font-size: 22px;
+  margin-left: 30px;
+  color: #000;
+  text-shadow: 1px 1px 1px #fff;
+  letter-spacing: 4px;
+  /* display: inline; */
+
+  text-align: center;
+}
+.name_adm a {
+  font-family: stamp;
+  font-weight: bold;
+  font-size: 22px;
+  color: #000;
+  text-shadow: 1px 1px 1px #fff;
+  letter-spacing: 4px;
+  text-decoration: none;
+  margin-top: 7px;
+  padding: 3px 5px;
+}
+
+.name_adm a:hover {
+  color: blue;
+  text-shadow: 1px 1px 1px #fff;
+}
+
+.name_adm a {
+  border-radius: 10px;
+  color: #36454a;
+  background: -webkit-linear-gradient(top, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+  background: -o-linear-gradient(top, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+  background: linear-gradient(to top, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+  box-shadow: 2px 2px 3px black;
+}
+.name_adm a:hover {
+  background: -webkit-linear-gradient(
+    bottom,
+    #a4d3e0,
+    #a4d3e0 50%,
+    #cbe3eb 50%
+  );
+  background: -o-linear-gradient(bottom, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+  background: linear-gradient(to bottom, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+}
+
+.name_home {
+  font-family: stamp;
+  font-weight: bold;
+  font-size: 28px;
+  text-align: left;
+  margin-right: 30px;
+  color: #000;
+  text-shadow: 1px 1px 1px #fff;
+  letter-spacing: 8px;
+  line-height: 60px;
+  display: inline;
+  float: right;
+}
+
+.bottom_adm {
+  line-height: 40px;
+  margin-left: 50px;
+  margin-top: 10px;
+  font-size: 20px;
+  display: inline;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+.bottom_adm a {
+  display: inline-block;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin: 8px 2px;
+  padding: 0px 3px;
+  font-size: 20px;
+  font-weight: bold;
+  font-family: "Montserrat", sans-serif;
+  transition: 0.4s ease-in-out;
+  text-shadow: 1px 1px 1px #fff;
+}
+.bottom_adm a {
+  border-radius: 10px;
+  color: #36454a;
+  background: -webkit-linear-gradient(top, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+  background: -o-linear-gradient(top, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+  background: linear-gradient(to top, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+  box-shadow: 2px 2px 3px black;
+}
+.bottom_adm a:hover {
+  background: -webkit-linear-gradient(
+    bottom,
+    #a4d3e0,
+    #a4d3e0 50%,
+    #cbe3eb 50%
+  );
+  background: -o-linear-gradient(bottom, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+  background: linear-gradient(to bottom, #a4d3e0, #a4d3e0 50%, #cbe3eb 50%);
+  color: blue;
+}
+
+.t_gen {
+  width: 98%;
+  margin-top: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  background: rgba(0, 0, 0, 0.733); /* Цвет фона */
+  text-align: center;
+}
+.tab_center {
+  margin: 20px auto;
+  width: 20%;
+  border: 1px solid #ffffff;
+  border-radius: 10px;
+  text-align: center;
+}
+.t_post,
+.tab_cat,
+.tab_autors {
+  border-collapse: collapse;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: #fff;
+  text-align: center;
+  margin: 10px auto;
+  align-content: center;
+  background-color: #000000d3;
+}
+.cat_tab {
+  display: flex;
+  align-items: top;
+  justify-content: center;
+  margin: 20px auto;
+}
+TD,
+TH {
+  padding: 5px; /* Поля вокруг содержимого таблицы */
+  border: 1px solid rgb(143, 142, 142); /* Параметры рамки */
+
+  color: #fff;
+}
+TH {
+  background: rgba(2, 27, 250, 0.678); /* Цвет фона */
+}
+
+/* Рекактор статей*/
+#win_post {
+  background-color: rgba(67, 73, 67, 0.733);
+  width: 500px;
+  height: 600px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #fff;
+  border-radius: 30px;
+  text-align: center;
+  font-size: 24px;
+}
+.form_post {
+  width: 90%;
+  height: 600px;
+  margin: 10px;
+  color: #fff;
+  font-size: 18px;
+}
+
+.new_post {
+  width: 90%;
+  height: auto;
+  margin-top: 20px;
+  padding-bottom: 20px;
+  color: rgb(0, 0, 0);
+  background-color: rgba(30, 32, 30, 0.753);
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #fff;
+  border-radius: 30px;
+  text-align: center;
+  vertical-align: auto;
+  display: flex;
+  flex-direction: column;
+}
+.dark_text {
+  color: #141414;
+}
+
+.name_str {
+  color: #fff;
+  margin: 20px auto 20px auto;
+}
+
+.redactor {
+  width: auto;
+  height: auto;
+  margin: 20px 50px;
+}
+.upload {
+  width: 400px;
+  height: auto;
+  margin-top: 10px;
+  color: rgb(255, 255, 255);
+  background-color: rgba(30, 32, 30, 0.753);
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #fff;
+  border-radius: 30px;
+  text-align: center;
+  vertical-align: auto;
+}
+
+.fp {
+  display: inline;
+  color: #fff;
+  margin: 0 auto;
+}
+.btn_file {
+display: flex;
+align-items: center;
+text-align: center;
+
+}
+
+.fp_vote {
+  margin: 10px;
+  color: #fff;
+}
+
+.verh {
+  display: flex;
+  gap: 10px;
+  margin: 0 auto;
+  justify-content: center;
+  align-self: center;
+  flex-wrap:wrap;
+}
+
+.verh2 {
+  margin-left: 35px;
+  margin-right: auto;
+  text-align: center;
+}
+
+#editor {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  height: auto;
+  color: #000;
+  font-size: 18px;
+}
+
+.varn {
+  font-size: 16px;
+  color: orangered;
+}
+
+.edit_cat {
+  width: 400px;
+  height: 200px;
+  margin-top: 50px;
+  color: rgb(255, 255, 255);
+  background-color: rgba(30, 32, 30, 0.753);
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #fff;
+  border-radius: 30px;
+  text-align: center;
+  vertical-align: auto;
+}
+
+.fpe {
+  float: left;
+  margin: 20px 0 0 45px;
+  color: #fff;
+}
+
+.mod_com {
+  width: 55%;
+  height: auto;
+  margin-top: 10px;
+  color: rgb(0, 0, 0);
+  background-color: rgba(30, 32, 30, 0.753);
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #fff;
+  border-radius: 30px;
+  text-align: center;
+  vertical-align: auto;
+}
+.mod_z {
+  font-size: 20px;
+  color: #fff;
+  margin: 20px auto 20px auto;
+  text-align: center;
+  /* display: block; */
+}
+.mod_tab {
+  margin: 15px auto 15px auto;
+  border-collapse: collapse;
+}
+.t_gen a,
+.t_gen a:link,
+.t_gen a:visited,
+.t_gen a:active {
+  text-decoration: none;
+  color: rgb(243, 179, 42);
+  font-size: 24px;
+}
+.t_gen a:hover {
+  text-decoration: none;
+  color: rgb(30, 255, 0);
+  font-size: 24px;
+}
+
+/* Кнопка на верх */
+.scrollup {
+  width: 50px;
+  height: 52px;
+  opacity: 0.7;
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  /*display:none; */
+  text-indent: -9999px;
+  background: url("../img/b_top.png") no-repeat;
+}
+
+.offer {
+  width: 60%;
+  height: 100%;
+  background-color: #000000d2;
+  border: 2px solod #fff;
+  border-radius: 25px;
+  margin: 20px auto auto auto;
+}
+
+#navbar ul {
+  display: none;
+  background-color: rgba(8, 193, 226, 0.8);
+  position: absolute;
+  top: 100%;
+}
+#navbar li:hover ul {
+  display: block;
+}
+#navbar,
+#navbar ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+#navbar {
+  height: 30px;
+  background-color: #141414;
+  /* padding-left: 25px; */
+  min-width: 470px;
+}
+#navbar li {
+  float: left;
+  position: relative;
+  height: 100%;
+}
+#navbar li a {
+  display: block;
+  padding: 6px;
+  width: 140px;
+  color: #fff;
+  text-decoration: none;
+  text-align: center;
+}
+#navbar ul li {
+  float: none;
+}
+#navbar li:hover {
+  background-color: rgba(2, 146, 172, 0.8);
+  border: 1px solid #fff;
+}
+#navbar ul li:hover {
+  background-color: #141414;
+}
+.mod_ms {
+  color: red;
+}
+.mod_title {
+  /* margin: 50px auto 30px auto; */
+  text-align: center;
+  /* display: inline; */
+}
+
+.instruction {
+  width: 45%;
+  height: 100%;
+  margin-top: 50px;
+  color: rgb(255, 255, 255);
+  background-color: rgba(30, 32, 30, 0.753);
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid #fff;
+  border-radius: 30px;
+  /* text-align: justify; */
+  vertical-align: auto;
+  color: #fff;
+  padding: 15px;
+}
+.center {
+  text-align: center;
+}
