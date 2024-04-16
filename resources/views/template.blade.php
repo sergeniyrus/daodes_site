@@ -17,7 +17,7 @@
         rel="stylesheet" />
 
     <!-- * Вставляем стили -->
-    {{-- @vite(['resources/css/app.css', 'resources/css/main.css', 'resources/js/app.js']) --}}
+    @vite(['resources/css/app.css', 'resources/css/main.css'])
     <link href="/style/main.css" rel="stylesheet" />
     {{-- <link rel="stylesheet" href="{{ asset('css/main.css') }}"> --}}
     <link href="/style/const.css" rel="stylesheet" />
