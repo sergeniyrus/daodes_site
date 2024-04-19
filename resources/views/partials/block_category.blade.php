@@ -37,26 +37,4 @@ $category = DB::table($category_name)
             ?>
         </div>
     
-
-{{-- @auth
-            <?php
-            $rol = DB::table('users')
-                ->where('name', Auth::user()->name)
-                ->select('rang_access')
-                ->first();
-            ?>
-            @if ($rol->rang_access >= 3)
-                <div class="admin_menu my-4">
-                    <div>
-                        <a href="/add_cat" title="Создать">
-                            <img src="/img/icons_post/add.png" alt="Создать">
-                        </a>
-                    </div>
-                    <div>
-                        <a href="/edit_cat">
-                            <img src="/img/icons_post/edit.png" title="Редактировать" alt="Редактировать"></a>
-                    </div>
-                </div>
-                @endif
-            @endauth 
-</div>--}}
+</div>

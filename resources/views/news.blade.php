@@ -79,7 +79,7 @@
                 @include('partials.block_category')
 
 
-            </div>
+
                 
                     
                 

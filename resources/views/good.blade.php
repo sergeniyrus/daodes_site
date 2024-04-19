@@ -9,10 +9,8 @@
         <br>
         <h2>            
         <?php
-        if ( $action == 'create') {echo 'Создание';}
-        if ( $action == 'createCat') {echo 'Создание темы';}
         if ( $action == 'edit') {echo 'Редактирование';}
-        if ( $action == 'editCat') {echo 'Редактирование темы ';}
+        if ( $action == 'create') {echo 'Создание';}
 
         if ( $post == 'news'){ echo ' новости'; }
         if ( $post == 'offers'){ echo ' предложения'; }
@@ -21,12 +19,9 @@
         </h2><br>
         <h2>прошло успешно!</h2>
         <br>
-        <?php
-        if ( ($action == 'create') || ($action == 'edit') ){ ?>
         <a href="/page/{{ $post }}/{{ $id }}" >
             <h2 class="text-cyan-600">посмотреть</h2>
         </a>
-        <?php } ?>
         <br>
     </div>
 @endsection

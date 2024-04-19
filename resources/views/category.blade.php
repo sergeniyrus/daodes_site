@@ -18,7 +18,6 @@ echo "Темы новостей";
 @endsection
 
 @section('main')
-
 {{-- тело вывода --}}
 @if ($texts->count())
 @foreach ($texts as $text)
@@ -32,82 +31,87 @@ $link="/page/news/{$text->id}";
 @endphp
 
 <br>
-<div class="flex-container">
+<div class="posts">
+    <table>
+        <tr>
+            <td class="td_column">
+                <div class="img_post"><img src="/img/post_img/{{ $text->img }}" /></div>
+            </td>
+            <td class="td_column_c">
+                <table>
+                    <tr>
+                        <td>
+                            <div class="title_post">
+                                <h5>
+                                    <a href="<?php echo $link; ?>">{{ $text->title }}</a>
+                                    <hr class="hr_title">
+                                </h5>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="text_post">
+                                <p>
+                                    {!! Str::limit(html_entity_decode($text->text), 250) !!}
+                                    <a class="all_post" href="{{ $link }}">Дальше</a>
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </td>
 
-    <div class="item-1">
-        <div class="img_post"><img src="{{ $text->img }}" /></div>
-        
-    </div>
-    <div class="item-2">
-
-        <div class="title_post">
-            <h5>
-                <a href="/page/news/{{ $text->id }}">{{ $text->title }}</a>
-                <hr class="hr_title">
-            </h5>
-        </div>
-
-        <div class="text_post">
-            <p>
-                {!! Str::limit(html_entity_decode($text->text), 250) !!}
-                <a class="all_post" href="/page/news/{{ $text->id }}">Дальше</a>
-            </p>
-        </div>
-        <div class="footer-post">
-            <div class="infa_post">
-                <div class="viewes_post">
-                    <span class="rown"><img src="/img/icons_post/views.png" />&nbsp;</span>
-                    <span class="rown">
-                        @if ($text->views === null)
-                            0
-                        @else
-                            {{ $text->views }}
-                        @endif
-                    </span>
-                </div>
-                <div class="comment_post">
-                    <span class="rown"><img src="/img/icons_post/comments.png" />&nbsp;</span>
-                    <span class="rown">
-                        @php
-                            $commentCount = DB::table('comments_news')
-                                ->where('new_id', $text->id)
-                                ->count();
-                        @endphp
-                        {{ $commentCount }}
-                    </span>
-                </div>
-                <div class="data_post">
-                    <span class="rown"><img src="/img/icons_post/data.png" />&nbsp;</span>
-                    <span class="rown">
-                        {{ \Carbon\Carbon::parse($text->created_at)->format('d/m/y') }}
-                    </span>
-                </div>
-                <div class="author_post">
-                    <span class="rown"><img src="/img/icons_post/author.png" />&nbsp;</span>
-                    <span class="rown">
-                        {{ $text->author }}
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- //темы категгории --}}
-
-    @php
-        $post = 'news';
-        $category_name = 'category_news';
-        $category_id = $text->category_id;
-    @endphp
-    @include('partials.block_category')
-
-
+            {{-- //темы категгории --}}
+            
+            @php  
+            $category_id = $text->category_id;
+            @endphp
+            @include('partials.block_category')
+        </tr>
+        <tr>
+            <td></td>
+            <td align="center">
+                <div class="footer-post">
+                    <div class="infa_post">
+                        <div class="viewes_post">
+                            <span class="rown"><img src="/img/icons_post/views.png" />&nbsp;</span>
+                            <span class="rown">
+                                @if (($text->views)===NULL) 0
+                                @else {{ $text->views }}                           
+                                @endif
+                            </span>
+                        </div>
+                        <div class="comment_post">
+                            <span class="rown"><img src="/img/icons_post/comments.png" />&nbsp;</span>
+                            <span class="rown">
+                                <?php
+                                    $commentCount = DB::table($comments_tab)
+                                        ->where($column, $text->id)
+                                        ->count();
+                                    ?>
+                                {{ $commentCount }}
+                            </span>
+                        </div>
+                        <div class="data_post">
+                            <span class="rown"><img src="/img/icons_post/data.png" />&nbsp;</span>
+                            <span class="rown">
+                                {{ $text->created_at }}
+                            </span>
+                        </div>
+                        <div class="author_post">
+                            <span class="rown"><img src="/img/icons_post/author.png" />&nbsp;</span>
+                            <span class="rown">
+                                {{ $text->author }}
+                            </span>
+                        </div>
+                    </div>
+            </td>
+            <td></td>
+        </tr>
+    </table>
 </div>
-    
-        
-    
-</div>
-    <br>
+<br>
 @endforeach
 @endif
 @endsection

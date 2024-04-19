@@ -17,7 +17,7 @@
         rel="stylesheet" />
 
     <!-- * Вставляем стили -->
-    @vite(['resources/css/app.css', 'resources/css/main.css'])
+    @vite(['resources/css/app.css', 'resources/css/main.css', 'resources/js/app.js'])
     <link href="/style/main.css" rel="stylesheet" />
     {{-- <link rel="stylesheet" href="{{ asset('css/main.css') }}"> --}}
     <link href="/style/const.css" rel="stylesheet" />
@@ -32,7 +32,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/jquery.marquee/1.4.0/jquery.marquee.min.js"></script>
     
     <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
 
@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="copy">
-                <h4>DAO DES 2024</h4>
+                <h4>DAO DES 2022-2023</h4>
             </div>
         </div>
         <a href="#" class="scrollup">Наверх</a>

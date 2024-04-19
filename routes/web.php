@@ -6,7 +6,6 @@ use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ImportProductController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OffersController;
-use App\Http\Controllers\CategoryController;
 
 // Route::post('products/import', ImportProductController::class)->name('products.import');
 
@@ -40,7 +39,7 @@ Route::get('/page/{post}/{id}/', 'App\Http\Controllers\PageController@page_sort'
 
 
 
-//добавление изменение новости
+//добавление изменение удаление новости
 Route::middleware('auth')->group(function () {
     Route::get('/add_news', [NewsController::class, 'add'])->name('news._adds');
     Route::post('/add_news', [NewsController::class, 'create'])->middleware(['auth', 'verified'])->name('add_news');
@@ -54,18 +53,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/add_offers', [OffersController::class, 'add'])->name('offers._add');
     Route::post('/add_offers', [OffersController::class, 'create'])->middleware(['auth', 'verified'])->name('add_offers');
 
-    Route::get('/edit_offers/{post}/{id}', [OffersController::class, 'edit'])->name('offers._edit');
-    Route::post('/edit_offers', [OffersController::class, 'update'])->middleware(['auth', 'verified'])->name('edit_offers');
-});
-
-
-//добавление изменение категорий
-Route::middleware('auth')->group(function () {
-    Route::get('/add_cat/{post}', [CategoryController::class, 'add'])->name('category._add');
-    Route::post('/add_cat', [CategoryController::class, 'create'])->middleware(['auth', 'verified'])->name('add_cat');
-
-    Route::get('/edit_cat/{post}/{id}', [CategoryController::class, 'edit'])->name('category._edit');
-    Route::post('/edit_cat', [CategoryController::class, 'update'])->middleware(['auth', 'verified'])->name('edit_cat');
+    Route::get('/edit_offers/{id}', [OffersController::class, 'edit'])->name('offers._edit');
+    Route::post('/edit_offers/{id}', [OffersController::class, 'update'])->middleware(['auth', 'verified'])->name('edit_offers');
 });
 
 
