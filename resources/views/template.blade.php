@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="copy">
-                <h4>DAO DES 2022-2023</h4>
+                <h4>DAO DES 2024</h4>
             </div>
         </div>
         <a href="#" class="scrollup">Наверх</a>
