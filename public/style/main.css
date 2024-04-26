@@ -697,6 +697,11 @@ input[type="checkbox"]:checked + label:after {
   margin: 0 auto;
   color: #000;
 }
+.tabnum {
+  font-size: 14px;
+  color: #eee;
+  float: left;
+}
 
 /*  окно для входа регистрации сброса пароля */
 

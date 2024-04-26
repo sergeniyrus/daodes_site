@@ -81,40 +81,40 @@
     <div class="tabseed">
         <table class="tabseed" >
         <tr >
-          <td>1  <input size="5" type="text" value="<?php echo $lines[$value[0]]; ?>"></td>
-          <td>2  <input size="5" type="text" value="<?php echo $lines[$value[1]]; ?>"></td>
-          <td>3  <input size="5" type="text" value="<?php echo $lines[$value[2]]; ?>"></td>
-          <td>4  <input size="5" type="text" value="<?php echo $lines[$value[3]]; ?>"></td>
+          <td><div class="tabnum">1</div>  <input size="5" type="text" value="<?php echo $lines[$value[0]]; ?>"></td>
+          <td><div class="tabnum">2</div>  <input size="5" type="text" value="<?php echo $lines[$value[1]]; ?>"></td>
+          <td><div class="tabnum">3</div> <input size="5" type="text" value="<?php echo $lines[$value[2]]; ?>"></td>
+          <td><div class="tabnum">4</div> <input size="5" type="text" value="<?php echo $lines[$value[3]]; ?>"></td>
         </tr>
         <tr>
-          <td>5  <input size="5" type="text" value="<?php echo $lines[$value[4]]; ?>"></td>
-          <td>6  <input size="5" type="text" value="<?php echo $lines[$value[5]]; ?>"></td>
-          <td>7  <input size="5" type="text" value="<?php echo $lines[$value[6]]; ?>"></td>
-          <td>8  <input size="5" type="text" value="<?php echo $lines[$value[7]]; ?>"></td>
+          <td><div class="tabnum">5</div> <input size="5" type="text" value="<?php echo $lines[$value[4]]; ?>"></td>
+          <td><div class="tabnum">6</div> <input size="5" type="text" value="<?php echo $lines[$value[5]]; ?>"></td>
+          <td><div class="tabnum">7</div> <input size="5" type="text" value="<?php echo $lines[$value[6]]; ?>"></td>
+          <td><div class="tabnum">8</div> <input size="5" type="text" value="<?php echo $lines[$value[7]]; ?>"></td>
         </tr>
         <tr>
-          <td>9  <input size="5" type="text" value="<?php echo $lines[$value[8]]; ?>"></td>
-          <td>10 <input size="5" type="text" value="<?php echo $lines[$value[9]]; ?>"></td>
-          <td>11 <input size="5" type="text" value="<?php echo $lines[$value[10]]; ?>"></td>
-          <td>12 <input size="5" type="text" value="<?php echo $lines[$value[11]]; ?>"></td>
+          <td><div class="tabnum">9</div> <input size="5" type="text" value="<?php echo $lines[$value[8]]; ?>"></td>
+          <td><div class="tabnum">10</div> <input size="5" type="text" value="<?php echo $lines[$value[9]]; ?>"></td>
+          <td><div class="tabnum">11</div> <input size="5" type="text" value="<?php echo $lines[$value[10]]; ?>"></td>
+          <td><div class="tabnum">12</div> <input size="5" type="text" value="<?php echo $lines[$value[11]]; ?>"></td>
         </tr>
         <tr>
-          <td>13 <input size="5" type="text" value="<?php echo $lines[$value[12]]; ?>"></td>
-          <td>14 <input size="5" type="text" value="<?php echo $lines[$value[13]]; ?>"></td>
-          <td>15 <input size="5" type="text" value="<?php echo $lines[$value[14]]; ?>"></td>
-          <td>16 <input size="5" type="text" value="<?php echo $lines[$value[15]]; ?>"></td>
+          <td><div class="tabnum">13</div> <input size="5" type="text" value="<?php echo $lines[$value[12]]; ?>"></td>
+          <td><div class="tabnum">14</div> <input size="5" type="text" value="<?php echo $lines[$value[13]]; ?>"></td>
+          <td><div class="tabnum">15</div> <input size="5" type="text" value="<?php echo $lines[$value[14]]; ?>"></td>
+          <td><div class="tabnum">16</div> <input size="5" type="text" value="<?php echo $lines[$value[15]]; ?>"></td>
           </tr>
         <tr>
-          <td>17 <input size="5" type="text" value="<?php echo $lines[$value[16]]; ?>"></td>
-          <td>18 <input size="5" type="text" value="<?php echo $lines[$value[17]]; ?>"></td>
-          <td>19 <input size="5" type="text" value="<?php echo $lines[$value[18]]; ?>"></td>
-          <td>20 <input size="5" type="text" value="<?php echo $lines[$value[19]]; ?>"></td>
+          <td><div class="tabnum">17</div> <input size="5" type="text" value="<?php echo $lines[$value[16]]; ?>"></td>
+          <td><div class="tabnum">18</div> <input size="5" type="text" value="<?php echo $lines[$value[17]]; ?>"></td>
+          <td><div class="tabnum">19</div> <input size="5" type="text" value="<?php echo $lines[$value[18]]; ?>"></td>
+          <td><div class="tabnum">20</div> <input size="5" type="text" value="<?php echo $lines[$value[19]]; ?>"></td>
           </tr>
         <tr>
-          <td>21 <input size="5" type="text" value="<?php echo $lines[$value[20]]; ?>"></td>
-          <td>22 <input size="5" type="text" value="<?php echo $lines[$value[21]]; ?>"></td>
-          <td>23 <input size="5" type="text" value="<?php echo $lines[$value[22]]; ?>"></td>
-          <td>24 <input size="5" type="text" value="<?php echo 'you keyword'; ?>"></td>
+          <td><div class="tabnum">21</div> <input size="5" type="text" value="<?php echo $lines[$value[20]]; ?>"></td>
+          <td><div class="tabnum">22</div> <input size="5" type="text" value="<?php echo $lines[$value[21]]; ?>"></td>
+          <td><div class="tabnum">23</div> <input size="5" type="text" value="<?php echo $lines[$value[22]]; ?>"></td>
+          <td><div class="tabnum">24</div> <input size="5" type="text" value="<?php echo 'you keyword'; ?>"></td>
         </tr>
         </table></div><br>
     </x-guest-layout>
