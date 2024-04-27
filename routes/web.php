@@ -57,6 +57,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/edit_offers/{id}', [OffersController::class, 'update'])->middleware(['auth', 'verified'])->name('edit_offers');
 });
 
+// переход за сид-фразой после регистрации
+Route::get('/seed', function(){
+    return view('seed');
+})->middleware(['auth', 'verified'])->name('seed');
 
 //админка после входа
 Route::get('/dashboard', function () {
