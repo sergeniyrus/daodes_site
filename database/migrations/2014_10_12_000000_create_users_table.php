@@ -20,8 +20,6 @@ return new class extends Migration
             $table->rememberToken();
             $table->timestamps();
             $table->string('keyword');
-            // $table->datetime('reg_date');
-            // $table->datetime('last_date');
             $table->integer('rang_access');
         });
     }

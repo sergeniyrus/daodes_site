@@ -6,6 +6,7 @@ use App\Http\Controllers\FileUploadController;
 use App\Http\Controllers\ImportProductController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OffersController;
+use App\Http\Controllers\SeedController;
 
 // Route::post('products/import', ImportProductController::class)->name('products.import');
 
@@ -58,9 +59,14 @@ Route::middleware('auth')->group(function () {
 });
 
 // переход за сид-фразой после регистрации
-Route::get('/seed', function(){
-    return view('seed');
-})->middleware(['auth', 'verified'])->name('seed');
+Route::get('/seed', [SeedController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('seed');
+// сохранятель сид-фразы
+Route::post('/saveseed', [SeedController::class, 'saveSeed'])->name('saveseed');
+
+
+
 
 //админка после входа
 Route::get('/dashboard', function () {

@@ -30,7 +30,7 @@
                         ?>
                         @if ($rol->rang_access >= 3)
                             <x-nav-link :href="route('add_news')" :active="request()->routeIs('add_news')">
-                                {{ __('Сreate New') }}
+                                {{ __('Сreate News') }}
                             </x-nav-link>
                         @endif
                         <x-nav-link :href="route('add_offers')" :active="request()->routeIs('add_offers')">
