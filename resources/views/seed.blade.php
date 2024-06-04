@@ -1,51 +1,73 @@
-{{-- //страница создания сид фразы --}}
 @extends('template')
-@section('title_page')
-    SeedPhraze
-@endsection
-@section('main')
-<main>
-    {{-- <?php
-    $onseed = DB::table('seed')
-            ->where('user_id', $userId)
-            ->value('keyword');
 
-            ?> --}}
-<x-app-layout>
-<div class="py-12">
-    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 text-center">
-        Ваша Сид-Фраза<br>
-        обязательно её сохраните<br><br>
-                {{-- //генерируем сид-фразу --}}
-                <?php
-                $n = 23;
-                $lines = file('../public/base.txt');
-                shuffle($lines);
-                $value = [];
-                $value = array_rand($lines, $n);
-                
-                foreach ($value as $line_num => $line) {
-                }
-                
-                $seed = $lines[$value[0]] . $lines[$value[1]] . $lines[$value[2]] . $lines[$value[3]] . $lines[$value[4]] . $lines[$value[5]] . $lines[$value[6]] . $lines[$value[7]] . $lines[$value[8]] . $lines[$value[9]] . $lines[$value[10]] . $lines[$value[11]] . $lines[$value[12]] . $lines[$value[13]] . $lines[$value[14]] . $lines[$value[15]] . $lines[$value[16]] . $lines[$value[17]] . $lines[$value[18]] . $lines[$value[19]] . $lines[$value[20]] . $lines[$value[21]] . $lines[$value[22]] . $keyword;
-                ?>
-                <form method="post" action="{{ route('saveseed') }}">
-                    @csrf
-        <div class="tabseed">
-                <textarea name="seed_text" rows="24"><?php echo $seed; ?>        
-                </textarea>
-        </div>
-        <?php for($i = 0; $i < 23; $i++): ?>
-        <input type="hidden" name="word<?php echo $i; ?>" value="<?php echo $lines[$value[$i]]; ?>">
-    <?php endfor; ?>  
-    <input type="hidden" name="word23" value="<?php echo $keyword; ?>">    
-        <br>
-        <button type="submit">Сохранить</button>
-        
-</form>
-                {{-- <button onclick="copytext('#myseed')"> Копировать в буфер </button> --}}
+@section('title_page', 'SeedPhrase')
+
+@section('main')
+<div class="modal-content">
+    <div class="imgcontainer">
+        <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
+    </div>
+    <div class="container">
+        @if(isset($message))
+            <p style="font-size: 22px; color:red; text-align: center;">{{ $message }}</p>
+        @else
+            <form method="post" action="{{ route('saveSeed') }}">
+                @csrf
+                <div class="tabseed">
+                    <h2>Ваша сид-фраза:</h2><br>
+                    <p style="color: red;">ОБЯЗАТЕЛЬНО СОХРАНИТЕ ЕЁ В НАДЁЖНОМ МЕСТЕ</p><br>
+                    <div id="seedPhrase">
+                        @foreach($words as $index => $word)
+                            {{ $word }} <input type="hidden" name="word{{ $index }}" value="{{ $word }}">
+                        @endforeach
+                        {{ $keyword }}
+                        <input type="hidden" name="word23" value="{{ $keyword }}">
+                    </div>
+                </div>
+                <div class="flex items-center justify-center mt-4">
+                    <x-primary-button class="ms-4">
+                        {{ __('Сохранить') }}
+                    </x-primary-button>
+                </div>
+            </form>
+
+            {{-- <div class="flex items-center justify-center mt-4">
+                <button onclick="copyToClipboard()" class="ms-4">
+                    Копировать сид-фразу
+                </button>
+            </div>
+            <div id="copyMessage" style="display: none; font-size: 22px; color: green; text-align: center;">
+                Сид-фраза скопирована в буфер обмена.
+            </div> --}}
+        @endif
+
+        @if (session('checkpoint'))
+            <p style="font-size: 22px; color: green; text-align: center;">
+                {{ session('checkpoint') }}
+            </p>
+        @endif
+
+        @if (session('error'))
+            <p style="font-size: 22px; color: red; text-align: center;">
+                {{ session('error') }}
+            </p>
+        @endif
     </div>
 </div>
-</x-app-layout>
-    </main>
+
+{{-- <script>
+function copyToClipboard() {
+    var seedPhrase = document.getElementById('seedPhrase').innerText;
+    navigator.clipboard.writeText(seedPhrase).then(function() {
+        var copyMessage = document.getElementById('copyMessage');
+        copyMessage.style.display = 'block';
+        setTimeout(function() {
+            copyMessage.style.display = 'none';
+        }, 3000); // Показываем сообщение на 3 секунды
+    }, function(err) {
+        console.error('Ошибка при копировании: ', err);
+    });
+}
+</script> --}}
+
 @endsection

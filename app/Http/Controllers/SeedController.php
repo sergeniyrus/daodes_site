@@ -2,65 +2,80 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use App\Models\seed;
-use Dflydev\DotAccessData\Data;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use App\Models\seed;
 
 class SeedController extends Controller
 {
     public function index()
     {
-      
+        $user = Auth::user();
+        $userName = $user->name;
+        $user_id = auth()->id(); // Получение ID текущего пользователя
 
-      $user = Auth::user();
-      $userName = $user->name;
-
-      $user_id = auth()->id(); // Получение ID текущего пользователя
-
-      $keyword = DB::table('users')
+        $keyword = DB::table('users')
             ->where('name', $userName)
             ->value('keyword');
 
-      // $onseed = DB::table('seed')
-      //       ->where('user_id', $user_id)
-      //       ->value('word23');
+        $onseedExists = DB::table('seed')
+            ->where('user_id', $user_id)
+            ->exists();
 
-    return view('seed')->with('keyword', $keyword);
-
-
+        if ($onseedExists) {
+            $message = "Сид-фраза уже была получена.";
+            return view('seed', [
+                'keyword' => $keyword,
+                'message' => $message,
+            ]);
+        } else {
+            $words = $this->generateRandomWordsFromFile(public_path('base.txt'), 23);
+            return view('seed', [
+                'keyword' => $keyword,
+                'words' => $words,
+            ]);
+        }
     }
 
+    protected function generateRandomWordsFromFile($filePath, $count)
+    {
+        $words = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+        shuffle($words);
+        return array_slice($words, 0, $count);
+    }
 
-
-
-
-
-
-    //Сохранятель сид-фразы
-
+    // Сохранятель сид-фразы
     public function saveSeed(Request $request)
 {
-    // Получаем данные из запроса для 24 скрытых полей
     $user_id = auth()->id(); // Получение ID текущего пользователя
+    $user = Auth::user();
+    $userName = $user->name;
 
-    $seedword = ['user_id' => $user_id];
-    for ($i = 0; $i < 24; $i++) {
-        $seedword['word' . $i] = $request->input('word' . $i);   
-}
-        seed::create($seedword);
+    $keyword = DB::table('users')
+            ->where('name', $userName)
+            ->value('keyword');
 
-     $checkpoint = 'Cохранил'; // Чекпоинт "Cохранил"
+    $seedWords = $request->only([
+        'word0', 'word1', 'word2', 'word3', 'word4',
+        'word5', 'word6', 'word7', 'word8', 'word9',
+        'word10', 'word11', 'word12', 'word13', 'word14',
+        'word15', 'word16', 'word17', 'word18', 'word19',
+        'word20', 'word21', 'word22'
+    ]);
+    $seedWords['word23'] = $keyword; // Добавили $keyword вместо 'word23'
+
+    $seedWords['user_id'] = $user_id;
+
+    $storedSeedExists = Seed::where('user_id', $user_id)->exists();
+
+    if ($storedSeedExists) {
+        return redirect()->back()->with('error', 'Сид-фраза уже была сохранена.');
+    }
+
+    Seed::create($seedWords);
+    $checkpoint = 'Сид-фраза успешно сохранена.';
 
     return redirect()->back()->with('checkpoint', $checkpoint);
-
-
 }
-
 }

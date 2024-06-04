@@ -5,7 +5,7 @@
         </h2>
 
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Обновите информацию о профиле вашей учетной записи и адрес электронной почты.") }}
+            {{ __("Сдесь можете изменить имя пользователя.") }}
         </p>
     </header>
 
@@ -23,7 +23,7 @@
             <x-input-error class="mt-2" :messages="$errors->get('name')" />
         </div>
 
-        <div>
+        {{-- <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" name="email" type="email" class="mt-1 block w-full" :value="old('email', $user->email)" required autocomplete="username" />
             <x-input-error class="mt-2" :messages="$errors->get('email')" />
@@ -45,7 +45,7 @@
                     @endif
                 </div>
             @endif
-        </div>
+        </div> --}}
 
         <div class="flex items-center gap-4">
             <x-primary-button>{{ __('Сохранить') }}</x-primary-button>
