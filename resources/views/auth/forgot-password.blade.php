@@ -27,14 +27,14 @@
             <div>
                 <x-input-label for="username" :value="__('Имя пользователя')" />
                 <x-text-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required autofocus />
-                <x-input-error :messages="$errors->get('username')" class="mt-2" />
+                {{-- <x-input-error :messages="$errors->get('username')" class="mt-2" /> --}}
             </div>
 
             <!-- Keyword -->
             <div class="mt-4">
                 <x-input-label for="keyword" :value="__('Ключевое слово')" />
                 <x-text-input id="keyword" class="block mt-1 w-full" type="text" name="keyword" :value="old('keyword')" required />
-                <x-input-error :messages="$errors->get('keyword')" class="mt-2" />
+                {{-- <x-input-error :messages="$errors->get('keyword')" class="mt-2" /> --}}
             </div>
 
             <div class="flex items-center justify-center mt-4">
@@ -42,6 +42,20 @@
                     {{ __('Отправить') }}
                 </x-primary-button>
             </div>
+
+            <!-- Remaining Attempts -->
+            @if (session('attempts'))
+                <div class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                    {{ __('Осталось попыток до блокировки: :attempts', ['attempts' => session('attempts')]) }}
+                </div>
+            @endif
+
+            <!-- Lockout Message -->
+            @if (session('lockout'))
+                <div class="mt-4 text-sm text-red-600 dark:text-red-400">
+                    {{ __('Повторите попытку через :time', ['time' => session('lockout')]) }}
+                </div>
+            @endif
         </form>
     </div>
 </x-guest-layout>
