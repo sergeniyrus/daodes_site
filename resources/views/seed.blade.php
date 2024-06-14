@@ -14,31 +14,30 @@
             <form method="post" action="{{ route('saveSeed') }}">
                 @csrf
                 <div class="tabseed">
-                    <h2>Ваша сид-фраза:</h2><br>
-                    <p style="color: red;">ОБЯЗАТЕЛЬНО СОХРАНИТЕ ЕЁ В НАДЁЖНОМ МЕСТЕ</p><br>
-                    <div id="seedPhrase">
+                    <h2 style="color: rgb(0, 255, 0);">Ваша сид-фраза:</h2><br>
+                        <div id="seedPhrase">
                         @foreach($words as $index => $word)
-                            {{ $word }} <input type="hidden" name="word{{ $index }}" value="{{ $word }}">
+                        <span> {{ $word }} </span> <input type="hidden" name="word{{ $index }}" value="{{ $word }}">
                         @endforeach
-                        {{ $keyword }}
-                        <input type="hidden" name="word23" value="{{ $keyword }}">
+                        <span> {{ $keyword }} </span> <input type="hidden" name="word23" value="{{ $keyword }}">
                     </div>
+                    <br><p style="color: red;">ОБЯЗАТЕЛЬНО СОХРАНИТЕ ЕЁ В НАДЁЖНОМ МЕСТЕ</p>
                 </div>
                 <div class="flex items-center justify-center mt-4">
                     <x-primary-button class="ms-4">
-                        {{ __('Сохранить') }}
+                        {{ __('Я Сохранил сид-фразу') }}
                     </x-primary-button>
                 </div>
             </form>
 
-            {{-- <div class="flex items-center justify-center mt-4">
+            <div class="flex items-center justify-center mt-4">
                 <button onclick="copyToClipboard()" class="ms-4">
                     Копировать сид-фразу
                 </button>
             </div>
             <div id="copyMessage" style="display: none; font-size: 22px; color: green; text-align: center;">
                 Сид-фраза скопирована в буфер обмена.
-            </div> --}}
+            </div>
         @endif
 
         @if (session('checkpoint'))
@@ -55,7 +54,7 @@
     </div>
 </div>
 
-{{-- <script>
+<script>
 function copyToClipboard() {
     var seedPhrase = document.getElementById('seedPhrase').innerText;
     navigator.clipboard.writeText(seedPhrase).then(function() {
@@ -68,6 +67,6 @@ function copyToClipboard() {
         console.error('Ошибка при копировании: ', err);
     });
 }
-</script> --}}
+</script>
 
 @endsection

@@ -2,22 +2,17 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\FileUploadController;
-use App\Http\Controllers\ImportProductController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OffersController;
 use App\Http\Controllers\SeedController;
+use App\Http\Controllers\Auth\KeywordResetPasswordController;
 
-// Route::post('products/import', ImportProductController::class)->name('products.import');
-
-// Route::post('uploads/process', [FileUploadController::class, 'process'])->name('uploads.process');
 
 //стандартная главная 
 Route::get('/', function () {
     return view('home');
 });
 Route::get('good/{post}/{id}/{action}', 'App\Http\Controllers\HomeController@good') ->name(name:'good');
-
 
 //home c перебросом на стандартную главную
 Route::get('home', 'App\Http\Controllers\HomeController@home')->name(name:'home');
@@ -35,9 +30,6 @@ Route::get('/category/{post}/{id}/', 'App\Http\Controllers\CategoryController@ca
 
 //один шаблон под новости и предложения
 Route::get('/page/{post}/{id}/', 'App\Http\Controllers\PageController@page_sort')->name(name:'page');
-
-
-
 
 
 //добавление изменение удаление новости
@@ -65,6 +57,14 @@ Route::get('/seed', [SeedController::class, 'index'])
 // // сохранятель сид-фразы
 Route::post('/seed/save', [SeedController::class, 'saveSeed'])
 ->name('saveSeed');
+
+//Сброс пароля по ключевому слову
+Route::middleware('guest')->group(function () {
+    Route::get('/forgot-password', [KeywordResetPasswordController::class, 'showKeywordForm'])->name('custom.password.keyword');
+    Route::post('/submit-keyword', [KeywordResetPasswordController::class, 'submitKeyword'])->name('custom.password.submit');
+    Route::get('/reset-password', [KeywordResetPasswordController::class, 'showResetForm'])->name('custom.password.reset');
+    Route::put('/update-password', [KeywordResetPasswordController::class, 'updatePassword'])->name('custom.password.update');
+});
 
 
 
