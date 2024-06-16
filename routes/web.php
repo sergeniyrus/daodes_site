@@ -6,6 +6,7 @@ use App\Http\Controllers\NewsController;
 use App\Http\Controllers\OffersController;
 use App\Http\Controllers\SeedController;
 use App\Http\Controllers\Auth\KeywordResetPasswordController;
+use App\Http\Controllers\WalletController;
 
 
 //стандартная главная 
@@ -66,7 +67,13 @@ Route::middleware('guest')->group(function () {
     Route::put('/update-password', [KeywordResetPasswordController::class, 'updatePassword'])->name('custom.password.update');
 });
 
-
+//кошельки и переводы
+Route::middleware('auth')->group(function () {
+    Route::get('/wallet', [WalletController::class, 'wallet'])->name('wallet.wallet');
+    Route::get('/wallet/transfer', [WalletController::class, 'showTransferForm'])->name('wallet.showTransferForm');
+    Route::post('/wallet/transfer', [WalletController::class, 'transfer'])->name('wallet.transfer');
+});
+Route::get('/wallet/history', [WalletController::class, 'history'])->name('wallet.history');
 
 
 //админка после входа

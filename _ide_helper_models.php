@@ -16,6 +16,33 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int $from_wallet_id
+ * @property int $to_wallet_id
+ * @property string $amount
+ * @property string $fee
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Wallet $fromWallet
+ * @property-read \App\Models\Wallet $toWallet
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay query()
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay whereFee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay whereFromWalletId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay whereToWalletId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay whereUpdatedAt($value)
+ */
+	class HistoryPay extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property string $name
  * @property string|null $email
  * @property string|null $email_verified_at
@@ -45,6 +72,32 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  */
 	class User extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $balance
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\HistoryPay> $historyPaysFrom
+ * @property-read int|null $history_pays_from_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\HistoryPay> $historyPaysTo
+ * @property-read int|null $history_pays_to_count
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereBalance($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereUserId($value)
+ */
+	class Wallet extends \Eloquent {}
 }
 
 namespace App\Models{
