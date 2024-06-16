@@ -154,9 +154,7 @@
 
                             <div class="menu-hamburg">{{ Auth::user()->name }}
                             </div>
-                            <div class="menu-hamburg">{{ Auth::user()->email }}</div>
-
-
+                            
                             <x-responsive-nav-link :href="route('profile.edit')">
                                 {{ __('Profile') }}
                             </x-responsive-nav-link>
