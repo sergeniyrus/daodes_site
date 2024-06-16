@@ -72,8 +72,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/wallet', [WalletController::class, 'wallet'])->name('wallet.wallet');
     Route::get('/wallet/transfer', [WalletController::class, 'showTransferForm'])->name('wallet.showTransferForm');
     Route::post('/wallet/transfer', [WalletController::class, 'transfer'])->name('wallet.transfer');
+    Route::get('/wallet/history', [WalletController::class, 'history'])->name('wallet.history');
 });
-Route::get('/wallet/history', [WalletController::class, 'history'])->name('wallet.history');
+
 
 
 //админка после входа

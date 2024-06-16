@@ -1,3 +1,5 @@
+// раскрытие блоков предложений
+
 function myFunction1() {
 var b = document.getElementById("details1");
   if (b.style.display === 'block')

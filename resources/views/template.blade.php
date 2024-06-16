@@ -26,31 +26,16 @@
     <title>@yield('title_page')</title>
 
     <!-- Подключаем скрипты -->
+        
+    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>  
     
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/jquery.marquee/1.4.0/jquery.marquee.min.js"></script>
-    
-    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
-
-    <script src="/js/file_up.js"></script>
-    <script src="/js/jquery.cookie.js"></script>
-    <!-- Бегущая строка -->
-    <script src="/js/run_news.js" type="text/javascript"></script>
-    <!-- Проверяем пароли-->
-    <script src="/js/pass.js" type="text/javascript"></script>
     <!-- кнопка вверх -->
     <script src="/js/bt_top.js" type="text/javascript"></script>
     <!-- Скрипт копирования в буфер -->
     <script src="/js/copy_seed.js" type="text/javascript"></script>
     <!-- Скрипт раскрытия блоков -->
     <script src="/js/block.js" type="text/javascript"></script>
-    <!-- Скрипты главной страницы -->
-    <script src="/js/show.js" type="text/javascript"></script>
-    {{-- <script type="text/javascript" src="https://viewer.diagrams.net/js/viewer-static.min.js"></script> --}}
+    
 </head>
 
 <body>

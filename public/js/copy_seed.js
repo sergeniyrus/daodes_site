@@ -1,3 +1,5 @@
+
+// копирование сидфразы
 function copytext(el) {
       var $tmp = $("<textarea>");
       $("body").append($tmp);
