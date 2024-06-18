@@ -70,7 +70,7 @@ class SeedController extends Controller
     $storedSeedExists = Seed::where('user_id', $user_id)->exists();
 
     if ($storedSeedExists) {
-        return redirect()->back()->with('error', 'Сид-фраза уже была сохранена.');
+        return redirect()->back()->with('error', 'Сид-фраза была сохранена.');
     }
 
     Seed::create($seedWords);

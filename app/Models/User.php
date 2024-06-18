@@ -43,4 +43,14 @@ class User extends Authenticatable
         'name_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    /**
+     * Get the seeds for the user.
+     */
+    public function seeds()
+    {
+        return $this->hasMany(Seed::class);
+    }
+
+
 }

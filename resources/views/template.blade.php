@@ -28,11 +28,15 @@
     <!-- Подключаем скрипты -->
         
     <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>  
-    
+
+    {{-- <!--для копирования сид фразы -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Скрипт копирования в буфер -->
+    <script src="/js/copy_seed.js" type="text/javascript"></script> --}}
+
     <!-- кнопка вверх -->
     <script src="/js/bt_top.js" type="text/javascript"></script>
-    <!-- Скрипт копирования в буфер -->
-    <script src="/js/copy_seed.js" type="text/javascript"></script>
+    
     <!-- Скрипт раскрытия блоков -->
     <script src="/js/block.js" type="text/javascript"></script>
     

@@ -40,7 +40,14 @@ class Seed extends Model
         'word22',
         'word23',
     ];
+    
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    
     // Если название таблицы не совпадает с названием модели, раскомментируйте и укажите имя таблицы
     // protected $table = 'seeds';
 }
