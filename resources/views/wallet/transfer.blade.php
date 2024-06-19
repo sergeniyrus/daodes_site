@@ -28,25 +28,40 @@
             </div>
         @endif
         <br>
-        <form action="{{ route('wallet.transfer') }}" method="POST">
+        <form method="post" action="{{ route('wallet.transfer') }}">
             @csrf
-            <div class="mb-3">
-                <x-input-label for="to_username" :value="__('Кому (имя пользователя)')" />
-                <x-text-input id="to_username" class="form-control" type="text" name="to_username" required />
+            <div>
+                <x-input-label for="recipient" :value="__('Получатель')" />
+                <x-text-input id="recipient" class="block mt-1 w-full" type="text" name="recipient" :value="old('recipient')" required autofocus />
+                @error('recipient')
+                    <div class="font-medium text-red-600">{{ $message }}</div>
+                @enderror
             </div>
-            <div class="mb-3">
+        
+            <div class="mt-4">
                 <x-input-label for="amount" :value="__('Сумма')" />
-                <x-text-input id="amount" class="form-control" type="number" step="0.00000001" name="amount" required />
+                <x-text-input id="amount" class="block mt-1 w-full" type="number" step="0.01" name="amount" :value="old('amount')" required />
+                @error('amount')
+                    <div class="font-medium text-red-600">{{ $message }}</div>
+                @enderror
             </div>
-            <div class="mb-3">
-                <x-input-label for="user_seed" :value="__('Сид-фраза')" />
-                <x-text-input id="user_seed" class="form-control" type="text" name="user_seed" required />
+        
+            <div class="mt-4">
+                <x-input-label for="seed_phrase" :value="__('Сид-фраза')" />
+                <x-text-input id="seed_phrase" class="block mt-1 w-full" type="text" name="seed_phrase" :value="old('seed_phrase')" required />
+                @error('seed_phrase')
+                    <div class="font-medium text-red-600">{{ $message }}</div>
+                @enderror
             </div>
-            <br>
-            <x-primary-button class="ms-3">
-                {{ __('Перевести') }}
-            </x-primary-button>
+        
+            <div class="flex items-center justify-center mt-4">
+                <x-primary-button class="ms-3">
+                    {{ __('Перевести') }}
+                </x-primary-button>
+            </div>
         </form>
+        
+        
     </div>
 </div>
 @endsection

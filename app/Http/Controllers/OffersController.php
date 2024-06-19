@@ -2,34 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ProfileUpdateRequest;
-use Dflydev\DotAccessData\Data;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
+use GuzzleHttp\Client;
 
 class OffersController extends Controller
 {
-    public function dao() {        
+    public function dao()
+    {        
         $offers = DB::table('offers')->get();
         return view('dao')->with('offers', $offers);
     }
 
-
-    public function offers() {        
+    public function offers()
+    {        
         $offers = DB::table('offers')->get();
         return view('offers')->with('offers', $offers);
     }
 
     public function offer($id) 
     {
-        $offer = DB::table('offers')->where('id', $id)->first(); // Use first() to get a single record
+        $offer = DB::table('offers')->where('id', $id)->first();
         return view('offer')->with('offer', $offer);
-        
     }
 
     public function add()
@@ -42,27 +38,18 @@ class OffersController extends Controller
     {
         $validate = $request->validate([
             'title' => ['required', 'string', 'max:255'],
-            'text' => ['required', 'string'],
+            'content' => ['required', 'string'],
             'category' => ['required', 'integer'],
-            
         ]);
 
-        if ($request->hasFile('filename')) {
-            $img = $request->file('filename')->store('public');
-
-        } else {
-            $img = 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico'; // или присвоить другое значение по умолчанию
-        }
-
-        $user = Auth::user();
-        $userName = $user->name;
+        $img = $this->uploadToIPFS($request);
 
         DB::table('offers')->insert([
             'created_at' => date("Y-m-d H:i"),
             'title' => $validate['title'],
-            'text' => $validate['text'],
+            'content' => $validate['content'],
             'category_id' => $validate['category'],
-            'author' => $userName,
+            'user_id' => Auth::id(),
             'img' => $img,
             'views' => 0
         ]);
@@ -73,37 +60,61 @@ class OffersController extends Controller
 
         return redirect()->route('good', ['post' => $post, 'id' => $id, 'action' => $action]);
     }
+
     public function edit($id)
     {
         $offer = DB::table('offers')
-        ->where('id', $id)
-        ->first();
+            ->where('id', $id)
+            ->first();
         return view('offers._edit')->with('offer', $offer);
-
     }
 
     public function update(Request $request, $id)
-{
-    $validate = $request->validate([
-        'title' => ['required', 'string', 'max:255'],
-        'text' => ['required', 'string'],
-        'category' => ['required', 'integer'],
-    ]);
-
-    DB::table('offers')
-        ->where('id', $id)
-        ->update([
-            'updated_at' => date("Y-m-d H:i"),
-            'title' => $validate['title'],
-            'text' => $validate['text'],
-            'category_id' => $validate['category']
+    {
+        $validate = $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'category' => ['required', 'integer'],
         ]);
-        
+
+        $img = $this->uploadToIPFS($request);
+
+        DB::table('offers')
+            ->where('id', $id)
+            ->update([
+                'updated_at' => date("Y-m-d H:i"),
+                'title' => $validate['title'],
+                'content' => $validate['content'],
+                'category_id' => $validate['category'],
+                'user_id' => Auth::id(),
+                'img' => $img,
+            ]);
+
         $post = 'offers';
         $action = 'edit';
         return redirect()->route('good', ['post' => $post, 'id' => $id, 'action' => $action]);
-        
     }
 
+    private function uploadToIPFS($request)
+    {
+        if ($request->hasFile('filename')) {
+            $file = $request->file('filename');
+            $client = new Client();
+            $response = $client->request('POST', 'http://localhost:5001/api/v0/add', [
+                'multipart' => [
+                    [
+                        'name' => 'file',
+                        'contents' => fopen($file->getPathname(), 'r'),
+                        'filename' => $file->getClientOriginalName()
+                    ]
+                ]
+            ]);
 
+            $body = json_decode($response->getBody(), true);
+            return 'http://localhost:8080/ipfs/' . $body['Hash'];
+        } else {
+            return 'http://localhost:8080/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP'; // или присвоить другое значение по умолчанию
+        }
+    }
 }
+

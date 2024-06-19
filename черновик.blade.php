@@ -32,7 +32,7 @@ if ($post == "news"){
 
         <div class="flex-container">
             <div class="item-1">
-                <div class="img_post"><img src="{{ $text->img }}" /></div>
+                <div class="img_post"><img src="/img/post_img/{{ $text->img }}" /></div>
             </div>
             <div class="item-2">
                 <div class="title_post">

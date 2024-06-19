@@ -29,10 +29,11 @@
         
     <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>  
 
-    {{-- <!--для копирования сид фразы -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- Скрипт копирования в буфер -->
-    <script src="/js/copy_seed.js" type="text/javascript"></script> --}}
+<!-- Подключите библиотеки Cropper.js и IPFS HTTP Client -->
+<link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet">
+<script src="https://unpkg.com/cropperjs"></script>
+<script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
+
 
     <!-- кнопка вверх -->
     <script src="/js/bt_top.js" type="text/javascript"></script>

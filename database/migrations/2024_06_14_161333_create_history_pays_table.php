@@ -19,9 +19,10 @@ return new class extends Migration
             $table->decimal('fee', 18, 8);
             $table->timestamps();
         
-            $table->foreign('from_wallet_id')->references('id')->on('wallets');
-            $table->foreign('to_wallet_id')->references('id')->on('wallets');
+            $table->foreign('from_wallet_id')->references('id')->on('wallets')->onDelete('cascade');
+            $table->foreign('to_wallet_id')->references('id')->on('wallets')->onDelete('cascade');
         });
+        
         
     }
 

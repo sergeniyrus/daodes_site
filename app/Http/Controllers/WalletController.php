@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\Seed;
 use App\Models\HistoryPay;
 use App\Services\WalletService;
 use Illuminate\Http\Request;
@@ -42,71 +43,64 @@ class WalletController extends Controller
     }
 
     public function transfer(Request $request)
-    {
-        $request->validate([
-            'to_username' => 'required|string',
-            'amount' => 'required|numeric|min:0.00000001',
-            'user_seed' => 'required|string'
+{
+    $validatedData = $request->validate([
+        'recipient' => 'required|string',
+        'amount' => 'required|numeric|min:0.01',
+        'seed_phrase' => 'required|string'
+    ]);
+
+    $user = Auth::user();
+    $amount = $validatedData['amount'];
+    $recipientName = $validatedData['recipient'];
+    $seedPhrase = $validatedData['seed_phrase'];
+
+    $fromWallet = Wallet::where('user_id', $user->id)->firstOrFail();
+
+    $recipientUser = User::where('name', $recipientName)->first();
+
+    if (!$recipientUser) {
+        return redirect()->back()->withErrors(['recipient' => 'Пользователь с таким именем не найден.']);
+    }
+
+    $toWallet = Wallet::where('user_id', $recipientUser->id)->firstOrFail();
+
+    $storedSeed = Seed::where('user_id', $user->id)->first();
+    $storedSeedPhrase = implode(' ', array_slice($storedSeed->toArray(), 2));
+
+    if ($seedPhrase !== $storedSeedPhrase) {
+        return redirect()->back()->withErrors(['seed_phrase' => 'Неверная сид фраза.']);
+    }
+
+    $totalAmount = $amount * 1.01;
+
+    if ($fromWallet->balance < $totalAmount) {
+        return redirect()->back()->withErrors(['amount' => 'Недостаточно средств для перевода.']);
+    }
+
+    DB::transaction(function() use ($fromWallet, $toWallet, $amount, $totalAmount) {
+        $fromWallet->balance -= $totalAmount;
+        $fromWallet->save();
+
+        $toWallet->balance += $amount;
+        $toWallet->save();
+
+        HistoryPay::create([
+            'from_wallet_id' => $fromWallet->id,
+            'to_wallet_id' => $toWallet->id,
+            'amount' => $amount,
+            'fee' => $totalAmount - $amount
         ]);
 
-        try {
-            $user = Auth::user();
-            $fromWallet = Wallet::firstOrCreate(
-                ['user_id' => $user->id],
-                ['balance' => 0]
-            );
+        $systemWallet = Wallet::where('user_id', 1)->first();
+        $systemWallet->balance += $totalAmount - $amount;
+        $systemWallet->save();
+    });
 
-            // Получение пользователя-получателя по имени
-            $toUser = User::where('name', $request->input('to_username'))->first();
-            if (!$toUser) {
-                throw new Exception('Нет такого пользователя');
-            }
+    return redirect()->route('wallet.wallet')->with('success', 'Перевод успешно выполнен.');
+}
 
-            // Создание кошелька для получателя, если его еще нет
-            $toWallet = Wallet::firstOrCreate(
-                ['user_id' => $toUser->id],
-                ['balance' => 0]
-            );
 
-            // Получение сохраненной сид-фразы
-            $savedSeed = DB::table('seed')
-                ->where('user_id', $fromWallet->user_id)
-                ->first();
-
-            if (!$savedSeed) {
-                throw new Exception('Сид-фраза не найдена');
-            }
-
-            // Преобразование вводимой сид-фразы в строку для сравнения
-            $enteredSeedString = trim($request->input('user_seed'));
-
-            // Проверка сид-фразы
-            if (!$this->walletService->validateSeed($fromWallet->user_id, $enteredSeedString)) {
-                return redirect()->back()->with('error', 'Неверная сид фраза');
-            }
-
-            // Проверка достаточности средств с учетом комиссии
-            $amount = $request->input('amount');
-            $fee = $amount * WalletService::FEE_PERCENTAGE;
-            $totalAmount = $amount + $fee;
-
-            if ($fromWallet->balance < $totalAmount) {
-                throw new Exception('Не хватает средств для перевода');
-            }
-
-            // Выполнение перевода
-            $this->walletService->transfer(
-                $fromWallet->user_id,
-                $toWallet->user_id,
-                $amount,
-                $enteredSeedString
-            );
-
-            return redirect()->route('wallet.wallet')->with('success', 'Перевод выполнен успешно');
-        } catch (Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
 
     public function history()
     {

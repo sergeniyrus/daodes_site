@@ -3,7 +3,7 @@
 
 
     <div class="windows-new-images">
-        <img src="/img/post_img/<?php echo $offer->img; ?>" alt="" />
+        <img src="<?php echo $offer->img; ?>" alt="" />
     </div>
     <div class="windows-string" >        
         <a href="/page/offers/<?php echo $offer->id; ?>">        
@@ -13,7 +13,7 @@
             </a>
             <div class="windows-new-text">
                 <p>
-                    <?php echo html_entity_decode(substr($offer->text, 0, 500), ENT_QUOTES, 'utf-8'); ?>
+                    <?php echo html_entity_decode(substr($offer->content, 0, 500), ENT_QUOTES, 'utf-8'); ?>
                 </p>
             </div>
 </div>

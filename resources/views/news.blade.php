@@ -10,23 +10,19 @@
     @if ($news->count())
         @foreach ($news as $new)
             <div class="flex-container">
-
                 <div class="item-1">
                     <div class="img_post"><img src="{{ $new->img }}" /></div>
-                    
                 </div>
                 <div class="item-2">
-
                     <div class="title_post">
                         <h5>
                             <a href="/page/news/{{ $new->id }}">{{ $new->title }}</a>
                             <hr class="hr_title">
                         </h5>
                     </div>
-
-                    <div class="text_post">
+                    <div class="content_post">
                         <p>
-                            {!! Str::limit(html_entity_decode($new->text), 250) !!}
+                            {!! Str::limit(html_entity_decode($new->content), 250) !!}
                             <a class="all_post" href="/page/news/{{ $new->id }}">Дальше</a>
                         </p>
                     </div>
@@ -62,7 +58,12 @@
                             <div class="author_post">
                                 <span class="rown"><img src="/img/icons_post/author.png" />&nbsp;</span>
                                 <span class="rown">
-                                    {{ $new->author }}
+                                    @php
+                                        $authorName = DB::table('users')
+                                            ->where('id', $new->user_id)
+                                            ->value('name');
+                                    @endphp
+                                    {{ $authorName }}
                                 </span>
                             </div>
                         </div>
@@ -70,21 +71,14 @@
                 </div>
 
                 {{-- //темы категгории --}}
-
                 @php
                     $post = 'news';
                     $category_name = 'category_news';
                     $category_id = $new->category_id;
                 @endphp
                 @include('partials.block_category')
-
-
-
-                
-                    
-                
             </div>
-                <br>
+            <br>
         @endforeach
     @endif
 @endsection

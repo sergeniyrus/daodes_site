@@ -20,7 +20,6 @@
 @section('main')
     <br>
     <div class="flex-container">
-
         <div class="item-1">
             <div class="img_post"><img src="{{ $text->img }}" /></div>
             @auth
@@ -41,7 +40,6 @@
                             <a href="/edit_{{$post}}/{{ $text->id }}">
                                 <img src="/img/icons_post/edit.png" title="Редактировать" alt="Редактировать"></a>
                         </div>
-
                         {{-- <div>
                             <a href="/delete_new" title="Удалить">
                                 <img src="/img/icons_post/delete.png" alt="Удалить"></a>
@@ -50,7 +48,6 @@
                 @endif
             @endauth
         </div>
-
         <div class="item-2">
             <div class="title_post">
                 <h5>
@@ -58,12 +55,9 @@
                     <hr class="hr_title">
                 </h5>
             </div>
-
-            <div class="text_post">
+            <div class="content_post">
                 <p>
-                    {!! html_entity_decode($text->text) !!}
-
-
+                    {!! html_entity_decode($text->content) !!}
                 </p>
             </div>
             <div class="footer-post">
@@ -100,7 +94,12 @@
                     <div class="author_post">
                         <span class="rown"><img src="/img/icons_post/author.png" />&nbsp;</span>
                         <span class="rown">
-                            {{ $text->author }}
+                            @php
+                                $authorName = DB::table('users')
+                                    ->where('id', $text->user_id)
+                                    ->value('name');
+                            @endphp
+                            {{ $authorName }}
                         </span>
                     </div>
                 </div>
@@ -108,12 +107,9 @@
         </div>
 
         {{-- //темы категории --}}
-
         <?php
         $category_id = $text->category_id; ?>
         @include('partials.block_category')
-
-
     </div>
     <br>
 @endsection

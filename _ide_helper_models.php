@@ -43,6 +43,100 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $title
+ * @property string $content
+ * @property string $img
+ * @property int $category_id
+ * @property string $user_id
+ * @property int|null $views
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|News newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|News newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|News query()
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereImg($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|News whereViews($value)
+ */
+	class News extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string $word0
+ * @property string $word1
+ * @property string $word2
+ * @property string $word3
+ * @property string $word4
+ * @property string $word5
+ * @property string $word6
+ * @property string $word7
+ * @property string $word8
+ * @property string $word9
+ * @property string $word10
+ * @property string $word11
+ * @property string $word12
+ * @property string $word13
+ * @property string $word14
+ * @property string $word15
+ * @property string $word16
+ * @property string $word17
+ * @property string $word18
+ * @property string $word19
+ * @property string $word20
+ * @property string $word21
+ * @property string $word22
+ * @property string $word23
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord0($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord10($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord11($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord12($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord13($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord14($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord15($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord16($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord17($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord18($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord19($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord20($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord21($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord22($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord23($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord3($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord4($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord5($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord6($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord7($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord8($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord9($value)
+ */
+	class Seed extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property string $name
  * @property mixed $password
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -51,6 +145,8 @@ namespace App\Models{
  * @property int|null $rang_access
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Seed> $seeds
+ * @property-read int|null $seeds_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \Laravel\Sanctum\PersonalAccessToken> $tokens
  * @property-read int|null $tokens_count
  * @method static \Database\Factories\UserFactory factory($count = null, $state = [])
@@ -182,39 +278,10 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $title
- * @property string $text
+ * @property string $content
  * @property string $img
  * @property int $category_id
- * @property string $author
- * @property int|null $views
- * @method static \Illuminate\Database\Eloquent\Builder|news newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|news newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|news query()
- * @method static \Illuminate\Database\Eloquent\Builder|news whereAuthor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|news whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|news whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|news whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|news whereImg($value)
- * @method static \Illuminate\Database\Eloquent\Builder|news whereText($value)
- * @method static \Illuminate\Database\Eloquent\Builder|news whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|news whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|news whereViews($value)
- */
-	class news extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * 
- *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $title
- * @property string $text
- * @property string $img
- * @property int $category_id
- * @property string $author
+ * @property int $user_id
  * @property int|null $views
  * @property string|null $state
  * @property string|null $method
@@ -222,13 +289,14 @@ namespace App\Models{
  * @property string|null $coin
  * @property string|null $control
  * @property string|null $finish
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|offers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|offers newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|offers query()
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereAuthor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereBudget($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereCoin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|offers whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereControl($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereFinish($value)
@@ -236,9 +304,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereImg($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereMethod($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereState($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|offers whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|offers whereViews($value)
  */
 	class offers extends \Eloquent {}
