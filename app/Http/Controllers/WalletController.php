@@ -102,18 +102,18 @@ class WalletController extends Controller
 
 
 
-    public function history()
-    {
-        $user = Auth::user();
-        $wallet = Wallet::where('user_id', $user->id)->firstOrFail();
+public function history()
+{
+    $user = Auth::user();
+    $wallet = Wallet::where('user_id', $user->id)->firstOrFail();
 
-        $historyPays = HistoryPay::where('from_wallet_id', $wallet->id)
-            ->orWhere('to_wallet_id', $wallet->id)
-            ->orderBy('created_at', 'desc')
-            ->get();
+    $historyPays = HistoryPay::where('from_wallet_id', $wallet->id)
+        ->orWhere('to_wallet_id', $wallet->id)
+        ->orderBy('created_at', 'desc')
+        ->paginate(5);
 
-        return view('wallet.history', compact('historyPays'));
-    }
+    return view('wallet.history', compact('historyPays'));
+}
 
     
 }

@@ -25,6 +25,16 @@
             border-bottom: 1px solid rgba(68, 68, 68, 0.5);
         }
     }
+    .pagination-center {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+    }
+    .pagination-info {
+        color: #ccc;
+        margin-top: 10px;
+    }
 </style>
 
 <div class="container center-content">
@@ -55,5 +65,11 @@
             @endforeach
         </tbody>
     </table>
+    <div class="pagination-center">
+        {{ $historyPays->links() }}
+        <div class="pagination-info">
+            Showing {{ $historyPays->firstItem() }} to {{ $historyPays->lastItem() }} of {{ $historyPays->total() }} results
+        </div>
+    </div>
 </div>
 @endsection
