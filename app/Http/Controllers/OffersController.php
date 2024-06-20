@@ -100,7 +100,7 @@ class OffersController extends Controller
         if ($request->hasFile('filename')) {
             $file = $request->file('filename');
             $client = new Client();
-            $response = $client->request('POST', 'http://localhost:5001/api/v0/add', [
+            $response = $client->request('POST', 'http://95.188.118.100:5001/api/v0/add', [
                 'multipart' => [
                     [
                         'name' => 'file',
@@ -111,7 +111,7 @@ class OffersController extends Controller
             ]);
 
             $body = json_decode($response->getBody(), true);
-            return 'http://localhost:8080/ipfs/' . $body['Hash'];
+            return 'http://95.188.118.100:8080/ipfs/' . $body['Hash'];
         } else {
             return 'http://localhost:8080/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP'; // или присвоить другое значение по умолчанию
         }

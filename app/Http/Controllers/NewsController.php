@@ -23,27 +23,21 @@ class NewsController extends Controller
         return view('news._add')->with('category_news', $category);
     }
 
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         //
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create(Request $request): RedirectResponse
     {
         $validate = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'category' => ['required', 'integer'],
-            'filename' => ['nullable', 'image', 'max:2048'] // Добавлено правило валидации для изображения
+            'filename' => ['nullable', 'image', 'max:2048']
         ]);
 
-        $img = 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico'; // значение по умолчанию
+        $img = 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
 
         if ($request->hasFile('filename')) {
             $img = $this->uploadToIPFS($request->file('filename'));
@@ -66,92 +60,78 @@ class NewsController extends Controller
         return redirect()->route('good', ['post' => $post, 'id' => $id, 'action' => $action]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         //
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(string $id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit($id)
     {
-        $new = DB::table('news')
-            ->where('id', $id)
-            ->first();
+        $new = DB::table('news')->where('id', $id)->first();
         return view('news._edit')->with('new', $new);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, $id)
     {
         $validate = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'category' => ['required', 'integer'],
-            'filename' => ['nullable', 'image', 'max:2048'] // Добавлено правило валидации для изображения
+            'filename' => ['nullable', 'image', 'max:2048']
         ]);
 
         if ($request->hasFile('filename')) {
             $img = $this->uploadToIPFS($request->file('filename'));
         } else {
-            $img = DB::table('news')->where('id', $id)->value('img'); // Сохранить старое значение, если новое не загружено
+            $img = DB::table('news')->where('id', $id)->value('img');
         }
 
-        DB::table('news')
-            ->where('id', $id)
-            ->update([
-                'updated_at' => now(),
-                'title' => $validate['title'],
-                'content' => $validate['content'],
-                'category_id' => $validate['category'],
-                'user_id' => Auth::id(), // если нужно обновлять user_id
-                'img' => $img
-            ]);
+        DB::table('news')->where('id', $id)->update([
+            'updated_at' => now(),
+            'title' => $validate['title'],
+            'content' => $validate['content'],
+            'category_id' => $validate['category'],
+            'user_id' => Auth::id(),
+            'img' => $img
+        ]);
 
         $post = 'news';
         $action = 'edit';
         return redirect()->route('good', ['post' => $post, 'id' => $id, 'action' => $action]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(string $id)
     {
         //
     }
 
-    /**
-     * Upload file to IPFS
-     */
     private function uploadToIPFS($file)
-    {
-        $client = new Client(['base_uri' => 'http://localhost:5001']);
-        $response = $client->request('POST', '/api/v0/add', [
-            'multipart' => [
-                [
-                    'name' => 'file',
-                    'contents' => fopen($file->getPathname(), 'r'),
-                    'filename' => $file->getClientOriginalName()
-                ]
-            ]
-        ]);
+{
+    $client = new Client([
+        'base_uri' => 'https://daodes.space',
+        'headers' => [
+            // Здесь нет необходимости в авторизации, если вы используете свой собственный сервер
+        ]
+    ]);
 
-        $data = json_decode($response->getBody()->getContents(), true);
-        return 'http://localhost:8080/ipfs/' . $data['Hash'];
-    }
+    $response = $client->request('POST', '/api/v0/add', [
+        'multipart' => [
+            [
+                'name' => 'file',
+                'contents' => fopen($file->getPathname(), 'r'),
+                'filename' => $file->getClientOriginalName()
+            ]
+        ]
+    ]);
+
+    $data = json_decode($response->getBody()->getContents(), true);
+    return 'https://daodes.space/ipfs/' . $data['Hash'];
+}
+
+
 }
