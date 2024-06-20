@@ -40,9 +40,14 @@ class OffersController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'category' => ['required', 'integer'],
+            'filename' => ['nullable', 'image', 'max:2048']
         ]);
 
-        $img = $this->uploadToIPFS($request);
+        $img = 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
+
+        if ($request->hasFile('filename')) {
+            $img = $this->uploadToIPFS($request->file('filename'));
+        }
 
         DB::table('offers')->insert([
             'created_at' => date("Y-m-d H:i"),
@@ -75,9 +80,14 @@ class OffersController extends Controller
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'category' => ['required', 'integer'],
+            'filename' => ['nullable', 'image', 'max:2048']
         ]);
 
-        $img = $this->uploadToIPFS($request);
+        $img = DB::table('offers')->where('id', $id)->value('img');
+
+        if ($request->hasFile('filename')) {
+            $img = $this->uploadToIPFS($request->file('filename'));
+        }
 
         DB::table('offers')
             ->where('id', $id)
@@ -95,26 +105,26 @@ class OffersController extends Controller
         return redirect()->route('good', ['post' => $post, 'id' => $id, 'action' => $action]);
     }
 
-    private function uploadToIPFS($request)
+    private function uploadToIPFS($file)
     {
-        if ($request->hasFile('filename')) {
-            $file = $request->file('filename');
-            $client = new Client();
-            $response = $client->request('POST', 'http://95.188.118.100:5001/api/v0/add', [
-                'multipart' => [
-                    [
-                        'name' => 'file',
-                        'contents' => fopen($file->getPathname(), 'r'),
-                        'filename' => $file->getClientOriginalName()
-                    ]
-                ]
-            ]);
+        $client = new Client([
+            'base_uri' => 'https://daodes.space',
+            'headers' => [
+                // Здесь нет необходимости в авторизации, если вы используете свой собственный сервер
+            ]
+        ]);
 
-            $body = json_decode($response->getBody(), true);
-            return 'http://95.188.118.100:8080/ipfs/' . $body['Hash'];
-        } else {
-            return 'http://localhost:8080/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP'; // или присвоить другое значение по умолчанию
-        }
+        $response = $client->request('POST', '/api/v0/add', [
+            'multipart' => [
+                [
+                    'name' => 'file',
+                    'contents' => fopen($file->getPathname(), 'r'),
+                    'filename' => $file->getClientOriginalName()
+                ]
+            ]
+        ]);
+
+        $data = json_decode($response->getBody()->getContents(), true);
+        return 'https://daodes.space/ipfs/' . $data['Hash'];
     }
 }
-
