@@ -338,6 +338,11 @@ img {
   margin-bottom: 10px;
 }
 
+.windows-string {
+    display: block;
+    text-align: center;
+  }
+  
 .windows-new-title {
   margin: 5px;
   text-align: center;
@@ -349,6 +354,7 @@ img {
 .windows-new-images {
   margin: 10px;
   width: 80%;
+  max-width: 300px;
   object-fit: cover;
 }
 
@@ -1216,6 +1222,7 @@ img {
   }
   .windows-string {
     display: block;
+    text-align: center;
   }
 }
 

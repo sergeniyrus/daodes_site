@@ -5,7 +5,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    {{-- <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"> --}}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <!-- иконка сайта -->
     <link rel="icon" href="/../favicon.ico" type="image/x-icon">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
@@ -378,7 +380,11 @@ img {
   align-items: center;
   margin-bottom: 10px;
 }
-
+.windows-string {
+    display: block;
+    text-align: center;
+  }
+  
 .windows-new-title {
   margin: 5px;
   text-align: center;
@@ -390,6 +396,7 @@ img {
 .windows-new-images {
   margin: 10px;
   width: 80%;
+  max-width: 300px;
   object-fit: cover;
 }
 
@@ -1257,6 +1264,7 @@ img {
   }
   .windows-string {
     display: block;
+    text-align: center;
   }
 }
 
@@ -1409,6 +1417,10 @@ img {
   line-height: 16px;
   border-radius: 50%;
 }
+
+
+
+
     </style>
 </head>
 
