@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Log;
 class ProcessOffers extends Command
 {
     protected $signature = 'offers:process';
-    protected $description = 'Process offers based on voting results every 5 minutes';
+    protected $description = 'Process offers based on voting results every 1 minute';
 
     public function __construct()
     {
@@ -21,24 +21,29 @@ class ProcessOffers extends Command
 
     public function handle()
     {
-        Log::info('Processing offers started at ' . Carbon::now());
+        // Log::info('offers:process started at ' . Carbon::now());
 
         try {
             $now = Carbon::now();
 
-            // Получаем предложения, удовлетворяющие условиям
+            // Получаем предложения, которые соответствуют одному из двух условий:
+            // 1. Прошло более 72 часов
+            // 2. Процент "за" или "против" больше 50%
             $offers = DB::table('offers')
                 ->where('state', 2)
                 ->whereNotNull('start_vote')
-                // в конце  потом 72 часа
-                ->where(DB::raw('TIMESTAMPDIFF(HOUR, start_vote, NOW())'), '>=', 0.017)
                 ->get();
 
-            Log::info('Found ' . count($offers) . ' offers to process.');
+            // Log::info('Found ' . count($offers) . ' offers to process.');
 
             foreach ($offers as $offer) {
                 $id_offer = $offer->id;
 
+                // Получаем текущее время и время начала голосования
+                $startVoteTime = Carbon::parse($offer->start_vote);
+                $hoursElapsed = $startVoteTime->diffInHours($now);
+
+                // Получаем количество пользователей и голоса
                 $totalUsers = DB::table('users')->count() - 2;
 
                 $counts = DB::table('vote_users')
@@ -72,33 +77,42 @@ class ProcessOffers extends Command
                 $no_percentage = round($no_percentage, 2);
                 $vozd_percentage = round($vozd_percentage, 2);
 
-                if ($za > $no) {
+                // Проверяем условия для обновления состояния предложения
+                if ($hoursElapsed > 72 || $za_percentage > 50 || $no_percentage > 50) {
+                    if ($za_percentage > 50) {
+                        $newState = 4; // Принято "за"
+                        // Log::info("Offer ID $id_offer state updated to 4. Za percentage: $za_percentage.");
+                    } elseif ($no_percentage > 50) {
+                        $newState = 5; // Принято "против"
+                        // Log::info("Offer ID $id_offer state updated to 5. No percentage: $no_percentage.");
+                    } else {
+                        // Если не превышает 50%, но прошло более 72 часов
+                        $newState = $za_percentage > $no_percentage ? 4 : 5;
+                        // Log::info("Offer ID $id_offer state updated due to 72 hours rule. Za percentage: $za_percentage, No percentage: $no_percentage.");
+                    }
+
                     DB::table('offers')
                         ->where('id', $id_offer)
-                        ->update(['state' => 4]);
-                    Log::info("Offer ID $id_offer state updated to 3.");
-                } elseif ($za < $no) {
-                    DB::table('offers')
-                        ->where('id', $id_offer)
-                        ->update(['state' => 5]);
-                    Log::info("Offer ID $id_offer state updated to 5.");
-                }
+                        ->update(['state' => $newState]);
 
-                // Создаем PDF файл
-                $pdfFilePath = $this->createPdf($offer, $za_percentage, $no_percentage, $vozd_percentage);
+                    // Создаем PDF файл
+                    $pdfFilePath = $this->createPdf($offer, $za_percentage, $no_percentage, $vozd_percentage);
 
-                if ($pdfFilePath) {
-                    // Загружаем PDF на IPFS
-                    $this->uploadToIPFS($pdfFilePath, $offer->id);
+                    if ($pdfFilePath) {
+                        // Загружаем PDF на IPFS
+                        $this->uploadToIPFS($pdfFilePath, $offer->id);
+                    } else {
+                        // Log::error("PDF file not created or not found for offer ID $id_offer");
+                    }
                 } else {
-                    Log::error("PDF file not created or not found for offer ID $id_offer");
+                    // Log::info("Offer ID $id_offer not processed. Za percentage: $za_percentage, No percentage: $no_percentage.");
                 }
             }
         } catch (\Exception $e) {
-            Log::error('Error processing offers: ' . $e->getMessage());
+            // Log::error('Error processing offers: ' . $e->getMessage());
         }
 
-        Log::info('Processing offers completed at ' . Carbon::now());
+        // Log::info('offers:process finished at ' . Carbon::now());
     }
 
     private function createPdf($offer, $za_percentage, $no_percentage, $vozd_percentage)
@@ -141,11 +155,11 @@ class ProcessOffers extends Command
             $pdfFilePath = storage_path('app/public/offer_' . $offer->id . '.pdf');
             file_put_contents($pdfFilePath, $dompdf->output());
 
-            Log::info("PDF file created at $pdfFilePath for offer ID " . $offer->id);
+            // Log::info("PDF file created at $pdfFilePath for offer ID " . $offer->id);
 
             return $pdfFilePath;
         } catch (\Exception $e) {
-            Log::error('Error creating PDF for offer ID ' . $offer->id . ': ' . $e->getMessage());
+            // Log::error('Error creating PDF for offer ID ' . $offer->id . ': ' . $e->getMessage());
             return null;
         }
     }
@@ -173,9 +187,9 @@ class ProcessOffers extends Command
             // Сохраняем CID PDF в базе данных
             DB::table('offers')->where('id', $offerId)->update(['pdf_ipfs_cid' => $data['Hash']]);
 
-            Log::info("PDF uploaded to IPFS for offer ID $offerId with CID " . $data['Hash']);
+            // Log::info("PDF uploaded to IPFS for offer ID $offerId with CID " . $data['Hash']);
         } catch (\Exception $e) {
-            Log::error('Error uploading PDF to IPFS for offer ID ' . $offerId . ': ' . $e->getMessage());
+            // Log::error('Error uploading PDF to IPFS for offer ID ' . $offerId . ': ' . $e->getMessage());
         }
     }
 }
