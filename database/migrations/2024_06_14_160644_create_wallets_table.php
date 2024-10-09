@@ -11,16 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('wallets', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('nickname_hash')->unique();
-            $table->decimal('balance', 18, 8)->default(100);
-            $table->timestamps();
+        if (!Schema::hasTable('wallets')) {
+            Schema::create('wallets', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('user_id');
+                $table->string('nickname_hash')->unique();
+                $table->decimal('balance', 18, 8)->default(100);
+                $table->timestamps();
         
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-        });
-        
+                $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 
     /**

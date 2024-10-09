@@ -63,12 +63,12 @@
             margin: 0;
             color: #ffffff;
             background-color: #252441;
-            /* background-image: url("https://ipfs.sweb.ru/ipfs/QmTpCH5y3AkDhVBgDLUKuTRbkKV69EEvGzzgwLhQMtsWZ3?filename=bg01.jpg");
+             background-image: url("https://ipfs.sweb.ru/ipfs/QmTpCH5y3AkDhVBgDLUKuTRbkKV69EEvGzzgwLhQMtsWZ3?filename=bg01.jpg");
   opacity: 0.75;
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-size: cover; */
+  background-size: cover; 
             font-size: min(max(100%, 2vw), 200%);
         }
 
@@ -1689,7 +1689,19 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
             <a href="https://daodes.space/dao" title="Принятие решений"><span class="logo_name"><img src="/img/bottom/dd.jpg"></span></a>
         </div>
         <div class="header-title">
+            <a href="https://daodes.space/tasks" title="Биржа заданий"><span class="logo_name"><img src="/img/bottom/tasks2.png"></span></a>
+        </div>
+
+        <div class="header-title">
             <a href="https://daodes.space/wallet" title="Кошелёк"><span ><img src="/img/bottom/wallet2.png"></span></a>
+        </div>
+
+        <div class="header-title">
+            <a href="https://daodes.space/paper" title="Белая бумага"><span ><img src="/img/bottom/paper.png"></span></a>
+        </div>
+
+        <div class="header-title">
+            <a href="https://daodes.space/paper" title="Дорожная карта"><span ><img src="/img/bottom/roadmap.png"></span></a>
         </div>
 
       @if (Route::has('login'))

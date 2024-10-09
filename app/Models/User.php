@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -18,7 +17,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        // 'email',
         'keyword',
         'password',
     ];
@@ -30,7 +28,6 @@ class User extends Authenticatable
      */
     protected $hidden = [
         'password',
-        // 'remember_token',
     ];
 
     /**
@@ -46,6 +43,25 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Define the relationship with the tasks created by the user.
+     */
+    public function tasks()
+    {
+        return $this->hasMany(Task::class);
+    }
+
+    /**
+     * Define the relationship with the bids made by the user.
+     */
+    public function bids()
+    {
+        return $this->hasMany(Bid::class);
+    }
+
+    /**
+     * Define the relationship with seeds (example from your original code).
+     */
     public function seeds()
     {
         return $this->hasMany(Seed::class);

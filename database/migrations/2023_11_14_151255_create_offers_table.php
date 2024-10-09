@@ -11,23 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('offers', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
-            $table->string('title');
-            $table->text('text');
-            $table->string('img');
-            $table->integer('category_id');
-            $table->string('author');
-            $table->integer('views');
-            $table->string('state'); /*состояние предложения модерация-обсуждение исполнение * голосование исполнено отклонено */
-            $table->string('method');
-            $table->string('budget');
-            $table->string('coin');
-            $table->date('control');
-            $table->date('finish');
-            
-        });
+        if (!Schema::hasTable('offers')) {
+            Schema::create('offers', function (Blueprint $table) {
+                $table->id();
+                $table->timestamps();
+                $table->string('title');
+                $table->text('text');
+                $table->string('img');
+                $table->integer('category_id');
+                $table->string('author');
+                $table->integer('views');
+                $table->string('state');
+                $table->string('method');
+                $table->string('budget');
+                $table->string('coin');
+                $table->date('control');
+                $table->date('finish');
+            });
+        }
     }
 
     /**

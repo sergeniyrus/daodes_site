@@ -10,17 +10,21 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up()
-{
-    Schema::create('spamers', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
-        $table->timestamps();
-    });
-}
+    {
+        if (!Schema::hasTable('spamers')) {
+            Schema::create('spamers', function (Blueprint $table) {
+                $table->id();
+                $table->foreignId('id_user')->constrained('users')->onDelete('cascade');
+                $table->timestamps();
+            });
+        }
+    }
 
-public function down()
-{
-    Schema::dropIfExists('spamers');
-}
-
+    /**
+     * Reverse the migrations.
+     */
+    public function down()
+    {
+        Schema::dropIfExists('spamers');
+    }
 };

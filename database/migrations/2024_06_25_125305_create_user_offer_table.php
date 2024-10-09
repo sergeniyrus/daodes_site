@@ -13,16 +13,18 @@ class CreateUserOfferTable extends Migration
      */
     public function up()
     {
-        Schema::create('user_offer', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('id_offer');
-            $table->unsignedBigInteger('id_user');
-            $table->integer('vote')->comment('1 = За, 2 = Против, 3 = Воздержался');
-            $table->timestamps();
+        if (!Schema::hasTable('user_offer')) {
+            Schema::create('user_offer', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('id_offer');
+                $table->unsignedBigInteger('id_user');
+                $table->integer('vote')->comment('1 = За, 2 = Против, 3 = Воздержался');
+                $table->timestamps();
 
-            $table->foreign('id_offer')->references('id')->on('offers')->onDelete('cascade');
-            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
-        });
+                $table->foreign('id_offer')->references('id')->on('offers')->onDelete('cascade');
+                $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
     }
 
     /**

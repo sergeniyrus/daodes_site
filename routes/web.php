@@ -11,6 +11,7 @@ use App\Http\Controllers\VoteController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SpamController;
 use App\Http\Controllers\DiscussionController;
+use App\Http\Controllers\TaskController;
 
 //стандартная главная 
 Route::get('/', function () {
@@ -89,6 +90,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/wallet/history', [WalletController::class, 'history'])->name('wallet.history');
 });
 
+//биржа заданий
+
+Route::get('/tasks', [TaskController::class, 'list'])->name('tasks.list');
+Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create'); // Для отображения формы создания
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store'); // Для создания задачи
+Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
+Route::post('/tasks/{task}/bid', [TaskController::class, 'bid'])->name('tasks.bid');
 
 
 //админка после входа

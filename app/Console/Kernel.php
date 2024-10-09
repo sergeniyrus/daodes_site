@@ -30,4 +30,10 @@ class Kernel extends ConsoleKernel
 
         require base_path('routes/console.php');
     }
+
+    protected $routeMiddleware = [
+        // ...
+        'access.rang' => \App\Http\Middleware\CheckAccess::class,
+    ];
+    
 }

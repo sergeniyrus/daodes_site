@@ -8,13 +8,15 @@ class CreateDiscussionTable extends Migration
 {
     public function up()
     {
-        Schema::create('discussion', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('id_offer');
-            $table->unsignedBigInteger('id_user');
-            $table->boolean('vote'); // true (1) for ready to vote, false (0) otherwise
-            $table->timestamps();
-        });
+        if (!Schema::hasTable('discussion')) {
+            Schema::create('discussion', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('id_offer');
+                $table->unsignedBigInteger('id_user');
+                $table->boolean('vote'); // true (1) for ready to vote, false (0) otherwise
+                $table->timestamps();
+            });
+        }
     }
 
     public function down()
@@ -22,4 +24,3 @@ class CreateDiscussionTable extends Migration
         Schema::dropIfExists('discussion');
     }
 }
-
