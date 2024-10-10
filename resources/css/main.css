@@ -566,6 +566,9 @@ img {
   width: 80%;
   height: auto;
   padding: 5px;
+  border: #eee solid 2px;
+  border-radius: 25px;
+  background-color: #0B0C18;
 }
 
 .item-3 {
@@ -610,7 +613,7 @@ img {
   display: inline-block;
   padding: 15px 35px;
   background: linear-gradient(150deg, rgba(51, 106, 206, 1) 0%, rgba(57, 114, 213, 1) 50%, rgba(35, 90, 191, 1) 50%, rgba(1, 60, 163, 1) 100%);
-  font-size: min(max(150%, 12vw), 180%);
+  
   color: #fff;
   border-radius: 35px;
 }

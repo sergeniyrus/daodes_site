@@ -1657,6 +1657,29 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
   }
 }
 
+.marquee {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+
+        .marquee p {
+            display: inline-block;
+            font-size: 24px;
+            color: #ffffff;
+            animation: marquee 15s linear infinite;
+        }
+
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
     </style>
 </head>
 
@@ -1675,7 +1698,9 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
 
     @include('partials.infotrade')
 
-
+    <div class="marquee">
+        <p>Сайт находится в разработке, не обращайте внимание на некоторые недостатки.</p>
+    </div>
     <!-- Кнопочное меню -->
 
     <div class="knopkodav">
