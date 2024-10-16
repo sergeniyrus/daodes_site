@@ -15,11 +15,29 @@ namespace App\Models{
 /**
  * 
  *
- * @property-read \App\Models\Task|null $task
- * @property-read \App\Models\User|null $user
+ * @property int $id
+ * @property int $task_id
+ * @property int $user_id
+ * @property string $price
+ * @property string|null $comment
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $days
+ * @property int $hours
+ * @property-read \App\Models\Task $task
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Bid newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Bid newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Bid query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid whereDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid whereHours($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid whereTaskId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid whereUserId($value)
  */
 	class Bid extends \Eloquent {}
 }
@@ -172,14 +190,102 @@ namespace App\Models{
 /**
  * 
  *
+ * @property int $id
+ * @property int|null $accepted_bid_id
+ * @property string $title
+ * @property string $description
+ * @property string $budget
+ * @property string|null $deadline_time
+ * @property string $status
+ * @property int $user_id
+ * @property int|null $likes
+ * @property int|null $dislikes
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int|null $category_id
+ * @property string|null $start_time
+ * @property int $in_progress
+ * @property int $completed
+ * @property string|null $deadline
+ * @property string|null $completion_time
+ * @property int|null $rating
+ * @property-read \App\Models\Bid|null $acceptedBid
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Bid> $bids
  * @property-read int|null $bids_count
- * @property-read \App\Models\User|null $user
+ * @property-read \App\Models\TaskCategory|null $category
+ * @property-read \App\Models\User $user
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TaskVote> $votes
+ * @property-read int|null $votes_count
  * @method static \Illuminate\Database\Eloquent\Builder|Task newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Task newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Task query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereAcceptedBidId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereBudget($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereCompleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereCompletionTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereDeadlineTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereDislikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereInProgress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereLikes($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereStartTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereUserId($value)
  */
 	class Task extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $tasks
+ * @property-read int|null $tasks_count
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskCategory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskCategory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskCategory query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskCategory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskCategory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskCategory whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskCategory whereUpdatedAt($value)
+ */
+	class TaskCategory extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $task_id
+ * @property int $user_id
+ * @property int $is_like
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Task $task
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskVote newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskVote newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskVote query()
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskVote whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskVote whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskVote whereIsLike($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskVote whereTaskId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskVote whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|TaskVote whereUserId($value)
+ */
+	class TaskVote extends \Eloquent {}
 }
 
 namespace App\Models{

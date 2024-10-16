@@ -15,6 +15,9 @@ class CreateTasksTable extends Migration
             $table->date('deadline');
             $table->string('status')->default('open');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('category_id')->constrained('task_categories'); // Связь с таблицей категорий
+            $table->integer('likes')->default(0);      // Поле для лайков
+            $table->integer('dislikes')->default(0);   // Поле для дизлайков
             $table->timestamps();
         });
     }

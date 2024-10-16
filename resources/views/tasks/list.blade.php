@@ -51,11 +51,17 @@
                         {{ $task->description }}
                     @endif
                 </p>
+                <p>Категория: {{ $task->category ? $task->category->name : 'Без категории' }}</p>
+<!-- Добавлено отображение категории -->
                 <p class="card-text"><strong>Бюджет:</strong> {{ $task->budget }} руб.</p>
                 <p class="card-text"><strong>Срок:</strong> {{ $task->deadline }}</p>
             </div>
         </div>
     @endforeach
+</div>
+<!-- Пагинация -->
+<div class="pagination">
+    {{ $tasks->links() }}
 </div>
 </div>
 @endsection
