@@ -15,3 +15,8 @@ export default defineConfig({
         }),
     ],
 });
+export default {
+  build: {
+    sourcemap: false // отключение карт кода
+  }
+}

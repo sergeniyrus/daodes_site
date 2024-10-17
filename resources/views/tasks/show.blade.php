@@ -172,7 +172,13 @@
                 @endif
             </div>
             <br>
-
+            <!-- вывод информационных сообщений  --> 
+            @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
+<br>        
             <!-- Таймер -->
             <div id="timer" class="timer" style="display:none;"></div>
             <p id="start_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Время начала -->
@@ -225,7 +231,7 @@
                             @endfor
                         </div>
                         <input type="hidden" name="rating" id="rating" value="0">
-                        <button type="submit" class="btn btn-primary mt-3">Оставить оценку</button>
+                        <button type="submit" class="btn btn-primary mt-3">Поставить оценку</button>
                     </form>
                 </div>
             @endif
@@ -283,6 +289,7 @@
             });
         });
 
+    //скрипт таймера и времени
         let countdownTimer;
 
         function startTimer(days, hours, startTime) {

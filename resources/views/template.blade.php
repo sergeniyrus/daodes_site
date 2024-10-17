@@ -10,7 +10,7 @@
 
     <!-- иконка сайта -->
     <link rel="icon" href="/../favicon.ico" type="image/x-icon">
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    {{-- <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"> --}}
     <!-- Вставляем шрифты -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -36,12 +36,12 @@
     <script src="https://unpkg.com/cropperjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
 
-    <!-- Скрипт раскрытия блоков -->
+    {{-- <!-- Скрипт раскрытия блоков -->
     <script src="js/block.js" type="text/javascript"></script>
     <!-- кнопка вверх -->
-    <script src="js/bt_top.js" type="text/javascript"></script>
+    <script src="js/bt_top.js" type="text/javascript"></script> --}}
 
-    <link rel="stylesheet" href="{{ asset('resources/css/main.css') }}">
+    {{-- <link rel="stylesheet" href="{{ asset('resources/css/main.css') }}"> --}}
     <!-- * Вставляем стили -->
     {{-- <link rel="stylesheet" href="css/main.css"> --}}
     @vite(['resources/css/app.css', 'resources/css/main.css', 'resources/js/app.js', 'resources/js/block.js', 'resources/js/bt_top.js'])
@@ -1701,7 +1701,7 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
 
     </div> --}}
 
-    @include('partials.infotrade')
+    {{-- @include('partials.infotrade') --}}
 
     <div class="marquee">
         <p>Сайт находится в разработке, не обращайте внимание на некоторые недостатки.</p>
