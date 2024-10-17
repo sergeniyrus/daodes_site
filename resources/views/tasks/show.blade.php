@@ -133,44 +133,43 @@
                         👎 Дизлайк ({{ $task->votes()->where('is_like', false)->count() }})
                     </button>
                 </form>
-
+            
                 <!-- Кнопки редактировать и удалить для автора задания -->
                 @if (Auth::id() == $task->user_id)
                     <form action="{{ route('tasks.edit', $task) }}" method="GET" style="display:inline;">
                         @csrf
                         <button type="submit" class="btn-warning">✏️ Редактировать</button>
                     </form>
-
+            
                     <form action="{{ route('tasks.destroy', $task) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn-danger">🗑️ Удалить</button>
                     </form>
-
-                    <!-- Кнопка "Приступить к заданию" для автора -->
-                    @if ($task->accepted_bid_id && !$task->in_progress)
-                        <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;">
+            
+                    <!-- Кнопки для управления статусом задания -->
+                    @if($task->in_progress && !$task->completed)
+                        <form action="{{ route('tasks.complete', $task) }}" method="POST" style="display:inline;">
                             @csrf
-                            <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
+                            <button type="submit" class="btn-success">✅ Задание выполнено</button>
+                        </form>
+            
+                        <form action="{{ route('tasks.fail', $task) }}" method="POST" style="display:inline;">
+                            @csrf
+                            <button type="submit" class="btn-danger">❌ Задание провалено</button>
                         </form>
                     @endif
                 @endif
-
-                @if($task->in_progress && !$task->completed)
-                    <!-- Кнопка "Задание выполнено" -->
-                    <form action="{{ route('tasks.complete', $task) }}" method="POST" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="btn-success">✅ Задание выполнено</button>
-                    </form>
-
-                    <!-- Кнопка "Задание провалено" -->
-                    <form action="{{ route('tasks.fail', $task) }}" method="POST" style="display:inline;">
-                        @csrf
-                        <button type="submit" class="btn-danger">❌ Задание провалено</button>
-                    </form>
-                @endif
             </div>
+            
             <br>
+
+            <!-- Таймер -->
+            <div id="timer" class="timer" style="display:none;"></div>
+            <p id="start_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Время начала -->
+            <p id="end_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>   <!-- Время завершения -->
+            <p id="current_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Текущее время UTC -->
+
             <!-- Раздел предложений -->
             <div class="bids-section">
                 <h3>Предложения</h3><br>
@@ -183,11 +182,13 @@
                         <br>
 
                         <!-- Кнопка для фрилансера "Приступить к заданию", если предложение принято -->
-                        @if (Auth::id() == $bid->user_id && $task->accepted_bid_id == $bid->id && !$task->in_progress)
-                            <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;">
-                                @csrf
-                                <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
-                            </form>
+                        @if (Auth::id() == $bid->user_id && $task->accepted_bid_id == $bid->id)
+                            @if (!$task->in_progress)
+                                <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;" onsubmit="return startTimer({{ $bid->days }}, {{ $bid->hours }}, '{{ now() }}');">
+                                    @csrf
+                                    <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
+                                </form>
+                            @endif
                         @endif
 
                         <!-- Кнопка для автора задания "Принять предложение" -->
@@ -227,19 +228,19 @@
                 @else
                     <div class="bid-form">
                         <h3>Подать предложение</h3>
-                        <form action="{{ route('bids.store', ['task_id' => $task->id]) }}" method="POST">
+                        <form action="{{ route('tasks.bid', $task)  }}" method="POST">
                             @csrf
                             <div class="form-group">
                                 <label for="price">Цена (в рублях):</label>
-                                <input type="number" name="price" id="price" required>
+                                <input type="number" name="price" id="price" style="color: #000" required>
                             </div>
                             <div class="form-group">
                                 <label for="days">Срок выполнения (дни):</label>
-                                <input type="number" name="days" id="days" required>
+                                <input type="number" name="days" id="days" style="color: #000" required>
                             </div>
                             <div class="form-group">
                                 <label for="hours">Срок выполнения (часы):</label>
-                                <input type="number" name="hours" id="hours" required>
+                                <input type="number" name="hours" id="hours" style="color: #000" required>
                             </div>
                             <div class="form-group">
                                 <label for="comment">Комментарий:</label>
@@ -272,5 +273,77 @@
                 }
             });
         });
+
+        //let countdownTimer;
+
+        function startTimer(days, hours, startTime) {
+    // Конвертируем время начала в миллисекунды (UTC)
+    const startTimeMillis = new Date(startTime + 'Z').getTime(); // Обратите внимание на добавление 'Z'
+
+    // Преобразуем дни и часы в миллисекунды
+    const totalTime = (days * 24 * 60 * 60 * 1000) + (hours * 60 * 60 * 1000);
+
+    // Рассчитываем конечное время в миллисекундах
+    const endTime = startTimeMillis + totalTime;
+
+    // Отображаем таймер
+    const timerDiv = document.getElementById('timer');
+    timerDiv.style.display = 'block';
+
+    // Отображаем время начала задачи
+    const startDate = new Date(startTimeMillis);
+    const startTimeDisplay = document.getElementById('start_time_display');
+    startTimeDisplay.innerHTML = `Время начала работы: ${startDate.toUTCString()}`;
+
+    // Рассчитываем и отображаем время завершения задачи
+    const endDate = new Date(endTime);
+    const endTimeDisplay = document.getElementById('end_time_display');
+    endTimeDisplay.innerHTML = `Предполагаемое время завершения: ${endDate.toUTCString()}`;
+
+    // Обновление текущего времени каждую секунду
+    setInterval(function() {
+        const now = new Date(); // Получаем текущее время
+        const currentTimeDisplay = document.getElementById('current_time_display');
+        currentTimeDisplay.innerHTML = `Текущее время UTC: ${now.toUTCString()}`;
+    }, 1000);
+
+    countdownTimer = setInterval(function() {
+        // Получаем текущее время в UTC
+        const now = new Date().getTime(); // getTime() всегда возвращает UTC
+
+        const remainingTime = endTime - now;
+
+        // Когда время вышло
+        if (remainingTime <= 0) {
+            clearInterval(countdownTimer);
+            timerDiv.innerHTML = "Время вышло, задание на проверке.";
+            return;
+        }
+
+        // Вычисление дней, часов, минут и секунд
+        const seconds = Math.floor((remainingTime / 1000) % 60);
+        const minutes = Math.floor((remainingTime / 1000 / 60) % 60);
+        const hoursLeft = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
+        const daysLeft = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+
+        timerDiv.innerHTML = `До завершения работы над заданием осталось: ${daysLeft} дн. ${hoursLeft} ч. ${minutes} мин. ${seconds} сек.`;
+    }, 1000);
+
+    // Лог для проверки значений
+    console.log("Переданные значения: дни = ", days, "часы = ", hours);
+}
+
+
+        // Если задача в работе, запускаем таймер при загрузке страницы
+        @if($task->in_progress && $task->start_time)
+            @php
+                // Получаем предложение, которое было принято
+                $acceptedBid = $task->bids()->where('id', $task->accepted_bid_id)->first();
+            @endphp
+            @if($acceptedBid)
+                startTimer({{ $acceptedBid->days }}, {{ $acceptedBid->hours }}, '{{ $task->start_time }}');
+            @endif
+        @endif
     </script>
+
 @endsection

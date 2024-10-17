@@ -222,19 +222,28 @@ public function rate(Request $request, Task $task)
     }
     return redirect()->back();
 }
+
 public function startWork(Task $task)
-    {
-        // Убедимся, что только автор задания может начать работу
-        if (Auth::id() !== $task->user_id || $task->accepted_bid_id === null) {
-            return redirect()->back()->withErrors('Вы не можете начать работу над этой задачей.');
-        }
-
-        // Изменение статуса задачи на "в работе"
-        $task->in_progress = true;
-        $task->save();
-
-        return redirect()->back()->with('success', 'Задача теперь в работе.');
+{
+    // Проверяем, может ли текущий пользователь начать работу над задачей
+    if (Auth::id() !== $task->user_id || $task->accepted_bid_id === null) {
+        return redirect()->back()->withErrors('Вы не можете начать работу над этой задачей.');
     }
+
+    // Устанавливаем текущее время в UTC как время начала работы
+    $task->start_time = now()->setTimezone('UTC'); // Указываем таймзону UTC
+    $task->in_progress = true;
+    $task->save();
+
+    // Перенаправляем на страницу с задачей с сообщением об успехе
+    return redirect()->back()
+        ->with('success', 'Задача теперь в работе.')
+        ->with('start_time', $task->start_time); // Передаём start_time через сессию
+}
+
+
+
+
 
     public function fail(Task $task)
 {
