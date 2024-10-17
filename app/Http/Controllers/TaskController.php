@@ -242,6 +242,38 @@ public function startWork(Task $task)
 }
 
 
+public function freelancerComplete(Task $task)
+{
+    // Проверяем, что текущий пользователь — это фрилансер, который принял это задание
+    if (Auth::id() !== $task->acceptedBid->user_id) {
+        return redirect()->back()->with('error', 'Вы не можете завершить это задание.');
+    }
+
+    // Фиксируем время завершения задания
+    $task->completed_at = now();
+    $task->status = 'on_review'; // Устанавливаем статус "На проверке"
+    $task->save();
+
+    // Вычисляем разницу времени между предложенным сроком и временем завершения
+    $startTime = $task->start_time; // Время, когда задание было начато
+    $endTime = $task->completed_at; // Время завершения
+    $proposedDuration = Carbon::parse($startTime)
+        ->addDays($task->acceptedBid->days)  // Дни, предложенные фрилансером
+        ->addHours($task->acceptedBid->hours); // Часы, предложенные фрилансером
+
+    // Рассчитываем разницу между предложенным временем выполнения и фактическим
+    $difference = $proposedDuration->diffForHumans($endTime, ['parts' => 3]);
+
+    // Формируем сообщение в зависимости от того, раньше или позже задача выполнена
+    if ($endTime < $proposedDuration) {
+        $message = "Вы выполнили задание на {$difference} раньше срока.";
+    } else {
+        $message = "Вы выполнили задание с опозданием на {$difference}.";
+    }
+
+    // Возвращаем пользователя обратно на страницу задачи с выводом сообщения
+    return redirect()->route('tasks.show', $task)->with('success', $message);
+}
 
 
 

@@ -133,35 +133,44 @@
                         👎 Дизлайк ({{ $task->votes()->where('is_like', false)->count() }})
                     </button>
                 </form>
-            
+
                 <!-- Кнопки редактировать и удалить для автора задания -->
                 @if (Auth::id() == $task->user_id)
                     <form action="{{ route('tasks.edit', $task) }}" method="GET" style="display:inline;">
                         @csrf
                         <button type="submit" class="btn-warning">✏️ Редактировать</button>
                     </form>
-            
+
                     <form action="{{ route('tasks.destroy', $task) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn-danger">🗑️ Удалить</button>
                     </form>
-            
-                    <!-- Кнопки для управления статусом задания -->
-                    @if($task->in_progress && !$task->completed)
-                        <form action="{{ route('tasks.complete', $task) }}" method="POST" style="display:inline;">
-                            @csrf
-                            <button type="submit" class="btn-success">✅ Задание выполнено</button>
-                        </form>
-            
-                        <form action="{{ route('tasks.fail', $task) }}" method="POST" style="display:inline;">
-                            @csrf
-                            <button type="submit" class="btn-danger">❌ Задание провалено</button>
-                        </form>
-                    @endif
+                @endif
+
+                <!-- Кнопки для управления статусом задания -->
+                @if ($task->accepted_bid_id && !$task->in_progress && Auth::id() == $task->user_id)
+                    <!-- Кнопка "Приступить к заданию" для автора задания -->
+                    <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
+                    </form>
+                @endif
+
+                @if($task->in_progress && !$task->completed)
+                    <!-- Кнопка "Задание выполнено" -->
+                    <form action="{{ route('tasks.complete', $task) }}" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="btn-success">✅ Задание выполнено</button>
+                    </form>
+
+                    <!-- Кнопка "Задание провалено" -->
+                    <form action="{{ route('tasks.fail', $task) }}" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="btn-danger">❌ Задание провалено</button>
+                    </form>
                 @endif
             </div>
-            
             <br>
 
             <!-- Таймер -->
@@ -274,7 +283,7 @@
             });
         });
 
-        //let countdownTimer;
+        let countdownTimer;
 
         function startTimer(days, hours, startTime) {
     // Конвертируем время начала в миллисекунды (UTC)
@@ -299,7 +308,6 @@
     const endDate = new Date(endTime);
     const endTimeDisplay = document.getElementById('end_time_display');
     endTimeDisplay.innerHTML = `Предполагаемое время завершения: ${endDate.toUTCString()}`;
-
     // Обновление текущего времени каждую секунду
     setInterval(function() {
         const now = new Date(); // Получаем текущее время
@@ -331,8 +339,9 @@
 
     // Лог для проверки значений
     console.log("Переданные значения: дни = ", days, "часы = ", hours);
-}
 
+    
+}
 
         // Если задача в работе, запускаем таймер при загрузке страницы
         @if($task->in_progress && $task->start_time)
