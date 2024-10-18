@@ -112,16 +112,16 @@
             <strong> Срок:</strong> {{ $task->deadline->format('Y-m-d H:i:s') }}</p><br>
 
             <!-- Показать информацию о завершенной задаче и её рейтинг -->
-            @if ($task->completed && $task->rating)
-                <div class="task-rating" style="text-align: center">
-                    <p><strong>Задние выполнено и оценено на:</strong></p>
-                    <div class="rating-stars">
-                        @for ($i = 1; $i <= 10; $i++)
-                            <span class="star {{ $i <= $task->rating ? 'filled' : '' }}">★</span>
-                        @endfor
-                    </div>
-                </div><br>
-            @endif
+@if ($task->completed && $task->rating)
+<div class="task-rating" style="text-align: center">
+    <p><strong>Задание выполнено и оценено на:</strong></p>
+    <div class="rating-stars" style="display: flex; justify-content: center; align-items: center;">
+        @for ($i = 1; $i <= 10; $i++)
+            <span class="star {{ $i <= $task->rating ? 'filled' : '' }}" style="font-size: 24px;">★</span>
+        @endfor
+    </div>
+</div><br>
+@endif
 
             <!-- Кнопки управления заданием -->
             <div class="task-controls" style="text-align: center">
@@ -162,7 +162,7 @@
                     </form>
                 @endif
 
-                @if($task->in_progress && !$task->completed)
+                @if($task->in_progress && $task->status === 'on_review')
                     <!-- Кнопка "Задание выполнено" -->
                     <form action="{{ route('tasks.complete', $task) }}" method="POST" style="display:inline;">
                         @csrf
@@ -185,17 +185,29 @@
             </div>
         @endif      
             <!-- Таймер -->
+            @if ($task->status === 'in_progress') <!-- Убедитесь, что 'in_progress' - это правильное значение для статуса -->
             <div id="timer" class="timer" style="display:none;"></div>
             <p id="start_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Время начала -->
             <p id="end_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>   <!-- Время завершения -->
             <p id="current_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Текущее время UTC -->
+@endif
 <br> <hr>
             <!-- Раздел предложений -->
 <div class="bids-section">
-    <!-- Заголовок будет меняться в зависимости от наличия принятого предложения -->
     <h2 style="text-align:center; color:#029ac0">
-        {{ $task->accepted_bid_id ? 'Задание в работе' : 'Предложения от фрилансеров:' }}
+        @if ($task->status === 'completed')
+            Задание выполнено
+        @elseif ($task->status === 'on_review')
+            Задание на проверке
+        @elseif ($task->status === 'in_progress')
+            Задание в работе
+        @elseif ($task->accepted_bid_id)
+            Принятое предложение
+        @else
+            Предложения исполнителей
+        @endif
     </h2>
+    
 
     @if ($task->accepted_bid_id)
         <!-- Если есть принятое предложение, то выводим только его -->
@@ -208,14 +220,24 @@
             <p><strong>Время выполнения:</strong> {{ $acceptedBid->days }} дней {{ $acceptedBid->hours }} часов</p>
             <p><strong>Комментарий:</strong> {{ $acceptedBid->comment }}</p>
 
-            <!-- Кнопка для фрилансера "Приступить к заданию", если предложение принято -->
-            @if (Auth::id() == $acceptedBid->user_id && !$task->in_progress)
-                <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;" onsubmit="return startTimer({{ $acceptedBid->days }}, {{ $acceptedBid->hours }}, '{{ now() }}');">
-                    @csrf
-                    <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
-                </form>
-            @endif
-
+            <!-- Кнопка "Приступить к заданию" для фрилансера -->
+            @if ($task->accepted_bid_id && !$task->in_progress && Auth::id() == $task->acceptedBid->user_id)            
+            <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;">
+                @csrf
+                <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
+            </form>
+        @endif
+            <!-- Кнопка "Задание выполнено" для фрилансера -->
+            @if (Auth::id() == $acceptedBid->user_id)
+    @if ($task->status === 'in_progress' && !$task->completed)
+        <form action="{{ route('tasks.freelancer-complete', $task) }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="submit" class="btn-success">✅ Задание выполнено</button>
+        </form>
+    @elseif ($task->status === 'on_review')
+        <p style="text-align: center; color:#ffdf00"><span>Задание на проверке</span><p>
+    @endif
+@endif
         </div>
     @else
         <!-- Если предложение не принято, показываем все предложения -->
@@ -226,9 +248,9 @@
                 <p><strong>Время выполнения:</strong> {{ $bid->days }} дней {{ $bid->hours }} часов</p>
                 <p><strong>Комментарий:</strong> {{ $bid->comment }}</p>
 
-                <!-- Кнопка для автора задания "Принять предложение" -->
+                <!-- Кнопка "Принять предложение" -->
                 @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
-                    <br><form action="{{ route('bids.accept', $bid) }}" method="POST" style="display:inline;">
+                    <form action="{{ route('bids.accept', $bid) }}" method="POST" style="display:inline;">
                         @csrf
                         <button type="submit" class="btn btn-success">✔️ Принять предложение</button>
                     </form>
@@ -380,6 +402,12 @@
                 startTimer({{ $acceptedBid->days }}, {{ $acceptedBid->hours }}, '{{ $task->start_time }}');
             @endif
         @endif
+
+        function stopTimer() {
+    clearInterval(timer); // Здесь 'timer' — это переменная, где хранится ваш таймер
+}
+
+
     </script>
 
 

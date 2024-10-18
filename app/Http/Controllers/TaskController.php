@@ -202,13 +202,41 @@ class TaskController extends Controller
 
     public function complete(Task $task)
 {
-    // Убедитесь, что пользователь — это автор задания
-    if (Auth::id() == $task->user_id && $task->in_progress && !$task->completed) {
-        $task->completed = true;
-        $task->save();
+    // Проверяем, что текущий пользователь — это автор задания
+    if (Auth::id() !== $task->user_id) {
+        return redirect()->back()->with('error', 'Вы не можете завершить это задание.');
     }
-    return redirect()->back();
+
+    // Фиксируем время завершения задания
+    $task->completion_time = now();
+    $task->status = 'completed'; // Устанавливаем статус "Завершено"
+    $task->completed = true;
+    $task->save();
+
+    // Остановка таймера (если используется, например, через JavaScript)
+    // Логика остановки таймера может быть реализована на клиенте.
+
+    // Вычисляем разницу времени между предложенным сроком и временем завершения
+    $startTime = $task->start_time; // Время, когда задание было начато
+    $endTime = $task->completion_time; // Время завершения
+    $proposedDuration = Carbon::parse($startTime)
+        ->addDays($task->acceptedBid->days)  // Дни, предложенные фрилансером
+        ->addHours($task->acceptedBid->hours); // Часы, предложенные фрилансером
+
+    // Рассчитываем разницу между предложенным временем выполнения и фактическим
+    $difference = $proposedDuration->diffForHumans($endTime, ['parts' => 3]);
+
+    // Формируем сообщение в зависимости от того, раньше или позже задача выполнена
+    if ($endTime < $proposedDuration) {
+        $message = "Вы завершили задание на {$difference} раньше срока.";
+    } else {
+        $message = "Вы завершили задание с опозданием на {$difference}.";
+    }
+    // Возвращаем пользователя обратно на страницу задачи с выводом сообщения
+    return redirect()->route('tasks.show', $task)->with('success', $message);
+    
 }
+
 
 public function rate(Request $request, Task $task)
 {
@@ -237,6 +265,7 @@ public function startWork(Task $task)
     // Устанавливаем текущее время в UTC как время начала работы
     $task->start_time = now()->setTimezone('UTC'); // Указываем таймзону UTC
     $task->in_progress = true;
+    $task->status = 'in_progress'; // Устанавливаем статус как "in_progress"
     $task->save();
 
     // Перенаправляем на страницу с задачей с сообщением об успехе
@@ -244,6 +273,7 @@ public function startWork(Task $task)
         ->with('success', 'Задача теперь в работе.')
         ->with('start_time', $task->start_time); // Передаём start_time через сессию
 }
+
 
 
 
@@ -258,6 +288,10 @@ public function freelancerComplete(Task $task)
     $task->completed_at = now();
     $task->status = 'on_review'; // Устанавливаем статус "На проверке"
     $task->save();
+
+    // Остановка таймера (если используется, например, через JavaScript)
+    // Логика остановки таймера может быть реализована на клиенте, поэтому здесь это просто комментарий.
+    // Например, вы можете сохранить текущее время в отдельном поле или использовать событие JS для остановки.
 
     // Вычисляем разницу времени между предложенным сроком и временем завершения
     $startTime = $task->start_time; // Время, когда задание было начато
@@ -282,6 +316,7 @@ public function freelancerComplete(Task $task)
 
 
 
+
     public function fail(Task $task)
 {
     // Проверка, что только владелец задания может пометить его как проваленное
@@ -292,6 +327,7 @@ public function freelancerComplete(Task $task)
     // Логика обработки проваленного задания
     $task->in_progress = false;
     $task->completed = false;
+    $task->status = false;
     $task->accepted_bid_id = null;
     $task->save();
 

@@ -205,10 +205,11 @@ namespace App\Models{
  * @property int|null $category_id
  * @property string|null $start_time
  * @property int $in_progress
- * @property int $completed
+ * @property int|null $completed
  * @property string|null $deadline
  * @property string|null $completion_time
  * @property int|null $rating
+ * @property string|null $completed_at
  * @property-read \App\Models\Bid|null $acceptedBid
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Bid> $bids
  * @property-read int|null $bids_count
@@ -223,6 +224,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereBudget($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCompleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereCompletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCompletionTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereDeadline($value)

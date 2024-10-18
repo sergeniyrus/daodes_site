@@ -125,7 +125,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{taskCategory}/edit', [TasksCategoryController::class, 'edit'])->name('task_categories.edit');
         Route::put('/{taskCategory}', [TasksCategoryController::class, 'update'])->name('task_categories.update');
         Route::delete('/{taskCategory}', [TasksCategoryController::class, 'destroy'])->name('task_categories.destroy');
-        Route::post('/tasks/{task}/freelancer-complete', [TaskController::class, 'freelancerComplete'])->name('tasks.freelancer_complete');
+        Route::post('/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
+ //Для автора задания
+        Route::post('/tasks/{task}/freelancer-complete', [TaskController::class, 'freelancerComplete'])->name('tasks.freelancer-complete'); //Для фрилансера
+
+        
+
 
     });
 });

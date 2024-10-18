@@ -19,6 +19,7 @@ class Task extends Model
         'accepted_bid_id',
         'completion_time',
         'rating', // Добавлено новое поле
+        'completed',
     ];
     // Связь с пользователем
     public function user()
