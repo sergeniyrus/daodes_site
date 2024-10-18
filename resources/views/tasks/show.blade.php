@@ -177,47 +177,69 @@
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
-        @endif
-<br>        
+        @endif      
             <!-- Таймер -->
             <div id="timer" class="timer" style="display:none;"></div>
             <p id="start_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Время начала -->
             <p id="end_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>   <!-- Время завершения -->
             <p id="current_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Текущее время UTC -->
-
+<br> <hr>
             <!-- Раздел предложений -->
-            <div class="bids-section">
-                <h3>Предложения</h3><br>
-                @foreach ($task->bids as $bid)
-                    <div class="bid">
-                        <p><strong>Фрилансер:</strong> {{ $bid->user->name }}</p>
-                        <p><strong>Цена:</strong> {{ $bid->price }} руб.</p>
-                        <p><strong>Время выполнения:</strong> {{ $bid->days }} дней {{ $bid->hours }} часов</p>
-                        <p><strong>Комментарий:</strong> {{ $bid->comment }}</p>
-                        <br>
+<div class="bids-section">
+    <!-- Заголовок будет меняться в зависимости от наличия принятого предложения -->
+    <h3 style="text-align:center">
+        {{ $task->accepted_bid_id ? 'Принятое предложение:' : 'Предложения от фрилансеров:' }}
+    </h3>
 
-                        <!-- Кнопка для фрилансера "Приступить к заданию", если предложение принято -->
-                        @if (Auth::id() == $bid->user_id && $task->accepted_bid_id == $bid->id)
-                            @if (!$task->in_progress)
-                                <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;" onsubmit="return startTimer({{ $bid->days }}, {{ $bid->hours }}, '{{ now() }}');">
-                                    @csrf
-                                    <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
-                                </form>
-                            @endif
-                        @endif
+    @if ($task->accepted_bid_id)
+        <!-- Если есть принятое предложение, то выводим только его -->
+        @php
+            $acceptedBid = $task->bids()->where('id', $task->accepted_bid_id)->first();
+        @endphp
+        <div class="bid">
+            <p><strong>Фрилансер:</strong> {{ $acceptedBid->user->name }}</p>
+            <p><strong>Цена:</strong> {{ $acceptedBid->price }} руб.</p>
+            <p><strong>Время выполнения:</strong> {{ $acceptedBid->days }} дней {{ $acceptedBid->hours }} часов</p>
+            <p><strong>Комментарий:</strong> {{ $acceptedBid->comment }}</p>
 
-                        <!-- Кнопка для автора задания "Принять предложение" -->
-                        @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
-                            <form action="{{ route('bids.accept', $bid) }}" method="POST" style="display:inline;">
-                                @csrf
-                                <button type="submit" class="btn btn-success">
-                                    ✔️ Принять предложение
-                                </button>
-                            </form>
-                        @endif
-                    </div>
-                @endforeach
+            <!-- Кнопка для фрилансера "Приступить к заданию", если предложение принято -->
+            @if (Auth::id() == $acceptedBid->user_id && !$task->in_progress)
+                <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;" onsubmit="return startTimer({{ $acceptedBid->days }}, {{ $acceptedBid->hours }}, '{{ now() }}');">
+                    @csrf
+                    <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
+                </form>
+            @endif
+        </div>
+    @else
+        <!-- Если предложение не принято, показываем все предложения -->
+        @foreach ($task->bids as $bid)
+            <div class="bid">
+                <p><strong>Фрилансер:</strong> {{ $bid->user->name }}</p>
+                <p><strong>Цена:</strong> {{ $bid->price }} руб.</p>
+                <p><strong>Время выполнения:</strong> {{ $bid->days }} дней {{ $bid->hours }} часов</p>
+                <p><strong>Комментарий:</strong> {{ $bid->comment }}</p>
+
+                <!-- Кнопка для фрилансера "Приступить к заданию", если предложение принято -->
+                @if (Auth::id() == $bid->user_id && $task->accepted_bid_id == $bid->id)
+                    @if (!$task->in_progress)
+                        <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;" onsubmit="return startTimer({{ $bid->days }}, {{ $bid->hours }}, '{{ now() }}');">
+                            @csrf
+                            <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
+                        </form>
+                    @endif
+                @endif
+
+                <!-- Кнопка для автора задания "Принять предложение" -->
+                @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
+                    <br><form action="{{ route('bids.accept', $bid) }}" method="POST" style="display:inline;">
+                        @csrf
+                        <button type="submit" class="btn btn-success">✔️ Принять предложение</button>
+                    </form>
+                @endif
             </div>
+        @endforeach
+    @endif
+</div>
 
             <!-- Раздел оценивания -->
             @if ($task->completed && Auth::id() == $task->user_id && !$task->rating)
