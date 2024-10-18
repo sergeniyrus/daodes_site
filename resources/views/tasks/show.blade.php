@@ -10,8 +10,6 @@
         .bid,
         form {
             background-color: #3a3b3c;
-            border-radius: 10px;
-            border: 2px solid #f8f9fa;
             padding: 20px;
             margin-bottom: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -96,20 +94,27 @@
             color: #f8f9fa;
             margin-top: 10px;
         }
-    </style>
+        .task-details, .bid, .task-details  {
+            border-radius: 10px;
+            border: 2px solid #f8f9fa;
+        }
 
+    </style>
+<!-- Задание биржи-->
     <div class="container my-5">
         <div class="task-details">
-            <h1>{{ $task->title }}</h1>
+            <div class="bid">
+            <h1 style="text-align: center">{{ $task->title }}</h1>
             <p>{{ $task->description }}</p>
-            <p><strong>Категория:</strong> {{ $task->category ? $task->category->name : 'Без категории' }}</p>
-            <p><strong>Бюджет:</strong> {{ $task->budget }} руб.</p>
-            <p><strong>Срок:</strong> {{ $task->deadline->format('Y-m-d H:i:s') }}</p><br>
+            </div>
+            <p style="text-align: center"><strong>Категория:</strong> {{ $task->category ? $task->category->name : 'Без категории' }}
+            <strong> Бюджет:</strong> {{ $task->budget }} руб.
+            <strong> Срок:</strong> {{ $task->deadline->format('Y-m-d H:i:s') }}</p><br>
 
             <!-- Показать информацию о завершенной задаче и её рейтинг -->
             @if ($task->completed && $task->rating)
-                <div class="task-rating">
-                    <p><strong>Задача выполнена и оценена на:</strong></p>
+                <div class="task-rating" style="text-align: center">
+                    <p><strong>Задние выполнено и оценено на:</strong></p>
                     <div class="rating-stars">
                         @for ($i = 1; $i <= 10; $i++)
                             <span class="star {{ $i <= $task->rating ? 'filled' : '' }}">★</span>
@@ -119,7 +124,7 @@
             @endif
 
             <!-- Кнопки управления заданием -->
-            <div class="task-controls">
+            <div class="task-controls" style="text-align: center">
                 <!-- Лайк и дизлайк -->
                 <form action="{{ route('tasks.like', $task) }}" method="POST" style="display:inline;">
                     @csrf
@@ -146,7 +151,7 @@
                         @method('DELETE')
                         <button type="submit" class="btn-danger">🗑️ Удалить</button>
                     </form>
-                @endif
+                
 
                 <!-- Кнопки для управления статусом задания -->
                 @if ($task->accepted_bid_id && !$task->in_progress && Auth::id() == $task->user_id)
@@ -170,11 +175,12 @@
                         <button type="submit" class="btn-danger">❌ Задание провалено</button>
                     </form>
                 @endif
+                @endif
             </div>
             <br>
             <!-- вывод информационных сообщений  --> 
             @if (session('success'))
-            <div class="alert alert-success">
+            <div class="alert alert-success" style="color:#ffdf00; text-align:center">
                 {{ session('success') }}
             </div>
         @endif      
@@ -187,9 +193,9 @@
             <!-- Раздел предложений -->
 <div class="bids-section">
     <!-- Заголовок будет меняться в зависимости от наличия принятого предложения -->
-    <h3 style="text-align:center">
-        {{ $task->accepted_bid_id ? 'Принятое предложение:' : 'Предложения от фрилансеров:' }}
-    </h3>
+    <h2 style="text-align:center; color:#029ac0">
+        {{ $task->accepted_bid_id ? 'Задание в работе' : 'Предложения от фрилансеров:' }}
+    </h2>
 
     @if ($task->accepted_bid_id)
         <!-- Если есть принятое предложение, то выводим только его -->
@@ -209,6 +215,7 @@
                     <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
                 </form>
             @endif
+
         </div>
     @else
         <!-- Если предложение не принято, показываем все предложения -->
@@ -218,16 +225,6 @@
                 <p><strong>Цена:</strong> {{ $bid->price }} руб.</p>
                 <p><strong>Время выполнения:</strong> {{ $bid->days }} дней {{ $bid->hours }} часов</p>
                 <p><strong>Комментарий:</strong> {{ $bid->comment }}</p>
-
-                <!-- Кнопка для фрилансера "Приступить к заданию", если предложение принято -->
-                @if (Auth::id() == $bid->user_id && $task->accepted_bid_id == $bid->id)
-                    @if (!$task->in_progress)
-                        <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;" onsubmit="return startTimer({{ $bid->days }}, {{ $bid->hours }}, '{{ now() }}');">
-                            @csrf
-                            <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
-                        </form>
-                    @endif
-                @endif
 
                 <!-- Кнопка для автора задания "Принять предложение" -->
                 @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
@@ -261,7 +258,7 @@
             <!-- Раздел для подачи предложения -->
             @if (Auth::check() && Auth::id() !== $task->user_id && !$task->accepted_bid_id)
                 @if ($task->bids()->where('user_id', Auth::id())->exists())
-                    <p>Вы уже подали предложение на это задание.</p>
+                    <p style="text-align: center; color:#ffdf00">Вы уже подали предложение на это задание.</p>
                 @else
                     <div class="bid-form">
                         <h3>Подать предложение</h3>
@@ -312,7 +309,8 @@
         });
 
     //скрипт таймера и времени
-        let countdownTimer;
+
+    let countdownTimer;
 
         function startTimer(days, hours, startTime) {
     // Конвертируем время начала в миллисекунды (UTC)
@@ -383,5 +381,6 @@
             @endif
         @endif
     </script>
+
 
 @endsection

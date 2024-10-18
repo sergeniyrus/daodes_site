@@ -226,7 +226,11 @@ public function rate(Request $request, Task $task)
 public function startWork(Task $task)
 {
     // Проверяем, может ли текущий пользователь начать работу над задачей
-    if (Auth::id() !== $task->user_id || $task->accepted_bid_id === null) {
+    if (
+        (Auth::id() !== $task->user_id && Auth::id() !== $task->acceptedBid->user_id) 
+        || $task->accepted_bid_id === null 
+        || $task->in_progress
+    ) {
         return redirect()->back()->withErrors('Вы не можете начать работу над этой задачей.');
     }
 
@@ -240,6 +244,7 @@ public function startWork(Task $task)
         ->with('success', 'Задача теперь в работе.')
         ->with('start_time', $task->start_time); // Передаём start_time через сессию
 }
+
 
 
 public function freelancerComplete(Task $task)
