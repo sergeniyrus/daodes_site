@@ -566,9 +566,9 @@ img {
   width: 80%;
   height: auto;
   padding: 5px;
-  border: #eee solid 2px;
+  /* border: #eee solid 2px;
   border-radius: 25px;
-  background-color: #0B0C18;
+  background-color: #0B0C18; */
 }
 
 .item-3 {

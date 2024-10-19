@@ -1779,10 +1779,14 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
                             <x-nav-link :href="route('add_news')" :active="request()->routeIs('add_news')">
                                 {{-- {{ __('Create News') }}--}} <img src="/img/bottom/blog.png" title="Добавить новость"> 
                             </x-nav-link>
+                            <x-nav-link :href="route('tasks.create')" :active="request()->routeIs('tasks.create')">
+                                <img src="/img/bottom/blog.png" title="Добавить задание">
+                            </x-nav-link>
                         @endif
                         <x-nav-link :href="route('add_offers')" :active="request()->routeIs('add_offers')">
                             {{-- {{ __('Create Offer') }} --}} <img src="/img/bottom/blog.png" title="Добавить предложение">
                         </x-nav-link>
+
                     @endauth
                 
             </div>
