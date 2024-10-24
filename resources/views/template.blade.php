@@ -67,9 +67,9 @@
         body {
             margin: 0;
             color: #ffffff;
-            background-color: #252441;
+            background-color: #b3b2d3;
              background-image: url("https://ipfs.sweb.ru/ipfs/QmTpCH5y3AkDhVBgDLUKuTRbkKV69EEvGzzgwLhQMtsWZ3?filename=bg01.jpg");
-  opacity: 0.75;
+  opacity: 1;
   background-position: center center;
   background-repeat: no-repeat;
   background-attachment: fixed;
@@ -107,10 +107,10 @@
             display: inline-flex;
             justify-content: center;
             align-items: center;
-            background-color: #0b0c18
+            /* background-color: #0b0c18 */
         }
 
-        .logo_name {
+        /* .logo_name {
             font-family: StandardPoster;
             font-size: min(max(100%, 5vw), 700%);
             font-weight: 400;
@@ -125,7 +125,7 @@
                 #9c9c9c 5px 5px 1px, #9c9c9c 6px 6px 1px, #9c9c9c 1px 7px 1px,
                 rgba(16, 16, 16, 0.4) 1px 18px 6px, rgba(16, 16, 16, 0.2) 1px 22px 10px,
                 rgba(16, 16, 16, 0.2) 1px 26px 35px, rgba(16, 16, 16, 0.4) 1px 30px 65px;
-        }
+        } */
 
         .header-2 {
             display: none;
@@ -135,10 +135,10 @@
             justify-content: space-between;
         }
 
-        .header-logo-2 {
+        /* .header-logo-2 {
             width: 55px;
             height: auto;
-            align-items: start;
+            align-items: start; */
         }
 
         .header-title-2 {
@@ -148,7 +148,7 @@
             align-items: center;
         }
 
-        .logo_name-2 {
+        /* .logo_name-2 {
             font-family: StandardPoster;
             font-size: min(max(70%, 3vw), 170%);
             font-weight: 400;
@@ -158,7 +158,7 @@
             transition: all 0.3s ease;
             letter-spacing: 5px;
             color: #ffffff;
-        }
+        } */
 
         .admin_menu {
             display: flex;
@@ -235,11 +235,11 @@
             margin: 0 auto;
         }
 
-        .header-menu {
+        /* .header-menu {
             margin: 1% auto 0 auto;
             width: 97%;
             height: auto;
-        }
+        } */
 
         .header-menu-cont-bord {
             background: rgba(40, 61, 142, 0.78);
@@ -660,9 +660,9 @@
 
         .modal-content {
             background-color: #000000cf;
-            margin: 20px auto 0 auto;
+            margin: 20px;
             border: 1px solid rgb(255, 255, 255);
-            width: 25%;
+            max-width: 80%%;
             min-width: 300px;
             border-radius: 15px;
         }
@@ -1556,8 +1556,8 @@
 
 .header-title a {
   display: inline-block;
-  width: 100px; /* Задание размера кнопок */
-  height: 100px;
+  width: 120px; /* Задание размера кнопок */
+  height: 120px;
   text-decoration: none;
   color: #fff;
   /*border-radius: 50%;  Округление до круга */
@@ -1584,10 +1584,10 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
 }
 
 /* Скрытое меню */
-.header-title .dropdown-menu1 {
+/* .header-title .dropdown-menu1 {
   display: none;
   position: absolute;
-  top: 200px; /* Расположение под кнопкой */
+  top: 200px; 
   left: 90%;
   width: auto;
   transform: translateX(-50%);
@@ -1597,8 +1597,8 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
   border: #eeeeee 2px solid;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   z-index: 10;
-  text-align: center; /* Центровка текста внутри меню */
-}
+  text-align: center; Центровка текста внутри меню
+} */
 
 .header-title .dropdown-menu a {
   display: inline-block; /* Делаем ссылки блочными элементами */
@@ -1626,7 +1626,7 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
 /* Адаптивные стили для планшетов */
 @media (max-width: 768px) {
   .header-title {
-      flex: 0 0 45%; /* Два элемента в строке */
+      /* flex: 0 0 45%; Два элемента в строке */
       margin-bottom: 10px;
   }
   
@@ -1648,8 +1648,8 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
   .header-title {
       flex: 0 0 33%; /* Три элемента в строке на маленьких экранах */
       margin-bottom: 10px;
-      top: 300px;
-    left: 80%;
+      /* top: 300px;
+    left: 80%; */
   }
 
   .header-title a {
@@ -1708,90 +1708,7 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
     </div>
     <!-- Кнопочное меню -->
 
-    <div class="knopkodav">
-        <div class="header-title">
-            <a href="https://daodes.space/home" title="Главная"><span class="logo_name"><img src="/img/bottom/home.png"></span></a>
-        </div>
-        <div class="header-title">
-            <a href="https://daodes.space/news" title="Новости"><span class="logo_name"><img src="/img/bottom/news.jpg"></span></a>
-        </div>
-        <div class="header-title">
-            <a href="https://daodes.space/dao" title="Принятие решений"><span class="logo_name"><img src="/img/bottom/dd.jpg"></span></a>
-        </div>
-        <div class="header-title">
-            <a href="https://daodes.space/tasks" title="Биржа заданий"><span class="logo_name"><img src="/img/bottom/tasks2.png"></span></a>
-        </div>
-
-        <div class="header-title">
-            <a href="https://daodes.space/wallet" title="Кошелёк"><span ><img src="/img/bottom/wallet2.png"></span></a>
-        </div>
-
-        <div class="header-title">
-            <a href="https://daodes.space/paper" title="Белая бумага"><span ><img src="/img/bottom/paper.png"></span></a>
-        </div>
-
-        <div class="header-title">
-            <a href="https://daodes.space/paper" title="Дорожная карта"><span ><img src="/img/bottom/roadmap.png"></span></a>
-        </div>
-
-      @if (Route::has('login'))
-@auth        
-        
-        <div class="header-title esho">
-            <a href="#" class="menu-button" title="Раскрыть"><span ><img src="/img/bottom/add_post.png"></span></a>
-            <div class="dropdown-menu1">
-                <div class="header-title1">
-                    <a href="https://daodes.space/profile" >
-                      <span ><img src="/img/bottom/user.png" title="Профиль">
-                      </span>
-                    </a>
-                </div>
-                <div class="header-title1">
-                  <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                    @csrf
-                </form>
-                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                    <img src="/img/bottom/exit.png" title="Выход"></a>
-                </a>
-    @else
-    <div class="header-title">
-      <a href="https://daodes.space/login" title="Вход"><span ><img src="/img/bottom/enter.png"></span></a>
-  </div>   
-  <div class="header-title">
-    <a href="https://daodes.space/register" title="Регистрация"><span ><img src="/img/bottom/add-user.png"></span></a>
-</div>     
-@endauth    
-@endif                  
-                </div>
-                {{-- <div class="header-title1">
-                    <a href="https://daodes.space/link2" ><span ><img
-                                src="/img/bottom/work.png"></span></a>
-                </div> --}}
-
-                @auth
-                        <?php
-                        $rol = DB::table('users')
-                            ->where('name', Auth::user()->name)
-                            ->select('rang_access')
-                            ->first();
-                        ?>
-                        @if ($rol->rang_access >= 3)
-                            <x-nav-link :href="route('add_news')" :active="request()->routeIs('add_news')">
-                                {{-- {{ __('Create News') }}--}} <img src="/img/bottom/blog.png" title="Добавить новость"> 
-                            </x-nav-link>
-                            <x-nav-link :href="route('tasks.create')" :active="request()->routeIs('tasks.create')">
-                                <img src="/img/bottom/blog.png" title="Добавить задание">
-                            </x-nav-link>
-                        @endif
-                        <x-nav-link :href="route('add_offers')" :active="request()->routeIs('add_offers')">
-                            {{-- {{ __('Create Offer') }} --}} <img src="/img/bottom/blog.png" title="Добавить предложение">
-                        </x-nav-link>
-
-                    @endauth
-                
-            </div>
-        </div>
-    </div>
+    @include('menu')
 
 
 
@@ -1801,27 +1718,8 @@ box-shadow: 0px 5px 10px 2px rgba(244, 247, 36, 0.2) inset;
     @yield('main')
 
     <!-- Подвал-->
-    <footer>
-        <div class="footer">
-            <div class="icons">
-                <div class="icons-img">
-                    <a href="https://t.me/des_info_chat"><img src="/img/icons_ss/Telegram_white.svg"
-                            alt="" /></a>
-                </div>
-                <div class="icons-img">
-                    <a href="https://vk.com/daodes_space"><img src="/img/icons_ss/VK_white.svg" alt="" /></a>
-                </div>
-                <div class="icons-img">
-                    <a href="https://www.youtube.com/channel/UCukOsQwfyqApUuFX8UtisTg"><img
-                            src="/img/icons_ss/Youtube_white.svg" alt="" /></a>
-                </div>
-            </div>
-            <div class="copy">
-                <h4>DAO DES 2024</h4>
-            </div>
-        </div>
-        <a href="#" class="scrollup">Наверх</a>
-    </footer>
+    @include('footer')
+    
 
 </body>
 

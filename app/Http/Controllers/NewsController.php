@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use App\Models\News;
 
 class NewsController extends Controller
 {
@@ -36,15 +37,10 @@ class NewsController extends Controller
             'category' => ['required', 'integer'],
             'filename' => ['nullable', 'image', 'max:2048']
         ]);
-
+        var_dump($validate); // Для проверки данных, прошедших валидацию
         $img = 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
 
-        if ($request->hasFile('filename')) {
-            $img = $this->uploadToIPFS($request->file('filename'));
-        }
-
-        DB::table('news')->insert([
-            'created_at' => now(),
+        $news = News::create([
             'title' => $validate['title'],
             'content' => $validate['content'],
             'category_id' => $validate['category'],
@@ -53,9 +49,21 @@ class NewsController extends Controller
             'views' => 0
         ]);
 
+        // DB::table('news')->insert([
+        //     'created_at' => now(),
+        //     'title' => $validate['title'],
+        //     'content' => $validate['content'],
+        //     'category_id' => $validate['category'],
+        //     'user_id' => Auth::id(),
+        //     'img' => $img,
+        //     'views' => 0
+        // ]);
+
         $id = DB::table('news')->latest()->value('id');
         $post = 'news';
         $action = 'create';
+
+        
 
         return redirect()->route('good', ['post' => $post, 'id' => $id, 'action' => $action]);
     }

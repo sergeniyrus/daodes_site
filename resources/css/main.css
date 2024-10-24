@@ -53,152 +53,7 @@ img {
   display: inline-flex;
 }
 
-.knopkodav {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 10px;
-  width: 100%; /* На всю ширину экрана */
-  box-sizing: border-box;
-  border: 2px solid #ccc; /* Рамка */
-  border-radius: 8px; /* Закругление углов */
-  flex-wrap: wrap; /* Для переноса элементов на меньших экранах */
-}
-
-.header-title {
-  flex: 1;
-  text-align: center;
-  padding: 10px;
-}
-
-.header-title a {
-  display: inline-block;
-  width: 100px; /* Задание размера кнопок */
-  height: 100px;
-  text-decoration: none;
-  color: #fff;
- /* border-radius: 50%;  Округление до круга */
-  /*overflow: hidden;  Обрезка изображения по кругу */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
-  border: 1px solid #0000ff; /* Синяя рамка */
-}
-
-.header-title a img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; /* Обеспечивает покрытие всего элемента изображением */
- /* border-radius: 50%;  Округление изображений */
-}
-
-.header-title a:active {
-  transform: scale(1.5); /* Немного большее увеличение при нажатии */
-}
-
-/* Скрытое меню */
-.header-title .dropdown-menu1 {
-  display: none;
-  position: absolute;
-  top: 200px; /* Расположение под кнопкой */
-  left: 90%;
-  width: auto;
-  transform: translateX(-50%);
-  background-color: #0B0C18;
-  padding: 10px;
-  border-radius: 8px;
-  border: #eeeeee 2px solid;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  text-align: center; /* Центровка текста внутри меню */
-}
-
-.header-title .dropdown-menu a {
-  display: inline-block; /* Делаем ссылки блочными элементами */
-  margin-bottom: 10px;
-  text-align: center; /* Центровка внутри ссылок */
-}
-
-.header-title .dropdown-menu a img {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  /* border-radius: 50%; */
-  border: 1px solid #0000ff;
-}
-
-/* Показать меню при клике */
-.header-title.esho.active .dropdown-menu1 {
-  display: block;
-}
-
-/* Адаптивные стили для планшетов */
-@media (max-width: 768px) {
-  .header-title {
-      flex: 0 0 45%; /* Два элемента в строке */
-      margin-bottom: 10px;
-  }
-
-  .dropdown-menu1{
-    top: 300px
-  }
-  
-  .header-title a {
-      width: 80px; /* Уменьшение размера кнопок */
-      height: 80px;
-  }
-}
-
 /* Адаптивные стили для мобильных телефонов */
-@media (max-width: 480px) {
-  .knopkodav {
-      justify-content: center; /* Выровнять элементы по центру */
-  }
-
-  .header-title {
-      flex: 0 0 33%; /* Три элемента в строке на маленьких экранах */
-      margin-bottom: 10px;
-  }
-
-  .header-title a {
-      width: 70px; /* Ещё большее уменьшение размера кнопок */
-      height: 70px;
-  }
-}
-
-
-
-
-/* Добавляем фоновое изображение для каждого блока */
-.header-title.home {
-  background-image: url('home-bg.jpg'); /* Замените на URL вашего изображения */
-  background-size: cover;
-  background-position: center;
-  border-radius: 50%;
-  border: #0000ff 1px;
-}
-
-.header-title.news {
-  background-image: url('news-bg.jpg'); /* Замените на URL вашего изображения */
-  background-size: cover;
-  border: #0000ff 1px;
-  border-radius: 50%;
-  background-position: center;
-}
-
-.header-title.dao {
-  background-image: url('/img/main/daodes.jpg'); /* Замените на URL вашего изображения */
-  background-size: cover;
-  background-position: center;
-  border: #0000ff 1px;
-  border-radius: 50%;
-}
-
-.header-title a:hover {
-  background-color: rgba(0, 0, 0, 0.3); /* Подсветка фона при наведении */
-  border-radius: 4px; /* Немного скруглим углы у подсветки */
-}
 
 
 
@@ -208,7 +63,13 @@ img {
 
 
 
-.logo_name {
+
+
+
+
+
+
+  /* .logo_name {
   font-family: StandardPoster;
   font-size: min(max(100%, 5vw), 700%);
   font-weight: 400;
@@ -223,7 +84,7 @@ img {
     #9c9c9c 5px 5px 1px, #9c9c9c 6px 6px 1px, #9c9c9c 1px 7px 1px,
     rgba(16, 16, 16, 0.4) 1px 18px 6px, rgba(16, 16, 16, 0.2) 1px 22px 10px,
     rgba(16, 16, 16, 0.2) 1px 26px 35px, rgba(16, 16, 16, 0.4) 1px 30px 65px;
-}
+} */
 
 .header-2 {
   display: none;
@@ -246,7 +107,7 @@ img {
   align-items: center;
 }
 
-.logo_name-2 {
+/* .logo_name-2 {
   font-family: StandardPoster;
   font-size: min(max(70%, 3vw), 170%);
   font-weight: 400;
@@ -256,7 +117,7 @@ img {
   transition: all 0.3s ease;
   letter-spacing: 5px;
   color: #ffffff;
-}
+} */
 
 .admin_menu {
   display: flex;
@@ -333,11 +194,11 @@ img {
   margin: 0 auto;
 }
 
-.header-menu {
+/* .header-menu {
   margin: 1% auto 0 auto;
   width: 97%;
   height: auto;
-}
+} */
 
 .header-menu-cont-bord {
   background: rgba(40, 61, 142, 0.78);
@@ -726,6 +587,8 @@ img {
 /*  окно для входа регистрации сброса пароля */
 .imgcontainer {
   text-align: center;
+  margin: 0 auto;
+  width: 90%;
 }
 
 img.avatar {
@@ -741,9 +604,9 @@ img.avatar {
 
 .modal-content {
   background-color: #000000cf;
-  margin: 20px auto 0 auto;
+  margin: 20px auto;
   border: 1px solid rgb(255, 255, 255);
-  width: 25%;
+  width: 90%;
   min-width: 300px;
   border-radius: 15px;
 }

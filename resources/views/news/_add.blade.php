@@ -166,66 +166,9 @@
         <div class="redactor">
             <textarea id="editor" name="content" rows="20" cols="100" placeholder="Введите текст новости, возможно использование html тегов"></textarea><br>
         </div>
-        <script>
-            ClassicEditor
-                .create(document.querySelector('#editor'), {
-                    // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
-                })
-                .then(editor => {
-                    window.editor = editor;
-                })
-                .catch(err => {
-                    console.error(err.stack);
-                });
-
-            let cropper;
-
-            document.querySelector('.custom-file-button').addEventListener('click', function() {
-                document.getElementById('file-input').click();
-            });
-
-            document.getElementById('file-input').addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        document.getElementById('crop-container').style.display = 'block';
-                        const cropImage = document.getElementById('crop-image');
-                        cropImage.src = e.target.result;
-                        cropper = new Cropper(cropImage, {
-                            aspectRatio: 1,
-                            viewMode: 1,
-                            preview: '#preview',
-                        });
-                    }
-                    reader.readAsDataURL(file);
-                }
-                const fileName = this.files.length > 0 ? Array.from(this.files).map(f => f.name).join(', ') : 'Файлы не выбраны';
-                document.getElementById('file-name').textContent = fileName;
-            });
-
-            document.getElementById('news-form').addEventListener('submit', function(event) {
-                if (cropper) {
-                    const canvas = cropper.getCroppedCanvas();
-                    canvas.toBlob(function(blob) {
-                        const fileInputElement = document.getElementById('file-input');
-                        const file = new File([blob], 'cropped.png', { type: 'image/png' });
-
-                        // Create a DataTransfer to add the file to the file input
-                        const dataTransfer = new DataTransfer();
-                        dataTransfer.items.add(file);
-                        fileInputElement.files = dataTransfer.files;
-
-                        // Now the form can be submitted
-                        document.getElementById('news-form').submit();
-                    });
-                    event.preventDefault(); // Prevent the form from submitting until the blob is ready
-                }
-            });
-        </script>
+        
         <br>
-        <button
-            class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">Создать</button>
+        <button>Создать</button>
     </form><br>
     <div class="varn">
         <p>Изображение должно иметь размер 1:1</p>
@@ -233,4 +176,63 @@
     </div>
     <br>
 </div>
+
+<script>
+    ClassicEditor
+        .create(document.querySelector('#editor'), {
+            // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
+        })
+        .then(editor => {
+            window.editor = editor;
+        })
+        .catch(err => {
+            console.error(err.stack);
+        });
+
+    let cropper;
+
+    document.querySelector('.custom-file-button').addEventListener('click', function() {
+        document.getElementById('file-input').click();
+    });
+
+    document.getElementById('file-input').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('crop-container').style.display = 'block';
+                const cropImage = document.getElementById('crop-image');
+                cropImage.src = e.target.result;
+                cropper = new Cropper(cropImage, {
+                    aspectRatio: 1,
+                    viewMode: 1,
+                    preview: '#preview',
+                });
+            }
+            reader.readAsDataURL(file);
+        }
+        const fileName = this.files.length > 0 ? Array.from(this.files).map(f => f.name).join(', ') : 'Файлы не выбраны';
+        document.getElementById('file-name').textContent = fileName;
+    });
+
+    document.getElementById('news-form').addEventListener('submit', function(event) {
+        if (cropper) {
+            const canvas = cropper.getCroppedCanvas();
+            canvas.toBlob(function(blob) {
+                const fileInputElement = document.getElementById('file-input');
+                const file = new File([blob], 'cropped.png', { type: 'image/png' });
+
+                // Create a DataTransfer to add the file to the file input
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                fileInputElement.files = dataTransfer.files;
+
+                // Now the form can be submitted
+                document.getElementById('news-form').submit();
+            });
+            event.preventDefault(); // Prevent the form from submitting until the blob is ready
+        }
+    });
+</script>
+
 @endsection

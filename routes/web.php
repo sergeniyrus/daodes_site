@@ -19,7 +19,7 @@ use App\Http\Controllers\BidController;
 Route::get('/', function () {
     return view('home');
 });
-Route::get('good/{post}/{id}/{action}', 'App\Http\Controllers\HomeController@good') ->name(name:'good');
+Route::get('good/{post}/{id}/{action}', 'App\Http\Controllers\HomeController@good') ->name('good');
 
 //home c перебросом на стандартную главную
 Route::get('home', 'App\Http\Controllers\HomeController@home')->name(name:'home');

@@ -9,10 +9,11 @@
         .task-details,
         .bid,
         form {
-            background-color: #3a3b3c;
+            background-color: #0b0c18ce;
             padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin:0px auto 20px auto;
+            /* box-shadow: 0 4px 8px rgba(238, 255, 5, 0.1); */
+            width: 90%;
         }
 
         label {
@@ -21,52 +22,16 @@
 
         input,
         textarea {
-            background-color: #494a4b;
+            background-color: #000000;
             color: #fff;
-            border: 1px solid #6c757d;
+            border: 1px solid #a0ff08;
             border-radius: 5px;
             width: 100%;
             padding: 10px;
-            margin-bottom: 15px;
+            margin: 10px auto 15px auto;
         }
 
-        button {
-            background-color: #007bff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: #fff;
-            cursor: pointer;
-            font-size: 1rem;
-            margin-right: 10px;
-        }
-
-        button:hover {
-            background-color: #0056b3;
-        }
-
-        .btn-warning {
-            background-color: #02bac0;
-            color: #212529;
-        }
-
-        .btn-danger {
-            background-color: #dc3545;
-            color: #fff;
-        }
-
-        .btn-success {
-            background-color: #28a745;
-            color: #fff;
-        }
-
-        .btn-danger:hover,
-        .btn-warning:hover,
-        .btn-success:hover {
-            filter: brightness(0.9);
-        }
-
-        .rating-stars {
+                .rating-stars {
             display: flex;
             gap: 5px;
         }
@@ -94,10 +59,74 @@
             color: #f8f9fa;
             margin-top: 10px;
         }
-        .task-details, .bid, .task-details  {
+        .task-details {
             border-radius: 10px;
             border: 2px solid #f8f9fa;
+            
         }
+
+     .bid {
+        border: 1px solid #d7fc09;
+        border-radius: 10px;
+     }
+
+
+.bid-form {
+    padding: 20px;
+    border: 2px solid #007bff;
+    border-top: none;
+    width: 45%;
+    margin: 0% auto;
+}
+.form-group{
+
+    margin: 20px 50px;
+}
+
+.button-container {
+    text-align: center;
+    background: none;
+    
+  }
+
+  .blue_btn {
+    /* margin: 0 5% 5% 5%; */
+    display: inline-block;
+    color: #ffffff;
+    font-size: xx-large;
+    background: #0b0c18;
+    padding: 15px 30px;
+    border: 1px solid #d7fc09;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #000;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    gap: 15px;
+  }
+
+.likebtn {
+    background: none;
+    
+}
+
+  .blue_btn:hover {
+    box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+    transform: scale(1.05);
+    color: #000000;
+    background: #0b0c18;
+    
+  }
+
+
+  .task-line {
+    color: #00ccff;
+  }
+  .task-line2 {
+    color: #ffffff;
+  }
+
+
+
+
 
     </style>
 <!-- Задание биржи-->
@@ -107,9 +136,9 @@
             <h1 style="text-align: center">{{ $task->title }}</h1>
             <p>{{ $task->description }}</p>
             </div>
-            <p style="text-align: center"><strong>Категория:</strong> {{ $task->category ? $task->category->name : 'Без категории' }}
-            <strong> Бюджет:</strong> {{ $task->budget }} руб.
-            <strong> Срок:</strong> {{ $task->deadline->format('Y-m-d H:i:s') }}</p><br>
+            <p style="text-align: center"><strong  class="task-line">Категория:</strong> {{ $task->category ? $task->category->name : 'Без категории' }}
+            <strong  class="task-line"> Бюджет:</strong> {{ $task->budget }} DESCoin
+            <strong  class="task-line"> Срок:</strong> {{ $task->deadline->format('Y-m-d H:i:s') }}</p><br>
 
             <!-- Показать информацию о завершенной задаче и её рейтинг -->
 @if ($task->completed && $task->rating)
@@ -124,41 +153,45 @@
 @endif
 
             <!-- Кнопки управления заданием -->
-            <div class="task-controls" style="text-align: center">
+            <div class="button-container" >
                 <!-- Лайк и дизлайк -->
-                <form action="{{ route('tasks.like', $task) }}" method="POST" style="display:inline;">
+                <form action="{{ route('tasks.like', $task) }}" method="POST" class="likebtn" style="display:inline;">
                     @csrf
-                    <button type="submit" class="btn btn-success">
-                        👍 Лайк ({{ $task->votes()->where('is_like', true)->count() }})
+                    <button type="submit"  class="blue_btn">
+                        <img src="/img/icons_post/like.png"  alt="Like"/> ({{ $task->votes()->where('is_like', true)->count() }})
                     </button>
                 </form>
-                <form action="{{ route('tasks.dislike', $task) }}" method="POST" style="display:inline;">
+                <form action="{{ route('tasks.dislike', $task) }}" method="POST" class="likebtn" style="display:inline;" >
                     @csrf
-                    <button type="submit" class="btn btn-danger">
-                        👎 Дизлайк ({{ $task->votes()->where('is_like', false)->count() }})
+                    <button type="submit"  class="blue_btn">
+                        <img src="/img/icons_post/dizlike.png"  alt="DizLike"> ({{ $task->votes()->where('is_like', false)->count() }})
                     </button>
                 </form>
 
                 <!-- Кнопки редактировать и удалить для автора задания -->
                 @if (Auth::id() == $task->user_id)
-                    <form action="{{ route('tasks.edit', $task) }}" method="GET" style="display:inline;">
+                    <form action="{{ route('tasks.edit', $task) }}" method="GET"  class="likebtn" style="display:inline;">
                         @csrf
-                        <button type="submit" class="btn-warning">✏️ Редактировать</button>
+                        <button type="submit" class="blue_btn" title="Редактировать">
+                            <img src="/img/icons_post/work.png" alt="Редактировать">
+                        </button>
                     </form>
 
-                    <form action="{{ route('tasks.destroy', $task) }}" method="POST" style="display:inline;">
+                    <form action="{{ route('tasks.destroy', $task) }}" method="POST"  class="likebtn" style="display:inline;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn-danger">🗑️ Удалить</button>
+                        <button type="submit" class="blue_btn" title="Удалить">
+                            <img src="/img/bottom/delete.png" alt="Удалить">
+                        </button>
                     </form>
                 
 
                 <!-- Кнопки для управления статусом задания -->
                 @if ($task->accepted_bid_id && !$task->in_progress && Auth::id() == $task->user_id)
                     <!-- Кнопка "Приступить к заданию" для автора задания -->
-                    <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;">
+                    <form action="{{ route('tasks.start_work', $task) }}" method="POST"  style="display:inline;">
                         @csrf
-                        <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
+                        <button type="submit" class="blue_btn">🚀 Приступить</button>
                     </form>
                 @endif
 
@@ -166,13 +199,13 @@
                     <!-- Кнопка "Задание выполнено" -->
                     <form action="{{ route('tasks.complete', $task) }}" method="POST" style="display:inline;">
                         @csrf
-                        <button type="submit" class="btn-success">✅ Задание выполнено</button>
+                        <button type="submit" class="blue_btn">✅ Задание выполнено</button>
                     </form>
 
                     <!-- Кнопка "Задание провалено" -->
                     <form action="{{ route('tasks.fail', $task) }}" method="POST" style="display:inline;">
                         @csrf
-                        <button type="submit" class="btn-danger">❌ Задание провалено</button>
+                        <button type="submit" class="blue_btn">❌ Задание провалено</button>
                     </form>
                 @endif
                 @endif
@@ -184,17 +217,11 @@
                 {{ session('success') }}
             </div>
         @endif      
-            <!-- Таймер -->
-            @if ($task->status === 'in_progress') <!-- Убедитесь, что 'in_progress' - это правильное значение для статуса -->
-            <div id="timer" class="timer" style="display:none;"></div>
-            <p id="start_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Время начала -->
-            <p id="end_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>   <!-- Время завершения -->
-            <p id="current_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Текущее время UTC -->
-@endif
+            
 <br> <hr>
             <!-- Раздел предложений -->
 <div class="bids-section">
-    <h2 style="text-align:center; color:#029ac0">
+    <h2 style="text-align:center; color:#00ccff">
         @if ($task->status === 'completed')
             Задание выполнено
         @elseif ($task->status === 'on_review')
@@ -215,24 +242,33 @@
             $acceptedBid = $task->bids()->where('id', $task->accepted_bid_id)->first();
         @endphp
         <div class="bid">
-            <p><strong>Фрилансер:</strong> {{ $acceptedBid->user->name }}</p>
-            <p><strong>Цена:</strong> {{ $acceptedBid->price }} руб.</p>
-            <p><strong>Время выполнения:</strong> {{ $acceptedBid->days }} дней {{ $acceptedBid->hours }} часов</p>
-            <p><strong>Комментарий:</strong> {{ $acceptedBid->comment }}</p>
+            <p><strong class="task-line">Фрилансер:</strong> {{ $acceptedBid->user->name }}</p>
+            <p><strong class="task-line">Цена:</strong> {{ $acceptedBid->price }} DESCoin</p>
+            <p><strong class="task-line">Время выполнения:</strong> {{ $acceptedBid->days }} дней {{ $acceptedBid->hours }} часов</p>
+            <p><strong class="task-line">Комментарий:</strong> {{ $acceptedBid->comment }}</p>
 
             <!-- Кнопка "Приступить к заданию" для фрилансера -->
             @if ($task->accepted_bid_id && !$task->in_progress && Auth::id() == $task->acceptedBid->user_id)            
-            <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;">
+            <form action="{{ route('tasks.start_work', $task) }}" method="POST" class="likebtn" style="display:inline;">
                 @csrf
-                <button type="submit" class="btn-warning">🚀 Приступить к заданию</button>
+                <br>
+                <button type="submit" class="blue_btn"><img src="/img/bottom/start.png" alt="Приступить"> Приступить к заданию</button>
             </form>
         @endif
             <!-- Кнопка "Задание выполнено" для фрилансера -->
             @if (Auth::id() == $acceptedBid->user_id)
     @if ($task->status === 'in_progress' && !$task->completed)
-        <form action="{{ route('tasks.freelancer-complete', $task) }}" method="POST" style="display:inline;">
+    <!-- Таймер -->
+    @if ($task->status === 'in_progress') <!-- Убедитесь, что 'in_progress' - это правильное значение для статуса -->
+    <div id="timer" class="timer" class="likebtn" style="display:none;"></div>
+    <p id="start_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Время начала -->
+    <p id="end_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>   <!-- Время завершения -->
+    <p id="current_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p> <!-- Текущее время UTC -->
+    
+@endif
+        <form action="{{ route('tasks.freelancer-complete', $task) }}" method="POST" class="likebtn">
             @csrf
-            <button type="submit" class="btn-success">✅ Задание выполнено</button>
+            <button type="submit" class="blue_btn">✅ Задание выполнено</button>
         </form>
     @elseif ($task->status === 'on_review')
         <p style="text-align: center; color:#ffdf00"><span>Задание на проверке</span><p>
@@ -243,16 +279,16 @@
         <!-- Если предложение не принято, показываем все предложения -->
         @foreach ($task->bids as $bid)
             <div class="bid">
-                <p><strong>Фрилансер:</strong> {{ $bid->user->name }}</p>
-                <p><strong>Цена:</strong> {{ $bid->price }} руб.</p>
-                <p><strong>Время выполнения:</strong> {{ $bid->days }} дней {{ $bid->hours }} часов</p>
-                <p><strong>Комментарий:</strong> {{ $bid->comment }}</p>
+                <p class="task-line2"><strong class="task-line">Фрилансер:</strong> {{ $bid->user->name }}</p>
+                <p class="task-line2"><strong class="task-line">Цена:</strong> {{ $bid->price }} DESCoin</p>
+                <p class="task-line2"><strong class="task-line">Время выполнения:</strong> {{ $bid->days }} дней {{ $bid->hours }} часов</p>
+                <p class="task-line2"><strong  class="task-line">Комментарий:</strong> {{ $bid->comment }}</p>
 
                 <!-- Кнопка "Принять предложение" -->
                 @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
                     <form action="{{ route('bids.accept', $bid) }}" method="POST" style="display:inline;">
                         @csrf
-                        <button type="submit" class="btn btn-success">✔️ Принять предложение</button>
+                        <button type="submit" class="btn btn-success blue_btn">✔️ Принять предложение</button>
                     </form>
                 @endif
             </div>
@@ -272,7 +308,7 @@
                             @endfor
                         </div>
                         <input type="hidden" name="rating" id="rating" value="0">
-                        <button type="submit" class="btn btn-primary mt-3">Поставить оценку</button>
+                        <button type="submit" class="blue_btn">Поставить оценку</button>
                     </form>
                 </div>
             @endif
@@ -283,26 +319,29 @@
                     <p style="text-align: center; color:#ffdf00">Вы уже подали предложение на это задание.</p>
                 @else
                     <div class="bid-form">
-                        <h3>Подать предложение</h3>
+                        
                         <form action="{{ route('tasks.bid', $task)  }}" method="POST">
                             @csrf
+                            <fieldset>
+                                <legend><h3 style="text-align: center">Подать предложение</h3></legend>
                             <div class="form-group">
-                                <label for="price">Цена (в рублях):</label>
-                                <input type="number" name="price" id="price" style="color: #000" required>
+                                <label for="price">Цена (DESCoin):</label>
+                                <input type="number" name="price" id="price" style="color: #d7fc09; font-size:xx-large" required>
                             </div>
                             <div class="form-group">
                                 <label for="days">Срок выполнения (дни):</label>
-                                <input type="number" name="days" id="days" style="color: #000" required>
+                                <input type="number" name="days" id="days"  style="color: #d7fc09; font-size:xx-large" required>
                             </div>
                             <div class="form-group">
                                 <label for="hours">Срок выполнения (часы):</label>
-                                <input type="number" name="hours" id="hours" style="color: #000" required>
+                                <input type="number" name="hours" id="hours"  style="color: #d7fc09; font-size:xx-large" required>
                             </div>
                             <div class="form-group">
                                 <label for="comment">Комментарий:</label>
-                                <textarea name="comment" id="comment" rows="3"></textarea>
+                                <textarea name="comment" id="comment"  style="color: #d7fc09; font-size:xx-large" rows="3"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-primary">Отправить предложение</button>
+                            <button type="submit" class="blue_btn"  >Отправить предложение</button>
+                            </fieldset>
                         </form>
                     </div>
                 @endif

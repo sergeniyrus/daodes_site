@@ -10,7 +10,7 @@ class News extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'content', 'user_id', // обновите этот список согласно вашему таблицу
+        'title', 'content', 'user_id', 'img', // обновите этот список согласно вашему таблицу
     ];
 
     public function user()

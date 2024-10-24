@@ -358,11 +358,9 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $category_name
- * @property string $author
  * @method static \Illuminate\Database\Eloquent\Builder|category_news newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|category_news newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|category_news query()
- * @method static \Illuminate\Database\Eloquent\Builder|category_news whereAuthor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|category_news whereCategoryName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|category_news whereId($value)
  */
