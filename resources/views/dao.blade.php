@@ -3,6 +3,80 @@
     Предложения
 @endsection
 @section('main')
+<style>
+.main-content {
+  width: 100%;
+  margin: 35px auto 10px auto;
+  display: flex;
+  justify-content: center;
+  align-content: center; 
+  flex-direction: column;
+  align-items: center;
+}
+
+.windows {
+  max-width: 80%;
+  min-width: 380px;
+  height: 100%;
+  background-color: #1f234bce;
+  border: 1px solid rgb(255, 255, 255);
+  border-radius: 20px;
+  margin:  0px auto 20px auto;
+  padding: 0 10px 0 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Вертикальное выравнивание */
+  align-items: center; /* Горизонтальное выравнивание */
+}
+.windows-title {
+  text-align: center;
+  margin: 10px;
+  font-size: min(max(70%, 2vw), 100%);
+  font-weight: 700;
+}
+#details0, #details1, #details2, #details3, #details4, #details5, #details6{
+  display: none;
+}
+#state0, #state1, #state2, #state3, #state4, #state5 {
+  font-size: min(max(70%, 2vw), 100%);
+}
+.windows-new {
+  background: rgb(228, 225, 225);
+  border-radius: 15px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.windows-string {
+    display: block;
+    text-align: center;
+  }
+  
+.windows-new-title {
+  margin: 5px;
+  text-align: center;
+  color: #fb048c;
+  font-size: min(max(70%, 5vw), 90%);
+  font-weight: 700;
+}
+
+.windows-new-images {
+  margin: 10px;
+  width: 80%;
+  max-width: 300px;
+  object-fit: cover;
+}
+
+.windows-new-text {
+  margin: 10px;
+  color: black;
+  font-size: min(max(50%, 12vw), 80%);
+  text-align: start;
+  margin-bottom: 10px;
+}
+</style>
     <div class="main-content">
         <!-- информационные окна коротких событий -->
         @php

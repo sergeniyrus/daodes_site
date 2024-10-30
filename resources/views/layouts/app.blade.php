@@ -4,11 +4,11 @@
 @endsection
 
 @section('main')
-    <div class="modal-content">
+    <div id="box-content">
         <div class="imgcontainer">
             <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
         </div>
-        <div class="container" style="align-content: center">
+        <div class="container">
 
             {{ $slot }}
         </div>

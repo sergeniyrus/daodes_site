@@ -6,86 +6,134 @@
 
 @section('main')
     <style>
+        .form-container {
+            max-width: 400px; /* Максимальная ширина формы */
+            margin: 0 auto; /* Центрирование формы */
+            padding: 20px; /* Внутренние отступы */
+            background-color: #333333; /* Цвет фона формы */
+            border-radius: 10px; /* Скругление углов */
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Тень */
+            margin-bottom: 40px; /* Нижний отступ */
+            display: flex; /* Используем Flexbox для выравнивания */
+            flex-direction: column; /* Вертикальное выравнивание */
+            align-items: center; /* Центрируем элементы по горизонтали */
+        }
+
         .input_row {
-            background-color: #000000;
-            color: #fff;
-            border: 1px solid #a0ff08;
-            border-radius: 5px;
-            width: 100%;
-            padding: 10px;
-            margin: 10px auto;
+            background-color: #000000; /* Цвет фона полей ввода */
+            color: #ffffff; /* Цвет текста */
+            border: 1px solid #a0ff08; /* Цвет рамки */
+            border-radius: 5px; /* Скругление углов */
+            width: 100%; /* Ширина полей ввода */
+            padding: 10px; /* Внутренние отступы */
+            margin: 10px 0; /* Отступы между полями */
+        }
+
+        .input_row::placeholder {
+            color: #ccc; /* Цвет текста в плейсхолдере */
         }
 
         .button-container {
-            text-align: center;
-            background: none;
+            display: flex;
+            justify-content: center; /* Центрирование кнопок */
+            align-items: center;
+            margin: 20px 0; /* Отступы между кнопками и формой */
         }
 
-        .blue_btn {
-            display: inline-block;
-            color: #000000;
-            font-size: large;
-            background-color: #d7fc09;
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 0 20px #fcfbfb;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        .link-buttons {
+            display: flex;
+            justify-content: center; /* Центрирование кнопок */
+            gap: 20px; /* Отступ между кнопками */
+            margin-top: 20px; /* Отступ сверху */
         }
 
-        .blue_btn:hover {
-            box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-            transform: scale(1.05);
-            color: #fff;
+        .link-buttons a {
+            height: 100%;
+           /* width: 100px;  Ширина для ссылок */
         }
 
-        .likebtn {
-            background: none;
+        .link-buttons a img {
+            /*width:auto;  Ширина изображений */
+            height:  100%; /* Автоматическая высота */
+        }
+
+        .error-message {
+            color: red; /* Цвет сообщений об ошибках */
+            margin-top: 5px; /* Отступ сверху */
+            text-align: center; /* Центрирование сообщений об ошибках */
+        }
+
+        label {
+            display: block; /* Сброс стилей для меток */
+            margin: 10px 0 5px; /* Отступы вокруг меток */
+        }
+
+        .submit-button {
+            width: 100%; /* Ширина кнопки */
+            height: 100px; /* Высота кнопки */
+            background: none; /* Убираем фон */
+            border: 1px solid gold; /* Убираем рамку */
         }
     </style>
+
     <x-guest-layout>
         <!-- Session Status -->
         <x-auth-session-status class="mb-4" :status="session('status')" />
-        <div class="container my-5">
-            <form method="POST" action="{{ route('login') }}">
-                @csrf
-                <!-- Вход -->
-                <div class="">
-                    <label  for="name">Логин</label>
-                    <input class="input_row" id="name" type="text" name="name" value="{{ old('name') }}" required autofocus autocomplete="username">
-                    @error('name')
-                        <br><span style="color: red;">{{ $message }}</span>
-                    @enderror
-                </div>
 
-                <!-- Password -->
-                <div class="">
-                    <label for="password">Пароль</label>
-                    <input class="input_row" id="password" type="password" name="password" required autocomplete="current-password">
-                    @error('password')
-                        <br><span style="color: red;">{{ $message }}</span>
-                    @enderror
-                </div>   
-            
+        <form method="POST" action="{{ route('login') }}" class="form-container">
+            @csrf
+
+            <!-- Логин -->
+            <div>
+                <x-input-label for="name" :value="__('Логин')" class="task-line" />
+                <x-text-input 
+                    id="name" 
+                    class="input_row" 
+                    type="text" 
+                    name="name" 
+                    :value="old('name')" 
+                    required 
+                    autofocus 
+                    autocomplete="username" 
+                    placeholder="Введите логин"
+                />
+                <x-input-error :messages="$errors->get('name')" class="error-message" />
+            </div>
+
+            <!-- Пароль -->
+            <div class="mt-4">
+                <x-input-label for="password" :value="__('Пароль')" class="task-line" />
+                <x-text-input 
+                    id="password" 
+                    class="input_row" 
+                    type="password" 
+                    name="password" 
+                    required 
+                    autocomplete="current-password" 
+                    placeholder="Введите пароль"
+                />
+                <x-input-error :messages="$errors->get('password')" class="error-message" />
+            </div>
             <br>
-            <!-- Submit button -->
+
+            <!-- Кнопка отправки -->
             <div class="button-container">
-                <button type="submit" class="likebtn" title="Войти">
+                <button type="submit" class="submit-button" title="Войти">
                     <img src="img/bottom/login.png" alt="Войти" class="blue_btn">
                 </button>
             </div>
-        </form>
             <br>
-            <!-- Links -->
-            <div class="button-container">
+
+            <div class="link-buttons">
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" title="Забыли пароль?" class="likebtn">
-                        <img src="img/bottom/forgot2.png" alt="Забыли пароль?" class="blue_btn" >
+                        <img src="img/bottom/forgot2.png" alt="Забыли пароль?" class="blue_btn">
                     </a>
                 @endif
                 <a href="{{ route('register') }}" title="Регистрация" class="likebtn">
                     <img src="img/bottom/registrat.png" alt="Регистрация" class="blue_btn">
                 </a>
             </div>
-        </div>
+        </form>
     </x-guest-layout>
 @endsection

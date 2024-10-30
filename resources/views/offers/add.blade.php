@@ -1,39 +1,80 @@
 @extends('template')
 
 @section('title_page')
-    Редактировать новость
+    Создать предложение
 @endsection
 
 @section('main')
 <style>
     .new_post {
-        padding: 20px;
-        margin: auto;
+        width: 90%;
+  height: auto;
+  margin: 20px auto;
+  padding-bottom: 20px;
+  background-color: rgba(30, 32, 30, 0.753);
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  border: 1px solid #fff;
+  border-radius: 30px;
+  text-align: center;
+  vertical-align: auto;
+  display: flex;
+  flex-direction: column;
     }
+    
     .name_str h2 {
         text-align: center;
+        font-size: 36px;
     }
+
+    .blue_btn {
+    /* margin: 0 5% 5% 5%; */
+    display: inline-block;
+    color: #ffffff;
+    font-size: large;
+    background: #0b0c18;
+    padding: 15px 30px;
+    border: 1px solid #d7fc09;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #000;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    gap: 15px;
+  }
+  .blue_btn:hover {
+    box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+    transform: scale(1.05);
+    color: #ffffff;
+    background: #0b0c18;
+    
+  }
     .verh {
         display: flex;
         flex-direction: column;
         gap: 10px;
+        text-align: center;
+        align-items: center; /* Выравнивает элементы по центру горизонтально */
+    justify-content: center; /* Выравнивает элементы по центру вертикально */
     }
     .fp {
         display: flex;
         flex-direction: column;
         gap: 5px;
+        margin-left: 20px;
     }
     .dark_text {
         padding: 8px;
         font-size: 16px;
+        color: black;
     }
     .redactor {
-        margin-top: 20px;
+        margin: 20px;
+        color: black;
     }
     .varn {
         text-align: center;
         font-size: 14px;
         color: red;
+        margin-top: 25px;
     }
     .file-input-wrapper {
         display: flex;
@@ -131,44 +172,39 @@
 
 <div class="new_post">
     <div class="name_str">
-        <h2>Редактировать новость.</h2>
+        <h2>Добавление предложения.</h2>
     </div>
-    <form id="news-form" method="POST" action="/edit_news/{{ $new->id }}" enctype="multipart/form-data">
+    <form id="offers-form" method="POST" action="{{ route('offers.create') }}" enctype="multipart/form-data">
         @csrf
-        <input type="hidden" name="ids" value="{{ $new->id }}"/>
         <div class="verh">
-            <div class="fp">Название новости<br>
-                <input type="text" name="title" class="dark_text" value="{{ $new->title }}" /><br>
+            <div class="fp">Название предложения<br>
+                <input type="text" name="title" class="dark_text" /><br>
             </div>
 
             <div class="fp">Тема<br>
                 <select name="category" size="1" class="dark_text">
-                    <?php
-                        // получаем категории
-                        $categories = DB::table('category_news')->get();
-                        foreach ($categories as $category) : ?>
-                        <option value="<?php echo $category->id; ?>" <?php echo ($category->id == $new->category_id) ? 'selected="selected"' : ''; ?>>
-                            <?php echo $category->category_name; ?>
-                        </option>
-                    <?php endforeach; ?>
+                    <option value="0" selected>Жми и выбирай</option>
+                    @foreach (DB::table('category_offers')->get() as $category)
+                        <option value="{{ $category->id }}" label="{{ $category->category_name }}"></option>
+                    @endforeach
                 </select><br>
             </div>
 
-            <div class="fp">Картинка новости<br>
+            <div class="fp">Картинка<br>
                 <div class="file-input-wrapper">
                     <button type="button" class="custom-file-button">Выберите файл</button>
                     <input type="file" id="file-input" name="filename" accept="image/*">
                     <div id="crop-container">
                         <img id="crop-image" src="#">
                     </div>
-                    <img id="preview" src="{{ $new->img }}" alt="Image Preview" style="display: block; max-width: 100%;">
+                    <img id="preview" src="#" alt="Image Preview">
                     <span id="file-name">Файлы не выбраны</span>
                 </div>
             </div>
         </div>
 
         <div class="redactor">
-            <textarea id="editor" name="content" rows="20" cols="100">{{ $new->content }}</textarea><br>
+            <textarea id="editor" name="content" rows="20" cols="100" placeholder="Введите текст предложения, возможно использование html тегов"></textarea><br>
         </div>
         <script>
             ClassicEditor
@@ -208,7 +244,7 @@
                 document.getElementById('file-name').textContent = fileName;
             });
 
-            document.getElementById('news-form').addEventListener('submit', function(event) {
+            document.getElementById('offers-form').addEventListener('submit', function(event) {
                 if (cropper) {
                     const canvas = cropper.getCroppedCanvas();
                     canvas.toBlob(function(blob) {
@@ -221,7 +257,7 @@
                         fileInputElement.files = dataTransfer.files;
 
                         // Now the form can be submitted
-                        document.getElementById('news-form').submit();
+                        document.getElementById('offers-form').submit();
                     });
                     event.preventDefault(); // Prevent the form from submitting until the blob is ready
                 }
@@ -229,11 +265,11 @@
         </script>
         <br>
         <button
-            class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">Сохранить</button>
+            class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">Создать</button>
     </form><br>
     <div class="varn">
         <p>Изображение должно иметь размер 1:1</p>
-        <p> Имя файла <b>только</b> цифры и английский язык !</p>
+        <p> Имя файла <b>только</b> цифры и английский язык ! </p>
     </div>
     <br>
 </div>

@@ -7,33 +7,74 @@
 @section('main')
 <style>
     .new_post {
-        padding: 20px;
-        margin: auto;
+        width: 90%;
+  height: auto;
+  margin: 20px auto;
+  padding-bottom: 20px;
+  background-color: rgba(30, 32, 30, 0.753);
+  font-size: 20px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  border: 1px solid #fff;
+  border-radius: 30px;
+  text-align: center;
+  vertical-align: auto;
+  display: flex;
+  flex-direction: column;
     }
+    
     .name_str h2 {
         text-align: center;
+        font-size: 36px;
     }
+
+    .blue_btn {
+    /* margin: 0 5% 5% 5%; */
+    display: inline-block;
+    color: #ffffff;
+    font-size: large;
+    background: #0b0c18;
+    padding: 15px 30px;
+    border: 1px solid #d7fc09;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #000;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    gap: 15px;
+  }
+  .blue_btn:hover {
+    box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+    transform: scale(1.05);
+    color: #ffffff;
+    background: #0b0c18;
+    
+  }
     .verh {
         display: flex;
         flex-direction: column;
         gap: 10px;
+        text-align: center;
+        align-items: center; /* Выравнивает элементы по центру горизонтально */
+    justify-content: center; /* Выравнивает элементы по центру вертикально */
     }
     .fp {
         display: flex;
         flex-direction: column;
         gap: 5px;
+        margin-left: 20px;
     }
     .dark_text {
         padding: 8px;
         font-size: 16px;
+        color: black;
     }
     .redactor {
-        margin-top: 20px;
+        margin: 20px;
+        color: black;
     }
     .varn {
         text-align: center;
         font-size: 14px;
         color: red;
+        margin-top: 25px;
     }
     .file-input-wrapper {
         display: flex;
@@ -133,27 +174,38 @@
     <div class="name_str">
         <h2>Добавление новости.</h2>
     </div>
-    <form id="news-form" method="POST" action="{{ route('add_news') }}" enctype="multipart/form-data">
+
+    <!-- Отображение ошибок валидации -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form id="news-form" method="POST" action="{{ route('news.create') }}" enctype="multipart/form-data">
         @csrf
         <div class="verh">
             <div class="fp">Название новости<br>
-                <input type="text" name="title" class="dark_text" /><br>
+                <input type="text" name="title" class="dark_text" value="{{ old('title') }}" /><br>
             </div>
 
             <div class="fp">Тема<br>
                 <select name="category" size="1" class="dark_text">
-                    <option value="0" selected>Жми и выбирай</option>
-
-                    @foreach (DB::table('category_news')->get() as $category)
-                        <option value="{{ $category->id }}" label="{{ $category->category_name }}"></option>
-                    @endforeach
-                </select><br>
+    <option value="0" selected>Жми и выбирай</option>
+    @foreach (DB::table('category_news')->get() as $category)
+        <option value="{{ $category->id }}">{{ $category->category_name }}</option> <!-- Исправлено -->
+    @endforeach
+</select><br>
             </div>
 
             <div class="fp">Картинка новости<br>
                 <div class="file-input-wrapper">
                     <button type="button" class="custom-file-button">Выберите файл</button>
-                    <input type="file" id="file-input" name="filename" accept="image/*">
+                    <input type="file" id="file-input" name="filename" accept="image/*" required>
                     <div id="crop-container">
                         <img id="crop-image" src="#">
                     </div>
@@ -164,12 +216,11 @@
         </div>
 
         <div class="redactor">
-            <textarea id="editor" name="content" rows="20" cols="100" placeholder="Введите текст новости, возможно использование html тегов"></textarea><br>
+            <textarea id="editor" name="content" rows="20" cols="100" placeholder="Введите текст новости, возможно использование html тегов">{{ old('content') }}</textarea><br>
         </div>
         
-        <br>
-        <button>Создать</button>
-    </form><br>
+        <button class="blue_btn">Создать</button>
+    </form>
     <div class="varn">
         <p>Изображение должно иметь размер 1:1</p>
         <p> Имя файла <b>только</b> цифры и английский язык ! </p>

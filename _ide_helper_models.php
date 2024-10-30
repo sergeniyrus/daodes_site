@@ -47,6 +47,23 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $category_name
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\News> $news
+ * @property-read int|null $news_count
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereCategoryName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereId($value)
+ */
+	class CategoryNews extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $id_offer
@@ -105,6 +122,7 @@ namespace App\Models{
  * @property int $category_id
  * @property string $user_id
  * @property int|null $views
+ * @property-read \App\Models\CategoryNews|null $category
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|News newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|News newQuery()
@@ -350,21 +368,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereUserId($value)
  */
 	class Wallet extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * 
- *
- * @property int $id
- * @property string $category_name
- * @method static \Illuminate\Database\Eloquent\Builder|category_news newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|category_news newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|category_news query()
- * @method static \Illuminate\Database\Eloquent\Builder|category_news whereCategoryName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|category_news whereId($value)
- */
-	class category_news extends \Eloquent {}
 }
 
 namespace App\Models{

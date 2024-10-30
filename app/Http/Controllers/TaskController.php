@@ -334,4 +334,22 @@ public function freelancerComplete(Task $task)
     return redirect()->back()->with('status', 'Задание помечено как проваленное.');
 }
 
+public function continueTask(Task $task)
+{
+    // Проверка авторизации: только автор задания может его продолжить
+    if (auth()->id() !== $task->user_id) {
+        return redirect()->route('tasks.show', $task)->with('error', 'У вас нет прав для продолжения этого задания.');
+    }
+
+    // Проверяем, что задание на проверке и его можно вернуть в работу
+    if ($task->status === 'on_review') {
+        $task->status = 'in_progress';  // Возвращаем статус "в работе"
+        $task->save();
+
+        return redirect()->route('tasks.show', $task)->with('success', 'Задание возвращено в работу.');
+    }
+
+    return redirect()->route('tasks.show', $task)->with('error', 'Невозможно продолжить это задание.');
+}
+
 }

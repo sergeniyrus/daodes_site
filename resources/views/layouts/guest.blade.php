@@ -6,7 +6,7 @@ In DAODES
 
 @section('main')
 <style>
-   .button-container {
+  .button-container {
     text-align: center;
     background: none;
     
@@ -19,14 +19,14 @@ In DAODES
     font-size: xx-large;
     background-color: #d7fc09;
     /* padding: 15px 30px; */
-    border: none;
+    border: 1px solid gold;
     border-radius: 10px;
     box-shadow: 0 0 20px #000;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
     gap: 15px;
   }
 
-.likebtn {
+.likebtn  {
     background: none;
     
 }
@@ -41,21 +41,36 @@ In DAODES
 
   .task-line {
     color: #00ccff;
+    font-size: xx-large;
+    margin-bottom: 10px;
   }
   .task-line2 {
     color: #ffffff;
+    font-size: x-large;
   }
+  .regwin {
+            background-color: #0b0c18;
+            border: 1px solid #fff;
+            border-radius: 20px;
+            color: #fff;
+            padding: 20px;
+            max-width: 70%;
+            min-width: 280px;
+            margin: 20px auto 20px auto;
+            text-align: center;
+            /* font-size: min(max(50%, 1.5vw), 80%); */
+        }
 </style>
-<div class="modal-content">
+<div class="box-content">
     <div class="imgcontainer ">
         <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
     </div>
-    <div class="container">
+    
         <div class="regwin">
             
                 {{ $slot }}
             
         </div>    
-    </div>
+    
 </div>        
 @endsection

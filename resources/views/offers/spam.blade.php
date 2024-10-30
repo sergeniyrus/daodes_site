@@ -18,7 +18,7 @@
             @csrf
             <fieldset class="tbr">
                 <legend>
-                    <h4>Спам/не спам</h4>
+                    <h4 style="text-align: center">Спам/не спам</h4>
                 </legend>
                 <div class="vote_ratio">
                     <label for="choice1" class="img_vote">

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TaskCategory;
+use App\Models\TaskCategory; // Убедитесь, что модель TaskCategory ссылается на таблицу task_category
 use Illuminate\Http\Request;
 
 class TasksCategoryController extends Controller
@@ -31,7 +31,7 @@ class TasksCategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('task_categories.index')->with('success', 'Категория успешно создана!');
+        return redirect()->route('categories.index')->with('success', 'Категория успешно создана!');
     }
 
     // Отобразить форму для редактирования категории
@@ -51,13 +51,13 @@ class TasksCategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('task_categories.index')->with('success', 'Категория успешно обновлена!');
+        return redirect()->route('categories.index')->with('success', 'Категория успешно обновлена!');
     }
 
     // Удалить категорию
     public function destroy(TaskCategory $taskCategory)
     {
         $taskCategory->delete();
-        return redirect()->route('task_categories.index')->with('success', 'Категория успешно удалена!');
+        return redirect()->route('categories.index')->with('success', 'Категория успешно удалена!');
     }
 }

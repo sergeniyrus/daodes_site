@@ -3,112 +3,117 @@
 @section('main')
 
 <style>
-    .btn {
-        display: inline-flex;
+    .container {
+        padding: 20px; /* Увеличил отступы для более комфортного восприятия */
+        margin: 0 auto;
+        justify-content: center;
         align-items: center;
-        background-color: #007bff;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 5px;
+        text-align: center;
+        max-width: 800px; /* Максимальная ширина для контейнера */
+        background-color: rgba(20, 20, 20, 0.9); /* Темный фон для контейнера */
+        border-radius: 20px; /* Скругленные углы */
+        border: 1px solid #d7fc09; /* Золотая граница для контейнера */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Тень для выделения */
+        color: #f8f9fa; /* Цвет текста */
+        font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif; /* Шрифт */
+        margin-top: 30px; /* Отступ сверху */
+    }
+
+    .new_post {
+        width: 90%;
+        height: auto;
+        margin: 20px auto;
+        padding-bottom: 20px;
         color: #fff;
-        cursor: pointer;
-        font-size: 1rem;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn i {
-        margin-right: 8px;
-        font-size: 1.2rem;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
-    }
-
-    /* Стили для разных типов кнопок */
-    .btn-primary {
-        background-color: #007bff;
-    }
-
-    .btn-primary:hover {
-        background-color: #0056b3;
-    }
-
-    .btn-warning {
-        background-color: #ffc107;
-        color: #212529;
-    }
-
-    .btn-warning:hover {
-        background-color: #e0a800;
-    }
-
-    .btn-danger {
-        background-color: #dc3545;
-    }
-
-    .btn-danger:hover {
-        background-color: #c82333;
+        background-color: rgba(30, 32, 30, 0.8); /* Сделал фон менее прозрачным */
+        font-size: 20px;
+        border-radius: 30px; /* Скругление углов для блока */
+        display: flex;
+        flex-direction: column;
+        align-items: center; /* Центрирование содержимого */
     }
 
     .table {
-        width: 100%;
-        margin-top: 20px;
-        border: 1px solid #ddd;
-        background-color: #fff;
-        color: #333;
+        width: 90%;
+        margin: 30px auto; /* Выровнять таблицу по центру */
+        border-collapse: collapse;
     }
 
     .table th, .table td {
-        padding: 15px;
-        text-align: left;
-        border-bottom: 1px solid #ddd;
+        border: 1px solid #ccc; /* Светлый цвет границ */
+        padding: 10px;
+        text-align: center;
+        color: #fff; /* Цвет текста в ячейках */
+    }
+
+    .table th {
+        background-color: #444; /* Цвет фона заголовка */
+    }
+
+    .blue_btn {
+        display: inline-block;
+        color: #ffffff;
+        font-size: large;
+        background: #0b0c18;
+        padding: 10px 20px; /* Увеличил отступы для кнопки */
+        border: 1px solid #d7fc09; /* Золотая граница */
+        border-radius: 10px; /* Скругленные углы для кнопки */
+        box-shadow: 0 0 20px #000; /* Тень для кнопки */
+        transition: box-shadow 0.3s ease, transform 0.3s ease; /* Плавные переходы */
+        margin-top: 10px; /* Отступ сверху для кнопок */
+        cursor: pointer; /* Указатель при наведении */
+    }
+
+    .blue_btn:hover {
+        box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09; /* Эффект свечения при наведении */
+        transform: scale(1.05); /* Увеличение кнопки при наведении */
+        background: #1a1a1a; /* Смена фона кнопки при наведении */
     }
 </style>
 
 <div class="container">
-    <h1>Категории задач</h1>
+    <h1>Категории Биржи заданий</h1>
+    <div class="new_post">
+        @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <!-- Кнопка добавления категории с иконкой -->
-    <a href="{{ route('task_categories.create') }}" class="btn btn-primary mb-3">
-        <i class="fas fa-plus-circle"></i> Добавить категорию
-    </a>
-
-    <table class="table mt-4">
-        <thead>
-            <tr>
-                <th>Название</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($categories as $category)
-            <tr>
-                <td>{{ $category->name }}</td>
-                <td>
-                    <!-- Кнопка редактирования с иконкой -->
-                    <a href="{{ route('task_categories.edit', $category) }}" class="btn btn-warning">
-                        <i class="fas fa-edit"></i> Редактировать
-                    </a>
-                    <!-- Кнопка удаления с иконкой -->
-                    <form action="{{ route('task_categories.destroy', $category) }}" method="POST" style="display:inline;">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash-alt"></i> Удалить
-                        </button>
-                    </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+        <table class="table mt-4">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($categories as $category)
+                <tr>
+                    <td>{{ $category->name }}</td>
+                    <td>
+                        <!-- Кнопка редактирования с классом blue_btn -->
+                        <a href="{{ route('categories.edit', $category) }}" class="blue_btn" title="Редактировать">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <!-- Кнопка удаления с классом blue_btn -->
+                        <form action="{{ route('categories.destroy', $category) }}" method="POST" style="display:inline;">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="blue_btn" title="Удалить">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
+        
+        <!-- Кнопка добавления категории с классом blue_btn -->
+        <form action="{{ route('categories.create') }}" method="GET" style="display:inline;">
+            <button type="submit" class="blue_btn"> <i class="fas fa-plus-circle"></i> Добавить категорию</button>
+        </form>
+    </div>
 </div>
-
 @endsection

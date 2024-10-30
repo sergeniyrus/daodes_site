@@ -1,155 +1,172 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\NewsController;
-use App\Http\Controllers\OffersController;
-use App\Http\Controllers\SeedController;
-use App\Http\Controllers\Auth\KeywordResetPasswordController;
-use App\Http\Controllers\WalletController;
-use App\Http\Controllers\VoteController;
-use App\Http\Controllers\CommentController;
-use App\Http\Controllers\SpamController;
-use App\Http\Controllers\DiscussionController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\TasksCategoryController;
-use App\Http\Controllers\BidController;
+use App\Http\Controllers\{
+    ProfileController,
+    NewsController,
+    OffersController,
+    SeedController,
+    Auth\KeywordResetPasswordController,
+    WalletController,
+    VoteController,
+    CommentController,
+    SpamController,
+    DiscussionController,
+    TaskController,
+    TasksCategoryController,
+    BidController,
+    HomeController,
+    RoadMapController,
+    DController,
+    CategoryController,
+    PageController
+};
 
-//стандартная главная 
-Route::get('/', function () {
-    return view('home');
-});
-Route::get('good/{post}/{id}/{action}', 'App\Http\Controllers\HomeController@good') ->name('good');
+// Главная страница
+Route::view('/', 'home')->name('home');
+Route::get('home', [HomeController::class, 'home'])->name('home.alt');
 
-//home c перебросом на стандартную главную
-Route::get('home', 'App\Http\Controllers\HomeController@home')->name(name:'home');
+// Маршрут с дополнительными параметрами
+Route::get('good/{post}/{id}/{action}', [HomeController::class, 'good'])->name('good');
 
-Route::get('roadmap', 'App\Http\Controllers\RoadMapController@roadmap')->name(name:'roadmap');
+// Разделы
+Route::get('roadmap', [RoadMapController::class, 'roadmap'])->name('roadmap');
+Route::get('/news', [NewsController::class, 'news'])->name('news');
+Route::get('/dao', [DController::class, 'offers'])->name('dao');
+Route::get('/category/{post}/{id}', [CategoryController::class, 'category_sort'])->name('category.sort');
+Route::get('/page/{post}/{id}', [PageController::class, 'page_sort'])->name('page.sort');
 
-//новости коротким списком
-Route::get('/news', 'App\Http\Controllers\NewsController@news')->name(name:'news');
-
-//Предложения открывающимся списком
-Route::get('/dao', 'App\Http\Controllers\DController@offers')->name(name:'dao');
-
-//Вывод с группировкой по категориям
-Route::get('/category/{post}/{id}/', 'App\Http\Controllers\CategoryController@category_sort')->name(name:'category');
-
-//один шаблон под новости и предложения
-Route::get('/page/{post}/{id}/', 'App\Http\Controllers\PageController@page_sort')->name(name:'page');
-
-//спам обсуждения голосование и тд
+// Спам, обсуждения, голосования
 Route::post('/spam', [SpamController::class, 'store'])->name('spam.store');
 Route::post('/discussion', [DiscussionController::class, 'store'])->name('discussion.store');
-// маршрут для обработки голосования
 Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
 
-//добавление изменение удаление новости
-Route::middleware('auth')->group(function () {
-    Route::get('/add_news', [NewsController::class, 'add'])->name('news._adds');
-    Route::post('/add_news', [NewsController::class, 'create'])->middleware(['auth', 'verified'])->name('add_news');
+// Управление новостями
 
-    Route::get('/edit_news/{id}', [NewsController::class, 'edit'])->name('news._edit');
-    Route::post('/edit_news/{id}', [NewsController::class, 'update'])->middleware(['auth', 'verified'])->name('edit_news');
+Route::prefix('news')->group(function () {
+    Route::get('/', [NewsController::class, 'news'])->name('news.index');
+    Route::get('/add', [NewsController::class, 'add'])->name('news.add');
+    Route::post('/create', [NewsController::class, 'create'])->name('news.create');
+
+    // Маршруты для категорий новостей
+    Route::get('/categories', [NewsController::class, 'categoryIndex'])->name('news.categories.index');
+    Route::get('/categories/create', [NewsController::class, 'categoryCreate'])->name('news.categories.create');
+    Route::post('/categories', [NewsController::class, 'categoryStore'])->name('news.categories.store');
+    Route::get('/categories/{id}/edit', [NewsController::class, 'categoryEdit'])->name('news.categories.edit');
+    Route::put('/categories/{id}', [NewsController::class, 'categoryUpdate'])->name('news.categories.update');
+    Route::delete('/categories/{id}', [NewsController::class, 'categoryDestroy'])->name('news.categories.destroy');
+
+    // Маршруты для редактирования и удаления новостей
+    Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
+    Route::put('/{id}', [NewsController::class, 'update'])->name('news.update');
+    Route::delete('/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
 });
 
-//добавление изменение предложения
-Route::middleware('auth')->group(function () {
-    Route::get('/add_offers', [OffersController::class, 'add'])->name('offers._add');
-    Route::post('/add_offers', [OffersController::class, 'create'])->middleware(['auth', 'verified'])->name('add_offers');
 
-    Route::get('/edit_offers/{id}', [OffersController::class, 'edit'])->name('offers._edit');
-    Route::post('/edit_offers/{id}', [OffersController::class, 'update'])->middleware(['auth', 'verified'])->name('edit_offers');
+// Управление предложениями
+Route::middleware('auth')->prefix('offers')->group(function () {
+    // Основные маршруты для предложений
+    Route::get('/', [OffersController::class, 'index'])->name('offers.index');
+    Route::get('/add', [OffersController::class, 'add'])->name('offers.add');
+    Route::post('/create', [OffersController::class, 'create'])->name('offers.create')->middleware('verified');
+    
+    // Редактирование и удаление предложений
+    Route::get('/{id}/edit', [OffersController::class, 'edit'])->name('offers.edit');
+    Route::put('/{id}', [OffersController::class, 'update'])->name('offers.update')->middleware('verified');
+    Route::delete('/{id}', [OffersController::class, 'destroy'])->name('offers.destroy');
+
+    // Маршруты для категорий предложений
+    Route::get('/categories', [OffersController::class, 'categoryIndex'])->name('offers.categories.index');
+    Route::get('/categories/create', [OffersController::class, 'categoryCreate'])->name('offers.categories.create');
+    Route::post('/categories', [OffersController::class, 'categoryStore'])->name('offers.categories.store');
+    Route::get('/categories/{id}/edit', [OffersController::class, 'categoryEdit'])->name('offers.categories.edit');
+    Route::put('/categories/{id}', [OffersController::class, 'categoryUpdate'])->name('offers.categories.update');
+    Route::delete('/categories/{id}', [OffersController::class, 'categoryDestroy'])->name('offers.categories.destroy');
 });
 
 
-//комменты предложений
+// Комментарии
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
-
-
-// // переход за сид-фразой после регистрации
-Route::get('/seed', [SeedController::class, 'index'])
-    ->middleware(['auth', 'verified'])
-    ->name('seed');
-// // сохранятель сид-фразы
-Route::post('/seed/save', [SeedController::class, 'saveSeed'])
-->name('saveSeed');
-
-//Сброс пароля по ключевому слову
-Route::middleware('guest')->group(function () {
-    Route::get('/forgot-password', [KeywordResetPasswordController::class, 'showKeywordForm'])->name('custom.password.keyword');
-    Route::post('/submit-keyword', [KeywordResetPasswordController::class, 'submitKeyword'])->name('custom.password.submit');
-    Route::get('/reset-password', [KeywordResetPasswordController::class, 'showResetForm'])->name('custom.password.reset');
-    Route::put('/update-password', [KeywordResetPasswordController::class, 'updatePassword'])->name('custom.password.update');
+// Seed фраза
+Route::middleware(['auth', 'verified'])->prefix('seed')->name('seed.')->group(function () {
+    Route::get('/', [SeedController::class, 'index'])->name('index');
+    Route::post('/save', [SeedController::class, 'saveSeed'])->name('save');
 });
 
-//кошельки и переводы
-Route::middleware('auth')->group(function () {
-    Route::get('/wallet', [WalletController::class, 'wallet'])->name('wallet.wallet');
-    Route::get('/wallet/transfer', [WalletController::class, 'showTransferForm'])->name('wallet.showTransferForm');
-    Route::post('/wallet/transfer', [WalletController::class, 'transfer'])->name('wallet.transfer');
-    Route::get('/wallet/history', [WalletController::class, 'history'])->name('wallet.history');
+// Сброс пароля по ключевому слову
+Route::middleware('guest')->prefix('password')->name('password.')->group(function () {
+    Route::get('/forgot', [KeywordResetPasswordController::class, 'showKeywordForm'])->name('keyword');
+    Route::post('/submit', [KeywordResetPasswordController::class, 'submitKeyword'])->name('submit');
+    Route::get('/reset', [KeywordResetPasswordController::class, 'showResetForm'])->name('reset');
+    Route::put('/update', [KeywordResetPasswordController::class, 'updatePassword'])->name('update');
 });
 
-// Группируем маршруты, доступные только авторизованным пользователям
-Route::middleware(['auth'])->group(function () {
-    // Маршруты для задач
-    Route::get('/tasks', [TaskController::class, 'list'])->name('tasks.index');
-    Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create'); 
-    Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store'); 
-    Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
-    Route::post('/tasks/{task}/bid', [TaskController::class, 'bid'])->name('tasks.bid');
-    
-    // Лайки, дизлайки, редактирование, удаление задач
-    Route::post('/tasks/{task}/like', [TaskController::class, 'like'])->name('tasks.like');
-    Route::post('/tasks/{task}/dislike', [TaskController::class, 'dislike'])->name('tasks.dislike');
-    Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit'); // Редактирование
-    Route::put('/tasks/{task}', [TaskController::class, 'update'])->name('tasks.update'); // Обновление
-    Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy'); // Удаление
-
-    // Завершение задания и оценка
-    Route::post('tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
-    Route::post('tasks/{task}/rate', [TaskController::class, 'rate'])->name('tasks.rate');
-    Route::post('/tasks/{task}/start-work', [TaskController::class, 'startWork'])->name('tasks.start_work');
-    Route::post('/tasks/{task}/fail', [TaskController::class, 'fail'])->name('tasks.fail');
-
-    // Принятие предложения
-    Route::post('bids/{bid}/accept', [BidController::class, 'accept'])->name('bids.accept');
-
-    // Маршруты для категорий задач
-    Route::prefix('categories')->group(function () {
-        Route::get('/', [TasksCategoryController::class, 'index'])->name('task_categories.index');
-        Route::get('/create', [TasksCategoryController::class, 'create'])->name('task_categories.create');
-        Route::post('/', [TasksCategoryController::class, 'store'])->name('task_categories.store');
-        Route::get('/{taskCategory}/edit', [TasksCategoryController::class, 'edit'])->name('task_categories.edit');
-        Route::put('/{taskCategory}', [TasksCategoryController::class, 'update'])->name('task_categories.update');
-        Route::delete('/{taskCategory}', [TasksCategoryController::class, 'destroy'])->name('task_categories.destroy');
-        Route::post('/tasks/{task}/complete', [TaskController::class, 'complete'])->name('tasks.complete');
- //Для автора задания
-        Route::post('/tasks/{task}/freelancer-complete', [TaskController::class, 'freelancerComplete'])->name('tasks.freelancer-complete'); //Для фрилансера
-
-        
-
-
-    });
+// Кошелёк и переводы
+Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () {
+    Route::get('/', [WalletController::class, 'wallet'])->name('index');
+    Route::get('/transfer', [WalletController::class, 'showTransferForm'])->name('transfer.form');
+    Route::post('/transfer', [WalletController::class, 'transfer'])->name('transfer');
+    Route::get('/history', [WalletController::class, 'history'])->name('history');
 });
 
-// Маршрут для гостевых пользователей (например, список задач может быть доступен для просмотра без авторизации)
-Route::get('/tasks', [TaskController::class, 'list'])->name('tasks.index');
+// Задачи
+Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
+    Route::get('/', [TaskController::class, 'list'])->name('index');
+    Route::get('/create', [TaskController::class, 'create'])->name('create');
+    Route::post('/', [TaskController::class, 'store'])->name('store');
+    Route::get('/{task}', [TaskController::class, 'show'])->name('show');
+    Route::post('/{task}/bid', [TaskController::class, 'bid'])->name('bid');
+    Route::post('/{task}/like', [TaskController::class, 'like'])->name('like');
+    Route::post('/{task}/dislike', [TaskController::class, 'dislike'])->name('dislike');
+    Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('edit');
+    Route::put('/{task}', [TaskController::class, 'update'])->name('update');
+    Route::delete('/{task}', [TaskController::class, 'destroy'])->name('destroy');
+    Route::post('/{task}/complete', [TaskController::class, 'complete'])->name('complete');
+    Route::post('/{task}/freelancer-complete', [TaskController::class, 'freelancerComplete'])->name('freelancer-complete');
+    Route::post('/{task}/rate', [TaskController::class, 'rate'])->name('rate');
+    Route::post('/{task}/start-work', [TaskController::class, 'startWork'])->name('start_work');
+    Route::post('/{task}/fail', [TaskController::class, 'fail'])->name('fail');
+    Route::post('/{task}/continue', [TaskController::class, 'continueTask'])->name('continue');
+});
+
+// Принятие предложений
+Route::post('/bids/{bid}/accept', [BidController::class, 'accept'])->name('bids.accept');
+
+// Категории задач
+Route::middleware('auth')->prefix('categories')->name('categories.')->group(function () {
+    Route::get('/', [TasksCategoryController::class, 'index'])->name('index');
+    Route::get('/create', [TasksCategoryController::class, 'create'])->name('create');
+    Route::post('/', [TasksCategoryController::class, 'store'])->name('store');
+    Route::get('/{taskCategory}/edit', [TasksCategoryController::class, 'edit'])->name('edit');
+    Route::put('/{taskCategory}', [TasksCategoryController::class, 'update'])->name('update');
+    Route::delete('/{taskCategory}', [TasksCategoryController::class, 'destroy'])->name('destroy');
+});
 
 
-//админка после входа
-Route::get('/dashboard', function () {
+
+
+// Управление категориями предложений
+Route::middleware('auth')->prefix('offers/categories')->name('offers.categories.')->group(function () {
+    Route::get('/', [OffersController::class, 'categoryIndex'])->name('index'); // Список категорий
+    Route::get('/create', [OffersController::class, 'categoryCreate'])->name('create'); // Создание категории
+    Route::post('/', [OffersController::class, 'categoryStore'])->name('store'); // Сохранение категории
+    Route::get('/{category}/edit', [OffersController::class, 'categoryEdit'])->name('edit'); // Редактирование категории
+    Route::put('/{category}', [OffersController::class, 'categoryUpdate'])->name('update'); // Обновление категории
+    Route::delete('/{category}', [OffersController::class, 'categoryDestroy'])->name('destroy'); // Удаление категории
+});
+
+
+// Профиль пользователя
+Route::middleware('auth')->prefix('profile')->name('profile.')->group(function () {
+    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+    Route::patch('/', [ProfileController::class, 'update'])->name('update');
+    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+});
+
+// Админка
+Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-
+})->name('dashboard');
 
 require __DIR__.'/auth.php';

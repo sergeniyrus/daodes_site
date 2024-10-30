@@ -5,141 +5,177 @@ namespace App\Http\Controllers;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\News;
+use App\Models\CategoryNews;
 
 class NewsController extends Controller
 {
+    // Метод для отображения всех новостей
     public function news()
     {
         $news = DB::table('news')->get();
         return view('news')->with('news', $news);
     }
 
+    // Метод для отображения формы добавления новости
     public function add()
     {
-        $category = DB::table('category_news')->get();
-        return view('news._add')->with('category_news', $category);
+        $categories = CategoryNews::all();
+        return view('news.add')->with('category_news', $categories);
     }
 
-    public function index()
-    {
-        //
-    }
-
+    // Метод для создания новой записи новости
     public function create(Request $request): RedirectResponse
     {
-        $validate = $request->validate([
+        // Валидация данных
+        $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'category' => ['required', 'integer'],
             'filename' => ['nullable', 'image', 'max:2048']
         ]);
-        var_dump($validate); // Для проверки данных, прошедших валидацию
-        $img = 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
 
+        // Загружаем изображение на IPFS, если оно передано
+        $img = $request->hasFile('filename') 
+            ? $this->uploadToIPFS($request->file('filename')) 
+            : 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
+
+        // Сохраняем новость в БД
         $news = News::create([
-            'title' => $validate['title'],
-            'content' => $validate['content'],
-            'category_id' => $validate['category'],
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'category_id' => $validated['category'],
             'user_id' => Auth::id(),
             'img' => $img,
             'views' => 0
         ]);
 
-        // DB::table('news')->insert([
-        //     'created_at' => now(),
-        //     'title' => $validate['title'],
-        //     'content' => $validate['content'],
-        //     'category_id' => $validate['category'],
-        //     'user_id' => Auth::id(),
-        //     'img' => $img,
-        //     'views' => 0
-        // ]);
-
-        $id = DB::table('news')->latest()->value('id');
-        $post = 'news';
-        $action = 'create';
-
-        
-
-        return redirect()->route('good', ['post' => $post, 'id' => $id, 'action' => $action]);
+        // Получаем ID новой записи и перенаправляем пользователя
+        $id = $news->id;
+        return redirect()->route('good', ['post' => 'news', 'id' => $id, 'action' => 'create']);
     }
 
-    public function store(Request $request)
+    // Приватный метод для загрузки файла на IPFS
+    private function uploadToIPFS($file)
     {
-        //
+        $client = new Client([
+            'base_uri' => 'https://daodes.space'
+        ]);
+
+        // Загружаем файл на IPFS
+        $response = $client->request('POST', '/api/v0/add', [
+            'multipart' => [
+                [
+                    'name' => 'file',
+                    'contents' => fopen($file->getPathname(), 'r'),
+                    'filename' => $file->getClientOriginalName()
+                ]
+            ]
+        ]);
+
+        // Получаем URL-адрес файла на IPFS
+        $data = json_decode($response->getBody()->getContents(), true);
+        return 'https://daodes.space/ipfs/' . $data['Hash'];
     }
 
-    public function show(string $id)
-    {
-        //
-    }
-
+    // Метод для редактирования новости
     public function edit($id)
     {
-        $new = DB::table('news')->where('id', $id)->first();
-        return view('news._edit')->with('new', $new);
+        $news = News::findOrFail($id);
+        $categories = CategoryNews::all();
+        return view('news.edit', compact('news', 'categories'));
     }
 
-    public function update(Request $request, $id)
+    // Метод для обновления новости
+    public function update(Request $request, $id): RedirectResponse
     {
-        $validate = $request->validate([
+        $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
-            'category' => ['required', 'integer'],
+            'category' => ['required', 'integer', 'exists:category_news,id'],
             'filename' => ['nullable', 'image', 'max:2048']
         ]);
 
-        if ($request->hasFile('filename')) {
-            $img = $this->uploadToIPFS($request->file('filename'));
-        } else {
-            $img = DB::table('news')->where('id', $id)->value('img');
-        }
+        $news = News::findOrFail($id);
+        $img = $request->hasFile('filename')
+            ? $this->uploadToIPFS($request->file('filename'))
+            : $news->img;
 
-        DB::table('news')->where('id', $id)->update([
-            'updated_at' => now(),
-            'title' => $validate['title'],
-            'content' => $validate['content'],
-            'category_id' => $validate['category'],
+        $news->update([
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'category_id' => $validated['category'],
+            'img' => $img,
             'user_id' => Auth::id(),
-            'img' => $img
+            'updated_at' => now()
         ]);
 
-        $post = 'news';
-        $action = 'edit';
-        return redirect()->route('good', ['post' => $post, 'id' => $id, 'action' => $action]);
+        return redirect()->route('good', ['post' => 'news', 'id' => $id, 'action' => 'edit']);
     }
 
-    public function destroy(string $id)
+    // Метод для удаления новости
+    public function destroy($id)
     {
-        //
+        $news = News::findOrFail($id);
+        $news->delete();
+
+        return redirect()->route('news.index')->with('success', 'Новость удалена');
     }
 
-    private function uploadToIPFS($file)
-{
-    $client = new Client([
-        'base_uri' => 'https://daodes.space',
-        'headers' => [
-            // Здесь нет необходимости в авторизации, если вы используете свой собственный сервер
-        ]
-    ]);
+    // Метод для отображения всех категорий
+    public function categoryIndex()
+    {
+        $categories = CategoryNews::all();
+        return view('news.categories.index', compact('categories'));
+    }
 
-    $response = $client->request('POST', '/api/v0/add', [
-        'multipart' => [
-            [
-                'name' => 'file',
-                'contents' => fopen($file->getPathname(), 'r'),
-                'filename' => $file->getClientOriginalName()
-            ]
-        ]
-    ]);
+    // Метод для отображения формы создания категории
+    public function categoryCreate()
+    {
+        return view('news.categories.create');
+    }
 
-    $data = json_decode($response->getBody()->getContents(), true);
-    return 'https://daodes.space/ipfs/' . $data['Hash'];
-}
+    // Метод для сохранения новой категории
+    public function categoryStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:category_news'
+        ]);
 
+        CategoryNews::create(['name' => $request->name]);
 
+        return redirect()->route('news.categories.index')->with('success', 'Категория добавлена');
+    }
+
+    // Метод для редактирования категории
+    public function categoryEdit($id)
+    {
+        $category = CategoryNews::findOrFail($id);
+        return view('news.categories.edit', compact('category'));
+    }
+
+    // Метод для обновления категории
+    public function categoryUpdate(Request $request, $id)
+    {
+        $category = CategoryNews::findOrFail($id);
+
+        $request->validate([
+            'name' => 'required|string|max:255|unique:category_news,name,' . $id
+        ]);
+
+        $category->update(['name' => $request->name]);
+
+        return redirect()->route('news.categories.index')->with('success', 'Категория обновлена');
+    }
+
+    // Метод для удаления категории
+    public function categoryDestroy($id)
+    {
+        $category = CategoryNews::findOrFail($id);
+        $category->delete();
+
+        return redirect()->route('news.categories.index')->with('success', 'Категория удалена');
+    }
 }
