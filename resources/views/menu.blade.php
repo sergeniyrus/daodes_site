@@ -257,6 +257,12 @@
     </script>
 @endisset
 
+@isset($task)
+<script>
+    var taskId = {{ $task }};
+</script>
+@endisset
+
 <script>
     // Проверка существования переменной newsId
     var newsId = typeof newsId !== 'undefined' ? newsId : null;
@@ -266,33 +272,37 @@
     const submenus = {
         "/news": [
             { href: "/news/add", text: "Добавить новость" },
-            { href: "/news/categories", text: "Управление категориями" },
+            { href: "/newscategories", text: "Управление категориями" },
         ],
         [`/page/news/${newsId}`]: [
             { href: "/news", text: "Вернуться в список новостей" },
             { href: "/news/add", text: "Добавить новость" },
-            { href: "/news/categories", text: "Управление категориями" },
+            { href: "/newscategories", text: "Управление категориями" },
         ],
         "/dao": [
             { href: "/offers/add", text: "Добавить предложение" },
-            { href: "offers/categories", text: "Редактировать категории" },
+            { href: "/offerscategories", text: "Редактировать категории" },
         ],
+        
         [`/page/offers/${newsId}`]: [
             { href: "/dao", text: "Вернуться в список предложений" },
             { href: "/offers//add", text: "Добавить предложение" },
-            { href: "/offers/categories", text: "Редактировать категории" },
+            { href: "/offerscategories", text: "Редактировать категории" },
         ],
+
+
         "/tasks": [
-            { href: "/tasks/create", text: "Создать задание" },
-            { href: "/categories/", text: "Управление категориями" },
+            { href: "/tasks/create", text: "Добавить задание" },
+            { href: "/taskscategories", text: "Управление категориями" },
             
         ],
-        [`/tasks/${newsId}`]: [
-            { href: "/tasks", text: "Список заданий" },
-            { href: "/tasks/create", text: "Создать задание" },
-            { href: "/categories", text: "Управление категориями" },
-            
+
+        "/tasks/${taskId}": [
+            { href: "/tasks", text: "Вернуться в список предложений" },
+            { href: "/tasks/add", text: "Добавить Задание" },
+            { href: "/taskscategories", text: "Редактировать категории" },
         ],
+        
         "/wallet": [
             { href: "/wallet/add", text: "Пополнить кошелёк" },
             { href: "/wallet/edit", text: "Редактировать кошелёк" },

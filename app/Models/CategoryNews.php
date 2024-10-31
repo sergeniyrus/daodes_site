@@ -9,7 +9,9 @@ class CategoryNews extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    protected $fillable = ['category_name'];
+    public $timestamps = false; // Отключение автоматического управления метками времени
+
 
     // Определите связь с моделью News (если необходимо)
     public function news()

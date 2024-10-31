@@ -64,6 +64,23 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $category_name
+ * @property string $author
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers query()
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereAuthor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereCategoryName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereId($value)
+ */
+	class CategoryOffers extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $id_offer
@@ -368,23 +385,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet whereUserId($value)
  */
 	class Wallet extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * 
- *
- * @property int $id
- * @property string $category_name
- * @property string $author
- * @method static \Illuminate\Database\Eloquent\Builder|category_offers newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|category_offers newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|category_offers query()
- * @method static \Illuminate\Database\Eloquent\Builder|category_offers whereAuthor($value)
- * @method static \Illuminate\Database\Eloquent\Builder|category_offers whereCategoryName($value)
- * @method static \Illuminate\Database\Eloquent\Builder|category_offers whereId($value)
- */
-	class category_offers extends \Eloquent {}
 }
 
 namespace App\Models{

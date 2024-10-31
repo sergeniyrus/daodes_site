@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class CategoryOffers extends Model
 {
     use HasFactory;
+    protected $fillable = ['category_name'];
+    public $timestamps = false; // Отключение автоматического управления метками времени
+
 }

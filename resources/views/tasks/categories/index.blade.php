@@ -25,7 +25,8 @@
         margin: 20px auto;
         padding-bottom: 20px;
         color: #fff;
-        background-color: rgba(30, 32, 30, 0.8); /* Сделал фон менее прозрачным */
+        background-color: rgba(30, 30, 30, 0.9); /* Сделал фон менее прозрачным */
+        border: 1px solid #fff;
         font-size: 20px;
         border-radius: 30px; /* Скругление углов для блока */
         display: flex;
@@ -69,6 +70,17 @@
         transform: scale(1.05); /* Увеличение кнопки при наведении */
         background: #1a1a1a; /* Смена фона кнопки при наведении */
     }
+    .alert {
+        background-color: rgba(255, 0, 0, 0.8); /* Полупрозрачный красный фон */
+        color: #f8f9fa; /* Цвет текста */
+        border: 1px solid #d7fc09; /* Золотая граница */
+        border-radius: 10px; /* Скругленные углы */
+        padding: 15px; /* Отступы внутри */
+        margin: 20px 0; /* Отступы сверху и снизу */
+        font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif; /* Шрифт */
+        text-align: left; /* Выровнять текст влево */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Тень для выделения */
+    }
 </style>
 
 <div class="container">
@@ -93,11 +105,11 @@
                     <td>{{ $category->name }}</td>
                     <td>
                         <!-- Кнопка редактирования с классом blue_btn -->
-                        <a href="{{ route('categories.edit', $category) }}" class="blue_btn" title="Редактировать">
+                        <a href="{{ route('taskscategories.edit', $category) }}" class="blue_btn" title="Редактировать">
                             <i class="fas fa-edit"></i>
                         </a>
                         <!-- Кнопка удаления с классом blue_btn -->
-                        <form action="{{ route('categories.destroy', $category) }}" method="POST" style="display:inline;">
+                        <form action="{{ route('taskscategories.destroy', $category) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="blue_btn" title="Удалить">
@@ -111,7 +123,7 @@
         </table>
         
         <!-- Кнопка добавления категории с классом blue_btn -->
-        <form action="{{ route('categories.create') }}" method="GET" style="display:inline;">
+        <form action="{{ route('taskscategories.create') }}" method="GET" style="display:inline;">
             <button type="submit" class="blue_btn"> <i class="fas fa-plus-circle"></i> Добавить категорию</button>
         </form>
     </div>

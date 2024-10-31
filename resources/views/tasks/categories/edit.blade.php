@@ -68,35 +68,36 @@
     }
 
     .alert {
-        background-color: rgba(255, 0, 0, 0.8); /* Фоновый цвет для ошибок */
-        color: #ffffff; /* Цвет текста для ошибок */
-        padding: 15px; /* Отступы для блока ошибок */
-        border-radius: 5px; /* Скругленные углы */
-        margin-bottom: 20px; /* Отступ снизу для блока ошибок */
+        background-color: rgba(255, 0, 0, 0.8); /* Полупрозрачный красный фон */
+        color: #f8f9fa; /* Цвет текста */
+        border: 1px solid #d7fc09; /* Золотая граница */
+        border-radius: 10px; /* Скругленные углы */
+        padding: 15px; /* Отступы внутри */
+        margin: 20px 0; /* Отступы сверху и снизу */
+        font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif; /* Шрифт */
+        text-align: left; /* Выровнять текст влево */
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Тень для выделения */
     }
 
-    .alert ul {
-        list-style-type: none; /* Убираем маркеры списка */
-        padding: 0; /* Убираем отступы */
-    }
+    
 </style>
 
 <div class="container my-5">
-    <h1>Редактировать категорию</h1>
+    <h1>Редактировать категорию Заданий</h1>
 
     <!-- Вывод ошибок валидации -->
     @if($errors->any())
         <div class="alert">
-            <ul>
+            
                 @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
+                    >{{ $error }}
                 @endforeach
-            </ul>
+            
         </div>
     @endif
 
     <!-- Форма редактирования категории -->
-    <form action="{{ route('categories.update', $taskCategory) }}" method="POST">
+    <form action="{{ route('taskscategories.update', $taskCategory) }}" method="POST">
         @csrf
         @method('PUT')
         <div class="form-group">

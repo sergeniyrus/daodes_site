@@ -93,52 +93,73 @@ class OffersController extends Controller
         return redirect()->route('good', ['post' => 'offers', 'id' => $id, 'action' => 'edit']);
     }
 
-    
     public function categoryIndex()
-    {
-        $categories = DB::table('category_offers')->get();
-        return view('offers.categories.index')->with('categories', $categories);
+{
+    $categories = CategoryOffers::all(); // Используем модель CategoryOffers
+    return view('offers.categories.index', compact('categories'));
+}
+
+// Метод для отображения формы создания категории
+public function categoryCreate()
+{
+    return view('offers.categories.create');
+}
+
+// Метод для сохранения новой категории
+public function categoryStore(Request $request)
+{
+    $request->validate([
+        'name' => 'required|string|max:255|unique:category_offers,category_name',
+    ]);
+
+    try {
+        CategoryOffers::create(['category_name' => $request->name]); // Используем модель CategoryOffers
+    } catch (\Exception $e) {
+        // Записываем ошибку в лог для диагностики
+        \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
+        return back()->withErrors(['name' => 'Не удалось добавить категорию.']);
     }
 
-    public function categoryCreate()
-    {
-        return view('offers.categories.create');
+    return redirect()->route('offerscategories.index')->with('success', 'Категория добавлена');
+}
+
+// Метод для редактирования категории
+public function categoryEdit($id)
+{
+    $category = CategoryOffers::findOrFail($id); // Используем модель CategoryOffers
+    return view('offers.categories.edit', compact('category'));
+}
+
+// Метод для обновления категории
+public function categoryUpdate(Request $request, $id)
+{
+    $category = CategoryOffers::findOrFail($id); // Используем модель CategoryOffers
+
+    $request->validate([
+        'name' => 'required|string|max:255|unique:category_offers,category_name,' . $id,
+    ]);
+
+    try {
+        // Обновление категории
+        $category->update(['category_name' => $request->name]);
+        return redirect()->route('offerscategories.index')->with('success', 'Категория обновлена');
+    } catch (\Exception $e) {
+        // Запись ошибки в лог
+        \Log::error('Ошибка при обновлении категории: ' . $e->getMessage());
+        // Сообщение об ошибке
+        return redirect()->back()->withErrors(['name' => 'Не удалось обновить категорию. Пожалуйста, попробуйте еще раз.']);
     }
+}
 
-    public function categoryStore(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:category_offers',
-        ]);
+// Метод для удаления категории
+public function categoryDestroy($id)
+{
+    $category = CategoryOffers::findOrFail($id); // Используем модель CategoryOffers
+    $category->delete();
 
-        DB::table('category_offers')->insert(['name' => $request->name]);
+    return redirect()->route('offerscategories.index')->with('success', 'Категория удалена');
+}
 
-        return redirect()->route('offers.categories.index')->with('success', 'Категория добавлена');
-    }
-
-    public function categoryEdit($id)
-    {
-        $category = DB::table('category_offers')->where('id', $id)->first();
-        return view('offers.categories.edit')->with('category', $category);
-    }
-
-    public function categoryUpdate(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:category_offers,name,' . $id,
-        ]);
-
-        DB::table('category_offers')->where('id', $id)->update(['name' => $request->name]);
-
-        return redirect()->route('offers.categories.index')->with('success', 'Категория обновлена');
-    }
-
-    public function categoryDestroy($id)
-    {
-        DB::table('category_offers')->where('id', $id)->delete();
-
-        return redirect()->route('offers.categories.index')->with('success', 'Категория удалена');
-    }
 
     private function uploadToIPFS($file)
     {

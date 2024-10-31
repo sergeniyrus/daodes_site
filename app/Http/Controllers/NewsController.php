@@ -139,15 +139,22 @@ class NewsController extends Controller
 
     // Метод для сохранения новой категории
     public function categoryStore(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:category_news'
-        ]);
+{
+    $request->validate([
+        'name' => 'required|string|max:255|unique:category_news,category_name',
+    ]);
 
-        CategoryNews::create(['name' => $request->name]);
-
-        return redirect()->route('news.categories.index')->with('success', 'Категория добавлена');
+    try {
+        CategoryNews::create(['category_name' => $request->name]);
+    } catch (\Exception $e) {
+        // Записываем ошибку в лог для диагностики
+        \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
+        return back()->withErrors(['category_name' => 'Не удалось добавить категорию.']);
     }
+
+    return redirect()->route('newscategories.index')->with('success', 'Категория добавлена');
+}
+
 
     // Метод для редактирования категории
     public function categoryEdit($id)
@@ -158,17 +165,27 @@ class NewsController extends Controller
 
     // Метод для обновления категории
     public function categoryUpdate(Request $request, $id)
-    {
-        $category = CategoryNews::findOrFail($id);
+{
+    $category = CategoryNews::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required|string|max:255|unique:category_news,name,' . $id
-        ]);
+    $request->validate([
+        'name' => 'required|string|max:255|unique:category_news,category_name,' . $id
+    ]);
 
-        $category->update(['name' => $request->name]);
-
-        return redirect()->route('news.categories.index')->with('success', 'Категория обновлена');
+    try {
+        // Обновление категории
+        $category->update(['category_name' => $request->name]);
+        
+        return redirect()->route('newscategories.index')->with('success', 'Категория обновлена');
+    } catch (\Exception $e) {
+        // Запись ошибки в лог
+        \Log::error('Ошибка при обновлении категории: ' . $e->getMessage());
+        
+        // Сообщение об ошибке
+        return redirect()->back()->withErrors(['name' => 'Не удалось обновить категорию. Пожалуйста, попробуйте еще раз.']);
     }
+}
+
 
     // Метод для удаления категории
     public function categoryDestroy($id)
@@ -176,6 +193,6 @@ class NewsController extends Controller
         $category = CategoryNews::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('news.categories.index')->with('success', 'Категория удалена');
+        return redirect()->route('newscategories.index')->with('success', 'Категория удалена');
     }
 }
