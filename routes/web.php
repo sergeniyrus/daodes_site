@@ -33,7 +33,7 @@ Route::get('good/{post}/{id}/{action}', [HomeController::class, 'good'])->name('
 Route::get('roadmap', [RoadMapController::class, 'roadmap'])->name('roadmap');
 Route::get('/news', [NewsController::class, 'news'])->name('news');
 Route::get('/dao', [DController::class, 'offers'])->name('dao');
-Route::get('/category/{post}/{id}', [CategoryController::class, 'category_sort'])->name('category.sort');
+Route::get('/category/{post}/{id}', [CategoryController::class, 'categorySort'])->name('category.sort');
 Route::get('/page/{post}/{id}', [PageController::class, 'page_sort'])->name('page.sort');
 
 // Спам, обсуждения, голосования

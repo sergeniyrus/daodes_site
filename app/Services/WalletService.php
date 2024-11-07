@@ -10,7 +10,7 @@ use Exception;
 class WalletService
 {
     const FEE_PERCENTAGE = 0.01;
-    const SYSTEM_PULL1_USER_ID = 33; // Замените на реальный user_id для Pull1
+    const SYSTEM_PULL1_USER_ID = 1; // Замените на реальный user_id для Pull1
 
     public function transfer($fromUserId, $toUserId, $amount, $userSeedString)
     {

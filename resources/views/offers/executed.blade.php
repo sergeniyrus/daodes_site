@@ -13,7 +13,7 @@
 
             @if(isset($pdfIpfsCid))
                 <div class="msg">Решение в 
-                  <a href="https://daodes.space/ipfs/{{ $pdfIpfsCid }}" target="_blank">IPFS</a>
+                  <a href="https://daodes.space/ipfs/{{ $pdfIpfsCid }}" target="_blank" style="color: gold">IPFS</a>
                 </div>
             @else
                 <div class="msg">Решение в IPFS отсутствует</div>

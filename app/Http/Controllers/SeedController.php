@@ -46,7 +46,7 @@ class SeedController extends Controller
         return array_slice($words, 0, $count);
     }
 
-    // Сохранятель сид-фразы
+    // Сохранение сид-фразы
     public function saveSeed(Request $request)
     {
         $user_id = auth()->id(); // Получение ID текущего пользователя
