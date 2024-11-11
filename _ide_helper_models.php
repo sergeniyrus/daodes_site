@@ -65,11 +65,9 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $category_name
- * @property string $author
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers query()
- * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereAuthor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereCategoryName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereId($value)
  */
@@ -341,6 +339,7 @@ namespace App\Models{
  * @property-read int|null $bids_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \App\Models\UserProfile|null $profile
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Seed> $seeds
  * @property-read int|null $seeds_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $tasks
@@ -359,6 +358,66 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  */
 	class User extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string|null $wallet_address
+ * @property string|null $role
+ * @property string|null $avatar_url
+ * @property string|null $nickname
+ * @property string|null $timezone
+ * @property string|null $languages
+ * @property string|null $birth_date
+ * @property string|null $education
+ * @property string|null $resume
+ * @property string|null $portfolio
+ * @property string|null $specialization
+ * @property string|null $gender
+ * @property string|null $rating
+ * @property string|null $trust_level
+ * @property int|null $sbt_tokens
+ * @property int|null $tasks_completed
+ * @property int|null $tasks_failed
+ * @property string|null $recommendations
+ * @property string|null $activity_log
+ * @property string|null $achievements
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile query()
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereAchievements($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereActivityLog($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereAvatarUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereBirthDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereEducation($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereGender($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereLanguages($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereNickname($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile wherePortfolio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereRating($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereRecommendations($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereResume($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereSbtTokens($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereSpecialization($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereTasksCompleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereTasksFailed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereTimezone($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereTrustLevel($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereWalletAddress($value)
+ */
+	class UserProfile extends \Eloquent {}
 }
 
 namespace App\Models{

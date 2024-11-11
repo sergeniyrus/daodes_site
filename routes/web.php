@@ -19,7 +19,8 @@ use App\Http\Controllers\{
     RoadMapController,
     DController,
     CategoryController,
-    PageController
+    PageController,
+    UserProfileController
 };
 
 // Главная страница
@@ -119,7 +120,11 @@ Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () 
 Route::get('/tasks', [TaskController::class, 'list'])->name('index');
 Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
 
+
 Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {    
+
+    Route::get('/test', [TaskController::class, 'test'])->name('test');
+
     Route::get('/create', [TaskController::class, 'create'])->name('create');
     Route::post('/', [TaskController::class, 'store'])->name('store');    
     Route::post('/{task}/bid', [TaskController::class, 'bid'])->name('bid');
@@ -147,21 +152,33 @@ Route::middleware('auth')->prefix('taskscategories')->name('taskscategories.')->
     Route::delete('/{taskCategory}', [TasksCategoryController::class, 'destroy'])->name('destroy');
 });
 
-// Управление категориями предложений
-Route::middleware('auth')->prefix('offers/categories')->name('offers.categories.')->group(function () {
-    Route::get('/', [OffersController::class, 'categoryIndex'])->name('index'); // Список категорий
-    Route::get('/create', [OffersController::class, 'categoryCreate'])->name('create'); // Создание категории
-    Route::post('/', [OffersController::class, 'categoryStore'])->name('store'); // Сохранение категории
-    Route::get('/{category}/edit', [OffersController::class, 'categoryEdit'])->name('edit'); // Редактирование категории
-    Route::put('/{category}', [OffersController::class, 'categoryUpdate'])->name('update'); // Обновление категории
-    Route::delete('/{category}', [OffersController::class, 'categoryDestroy'])->name('destroy'); // Удаление категории
-});
+// // Управление категориями предложений
+// Route::middleware('auth')->prefix('offers/categories')->name('offers.categories.')->group(function () {
+//     Route::get('/', [OffersController::class, 'categoryIndex'])->name('index'); // Список категорий
+//     Route::get('/create', [OffersController::class, 'categoryCreate'])->name('create'); // Создание категории
+//     Route::post('/', [OffersController::class, 'categoryStore'])->name('store'); // Сохранение категории
+//     Route::get('/{category}/edit', [OffersController::class, 'categoryEdit'])->name('edit'); // Редактирование категории
+//     Route::put('/{category}', [OffersController::class, 'categoryUpdate'])->name('update'); // Обновление категории
+//     Route::delete('/{category}', [OffersController::class, 'categoryDestroy'])->name('destroy'); // Удаление категории
+// });
 
 // Профиль пользователя
 Route::middleware('auth')->prefix('profile')->name('profile.')->group(function () {
     Route::get('/', [ProfileController::class, 'edit'])->name('edit');
     Route::patch('/', [ProfileController::class, 'update'])->name('update');
     Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
+});
+
+//Для подробной анкеты
+Route::middleware(['auth'])->prefix('user-profile')->name('user_profile.')->group(function () {
+    Route::get('/', [UserProfileController::class, 'index'])->name('index');
+    Route::get('/create', [UserProfileController::class, 'create'])->name('create');
+    Route::post('/store', [UserProfileController::class, 'store'])->name('store');
+    Route::get('/edit/{id}', [UserProfileController::class, 'edit'])->name('edit');
+    Route::put('/update/{id}', [UserProfileController::class, 'update'])->name('update');
+
+Route::get('/{id?}', [UserProfileController::class, 'index'])->name('index');
+
 });
 
 // Админка

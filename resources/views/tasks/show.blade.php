@@ -5,208 +5,265 @@
 @endsection
 
 @section('main')
-    <style>
-        .task-details,
-        .bid,
-        form {
-            background-color: #0b0c18ce;
-            padding: 20px;
-            margin: 0px auto 20px auto;
-            width: 90%;
-        }
-
-        .rating-stars {
-            display: flex;
-            gap: 5px;
-        }
-
-        .star {
-            font-size: 2rem;
-            color: transparent;
-            cursor: pointer;
-            border-radius: 5px;
-            padding: 2px;
-        }
-
-        .star_off {
-            border: 1px solid #ffdf00;
-        }
-
-        .star.filled {
-            color: #ffdf00;
-            border-color: #ffdf00;
-        }
-
-        .timer {
-            font-size: 1.5rem;
-            color: #f8f9fa;
-            margin-top: 10px;
-        }
-
-        .task-details {
-            border-radius: 10px;
-            border: 2px solid #f8f9fa;
-            margin: 20px auto;
-        }
-
-        .bid {
-            border: 1px solid #d7fc09;
-            border-radius: 10px;
-        }
-
-        .bid-form {
-            padding: 20px;
-            border: 2px solid #007bff;
-            border-top: none;
-            width: 45%;
-            margin: 0% auto;
-        }
-
-        .form-group {
-            margin: 20px 50px;
-        }
-
-        .task-line {
-            color: #00ccff;
-        }
-
-        .task-line2 {
-            color: #ffffff;
-        }
-
-        .task-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            color: #d7fc09;
-            margin-top: 10px;
-        }
-
-        .task-title {
-            flex: 1;
-            text-align: center;
-            color: #00ccff;
-        }
-
-        .task-wrapper {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-        }
-
-        .task-budget,
-        .task-deadline,
-        .task-category {
-            font-size: 0.875rem;
-            margin: 0 10px;
-        }
-
-        .bid-title {
-            text-align: center;
-            color: #00ccff;
-            margin: 20px;
-        }
-
-        /* основные для кнопок */
-
-        .button-container {
-    text-align: center;
-    background: none;
-}
-
-.blue_btn {
-    display: inline-block;
-    color: #ffffff;
-    font-size: large;
-    background: #0b0c18;
-    padding: 15px 30px;
-    border: 1px solid #d7fc09;
-    border-radius: 10px;
-    box-shadow: 0 0 20px #000;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    gap: 15px;
-}
-
-.blue_btn:hover {
-    box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-    transform: scale(1.05);
-    color: #ffffff;
-    background: #0b0c18;
-}
-.icon-like,
-.icon-dislike,
-.icon-edit,
-.icon-delete {
-    font-size: 1.2em; /* Размер иконок */
-    margin-right: 5px; /* Отступ справа */
-    color: #d7fc09; /* Общий цвет иконок, если нужен */
-}
-
-/* Индивидуальные цвета для каждой иконки */
-.icon-like {
-    color: #4CAF50; /* Зеленый для лайка */
-}
-
-.icon-dislike {
-    color: #FF5722; /* Красный для дизлайка */
-}
-
-.icon-edit {
-    color: #2196F3; /* Синий для редактирования */
-}
-
-.icon-delete {
-    color: #F44336; /* Красный для удаления */
-}
-
-form {
-    background-color: #0b0c18ce;
-    padding: 20px;
-    margin: 0px auto 20px auto;
-    width: 90%;
-}
-
-input,
-textarea {
-    background-color: #000000;
-    color: #fff;
-    border: 1px solid #a0ff08;
-    border-radius: 5px;
-    width: 100%;
-    padding: 10px;
-    margin: 10px auto 15px auto;
-}
-
-label {
-    color: #f8f9fa;
-}
-
-@media (max-width: 768px) {
-    .task-wrapper {
-        flex-direction: column;
-        align-items: center;
+<style>
+    .task-details,
+    .bid,
+    form {
+        background-color: #0b0c18ce;
+        padding: 20px;
+        margin: 0px auto 20px auto;
+        width: 90%;
     }
 
-    .task-info {
-        justify-content: space-around;
-        width: 100%;
+    .rating-stars {
+        display: flex;
+        gap: 5px;
+    }
+
+    .star {
+        font-size: 2rem;
+        color: transparent;
+        cursor: pointer;
+        border-radius: 5px;
+        padding: 2px;
+    }
+
+    .star_off {
+        border: 1px solid #ffdf00;
+    }
+
+    .star.filled {
+        color: #ffdf00;
+        border-color: #ffdf00;
+    }
+
+    .timer {
+        font-size: 1.5rem;
+        color: #f8f9fa;
         margin-top: 10px;
     }
 
-    .task-info p {
-        margin: 5px 0;
+    .task-details {
+        border-radius: 10px;
+        border: 2px solid #f8f9fa;
+        margin: 20px auto;
     }
-}
 
-@media (max-width: 480px) {
+    .bid {
+        border: 1px solid #d7fc09;
+        border-radius: 10px;
+    }
+
+    .bid-form {
+        padding: 20px;
+        border: 2px solid #007bff;
+        border-top: none;
+        width: 45%;
+        margin: 0% auto;
+    }
+
+    .form-group {
+        margin: 20px 50px;
+    }
+
+    .task-line {
+        color: #00ccff;
+    }
+
+    .task-line2 {
+        color: #ffffff;
+    }
+
     .task-info {
-        flex-direction: column;
+        display: flex;
+        justify-content: space-between;
         align-items: center;
+        color: #d7fc09;
+        margin-top: 10px;
     }
-}
 
-    </style>
+    .task-title {
+        flex: 1;
+        text-align: center;
+        color: #00ccff;
+    }
+
+    .task-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .task-budget,
+    .task-deadline,
+    .task-category {
+        font-size: 0.875rem;
+        margin: 0 10px;
+    }
+
+    .bid-title {
+        text-align: center;
+        color: #00ccff;
+        margin: 20px;
+    }
+
+    /* основные для кнопок */
+    .button-container {
+        text-align: center;
+    }
+
+    .blue_btn {
+        display: inline-block;
+        color: #ffffff;
+        font-size: large;
+        background: #0b0c18;
+        padding: 15px 30px;
+        border: 1px solid #d7fc09;
+        border-radius: 10px;
+        box-shadow: 0 0 20px #000;
+        transition: box-shadow 0.3s ease, transform 0.3s ease;
+    }
+
+    .blue_btn:hover {
+        box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+        transform: scale(1.05);
+        color: #ffffff;
+        background: #0b0c18;
+    }
+
+    .icon-like,
+    .icon-dislike,
+    .icon-edit,
+    .icon-delete {
+        font-size: 1.2em;
+        margin-right: 5px;
+        color: #d7fc09;
+    }
+
+    .icon-like {
+        color: #4CAF50;
+    }
+
+    .icon-dislike {
+        color: #FF5722;
+    }
+
+    .icon-edit {
+        color: #2196F3;
+    }
+
+    .icon-delete {
+        color: #F44336;
+    }
+
+    input,
+    textarea {
+        background-color: #000000;
+        color: #fff;
+        border: 1px solid #a0ff08;
+        border-radius: 5px;
+        width: 100%;
+        padding: 10px;
+        margin: 10px auto 15px auto;
+    }
+
+    label {
+        color: #f8f9fa;
+    }
+
+    .bid-form {
+        padding: 20px;
+        margin: 0 auto;
+        max-width: 800px;
+        background-color: rgba(20, 20, 20, 0.9);
+        border-radius: 20px;
+        border: 1px solid #d7fc09;
+        color: #f8f9fa;
+        font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
+        margin-top: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .bid-form .form-group label {
+        color: #d7fc09;
+        font-size: 1.2rem;
+        display: block;
+        margin: 10px 0;
+        text-align: left;
+        font-weight: bold;
+        
+    }
+
+    .input_dark, textarea {
+        background-color: #1a1a1a;
+        color: #a0ff08;
+        border: 1px solid #d7fc09;
+        border-radius: 5px;
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        transition: border 0.3s ease;
+    }
+
+    .input_dark:focus, textarea:focus {
+        border: 1px solid #a0ff08;
+        outline: none;
+        box-shadow: 0 0 5px #d7fc09;
+    }
+
+    .blue_btn {
+        display: inline-block;
+        color: #ffffff;
+        font-size: 1.2rem;
+        background: #0b0c18;
+        padding: 12px 25px;
+        border: 1px solid #d7fc09;
+        border-radius: 10px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        cursor: pointer;
+        transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+        margin-top: 20px;
+    }
+
+    .blue_btn:hover {
+        box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+        transform: scale(1.05);
+        background: #1a1a1a;
+    }
+
+    .alert {
+        padding: 15px;
+        background-color: #f44336;
+        color: white;
+        margin-top: 20px;
+    }
+
+    @media (max-width: 768px) {
+        .task-wrapper {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .task-info {
+            justify-content: space-around;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .task-info p {
+            margin: 5px 0;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .task-info {
+            flex-direction: column;
+            align-items: center;
+        }
+    }
+</style>
+
     <!-- Задание биржи -->
     <div class="task-details">
         <div class="bid">
@@ -224,7 +281,15 @@ label {
             <div>
                 <p>{{ $task->description }}</p>
             </div>
+            <div class="task-author">
+                <p><strong>Автор задачи:</strong> 
+                    <a href="{{ route('user_profile.index', ['id' => $task->user_id]) }}" title="Profile" style="color: #d7fc09; text-decoration: none;">
+                        {{ $task->user->name }}
+                    </a>
+                </p>
+            </div>
         </div>
+        
 
         <br>
 
@@ -378,14 +443,19 @@ label {
             @else
                 @foreach ($task->bids as $bid)
                     <div class="bid">
-                        <p class="task-line2"><strong class="task-line">Фрилансер:</strong> {{ $bid->user->name }}</p>
+                        <p class="task-line2">
+                            <strong class="task-line">Фрилансер:</strong>
+                            <a href="{{ route('user_profile.index', ['id' => $bid->user->id]) }}" title="Profile" style="color: #d7fc09; text-decoration: none;">
+                                {{ $bid->user->name }}
+                            </a>
+                        </p>
                         <p class="task-line2"><strong class="task-line">Цена:</strong> {{ $bid->price }} DESCoin</p>
                         <p class="task-line2"><strong class="task-line">Время выполнения:</strong> {{ $bid->days }}
                             дней {{ $bid->hours }} часов</p>
                         <p class="task-line2"><strong class="task-line">Комментарий:</strong> {{ $bid->comment }}</p>
 
                         @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
-                            <form action="{{ route('bids.accept', $bid) }}" method="POST" style="display:inline;">
+                            <form action="{{ route('bids.accept', $bid) }}" method="POST" style="display:block;">
                                 @csrf
                                 <br><button type="submit" class="blue_btn">✔️ Принять предложение</button>
                             </form>
@@ -413,42 +483,43 @@ label {
         @endif
 
         <!-- Раздел для подачи предложения -->
-        @if (Auth::check() && Auth::id() !== $task->user_id && !$task->accepted_bid_id)
-            @if ($task->bids()->where('user_id', Auth::id())->exists())
-                <p style="text-align: center; color:#ffdf00">Вы уже подали предложение на это задание.</p>
-            @else
-                <div class="bid-form">
-                    <form action="{{ route('tasks.bid', $task) }}" method="POST">
-                        @csrf
-                        <fieldset>
-                            <legend>
-                                <h3 style="text-align: center">Подать предложение</h3>
-                            </legend>
-                            <div class="form-group">
-                                <label for="price">Цена (DESCoin):</label>
-                                <input type="number" name="price" id="price"
-                                    style="color: #d7fc09; font-size:xx-large" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="days">Срок выполнения (дни):</label>
-                                <input type="number" name="days" id="days"
-                                    style="color: #d7fc09; font-size:xx-large" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="hours">Срок выполнения (часы):</label>
-                                <input type="number" name="hours" id="hours"
-                                    style="color: #d7fc09; font-size:xx-large" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="comment">Комментарий:</label>
-                                <textarea name="comment" id="comment" style="color: #d7fc09; font-size:xx-large" rows="3"></textarea>
-                            </div>
-                            <button type="submit" class="blue_btn">Отправить предложение</button>
-                        </fieldset>
-                    </form>
-                </div>
+        <div class="container my-5">
+            @if (Auth::check() && Auth::id() !== $task->user_id && !$task->accepted_bid_id)
+                @if ($task->bids()->where('user_id', Auth::id())->exists())
+                    <p style="text-align: center; color:#ffdf00">Вы уже подали предложение на это задание.</p>
+                @else
+                    <div class="bid-form">
+                        <form action="{{ route('tasks.bid', $task) }}" method="POST" style="border: 1px solid #00ccff; border-radius: 15px;">
+                            @csrf
+                            <fieldset>
+                                <legend  style="text-align: center">
+                                    <h3>Подать предложение</h3>
+                                </legend>
+                                <div class="form-group">
+                                    <label for="price">Цена (DESCoin):</label>
+                                    <input type="number" name="price" id="price" class="input_dark" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="days">Срок выполнения (дни):</label>
+                                    <input type="number" name="days" id="days" class="input_dark" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="hours">Срок выполнения (часы):</label>
+                                    <input type="number" name="hours" id="hours" class="input_dark" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="comment">Комментарий:</label>
+                                    <textarea name="comment" id="comment" class="input_dark" rows="3"></textarea>
+                                </div>
+                                <div class="text-center">
+                                    <button type="submit" class="blue_btn">Отправить предложение</button>
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                @endif
             @endif
-        @endif
+        </div>
     </div>
 
 

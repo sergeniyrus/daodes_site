@@ -223,25 +223,33 @@
             <span><img src="/img/bottom/paper.png" alt="White paper"></span>
         </a>
     </div>
+
+
     <div class="auth-buttons">
-        @if (Auth::check())
-            <a href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" title="Logout">
-                <span class="logo_name"><img src="/img/bottom/logout.png" alt="Logout"></span>
-            </a>
-            <form id="logout-form" class="logo_name" action="{{ route('logout') }}" method="POST"
-                style="display: none;">
-                @csrf
-            </form>
-        @else
-            <a href="https://daodes.space/login" title="Login">
-                <span class="logo_name"><img src="/img/bottom/login.png" alt="Login"></span>
-            </a>
-            <a href="{{ route('register') }}" title="Registration">
-                <span class="logo_name"><img src="/img/bottom/registrat.png" alt="Registration"></span>
-            </a>
-        @endif
-    </div>
+    @if (Auth::check())
+        <a href="{{ route('user_profile.index', ['id' => Auth::id()]) }}" title="Profile">
+            <span class="logo_name">
+                <img src="{{ Auth::user()->profile && Auth::user()->profile->avatar_url ? Auth::user()->profile->avatar_url : 'https://daodes.space/ipfs/QmPdPDwGSrfWYxomC3u9FLBtB9MGH8iqVGRZ9TLPxZTekj' }}" alt="Profile">
+            </span>
+        </a>
+        
+        <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" title="Logout">
+            <span class="logo_name"><img src="/img/bottom/logout.png" alt="Logout"></span>
+        </a>
+        <form id="logout-form" class="logo_name" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+    @else
+        <a href="https://daodes.space/login" title="Login">
+            <span class="logo_name"><img src="/img/bottom/login.png" alt="Login"></span>
+        </a>
+        <a href="{{ route('register') }}" title="Registration">
+            <span class="logo_name"><img src="/img/bottom/registrat.png" alt="Registration"></span>
+        </a>
+    @endif
+</div>
+
+    
 </div>
 
 <!-- Модальное окно для подменю -->

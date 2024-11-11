@@ -66,4 +66,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Seed::class);
     }
+
+    // В модели User
+public function profile()
+{
+    return $this->hasOne(UserProfile::class);
+}
+
 }

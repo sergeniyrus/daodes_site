@@ -9,6 +9,7 @@ use App\Models\TaskCategory; // Модель для категорий
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 
 
 class TaskController extends Controller
@@ -16,13 +17,20 @@ class TaskController extends Controller
     // Отображение страницы создания задачи
     public function create()
     {
+        Log::info('ВОТ! читаем controller create');
         $categories = TaskCategory::all(); // Загружаем категории для выбора
         return view('tasks.create', compact('categories')); // Передаем категории в представление
     }
 
+public function test () {
+    Log::info('ВОТ! читаем controller test');
+    return view('tasks.test');
+}
+
     // Отображение списка открытых задач
     public function list()
     {
+        Log::info('List читаем controller list');
         // Логика получения задач с фильтрацией по категориям (если применимо)
         $tasks = Task::with('category')->paginate(10); // Пример с пагинацией
         $categories = TaskCategory::all();
@@ -197,7 +205,7 @@ class TaskController extends Controller
         $task->update($validatedData);
 
         // Перенаправляем с сообщением об успехе
-        return redirect()->route('tasks.index')->with('success', 'Задание успешно обновлено!');
+        return redirect()->route('tasks.store')->with('success', 'Задание успешно обновлено!');
     }
 
     public function complete(Task $task)

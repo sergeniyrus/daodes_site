@@ -141,33 +141,40 @@
         <h1 class="display-4">Биржа заданий</h1>
     </div>
 
-    @foreach($tasks as $task)
-        <div class="card shadow-sm">
-            <div class="card-body">
-                <div class="task-wrapper">
-                    <div class="task-title">
-                        <a href="{{ route('tasks.show', $task) }}" class="btn blue_btn">{{ $task->title }}</a> 
-                    </div>    
-                    <!-- Информация о категории, бюджете и сроке -->
-                    <div class="task-info">    
-                        <p class="task-category"><i class="fas fa-folder-open"></i> {{ $task->category ? $task->category->name : 'Без категории' }}</p>
-                        <p class="task-budget"><i class="fas fa-dollar-sign"></i> {{ $task->budget }} руб.</p>
-                        <p class="task-deadline"><i class="fas fa-clock"></i> {{ $task->deadline }}</p>
-                    </div>
+    @forelse($tasks as $task)
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <div class="task-wrapper">
+                <div class="task-title">
+                    <a href="{{ route('tasks.show', $task) }}" class="btn blue_btn">{{ $task->title }}</a> 
+                </div>    
+                <!-- Информация о категории, бюджете и сроке -->
+                <div class="task-info">    
+                    <p class="task-category"><i class="fas fa-folder-open"></i> {{ $task->category ? $task->category->name : 'Без категории' }}</p>
+                    <p class="task-budget"><i class="fas fa-dollar-sign"></i> {{ $task->budget }} руб.</p>
+                    <p class="task-deadline"><i class="fas fa-clock"></i> {{ $task->deadline }}</p>
                 </div>
-
-                <!-- Заголовок как кнопка -->
-                <p class="card-text">
-                    @if (strlen($task->description) > 260)
-                        {{ Str::limit($task->description, 260) }}...
-                        <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-link">→ Читать дальше ←</a> <!-- Кликабельная ссылка -->
-                    @else
-                        {{ $task->description }}
-                    @endif
-                </p>
             </div>
+
+            <!-- Заголовок как кнопка -->
+            <p class="card-text">
+                @if (strlen($task->description) > 260)
+                    {{ Str::limit($task->description, 260) }}...
+                    <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-link">→ Читать дальше ←</a>
+                @else
+                    {{ $task->description }}
+                @endif
+            </p>
         </div>
-    @endforeach
+    </div>
+@empty
+    <div style="text-align: center">
+        <p>Заданий нет, можете <a href="{{ route('tasks.create') }}">создать задание</a>.</p>
+    </div>
+@endforelse
+<?php
+Log::info('List читаем file');
+?>
 
     <!-- Пагинация -->
     <div class="pagination">
