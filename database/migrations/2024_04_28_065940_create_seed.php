@@ -10,38 +10,50 @@ return new class extends Migration
      * Run the migrations.
      */
     public function up(): void
-    {
-        if (!Schema::hasTable('seed')) {
-            Schema::create('seed', function (Blueprint $table) {
-                $table->id();
-                $table->integer('user_id');
-                $table->string('word0');
-                $table->string('word1');
-                $table->string('word2');
-                $table->string('word3');
-                $table->string('word4');
-                $table->string('word5');
-                $table->string('word6');
-                $table->string('word7');
-                $table->string('word8');
-                $table->string('word9');
-                $table->string('word10');
-                $table->string('word11');
-                $table->string('word12');
-                $table->string('word13');
-                $table->string('word14');
-                $table->string('word15');
-                $table->string('word16');
-                $table->string('word17');
-                $table->string('word18');
-                $table->string('word19');
-                $table->string('word20');
-                $table->string('word21');
-                $table->string('word22');
-                $table->string('word23');   
-            });
-        }
+{
+    // Проверка существования таблицы перед её созданием
+    if (!Schema::hasTable('seed')) {
+        Schema::create('seed', function (Blueprint $table) {
+            $table->id();
+
+            // Внешний ключ для пользователя (user_id)
+            $table->foreignId('user_id')
+                ->constrained('users') // Указывает на таблицу users
+                ->onDelete('cascade')
+                ->index(); // Индекс для ускорения поиска по user_id
+
+            // Хешированные слова (word0, word1, ..., word23)
+            $table->string('word0')->nullable();
+            $table->string('word1')->nullable();
+            $table->string('word2')->nullable();
+            $table->string('word3')->nullable();
+            $table->string('word4')->nullable();
+            $table->string('word5')->nullable();
+            $table->string('word6')->nullable();
+            $table->string('word7')->nullable();
+            $table->string('word8')->nullable();
+            $table->string('word9')->nullable();
+            $table->string('word10')->nullable();
+            $table->string('word11')->nullable();
+            $table->string('word12')->nullable();
+            $table->string('word13')->nullable();
+            $table->string('word14')->nullable();
+            $table->string('word15')->nullable();
+            $table->string('word16')->nullable();
+            $table->string('word17')->nullable();
+            $table->string('word18')->nullable();
+            $table->string('word19')->nullable();
+            $table->string('word20')->nullable();
+            $table->string('word21')->nullable();
+            $table->string('word22')->nullable();
+            $table->string('word23')->nullable();
+
+            // Добавление временных меток (created_at, updated_at)
+            $table->timestamps();
+        });
     }
+}
+
 
     /**
      * Reverse the migrations.
