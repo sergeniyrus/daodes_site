@@ -13,7 +13,7 @@
         <h1>Мой кошелек</h1>
         <p>Баланс: {{ rtrim(rtrim(number_format($wallet->balance, 8, '.', ''), '0'), '.') }} descoin</p>
         <br>
-        <a href="{{ route('wallet.showTransferForm') }}" >
+        <a href="{{ route('wallet.transfer.form') }}" >
             {{ __('Перевести') }}
         </a>
         <a href="{{ route('wallet.history') }}" >

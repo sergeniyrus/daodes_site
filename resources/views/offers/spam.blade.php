@@ -7,8 +7,8 @@
       $id_offer = $id_offer ?? request()->route('id'); // Получаем id предложения из маршрута, если переменная не передана
 
       $hasVoted = DB::table('spam')
-                    ->where('id_offer', $id_offer)
-                    ->where('id_user', $user_id)
+                    ->where('offer_id', $id_offer)
+                    ->where('user_id', $user_id)
                     ->exists();
       ?>
 
@@ -46,7 +46,7 @@ if (isset($id_offer)) {
         $totalUsers = DB::table('users')->count();
         $totalUsers -= 2;
     
-        $counts = DB::table('spam')->select(DB::raw('vote, COUNT(*) as count'))->where('id_offer', $id_offer)->groupBy('vote')->get();
+        $counts = DB::table('spam')->select(DB::raw('vote, COUNT(*) as count'))->where('offer_id', $offer_id)->groupBy('vote')->get();
     
         $yes = 0;
         $no = 0;

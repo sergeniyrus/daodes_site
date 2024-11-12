@@ -19,11 +19,12 @@ namespace App\Models{
  * @property int $task_id
  * @property int $user_id
  * @property string $price
+ * @property string|null $deadline
  * @property string|null $comment
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $days
  * @property int $hours
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Task $task
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Bid newModelQuery()
@@ -32,6 +33,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Bid whereComment($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bid whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bid whereDays($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bid whereDeadline($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bid whereHours($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bid whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bid wherePrice($value)
@@ -48,13 +50,17 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $category_name
+ * @property string|null $created_at
+ * @property string|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\News> $news
  * @property-read int|null $news_count
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews query()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereCategoryName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereUpdatedAt($value)
  */
 	class CategoryNews extends \Eloquent {}
 }
@@ -65,11 +71,15 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $category_name
+ * @property string|null $created_at
+ * @property string|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers query()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereCategoryName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereUpdatedAt($value)
  */
 	class CategoryOffers extends \Eloquent {}
 }
@@ -81,18 +91,18 @@ namespace App\Models{
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $id_offer
- * @property int $id_user
- * @property string $text
+ * @property int $offer_id
+ * @property int $user_id
+ * @property string|null $text
  * @method static \Illuminate\Database\Eloquent\Builder|Comment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Comment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Comment query()
  * @method static \Illuminate\Database\Eloquent\Builder|Comment whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Comment whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereIdOffer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Comment whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereOfferId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Comment whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUserId($value)
  */
 	class Comment extends \Eloquent {}
 }
@@ -104,12 +114,12 @@ namespace App\Models{
  * @property int $id
  * @property int $from_wallet_id
  * @property int $to_wallet_id
- * @property string $amount
- * @property string $fee
+ * @property string $amount The amount of money transferred between wallets.
+ * @property string $fee The transaction fee applied to the transfer.
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Wallet|null $fromWallet
- * @property-read \App\Models\Wallet|null $toWallet
+ * @property-read \App\Models\Wallet $fromWallet
+ * @property-read \App\Models\Wallet $toWallet
  * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|HistoryPay query()
@@ -133,10 +143,10 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $title
  * @property string $content
- * @property string $img
+ * @property string|null $img
  * @property int $category_id
- * @property string $user_id
- * @property int|null $views
+ * @property int $user_id
+ * @property int $views
  * @property-read \App\Models\CategoryNews|null $category
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|News newModelQuery()
@@ -160,36 +170,82 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $title
+ * @property string $content
+ * @property string|null $img
+ * @property int $category_id
  * @property int $user_id
- * @property string $word0
- * @property string $word1
- * @property string $word2
- * @property string $word3
- * @property string $word4
- * @property string $word5
- * @property string $word6
- * @property string $word7
- * @property string $word8
- * @property string $word9
- * @property string $word10
- * @property string $word11
- * @property string $word12
- * @property string $word13
- * @property string $word14
- * @property string $word15
- * @property string $word16
- * @property string $word17
- * @property string $word18
- * @property string $word19
- * @property string $word20
- * @property string $word21
- * @property string $word22
- * @property string $word23
+ * @property int $views
+ * @property string $state
+ * @property string $method
+ * @property string $budget
+ * @property string $coin
+ * @property string $control
+ * @property string $finish
  * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereBudget($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereCoin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereControl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereFinish($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereImg($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereState($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereViews($value)
+ */
+	class Offers extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property string|null $word0
+ * @property string|null $word1
+ * @property string|null $word2
+ * @property string|null $word3
+ * @property string|null $word4
+ * @property string|null $word5
+ * @property string|null $word6
+ * @property string|null $word7
+ * @property string|null $word8
+ * @property string|null $word9
+ * @property string|null $word10
+ * @property string|null $word11
+ * @property string|null $word12
+ * @property string|null $word13
+ * @property string|null $word14
+ * @property string|null $word15
+ * @property string|null $word16
+ * @property string|null $word17
+ * @property string|null $word18
+ * @property string|null $word19
+ * @property string|null $word20
+ * @property string|null $word21
+ * @property string|null $word22
+ * @property string|null $word23
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Seed newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Seed newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Seed query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Seed whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Seed whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Seed whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord0($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Seed whereWord1($value)
@@ -224,25 +280,24 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property int|null $accepted_bid_id
  * @property string $title
  * @property string $description
  * @property string $budget
- * @property string|null $deadline_time
+ * @property string|null $deadline
  * @property string $status
  * @property int $user_id
- * @property int|null $likes
- * @property int|null $dislikes
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int|null $category_id
+ * @property int $likes
+ * @property int $dislikes
+ * @property int|null $accepted_bid_id
  * @property string|null $start_time
  * @property int $in_progress
- * @property int|null $completed
- * @property string|null $deadline
+ * @property int $completed
  * @property string|null $completion_time
  * @property int|null $rating
  * @property string|null $completed_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Bid|null $acceptedBid
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Bid> $bids
  * @property-read int|null $bids_count
@@ -261,7 +316,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCompletionTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereDeadline($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereDeadlineTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereDislikes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereId($value)
@@ -330,8 +384,8 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property mixed $password
- * @property string|null $keyword
- * @property int|null $rang_access
+ * @property string $keyword
+ * @property int|null $access_level
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -348,12 +402,12 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereAccessLevel($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereKeyword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
- * @method static \Illuminate\Database\Eloquent\Builder|User whereRangAccess($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  */
@@ -366,10 +420,10 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $user_id
- * @property string|null $wallet_address
- * @property string|null $role
+ * @property string $role
  * @property string|null $avatar_url
  * @property string|null $nickname
+ * @property string|null $gender
  * @property string|null $timezone
  * @property string|null $languages
  * @property string|null $birth_date
@@ -377,12 +431,11 @@ namespace App\Models{
  * @property string|null $resume
  * @property string|null $portfolio
  * @property string|null $specialization
- * @property string|null $gender
- * @property string|null $rating
- * @property string|null $trust_level
- * @property int|null $sbt_tokens
- * @property int|null $tasks_completed
- * @property int|null $tasks_failed
+ * @property string $rating
+ * @property string $trust_level
+ * @property string $sbt_tokens
+ * @property int $tasks_completed
+ * @property int $tasks_failed
  * @property string|null $recommendations
  * @property string|null $activity_log
  * @property string|null $achievements
@@ -415,7 +468,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereTrustLevel($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|UserProfile whereWalletAddress($value)
  */
 	class UserProfile extends \Eloquent {}
 }
@@ -426,14 +478,14 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $user_id
- * @property string $balance
+ * @property string $balance The balance of the user wallet.
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\HistoryPay> $historyPaysFrom
  * @property-read int|null $history_pays_from_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\HistoryPay> $historyPaysTo
  * @property-read int|null $history_pays_to_count
- * @property-read \App\Models\User|null $user
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Wallet query()
@@ -454,17 +506,17 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $new_id
- * @property string $author
- * @property string $text
+ * @property int $user_id
+ * @property string|null $text
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news query()
- * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereAuthor($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereNewId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereUserId($value)
  */
 	class comments_news extends \Eloquent {}
 }
@@ -476,67 +528,19 @@ namespace App\Models{
  * @property int $id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $id_offer
- * @property int $id_user
- * @property string $text
+ * @property int $offer_id
+ * @property int $user_id
+ * @property string|null $text
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer query()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|comments_offer whereIdOffer($value)
- * @method static \Illuminate\Database\Eloquent\Builder|comments_offer whereIdUser($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|comments_offer whereOfferId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|comments_offer whereUserId($value)
  */
 	class comments_offer extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * 
- *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $title
- * @property string $content
- * @property string $img
- * @property int $category_id
- * @property int $user_id
- * @property int|null $views
- * @property int|null $state
- * @property string|null $start_vote
- * @property string|null $type
- * @property string|null $method
- * @property int|null $budget
- * @property string|null $coin
- * @property string|null $control
- * @property string|null $finish
- * @property string|null $pdf_ipfs_cid
- * @property-read \App\Models\User|null $user
- * @method static \Illuminate\Database\Eloquent\Builder|offers newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|offers newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|offers query()
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereBudget($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereCoin($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereContent($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereControl($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereFinish($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereImg($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereMethod($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers wherePdfIpfsCid($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereStartVote($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereState($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereTitle($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereType($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereUserId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|offers whereViews($value)
- */
-	class offers extends \Eloquent {}
 }
 

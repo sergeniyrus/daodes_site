@@ -1,240 +1,219 @@
 @extends('template')
 
 @section('title_page')
-    Создать новость
+    Редактировать предложение
 @endsection
 
 @section('main')
-<style>
-    .new_post {
-        width: 90%;
-        margin: 20px auto;
-        padding-bottom: 20px;
-        background-color: rgba(30, 32, 30, 0.753);
-        font-size: 20px;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        border: 1px solid #fff;
-        border-radius: 30px;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .name_str h2 {
-        text-align: center;
-        font-size: 36px;
-    }
-    
-    .blue_btn {
-        display: inline-block;
-        color: #ffffff;
-        font-size: large;
-        background: #0b0c18;
-        padding: 15px 30px;
-        border: 1px solid #d7fc09;
-        border-radius: 10px;
-        box-shadow: 0 0 20px #000;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
-        gap: 15px;
-    }
-    
-    .blue_btn:hover {
-        box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-        transform: scale(1.05);
-        color: #ffffff;
-        background: #0b0c18;
-    }
-    
-    .verh {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-        align-items: center;
-        justify-content: center;
-    }
-    
-    .fp {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin: 0 20px;
-        width: 100px;
-    }
-    
-    .dark_text {
-        padding: 8px;
-        font-size: 16px;
-        color: black;
-    }
-    
-    .redactor {
-        margin: 20px;
-        color: black;
-    }
-    
-    .varn {
-        text-align: center;
-        font-size: 14px;
-        color: red;
-        margin-top: 25px;
-    }
-    
-    .file-input-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        position: relative;
-        overflow: hidden;
-    }
-    
-    .file-input-wrapper input[type="file"] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        margin: 0;
-        padding: 0;
-        font-size: 100px;
-        cursor: pointer;
-        opacity: 0;
-    }
-    
-    .custom-file-button {
-        display: inline-block;
-        padding: 8px 12px;
-        cursor: pointer;
-        border: 1px solid #ddd;
-        background-color: #f8f8f8;
-        border-radius: 4px;
-        font-size: 14px;
-        color: #333;
-        transition: background-color 0.3s;
-        margin: auto;
-    }
-    
-    .custom-file-button:hover {
-        background-color: #e0e0e0;
-    }
-    
-    #crop-container {
-        display: none;
-        margin-top: 20px;
-    }
-    
-    #preview {
-        display: block;
-        width: 100px; /* Ограничение по ширине */
-        max-width: 100%;
-        margin-top: 20px;
-    }
-    
-    button.inline-flex {
-        margin-top: 20px;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-    }
-    
-    @media (min-width: 768px) {
-        .verh {
-            flex-direction: row;
-            justify-content: space-between;
+    <style>
+        .container {
+            padding: 20px;
+            margin: 30px auto;
+            max-width: 800px;
+            background-color: rgba(20, 20, 20, 0.9);
+            border-radius: 20px;
+            border: 1px solid #d7fc09;
+            color: #f8f9fa;
+            font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
-        .fp {
-            flex: 1;
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
         }
-        button.inline-flex {
-            width: auto;
+
+        .form-group label {
+            color: #d7fc09;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
-    }
-    
-    @media (max-width: 767px) {
-        .fp input[type="text"], .fp select, .fp input[type="file"] {
-            width: 100%;
+
+        .input_dark,
+        textarea {
+            background-color: #1a1a1a;
+            color: #a0ff08;
+            border: 1px solid #d7fc09;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 16px;
+            transition: border 0.3s ease;
         }
+
+        .input_dark:focus,
+        textarea:focus {
+            border: 1px solid #a0ff08;
+            outline: none;
+            box-shadow: 0 0 5px #d7fc09;
+        }
+
+        .blue_btn {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 1.2rem;
+            background: #0b0c18;
+            padding: 12px 25px;
+            border: 1px solid #d7fc09;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .blue_btn:hover {
+            box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+            transform: scale(1.05);
+            background: #1a1a1a;
+        }
+
+        .file-input-wrapper {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+
         #preview {
-            width: 80px;
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #d7fc09;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
-    }
-    
-    @media (max-width: 480px) {
-        .dark_text {
-            font-size: 14px;
-            padding: 6px;
+
+        #file-name {
+            font-size: 0.9rem;
+            color: #a0ff08;
+            text-align: center;
+            margin-top: 5px;
         }
-        .varn {
-            font-size: 12px;
+
+        .alert-danger {
+            background-color: rgba(255, 0, 0, 0.8);
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
         }
-    }
-    
-    @media (max-width: 320px) {
-        .dark_text {
-            font-size: 12px;
-            padding: 4px;
-        }
-        .varn {
-            font-size: 10px;
-        }
-    }
     </style>
-    <div class="new_post">
-        <div class="name_str">
-            <h2>Редактировать предложение.</h2>
-        </div>
-        <form method="POST" action="{{ route('offers.update', ['id' => $offer->id]) }}" enctype="multipart/form-data">
+
+    <div class="container">
+        <h2 class="text-center">Редактировать предложение</h2>
+
+        <!-- Validation Errors -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form id="offer-form" method="POST" action="{{ route('offers.update', ['id' => $offer->id]) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-            <input type="hidden" name="ids" value="{{ $offer->id }}"/>
-            <div class="verh">
-                <div class="fp">Название предложения<br>
-                    <input type="text" name="title" class="dark_text" value="{{ $offer->title }}" /><br>
-                </div>
 
-                <div class="fp">Тема<br>
-                    <select name="category" size="1" class="dark_text">
-                        
-
-
-                        <?php
-                    // получаем категории
-                    $categories = DB::table('category_offers')->get();
-                    foreach ($categories as $category) : ?>
-
-                        <option value="<?php echo $category->id;
-                        if (($category->id)==($offer->category_id)){
-                        echo '" selected="selected';
-                        }
-                        ?>" label="<?php echo $category->category_name; ?>"></option>
-                        <?php endforeach; ?>
-                    </select><br>
-                </div>
+            <div class="form-group">
+                <label for="title">Название предложения</label>
+                <input type="text" name="title" class="input_dark" value="{{ old('title', $offer->title) }}">
             </div>
-            <div class="redactor">
-                <textarea id="editor" name="content" rows="20" cols="100"
-                    >{{ $offer->content }}</textarea><br>
+
+            <div class="form-group">
+                <label for="category">Категория</label>
+                <select name="category" class="input_dark">
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}" {{ $category->id == $offer->category_id ? 'selected' : '' }}>
+                            {{ $category->category_name }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
-            <script>
-                ClassicEditor
-                    .create(document.querySelector('#editor'), {
-                        // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
-                    })
-                    .then(editor => {
-                        window.editor = editor;
-                    })
-                    .catch(err => {
-                        console.error(err.stack);
-                    });
-            </script>
+
+            <div class="form-group">
+                <label for="filename">Изображение предложения</label>
+                <div class="file-input-wrapper">
+                    <!-- Если изображение существует, показываем его, иначе скрываем -->
+                    <img id="preview" src="{{ $offer->img ?? '#' }}" alt="Превью изображения"
+                        style="display: {{ $offer->img ? 'block' : 'none' }}; max-width: 100px;">
             
-            <button
-                class="inline-flex items-center px-4 py-2 bg-gray-800 dark:bg-gray-200 border border-transparent rounded-md font-semibold text-xs text-white dark:text-gray-800 uppercase tracking-widest hover:bg-gray-700 dark:hover:bg-white focus:bg-gray-700 dark:focus:bg-white active:bg-gray-900 dark:active:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition ease-in-out duration-150">Сохранить</button>
+                    <div class="file-info">
+                        <!-- Если изображение есть, выводим имя файла, иначе пишем "Файл не выбран" -->
+                        <span id="file-name" class="file-name">{{ $offer->img ? basename($offer->img) : 'Файл не выбран' }}</span>
+                        <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">
+                            Выберите файл
+                        </button>
+                        <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+                    </div>
+                </div>
+                <p style="color: red; text-align: center; font-size: 0.9rem;">Изображение должно быть 1:1. Имя файла должно быть на английском.</p>
+            </div>
+            
+            <div class="form-group">
+                <label for="content">Содержание предложения</label>
+                <textarea id="editor" name="content" rows="10" class="input_dark">{{ old('content', $offer->content) }}</textarea>
+            </div>
+
+            <div style="text-align: center;">
+                <button type="submit" class="blue_btn">Сохранить изменения</button>
+            </div>
         </form>
-        <div class="varn">
-            <p>Изображение должно иметь размер 1:1 (200*200px)</p>
-            <p> Имя файла <b>только</b> цифры и английский язык ! </p>
-        </div>
-        <br>
     </div>
+
+    <script src="https://unpkg.com/cropperjs"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+    <script>
+        const fileInput = document.getElementById('file-input');
+        const previewImage = document.getElementById('preview');
+        let cropper;
+
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewImage.style.display = 'block';
+
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    cropper = new Cropper(previewImage, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        background: false,
+                        scalable: false,
+                        zoomable: false,
+                    });
+                };
+                reader.readAsDataURL(file);
+            } else {
+                previewImage.style.display = 'none';
+                if (cropper) {
+                    cropper.destroy();
+                }
+            }
+
+            document.getElementById('file-name').textContent = file ? file.name : 'Файл не выбран';
+        });
+
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 @endsection

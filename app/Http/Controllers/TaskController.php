@@ -2,15 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Task;
-use App\Models\Bid;
-use App\Models\TaskVote;
-use App\Models\TaskCategory; // Модель для категорий
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\Task;
+use App\Models\Bid;
+use App\Models\TaskVote;
+use App\Models\TaskCategory; // Модель для категорий
 
 class TaskController extends Controller
 {
@@ -63,7 +62,7 @@ public function test () {
             'description' => 'required|string',
             'deadline' => 'required|date',
             'budget' => 'required|numeric',
-            'category_id' => 'required|exists:task_category,id', // Проверка существования категории
+            'category_id' => 'required|exists:category_tasks,id', // Проверка существования категории
         ]);
 
         Task::create([
@@ -198,7 +197,7 @@ public function test () {
             'description' => 'required|string',
             'deadline' => 'required|date',
             'budget' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:task_category,id', // Категория должна существовать
+            'category_id' => 'required|exists:category_tasks,id', // Категория должна существовать
         ]);
 
         // Обновление задачи

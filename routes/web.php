@@ -95,10 +95,11 @@ Route::prefix('offerscategories')->name('offerscategories.')->group(function () 
 Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
 // Seed фраза
-Route::middleware(['auth', 'verified'])->prefix('seed')->name('seed.')->group(function () {
+Route::middleware(['auth'])->prefix('seed')->name('seed.')->group(function () {
     Route::get('/', [SeedController::class, 'index'])->name('index');
     Route::post('/save', [SeedController::class, 'saveSeed'])->name('save');
 });
+
 
 // Сброс пароля по ключевому слову
 Route::middleware('guest')->prefix('password')->name('password.')->group(function () {
@@ -116,14 +117,13 @@ Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () 
     Route::get('/history', [WalletController::class, 'history'])->name('history');
 });
 
+Route::get('/addtask', [TaskController::class, 'create'])->name('addtask')->middleware('auth');
+
 // Задачи
-Route::get('/tasks', [TaskController::class, 'list'])->name('index');
+Route::get('/tasks', [TaskController::class, 'list'])->name('tasks.index');
 Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
 
-
 Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {    
-
-    Route::get('/test', [TaskController::class, 'test'])->name('test');
 
     Route::get('/create', [TaskController::class, 'create'])->name('create');
     Route::post('/', [TaskController::class, 'store'])->name('store');    

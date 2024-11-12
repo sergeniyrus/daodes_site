@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('title', 255);
 
             // Основной текст предложения
-            $table->text('text');
+            $table->text('content');
 
             // Ссылка на изображение, необязательное поле
             $table->string('img')->nullable();
@@ -57,22 +57,22 @@ return new class extends Migration
             $table->unsignedInteger('views')->default(0);
 
             // Состояние предложения, ограниченное 50 символами
-            $table->string('state', 50);
+            $table->string('state', 50)->default('0')->nullable();
 
             // Метод предложения, ограниченный 50 символами
-            $table->string('method', 50);
+            $table->string('method', 50)->default('0')->nullable();
 
             // Бюджет предложения, ограниченный 100 символами
-            $table->string('budget', 100);
+            $table->string('budget', 100)->default('0')->nullable();
 
             // Валюта предложения, ограниченная 10 символами
-            $table->string('coin', 10);
+            $table->string('coin', 10)->default('0')->nullable();
 
             // Дата контроля предложения
-            $table->date('control');
+            $table->date('control')->default('0')->nullable();
 
             // Дата завершения предложения
-            $table->date('finish');
+            $table->date('finish')->default('0')->nullable();
         });
     }
 

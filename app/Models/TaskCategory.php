@@ -10,7 +10,7 @@ class TaskCategory extends Model
     use HasFactory;
 
     // Указываем имя таблицы, если оно не соответствует стандарту
-    protected $table = 'task_category';
+    protected $table = 'category_tasks';
 
     protected $fillable = [
         'name', // полное название категории

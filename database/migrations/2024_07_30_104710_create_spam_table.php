@@ -9,59 +9,33 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
 {
-    // Проверка существования таблицы "wallets" до её создания
-    if (!Schema::hasTable('wallets')) {
-        Schema::create('wallets', function (Blueprint $table) {
+    if (!Schema::hasTable('spam')) {
+        Schema::create('spam', function (Blueprint $table) {
             $table->id();
+            
+            // Внешние ключи для предложения и пользователя
+            $table->foreignId('offer_id')
+                ->constrained('offers')  // Связь с таблицей offers
+                ->onDelete('cascade');   // При удалении предложения удаляются все его отметки как спам
 
-            // Внешний ключ для пользователя (user_id)
             $table->foreignId('user_id')
-                ->constrained('users') // Связывает с таблицей users
-                ->onDelete('cascade')  // При удалении пользователя удаляются все его кошельки
-                ->index('idx_wallets_user_id'); // Уникальное имя для индекса
+                ->constrained('users')   // Связь с таблицей users
+                ->onDelete('cascade');   // При удалении пользователя удаляются все его отметки как спам
 
-            // Баланс пользователя в кошельке
-            $table->decimal('balance', 18, 8)
-                ->default(100)  // Значение по умолчанию для нового кошелька
-                ->unsigned()    // Баланс не может быть отрицательным
-                ->comment('The balance of the user wallet.'); // Комментарий, поясняющий поле
+            // Голосование за спам (0 - не спам, 1 - спам)
+            $table->boolean('vote')    // Можно оставить boolean или tinyInteger(1)
+                ->comment('1 = Спам, 0 = Не спам');
 
-            // Временные метки для отслеживания времени создания и обновления
+            // Временные метки
             $table->timestamps();
-        });
-    }
 
-    // Проверка существования таблицы "history_pays" до её создания
-    if (!Schema::hasTable('history_pays')) {
-        Schema::create('history_pays', function (Blueprint $table) {
-            $table->id();
-
-            // Идентификаторы кошельков отправителя и получателя
-            $table->foreignId('from_wallet_id')
-                ->constrained('wallets') // Связывает с таблицей wallets
-                ->onDelete('cascade')    // При удалении кошелька удаляются связанные транзакции
-                ->index('idx_history_pays_from_wallet'); // Индекс для ускорения запросов
-
-            $table->foreignId('to_wallet_id')
-                ->constrained('wallets') // Связывает с таблицей wallets
-                ->onDelete('cascade')    // При удалении кошелька удаляются связанные транзакции
-                ->index('idx_history_pays_to_wallet'); // Индекс для ускорения запросов
-
-            // Сумма транзакции и комиссия
-            $table->decimal('amount', 18, 8)
-                ->comment('The amount of money transferred between wallets.');
-
-            $table->decimal('fee', 18, 8)
-                ->comment('The transaction fee applied to the transfer.');
-
-            // Временные метки для отслеживания времени создания и обновления записи
-            $table->timestamps();
+            // Уникальный индекс на сочетание id_offer и id_user, чтобы каждый пользователь мог отметить только один раз
+            $table->unique(['offer_id', 'user_id']);
         });
     }
 }
-
 
 
     /**

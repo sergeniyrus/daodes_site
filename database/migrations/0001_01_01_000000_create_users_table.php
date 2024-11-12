@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 50)->unique();
             $table->string('password', 255); // Для хранения хэша пароля
-            $table->string('keyword', 100)->unique();
+            $table->string('keyword', 100);
             $table->unsignedInteger('access_level')->nullable();
 
             $table->rememberToken();

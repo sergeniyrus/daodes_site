@@ -121,17 +121,10 @@
             <div class="alert alert-info">{{ session('info') }}</div>
         @endif
 
-        <form action="{{ route('user_profile.store') }}" method="POST">
+        <form action="{{ route('user_profile.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
-            <!-- Основные данные -->
-            {{-- <div class="form-group">
-                <label for="wallet_address">Адрес кошелька</label>
-                <input type="text" class="input_dark" name="wallet_address" value="{{ old('wallet_address') }}"
-                    placeholder="Введите адрес кошелька">
-            </div> --}}
-
-                        <!-- Загрузка изображения -->
+            <!-- Загрузка изображения -->
             <div class="form-group">
                 <label for="filename">Аватар</label>
                 <div class="file-input-wrapper">

@@ -5,285 +5,209 @@
 @endsection
 
 @section('main')
-<style>
-    .new_post {
-        width: 90%;
-  height: auto;
-  margin: 20px auto;
-  padding-bottom: 20px;
-  background-color: rgba(30, 32, 30, 0.753);
-  font-size: 20px;
-  font-family: Verdana, Geneva, Tahoma, sans-serif;
-  border: 1px solid #fff;
-  border-radius: 30px;
-  text-align: center;
-  vertical-align: auto;
-  display: flex;
-  flex-direction: column;
-    }
-    
-    .name_str h2 {
-        text-align: center;
-        font-size: 36px;
-    }
-
-    .blue_btn {
-    /* margin: 0 5% 5% 5%; */
-    display: inline-block;
-    color: #ffffff;
-    font-size: large;
-    background: #0b0c18;
-    padding: 15px 30px;
-    border: 1px solid #d7fc09;
-    border-radius: 10px;
-    box-shadow: 0 0 20px #000;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    gap: 15px;
-  }
-  .blue_btn:hover {
-    box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-    transform: scale(1.05);
-    color: #ffffff;
-    background: #0b0c18;
-    
-  }
-    .verh {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-        align-items: center; /* Выравнивает элементы по центру горизонтально */
-    justify-content: center; /* Выравнивает элементы по центру вертикально */
-    }
-    .fp {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        margin-left: 20px;
-    }
-    .dark_text {
-        padding: 8px;
-        font-size: 16px;
-        color: black;
-    }
-    .redactor {
-        margin: 20px;
-        color: black;
-    }
-    .varn {
-        text-align: center;
-        font-size: 14px;
-        color: red;
-        margin-top: 25px;
-    }
-    .file-input-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-        position: relative;
-        overflow: hidden;
-    }
-    .file-input-wrapper input[type="file"] {
-        position: absolute;
-        top: 0;
-        right: 0;
-        margin: 0;
-        padding: 0;
-        font-size: 100px;
-        cursor: pointer;
-        opacity: 0;
-    }
-    .custom-file-button {
-        display: inline-block;
-        padding: 8px 12px;
-        cursor: pointer;
-        border: 1px solid #ddd;
-        background-color: #f8f8f8;
-        border-radius: 4px;
-        font-size: 14px;
-        color: #333;
-        transition: background-color 0.3s;
-        margin: auto;
-    }
-    .custom-file-button:hover {
-        background-color: #e0e0e0;
-    }
-    #crop-container {
-        display: none;
-        margin-top: 20px;
-    }
-    #preview {
-        display: none;
-        max-width: 100%;
-        margin-top: 20px;
-    }
-    button.inline-flex {
-        margin-top: 20px;
-        width: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-    }
-
-    @media (min-width: 768px) {
-        .verh {
-            flex-direction: row;
-            justify-content: space-between;
+    <style>
+        .container {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+            background-color: rgba(20, 20, 20, 0.9);
+            border-radius: 20px;
+            border: 1px solid #d7fc09;
+            color: #f8f9fa;
+            font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
+            margin-top: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
-        .fp {
-            flex: 1;
-        }
-        button.inline-flex {
-            width: auto;
-        }
-    }
 
-    @media (max-width: 767px) {
-        .fp input[type="text"], .fp select, .fp input[type="file"] {
-            width: 100%;
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
         }
-    }
 
-    @media (max-width: 480px) {
-        .dark_text {
-            font-size: 14px;
-            padding: 6px;
+        .form-group label {
+            color: #d7fc09;
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
         }
-        .varn {
-            font-size: 12px;
+
+        .input_dark,
+        textarea {
+            background-color: #1a1a1a;
+            color: #a0ff08;
+            border: 1px solid #d7fc09;
+            border-radius: 5px;
+            padding: 12px;
+            font-size: 16px;
+            transition: border 0.3s ease;
         }
-    }
 
-    @media (max-width: 320px) {
-        .dark_text {
-            font-size: 12px;
-            padding: 4px;
+        .input_dark:focus,
+        textarea:focus {
+            border: 1px solid #a0ff08;
+            outline: none;
+            box-shadow: 0 0 5px #d7fc09;
         }
-        .varn {
-            font-size: 10px;
+
+        .blue_btn {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 1.2rem;
+            background: #0b0c18;
+            padding: 12px 25px;
+            border: 1px solid #d7fc09;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+            margin-top: 20px;
         }
-    }
-</style>
 
-<!-- Подключите библиотеки Cropper.js -->
-<link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet">
-<script src="https://unpkg.com/cropperjs"></script>
+        .blue_btn:hover {
+            box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+            transform: scale(1.05);
+            background: #1a1a1a;
+        }
 
-<div class="new_post">
-    <div class="name_str">
-        <h2>Добавление новости.</h2>
-    </div>
+        .file-input-wrapper {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
 
-    <!-- Отображение ошибок валидации -->
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+        /* Стили для превью изображения */
+        #preview {
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #d7fc09;
+            border-radius: 10px;
+            display: none;
+            /* Скрыт по умолчанию */
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
 
-    <form id="news-form" method="POST" action="{{ route('news.create') }}" enctype="multipart/form-data">
-        @csrf
-        <div class="verh">
-            <div class="fp">Название новости<br>
-                <input type="text" name="title" class="dark_text" value="{{ old('title') }}" /><br>
+        /* Стили для названия файла */
+        #file-name {
+            font-size: 0.9rem;
+            color: #a0ff08;
+            text-align: center;
+            margin-top: 5px;
+        }
+    </style>
+
+    <div class="container">
+        <h2 class="text-center">Создать новость</h2>
+
+        <!-- Validation Errors -->
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <form id="news-form" method="POST" action="{{ route('news.create') }}" enctype="multipart/form-data">
+            @csrf
+
+            <div class="form-group">
+                <label for="title">Название новости</label>
+                <input type="text" name="title" class="input_dark" value="{{ old('title') }}">
             </div>
 
-            <div class="fp">Тема<br>
-                <select name="category" size="1" class="dark_text">
-    <option value="0" selected>Жми и выбирай</option>
-    @foreach (DB::table('category_news')->get() as $category)
-        <option value="{{ $category->id }}">{{ $category->category_name }}</option> <!-- Исправлено -->
-    @endforeach
-</select><br>
+            <div class="form-group">
+                <label for="category">Тема</label>
+                <select name="category" class="input_dark">
+                    <option value="0" selected>Выберите категорию</option>
+                    @foreach (DB::table('category_news')->get() as $category)
+                        <option value="{{ $category->id }}">{{ $category->category_name }}</option>
+                    @endforeach
+                </select>
             </div>
 
-            <div class="fp">Картинка новости<br>
+            <div class="form-group">
+                <label for="filename">Картинка новости</label>
                 <div class="file-input-wrapper">
-                    <button type="button" class="custom-file-button">Выберите файл</button>
-                    <input type="file" id="file-input" name="filename" accept="image/*" required>
-                    <div id="crop-container">
-                        <img id="crop-image" src="#">
-                    </div>
-                    <img id="preview" src="#" alt="Image Preview">
-                    <span id="file-name">Файлы не выбраны</span>
+                    <!-- Превью изображения -->
+                    <img id="preview" src="#" alt="Превью изображения">
+
+                    <!-- Кнопка для загрузки изображения -->
+                    <button type="button" class="blue_btn"
+                        onclick="document.getElementById('file-input').click();">Выберите файл</button>
+
+                    <!-- Поле загрузки файла (скрыто) -->
+                    <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+
+                    <!-- Название выбранного файла -->
+                    <div id="file-name">Файл не выбран</div>
                 </div>
+                <p style="color: red; text-align: center; margin-top: 20px; font-size:0.9rem;">Изображение должно быть 1:1.
+                    Имя файла должно быть на английском.</p>
             </div>
-        </div>
 
-        <div class="redactor">
-            <textarea id="editor" name="content" rows="20" cols="100" placeholder="Введите текст новости, возможно использование html тегов">{{ old('content') }}</textarea><br>
-        </div>
-        
-        <button class="blue_btn">Создать</button>
-    </form>
-    <div class="varn">
-        <p>Изображение должно иметь размер 1:1</p>
-        <p> Имя файла <b>только</b> цифры и английский язык ! </p>
+            <div class="form-group">
+                <label for="content">Содержание новости</label>
+                <textarea id="editor" name="content" rows="10" placeholder="Введите текст новости">{{ old('content') }}</textarea>
+            </div>
+
+            <div style="text-align: center;"><button type="submit" class="blue_btn">Создать новость</button></div>
+        </form>
     </div>
-    <br>
-</div>
 
-<script>
-    ClassicEditor
-        .create(document.querySelector('#editor'), {
-            // toolbar: [ 'heading', '|', 'bold', 'italic', 'link' ]
-        })
-        .then(editor => {
-            window.editor = editor;
-        })
-        .catch(err => {
-            console.error(err.stack);
-        });
+    <script src="https://unpkg.com/cropperjs"></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
+    <script>
+        const fileInput = document.getElementById('file-input');
+const previewImage = document.getElementById('preview');
+let cropper;
 
-    let cropper;
+fileInput.addEventListener('change', function(event) {
+    const file = event.target.files[0];
 
-    document.querySelector('.custom-file-button').addEventListener('click', function() {
-        document.getElementById('file-input').click();
-    });
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImage.src = e.target.result;
+            previewImage.style.display = 'block';
 
-    document.getElementById('file-input').addEventListener('change', function(event) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                document.getElementById('crop-container').style.display = 'block';
-                const cropImage = document.getElementById('crop-image');
-                cropImage.src = e.target.result;
-                cropper = new Cropper(cropImage, {
-                    aspectRatio: 1,
-                    viewMode: 1,
-                    preview: '#preview',
-                });
+            // Инициализация cropper.js после загрузки изображения
+            if (cropper) {
+                cropper.destroy();
             }
-            reader.readAsDataURL(file);
-        }
-        const fileName = this.files.length > 0 ? Array.from(this.files).map(f => f.name).join(', ') : 'Файлы не выбраны';
-        document.getElementById('file-name').textContent = fileName;
-    });
-
-    document.getElementById('news-form').addEventListener('submit', function(event) {
-        if (cropper) {
-            const canvas = cropper.getCroppedCanvas();
-            canvas.toBlob(function(blob) {
-                const fileInputElement = document.getElementById('file-input');
-                const file = new File([blob], 'cropped.png', { type: 'image/png' });
-
-                // Create a DataTransfer to add the file to the file input
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                fileInputElement.files = dataTransfer.files;
-
-                // Now the form can be submitted
-                document.getElementById('news-form').submit();
+            cropper = new Cropper(previewImage, {
+                aspectRatio: 1,
+                viewMode: 1,
+                background: false,
+                scalable: false, // Отключение масштабирования
+                zoomable: false, // Отключение масштабирования колесом мыши
             });
-            event.preventDefault(); // Prevent the form from submitting until the blob is ready
+        };
+        reader.readAsDataURL(file);
+    } else {
+        previewImage.style.display = 'none';
+        if (cropper) {
+            cropper.destroy();
         }
-    });
-</script>
+    }
 
+    document.getElementById('file-name').textContent = file ? file.name : 'Файл не выбран';
+});
+
+        // Инициализация CKEditor
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
+            })
+            .then(editor => {
+                window.editor = editor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 @endsection

@@ -300,14 +300,14 @@
 
 
         "/tasks": [
-            { href: "/tasks/create", text: "Добавить задание" },
+            { href: "/addtask", text: "Добавить задание" },
             { href: "/taskscategories", text: "Управление категориями" },
             
         ],
 
-        "/tasks/${taskId}": [
+        ['/tasks/${taskId}']: [
             { href: "/tasks", text: "Вернуться в список предложений" },
-            { href: "/tasks/add", text: "Добавить Задание" },
+            { href: "/addtask", text: "Добавить Задание" },
             { href: "/taskscategories", text: "Редактировать категории" },
         ],
         

@@ -83,7 +83,7 @@
                         {{ session('error') }}
                     </p>
                 @else
-                    <form method="post" action="{{ route('saveSeed') }}">
+                    <form method="post" action="{{ route('seed.save') }}">
                         @csrf
                         <div class="tabseed">
                             <h2>Ваша сид-фраза:</h2><br>

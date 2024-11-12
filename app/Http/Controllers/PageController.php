@@ -34,10 +34,10 @@ class PageController extends Controller
             DB::table('offers')->where('id', $id)->increment('views');
 
             // Получение комментариев для предложений
-            $comments = DB::table('comments_offers')->where('id_offer', $id)->get();
+            $comments = DB::table('comments_offers')->where('offer_id', $id)->get();
 
             // Получаем время начала голосования
-            $startVoteTime = $text->start_vote;
+            $startVoteTime = isset($text->start_vote) ? $text->start_vote : null;
 
             // Определяем имя представления на основе значения state
             switch ($text->state) {

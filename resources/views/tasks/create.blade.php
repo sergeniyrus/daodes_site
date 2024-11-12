@@ -1,6 +1,7 @@
 @extends('template')
-@section('title_page')
-Создать новое задание
+@section('title_page', 'Создать новое задание')
+
+
 @section('main')
 
 <style>

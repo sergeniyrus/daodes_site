@@ -5,7 +5,7 @@
     if ($post == 'offers') {
         $category_name = 'category_offers';
         $comments_tab = 'comments_offers';
-        $column = 'id_offer';
+        $column = 'offer_id';
         echo 'Предложение №: ' . $id;
     }
     if ($post == 'news') {
@@ -427,7 +427,23 @@ a.eror_com {
   text-align: center;
 }
 
+.content_post h1, .content_post h2, .content_post h3 {
+    color: #f8f9fa;
+    font-weight: bold;
+}
 
+.content_post p {
+    line-height: 1.5;
+    color: #f8f9fa;
+}
+
+.content_post ul, .content_post ol {
+    margin-left: 20px;
+}
+
+.content_post li {
+    color: #f8f9fa;
+}
 
     </style>
     <br>
@@ -438,10 +454,10 @@ a.eror_com {
                 <?php
                 $rol = DB::table('users')
                     ->where('name', Auth::user()->name)
-                    ->select('rang_access')
+                    ->select('access_level')
                     ->first();
                 ?>
-                @if ($rol->rang_access >= 3)
+                @if ($rol->access_level >= 3)
                     <div class="admin_menu my-4">
                         <div>
                             <a href="{{ route($post . '.add') }}" title="Создать" class="blue_btn">
@@ -490,7 +506,7 @@ a.eror_com {
             </div>
             <div class="content_post">
                 <p>
-                    {!! html_entity_decode($text->content) !!}
+                    {!! $text->content !!}
                 </p>
             </div>
             <div class="footer-post">
@@ -576,7 +592,7 @@ a.eror_com {
                             <legend> Написать сообщение </legend><br>
                             <textarea name="text" cols="80" rows="10" placeholder="Ваше мнение ..." style="color: black;"></textarea>
                             <br><br>
-                            <input type="hidden" name="id_offer" value="{{ $text->id }}" />
+                            <input type="hidden" name="offer_id" value="{{ $text->id }}" />
                         </fieldset><br>
                         <p><input type="submit" value="Отправить"  class="blue_btn"/></p><br>
                     </form>
