@@ -8,7 +8,7 @@ class CreateTasksTable extends Migration
 {
     public function up(): void
     {
-        // Проверка существования таблицы task_categories перед её созданием
+        // Проверка существования таблицы category_tasks перед её созданием
         if (!Schema::hasTable('category_tasks')) {
             Schema::create('category_tasks', function (Blueprint $table) {
                 $table->id();
@@ -50,14 +50,6 @@ class CreateTasksTable extends Migration
             });
         }
 
-        // Добавление внешнего ключа в таблицу tasks для связи с таблицей category_tasks (если таблица уже существует)
-        Schema::table('tasks', function (Blueprint $table) {
-            // Добавляем внешнюю связь с таблицей task_categories, если ещё не существует
-            if (!Schema::hasColumn('tasks', 'category_id')) {
-                $table->foreignId('category_id')->nullable()->constrained('category_tasks')->onDelete('cascade');
-            }
-        });
-
         // Создание таблицы task_votes
         if (!Schema::hasTable('task_votes')) {
             Schema::create('task_votes', function (Blueprint $table) {
@@ -82,8 +74,11 @@ class CreateTasksTable extends Migration
         }
     }
 
-    public function down()
+    public function down(): void
     {
+        // Удаление таблиц в правильном порядке
+        Schema::dropIfExists('task_votes');
         Schema::dropIfExists('tasks');
+        Schema::dropIfExists('category_tasks');
     }
 }

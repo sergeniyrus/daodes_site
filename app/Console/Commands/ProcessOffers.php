@@ -37,7 +37,7 @@ class ProcessOffers extends Command
             // Log::info('Found ' . count($offers) . ' offers to process.');
 
             foreach ($offers as $offer) {
-                $id_offer = $offer->id;
+                $offer_id = $offer->id;
 
                 // Получаем текущее время и время начала голосования
                 $startVoteTime = Carbon::parse($offer->start_vote);
@@ -46,9 +46,9 @@ class ProcessOffers extends Command
                 // Получаем количество пользователей и голоса
                 $totalUsers = DB::table('users')->count() - 2;
 
-                $counts = DB::table('vote_users')
+                $counts = DB::table('offer_votes')
                     ->select(DB::raw('vote, COUNT(*) as count'))
-                    ->where('id_offer', $id_offer)
+                    ->where('offer_id', $offer_id)
                     ->groupBy('vote')
                     ->get();
 
@@ -81,18 +81,18 @@ class ProcessOffers extends Command
                 if ($hoursElapsed > 72 || $za_percentage > 50 || $no_percentage > 50) {
                     if ($za_percentage > 50) {
                         $newState = 4; // Принято "за"
-                        // Log::info("Offer ID $id_offer state updated to 4. Za percentage: $za_percentage.");
+                        // Log::info("Offer ID $offer_id state updated to 4. Za percentage: $za_percentage.");
                     } elseif ($no_percentage > 50) {
                         $newState = 5; // Принято "против"
-                        // Log::info("Offer ID $id_offer state updated to 5. No percentage: $no_percentage.");
+                        // Log::info("Offer ID $offer_id state updated to 5. No percentage: $no_percentage.");
                     } else {
                         // Если не превышает 50%, но прошло более 72 часов
                         $newState = $za_percentage > $no_percentage ? 4 : 5;
-                        // Log::info("Offer ID $id_offer state updated due to 72 hours rule. Za percentage: $za_percentage, No percentage: $no_percentage.");
+                        // Log::info("Offer ID $offer_id state updated due to 72 hours rule. Za percentage: $za_percentage, No percentage: $no_percentage.");
                     }
 
                     DB::table('offers')
-                        ->where('id', $id_offer)
+                        ->where('id', $offer_id)
                         ->update(['state' => $newState]);
 
                     // Создаем PDF файл
@@ -102,10 +102,10 @@ class ProcessOffers extends Command
                         // Загружаем PDF на IPFS
                         $this->uploadToIPFS($pdfFilePath, $offer->id);
                     } else {
-                        // Log::error("PDF file not created or not found for offer ID $id_offer");
+                        // Log::error("PDF file not created or not found for offer ID $offer_id");
                     }
                 } else {
-                    // Log::info("Offer ID $id_offer not processed. Za percentage: $za_percentage, No percentage: $no_percentage.");
+                    // Log::info("Offer ID $offer_id not processed. Za percentage: $za_percentage, No percentage: $no_percentage.");
                 }
             }
         } catch (\Exception $e) {
@@ -120,7 +120,7 @@ class ProcessOffers extends Command
         try {
             // Получение комментариев и голосов
             $comments = DB::table('comments_offers')
-                ->where('id_offer', $offer->id)
+                ->where('offer_id', $offer->id)
                 ->get()
                 ->map(function ($comment) {
                     return (object)[
@@ -129,8 +129,8 @@ class ProcessOffers extends Command
                     ];
                 });
 
-            $votes = DB::table('vote_users')
-                ->where('id_offer', $offer->id)
+            $votes = DB::table('offer_votes')
+                ->where('offer_id', $offer->id)
                 ->get()
                 ->map(function ($vote) {
                     return (object)[

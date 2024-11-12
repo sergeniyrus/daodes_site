@@ -12,8 +12,8 @@ class Comment extends Model
     protected $table = 'comments_offers';
 
     protected $fillable = [
-        'id_offer',
-        'id_user',
+        'offer_id',
+        'user_id',
         'text',
     ];
 }

@@ -5,13 +5,13 @@
         $user_id = $user->id;
         
         // Получаем id предложения из маршрута, если переменная не передана
-        $id_offer = $id_offer ?? request()->route('id');
+        $offer_id = $offer_id ?? request()->route('id');
         
         // Проверяем, оставил ли пользователь комментарий к этому предложению
-        $hasCommented = DB::table('comments_offers')->where('id_offer', $id_offer)->where('id_user', $user_id)->exists();
+        $hasCommented = DB::table('comments_offers')->where('offer_id', $offer_id)->where('user_id', $user_id)->exists();
         
         // Проверяем, голосовал ли пользователь за это предложение
-        $hasVoted = DB::table('discussion')->where('id_offer', $id_offer)->where('id_user', $user_id)->exists();
+        $hasVoted = DB::table('discussions')->where('offer_id', $offer_id)->where('user_id', $user_id)->exists();
         ?>
 
         @if (!$hasVoted)
@@ -35,7 +35,7 @@
                                     <img class="img_bt circle" src="{{ asset('/img/icons_post/no.png') }}" alt="">
                                 </label>
                             </div>
-                            <input type="hidden" name="id_offer" value="{{ $id_offer }}">
+                            <input type="hidden" name="offer_id" value="{{ $offer_id }}">
                             <input type="image" src="{{ asset('/img/icons_post/voting.png') }}" class="img_bt"
                                 title="Голосовать">
                         </fieldset>
@@ -49,12 +49,12 @@
 
 
             <?php
-            // Проверяем, что переменная $id_offer определена
-            if (isset($id_offer)) {
+            // Проверяем, что переменная $offer_id определена
+            if (isset($offer_id)) {
                 $totalUsers = DB::table('users')->count();
                 $totalUsers -= 2;
             
-                $counts = DB::table('discussion')->select(DB::raw('vote, COUNT(*) as count'))->where('id_offer', $id_offer)->groupBy('vote')->get();
+                $counts = DB::table('discussions')->select(DB::raw('vote, COUNT(*) as count'))->where('offer_id', $offer_id)->groupBy('vote')->get();
             
                 $yes = 0;
                 $no = 0;
@@ -132,14 +132,14 @@
             <?php if ($za_percentage >= 25) {
                 // {{-- // отправляем в отклонённые --}}
                 DB::table('offers')
-                    ->where('id', $id_offer)
+                    ->where('id', $offer_id)
                     ->update(['state' => 5]);
             
                 echo 'Предложение отклонено по итогам обсуждений';
             }
             if ($no_percentage >= 25) {
                 DB::table('offers')
-                    ->where('id', $id_offer)
+                    ->where('id', $offer_id)
                     ->update([
                         'state' => 2,
                         'start_vote' => now(), // Или можно использовать now()

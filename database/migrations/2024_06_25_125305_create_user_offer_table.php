@@ -18,11 +18,11 @@ class CreateUserOfferTable extends Migration
             $table->id();
             
             // Внешние ключи
-            $table->foreignId('id_offer')
+            $table->foreignId('offer_id')
                 ->constrained('offers') // Ссылается на таблицу offers
                 ->onDelete('cascade');  // При удалении предложения удаляются голоса
 
-            $table->foreignId('id_user')
+            $table->foreignId('user_id')
                 ->constrained('users')  // Ссылается на таблицу users
                 ->onDelete('cascade');  // При удалении пользователя удаляются голоса
 
@@ -34,7 +34,7 @@ class CreateUserOfferTable extends Migration
             $table->timestamps();
 
             // Уникальный индекс для комбинации id_offer и id_user
-            $table->unique(['id_offer', 'id_user']);  // Каждый пользователь может голосовать только один раз за одно предложение
+            $table->unique(['offer_id', 'user_id']);  // Каждый пользователь может голосовать только один раз за одно предложение
         });
     }
 }

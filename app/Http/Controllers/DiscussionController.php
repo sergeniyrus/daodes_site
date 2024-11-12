@@ -16,21 +16,21 @@ class DiscussionController extends Controller
         // Проверяем, что vote имеет допустимое значение (0 или 1)
         $request->validate([
             'vote' => 'required|in:1,0',
-            'id_offer' => 'required|exists:offers,id',
+            'offer_id' => 'required|exists:offers,id',
         ]);
 
         $user = Auth::user();
-        $id_user = $user->id;
-        $id_offer = $request->input('id_offer');
+        $user_id = $user->id;
+        $offer_id = $request->input('offer_id');
         $vote = $request->input('vote');
 
-        // Вставляем голос в таблицу discussion
-        DB::table('discussion')->updateOrInsert(
-            ['id_offer' => $id_offer, 'id_user' => $user->id],
+        // Вставляем голос в таблицу discussions
+        DB::table('discussions')->updateOrInsert(
+            ['offer_id' => $offer_id, 'user_id' => $user->id],
             ['vote' => $vote, 'created_at' => now(), 'updated_at' => now()]
         );
 
-        return redirect()->to('https://daodes.space/page/offers/' . $id_offer);
+        return redirect()->to('https://daodes.space/page/offers/' . $offer_id);
     }
 
 }

@@ -17,18 +17,18 @@ class VoteController extends Controller
 
         $user = Auth::user();
         $user_id = $user->id;
-        $id_offer = $request->input('offer_id');
+        $offer_id = $request->input('offer_id');
 
         // Проверка на существующий голос
-        $hasVoted = DB::table('vote_users')
-            ->where('id_offer', $id_offer)
-            ->where('id_user', $user_id)
+        $hasVoted = DB::table('offer_votes')
+            ->where('offer_id', $offer_id)
+            ->where('user_id', $user_id)
             ->exists();
 
         if (!$hasVoted) {
-            DB::table('vote_users')->insert([
-                'id_offer' => $id_offer,
-                'id_user' => $user_id,
+            DB::table('offer_votes')->insert([
+                'offer_id' => $offer_id,
+                'user_id' => $user_id,
                 'vote' => $request->input('vote'),
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -36,7 +36,7 @@ class VoteController extends Controller
         }
 
         // Перенаправление на указанный URL после голосования
-        return redirect()->to('https://daodes.space/page/offers/' . $id_offer);
+        return redirect()->to('https://daodes.space/page/offers/' . $offer_id);
     }
 
     

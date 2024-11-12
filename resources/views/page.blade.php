@@ -574,7 +574,7 @@ a.eror_com {
                 @foreach ($comments as $comment)
                     <div class="post_com">
                         <div class="name_com">
-                            {{ DB::table('users')->where('id', $comment->id_user)->value('name') }}
+                            {{ DB::table('users')->where('id', $comment->user_id)->value('name') }}
                             <div class="date_com">{{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.y в H:i') }}
                             </div>
                             <div class="text_com">{{ $comment->text }}</div>

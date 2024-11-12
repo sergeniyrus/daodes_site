@@ -178,12 +178,13 @@ namespace App\Models{
  * @property int $category_id
  * @property int $user_id
  * @property int $views
- * @property string $state
- * @property string $method
- * @property string $budget
- * @property string $coin
- * @property string $control
- * @property string $finish
+ * @property string|null $state
+ * @property string|null $method
+ * @property string|null $budget
+ * @property string|null $coin
+ * @property string|null $control
+ * @property string|null $finish
+ * @property string|null $start_vote
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Offers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Offers newQuery()
@@ -198,6 +199,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereImg($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers whereStartVote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereState($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereUpdatedAt($value)

@@ -4,16 +4,16 @@
       $user = Auth::user();
       $user_id = $user->id;
   
-      $id_offer = $id_offer ?? request()->route('id'); // Получаем id предложения из маршрута, если переменная не передана
+      $offer_id = $offer_id ?? request()->route('id'); // Получаем id предложения из маршрута, если переменная не передана
   
-      $hasVoted = DB::table('vote_users')
-                    ->where('id_offer', $id_offer)
-                    ->where('id_user', $user_id)
+      $hasVoted = DB::table('offer_votes')
+                    ->where('offer_id', $offer_id)
+                    ->where('user_id', $user_id)
                     ->exists();
 
     $startVoteTime = DB::table('offers')
         ->select('start_vote')
-        ->where('id', $id_offer)
+        ->where('id', $offer_id)
         ->first();
         $startVoteTime = $startVoteTime->start_vote;
   
@@ -36,7 +36,7 @@
                             <img class="img_bt circle" src="{{ asset('/img/icons_post/no.png') }}" alt="">
                         </label>
                     </div>
-                    <input type="hidden" name="offer_id" value="{{ $id_offer }}">
+                    <input type="hidden" name="offer_id" value="{{ $offer_id }}">
                     <input type="image" src="{{ asset('/img/icons_post/voting.png') }}" class="img_bt" title="Голосовать">
                 </fieldset>
             </form>
@@ -45,12 +45,12 @@
     } 
     else {
         echo "<div class='msg'>Ваше мнение учтено</div>";
-// Проверяем, что переменная $id_offer определена и производим расчёты результатов
-if (isset($id_offer)) {
+// Проверяем, что переменная $offer_id определена и производим расчёты результатов
+if (isset($offer_id)) {
         $totalUsers = DB::table('users')->count();
         $totalUsers -= 2;
     
-        $counts = DB::table('vote_users')->select(DB::raw('vote, COUNT(*) as count'))->where('id_offer', $id_offer)->groupBy('vote')->get();
+        $counts = DB::table('offer_votes')->select(DB::raw('vote, COUNT(*) as count'))->where('offer_id', $offer_id)->groupBy('vote')->get();
     
         $za = 0;
         $no = 0;

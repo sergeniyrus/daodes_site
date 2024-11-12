@@ -37,7 +37,7 @@ class PageController extends Controller
             $comments = DB::table('comments_offers')->where('offer_id', $id)->get();
 
             // Получаем время начала голосования
-            $startVoteTime = isset($text->start_vote) ? $text->start_vote : null;
+            $startVoteTime = $text->start_vote;
 
             // Определяем имя представления на основе значения state
             switch ($text->state) {
