@@ -101,7 +101,7 @@
             <tbody>
                 @foreach($categories as $category)
                 <tr>
-                    <td>{{ $category->category_name }}</td> <!-- Убедитесь, что здесь используется корректное поле названия -->
+                    <td>{{ $category->name }}</td> <!-- Убедитесь, что здесь используется корректное поле названия -->
                     <td>
                         <a href="{{ route('newscategories.edit', $category->id) }}" class="blue_btn" title="Редактировать">
                             <i class="fas fa-edit"></i>

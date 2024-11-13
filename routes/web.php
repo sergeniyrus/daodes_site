@@ -20,7 +20,8 @@ use App\Http\Controllers\{
     DController,
     CategoryController,
     PageController,
-    UserProfileController
+    UserProfileController,
+    UploadController
 };
 
 // Главная страница
@@ -44,18 +45,22 @@ Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
 
 // Управление новостями
 Route::prefix('news')->group(function () {
+    // Маршрут для просмотра новости, доступен для всех пользователей
     Route::get('/', [NewsController::class, 'news'])->name('news.index');
-    Route::get('/add', [NewsController::class, 'add'])->name('news.add');
-    Route::post('/create', [NewsController::class, 'create'])->name('news.create');
-
-    // Маршруты для редактирования и удаления новостей
-    Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
-    Route::put('/{id}', [NewsController::class, 'update'])->name('news.update');
-    Route::delete('/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+    
+    // Только авторизованные пользователи могут добавлять, редактировать и удалять новости
+    Route::middleware('auth')->group(function () {
+        Route::get('/add', [NewsController::class, 'add'])->name('news.add');
+        Route::post('/create', [NewsController::class, 'create'])->name('news.create');
+        
+        Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
+        Route::put('/{id}', [NewsController::class, 'update'])->name('news.update');
+        Route::delete('/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
+    });
 });
 
 // Управление категориями новостей
-Route::prefix('newscategories')->name('newscategories.')->group(function () {
+Route::prefix('newscategories')->name('newscategories.')->middleware('auth')->group(function () {
     Route::get('/', [NewsController::class, 'categoryIndex'])->name('index');
     Route::get('/create', [NewsController::class, 'categoryCreate'])->name('create');
     Route::post('/', [NewsController::class, 'categoryStore'])->name('store');
@@ -63,8 +68,6 @@ Route::prefix('newscategories')->name('newscategories.')->group(function () {
     Route::put('/{id}', [NewsController::class, 'categoryUpdate'])->name('update');
     Route::delete('/{id}', [NewsController::class, 'categoryDestroy'])->name('destroy');
 });
-
-
 
 // Управление предложениями
 Route::get('/offers', [OffersController::class, 'index'])->name('offers.index');
@@ -82,7 +85,7 @@ Route::middleware('auth')->prefix('offers')->group(function () {
     Route::delete('/{id}', [OffersController::class, 'destroy'])->name('offers.destroy');
 });
     // Управление категориями предложений
-Route::prefix('offerscategories')->name('offerscategories.')->group(function () {
+Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')->group(function () {
     Route::get('/', [OffersController::class, 'categoryIndex'])->name('index');
     Route::get('/create', [OffersController::class, 'categoryCreate'])->name('create');
     Route::post('/', [OffersController::class, 'categoryStore'])->name('store');
@@ -152,16 +155,6 @@ Route::middleware('auth')->prefix('taskscategories')->name('taskscategories.')->
     Route::delete('/{taskCategory}', [TasksCategoryController::class, 'destroy'])->name('destroy');
 });
 
-// // Управление категориями предложений
-// Route::middleware('auth')->prefix('offers/categories')->name('offers.categories.')->group(function () {
-//     Route::get('/', [OffersController::class, 'categoryIndex'])->name('index'); // Список категорий
-//     Route::get('/create', [OffersController::class, 'categoryCreate'])->name('create'); // Создание категории
-//     Route::post('/', [OffersController::class, 'categoryStore'])->name('store'); // Сохранение категории
-//     Route::get('/{category}/edit', [OffersController::class, 'categoryEdit'])->name('edit'); // Редактирование категории
-//     Route::put('/{category}', [OffersController::class, 'categoryUpdate'])->name('update'); // Обновление категории
-//     Route::delete('/{category}', [OffersController::class, 'categoryDestroy'])->name('destroy'); // Удаление категории
-// });
-
 // Профиль пользователя
 Route::middleware('auth')->prefix('profile')->name('profile.')->group(function () {
     Route::get('/', [ProfileController::class, 'edit'])->name('edit');
@@ -177,9 +170,12 @@ Route::middleware(['auth'])->prefix('user-profile')->name('user_profile.')->grou
     Route::get('/edit/{id}', [UserProfileController::class, 'edit'])->name('edit');
     Route::put('/update/{id}', [UserProfileController::class, 'update'])->name('update');
 
-Route::get('/{id?}', [UserProfileController::class, 'index'])->name('index');
+Route::get('/{id?}', [UserProfileController::class, 'index'])->name('show');
 
 });
+
+Route::post('/upload-image', [UploadController::class, 'uploadImage'])->name('upload.image');
+
 
 // Админка
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {

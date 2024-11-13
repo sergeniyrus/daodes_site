@@ -61,7 +61,35 @@
     transform: scale(1.05);
     background: #1a1a1a; /* Сделал фон кнопки чуть светлее при наведении */
 }
+.ck-toolbar {
+            background-color: #333333 !important; /* Тёмный фон */
+            border-bottom: 1px solid #d7fc09 !important; /* Добавление границы */
+        }
 
+        /* Изменение цвета кнопок на панели инструментов */
+        .ck-toolbar button {
+            color: #f8f9fa !important; /* Светлый цвет текста */
+            background-color: #0b0c18 !important; /* Темный фон кнопок */
+            border: 1px solid #d7fc09 !important; /* Цвет границ кнопок */
+        }
+
+        /* Цвет кнопок при наведении */
+        .ck-toolbar button:hover {
+            background-color: #d7fc09 !important; /* Желтый фон при наведении */
+            color: #1a1a1a !important; /* Тёмный текст при наведении */
+        }
+
+        /* Цвет для активных кнопок */
+        .ck-toolbar button.ck-on {
+            background-color: #d7fc09 !important; /* Желтый фон */
+            color: #1a1a1a !important; /* Тёмный текст */
+        }
+
+        .ck-editor__editable {
+            color: #bbbbbb !important; /* Тёмный цвет текста */
+            background-color: #1a1a1a !important; /* Тёмный фон */
+            font-size: 16px !important;
+        }
 </style>
 
 <div class="container">
@@ -98,8 +126,8 @@
         </div>
 
         <div class="form-group">
-            <label for="description">Описание задачи:</label>
-            <textarea name="description" id="description" rows="5" required class="input_dark">{{ old('description', $task->description) }}</textarea>
+            <label for="content">Описание задачи:</label>
+            <textarea name="content" id="editor" rows="5" required class="input_dark">{{ old('contentn', $task->content) }}</textarea>
         </div>
 
         <div class="form-group">
@@ -129,4 +157,22 @@
         </div>
     </form>
 </div>
+<script>
+    // Инициализация CKEditor
+    ClassicEditor
+    .create(document.querySelector('#editor'), {
+        ckfinder: {
+            uploadUrl: '{{ route('upload.image') }}',
+            options: {
+                onError: function(error) {
+                    console.error('Error during file upload:', error);
+                }
+            }
+        },
+        
+    })
+    .catch(error => {
+        console.error('Editor error:', error);
+    });
+</script>
 @endsection

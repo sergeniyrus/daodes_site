@@ -227,7 +227,7 @@
 
     <div class="auth-buttons">
     @if (Auth::check())
-        <a href="{{ route('user_profile.index', ['id' => Auth::id()]) }}" title="Profile">
+        <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="Profile">
             <span class="logo_name">
                 <img src="{{ Auth::user()->profile && Auth::user()->profile->avatar_url ? Auth::user()->profile->avatar_url : 'https://daodes.space/ipfs/QmPdPDwGSrfWYxomC3u9FLBtB9MGH8iqVGRZ9TLPxZTekj' }}" alt="Profile">
             </span>
@@ -279,6 +279,7 @@
     // Определяем пути и подменю
     const submenus = {
         "/news": [
+            { href: "/news", text: "Вернуться в новости" },
             { href: "/news/add", text: "Добавить новость" },
             { href: "/newscategories", text: "Управление категориями" },
         ],
@@ -312,9 +313,9 @@
         ],
         
         "/wallet": [
-            { href: "/wallet/add", text: "Пополнить кошелёк" },
-            { href: "/wallet/edit", text: "Редактировать кошелёк" },
-            { href: "/wallet/moderation", text: "Модерация кошельков" }
+            { href: "/wallet", text: "Кошелёк" },
+            { href: "/wallet/transfer", text: "Перевести" },
+            { href: "/wallet/history", text: "История" }            
         ]
     };
 

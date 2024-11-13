@@ -101,6 +101,35 @@
             border-radius: 5px;
             margin-bottom: 20px;
         }
+        .ck-toolbar {
+        background-color: #333333 !important; /* Тёмный фон */
+        border-bottom: 1px solid #d7fc09 !important; /* Добавление границы */
+    }
+
+    /* Изменение цвета кнопок на панели инструментов */
+    .ck-toolbar button {
+        color: #f8f9fa !important; /* Светлый цвет текста */
+        background-color: #0b0c18 !important; /* Темный фон кнопок */
+        border: 1px solid #d7fc09 !important; /* Цвет границ кнопок */
+    }
+
+    /* Цвет кнопок при наведении */
+    .ck-toolbar button:hover {
+        background-color: #d7fc09 !important; /* Желтый фон при наведении */
+        color: #1a1a1a !important; /* Тёмный текст при наведении */
+    }
+
+    /* Цвет для активных кнопок */
+    .ck-toolbar button.ck-on {
+        background-color: #d7fc09 !important; /* Желтый фон */
+        color: #1a1a1a !important; /* Тёмный текст */
+    }
+
+        .ck-editor__editable {
+        color: #bbbbbb !important; /* Тёмный цвет текста */
+        background-color: #1a1a1a !important; /* Тёмный фон */
+        font-size: 16px !important;
+    }
     </style>
 
     <div class="container">
@@ -131,7 +160,7 @@
                 <select name="category" class="input_dark">
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}" {{ $category->id == $news->category_id ? 'selected' : '' }}>
-                            {{ $category->category_name }}
+                            {{ $category->name }}
                         </option>
                     @endforeach
                 </select>
@@ -168,9 +197,8 @@
         </form>
     </div>
 
-    <script src="https://unpkg.com/cropperjs"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/34.2.0/classic/ckeditor.js"></script>
-    <script>
+    
+    <script> 
         const fileInput = document.getElementById('file-input');
         const previewImage = document.getElementById('preview');
         let cropper;
@@ -206,15 +234,21 @@
             document.getElementById('file-name').textContent = file ? file.name : 'Файл не выбран';
         });
 
+        // Инициализация CKEditor
         ClassicEditor
-            .create(document.querySelector('#editor'), {
-                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
-            })
-            .then(editor => {
-                window.editor = editor;
-            })
-            .catch(error => {
-                console.error(error);
-            });
+    .create(document.querySelector('#editor'), {
+        ckfinder: {
+            uploadUrl: '{{ route('upload.image') }}',
+            options: {
+                onError: function(error) {
+                    console.error('Error during file upload:', error);
+                }
+            }
+        },
+        
+    })
+    .catch(error => {
+        console.error('Editor error:', error);
+    });
     </script>
 @endsection

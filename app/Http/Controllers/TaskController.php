@@ -59,7 +59,7 @@ public function test () {
     {
         $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'content' => 'required|string',
             'deadline' => 'required|date',
             'budget' => 'required|numeric',
             'category_id' => 'required|exists:category_tasks,id', // Проверка существования категории
@@ -67,7 +67,7 @@ public function test () {
 
         Task::create([
             'title' => $request->title,
-            'description' => $request->description,
+            'content' => $request->content,
             'deadline' => $request->deadline,
             'budget' => $request->budget,
             'status' => 'open',
@@ -194,7 +194,7 @@ public function test () {
         // Валидация данных
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'content' => 'required|string',
             'deadline' => 'required|date',
             'budget' => 'required|numeric|min:0',
             'category_id' => 'required|exists:category_tasks,id', // Категория должна существовать

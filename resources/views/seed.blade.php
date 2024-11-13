@@ -9,6 +9,7 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
+            margin: 15px auto;
         }
 
         .container {
@@ -74,9 +75,9 @@
             @if (isset($message))
                 <p style="font-size: 18px; color:red;">{{ $message }}</p>
             @else
-                @if (session('checkpoint'))
+                @if (session('success'))
                     <p style="font-size: 18px; color: green;">
-                        {{ session('checkpoint') }}
+                        {{ session('success') }}
                     </p>
                 @elseif(session('error'))
                     <p style="font-size: 18px; color: red;">

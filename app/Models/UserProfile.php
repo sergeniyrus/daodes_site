@@ -24,5 +24,10 @@ class UserProfile extends Model
     return $this->belongsTo(User::class, 'user_id');
 }
     
+public function profile()
+{
+    return $this->hasOne(UserProfile::class, 'user_id');
+}
+
 }
 

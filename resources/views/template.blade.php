@@ -24,7 +24,7 @@
 
     <!-- Подключаем скрипты -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script>
+    {{-- <script src="https://cdn.ckeditor.com/ckeditor5/40.0.0/classic/ckeditor.js"></script> --}}
 
     <!-- смайлики значки -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
@@ -32,8 +32,12 @@
 
 
     <!-- Подключите библиотеки Cropper.js и IPFS HTTP Client -->
-    <link href="https://unpkg.com/cropperjs/dist/cropper.css" rel="stylesheet">
-    <script src="https://unpkg.com/cropperjs"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/cropperjs@1.5.12/dist/cropper.min.js"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@43.3.1/build/ckeditor.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script>
 
     {{-- <!-- Скрипт раскрытия блоков -->

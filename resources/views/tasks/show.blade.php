@@ -279,11 +279,11 @@
                 </div>
             </div>
             <div>
-                <p>{{ $task->description }}</p>
+                <p>{!! $task->content !!}</p>
             </div>
             <div class="task-author">
                 <p><strong>Автор задачи:</strong> 
-                    <a href="{{ route('user_profile.index', ['id' => $task->user_id]) }}" title="Profile" style="color: #d7fc09; text-decoration: none;">
+                    <a href="{{ route('user_profile.show', ['id' => $task->user_id]) }}" title="Profile" style="color: #d7fc09; text-decoration: none;">
                         {{ $task->user->name }}
                     </a>
                 </p>
@@ -445,7 +445,7 @@
                     <div class="bid">
                         <p class="task-line2">
                             <strong class="task-line">Фрилансер:</strong>
-                            <a href="{{ route('user_profile.index', ['id' => $bid->user->id]) }}" title="Profile" style="color: #d7fc09; text-decoration: none;">
+                            <a href="{{ route('user_profile.show', ['id' => $bid->user->id]) }}" title="Profile" style="color: #d7fc09; text-decoration: none;">
                                 {{ $bid->user->name }}
                             </a>
                         </p>

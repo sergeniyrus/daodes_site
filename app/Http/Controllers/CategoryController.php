@@ -25,11 +25,11 @@ class CategoryController extends Controller
     public function store(Request $request, $type)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:' . ($type == 'news' ? 'category_news' : 'category_offers') . ',category_name',
+            'name' => 'required|string|max:255|unique:' . ($type == 'news' ? 'category_news' : 'category_offers') . ',name',
         ]);
 
         DB::table($type == 'news' ? 'category_news' : 'category_offers')->insert([
-            'category_name' => $request->input('name'),
+            'name' => $request->input('name'),
             'created_at' => now(),
             'updated_at' => now(),
         ]);
@@ -48,13 +48,13 @@ class CategoryController extends Controller
     public function update(Request $request, $type, $id)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:' . ($type == 'news' ? 'category_news' : 'category_offers') . ',category_name,' . $id,
+            'name' => 'required|string|max:255|unique:' . ($type == 'news' ? 'category_news' : 'category_offers') . ',name,' . $id,
         ]);
 
         DB::table($type == 'news' ? 'category_news' : 'category_offers')
             ->where('id', $id)
             ->update([
-                'category_name' => $request->input('name'),
+                'name' => $request->input('name'),
                 'updated_at' => now(),
             ]);
 

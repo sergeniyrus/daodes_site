@@ -158,18 +158,18 @@
 
             <!-- Заголовок как кнопка -->
             <p class="card-text">
-                @if (strlen($task->description) > 260)
-                    {{ Str::limit($task->description, 260) }}...
+                @if (strlen($task->content) > 260)
+                    {!! Str::limit($task->content, 260) !!}...
                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-link">→ Читать дальше ←</a>
                 @else
-                    {{ $task->description }}
+                    {!! $task->content !!}
                 @endif
             </p>
         </div>
     </div>
 @empty
     <div style="text-align: center">
-        <p>Заданий нет, можете <a href="{{ route('tasks.create') }}">создать задание</a>.</p>
+        <p>Заданий нет, можете <a href="{{ route('addtask') }}">создать задание</a>.</p>
     </div>
 @endforelse
 <?php

@@ -49,7 +49,7 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $category_name
+ * @property string $name
  * @property string|null $created_at
  * @property string|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\News> $news
@@ -57,9 +57,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews query()
- * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereCategoryName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryNews whereUpdatedAt($value)
  */
 	class CategoryNews extends \Eloquent {}
@@ -70,15 +70,15 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $category_name
+ * @property string $name
  * @property string|null $created_at
  * @property string|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers query()
- * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereCategoryName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|CategoryOffers whereUpdatedAt($value)
  */
 	class CategoryOffers extends \Eloquent {}
@@ -89,11 +89,11 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $offer_id
  * @property int $user_id
  * @property string|null $text
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|Comment newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Comment newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Comment query()
@@ -139,16 +139,16 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $title
  * @property string $content
  * @property string|null $img
  * @property int $category_id
  * @property int $user_id
  * @property int $views
- * @property-read \App\Models\CategoryNews|null $category
- * @property-read \App\Models\User|null $user
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\CategoryNews $category
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|News newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|News newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|News query()
@@ -170,13 +170,11 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property string $title
  * @property string $content
  * @property string|null $img
- * @property int $category_id
  * @property int $user_id
+ * @property int $category_id
  * @property int $views
  * @property string|null $state
  * @property string|null $method
@@ -185,6 +183,9 @@ namespace App\Models{
  * @property string|null $control
  * @property string|null $finish
  * @property string|null $start_vote
+ * @property string|null $pdf_ipfs_cid
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|Offers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Offers newQuery()
@@ -199,6 +200,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereImg($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Offers wherePdfIpfsCid($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereStartVote($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereState($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Offers whereTitle($value)
@@ -283,7 +285,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $title
- * @property string $description
+ * @property string $content
  * @property string $budget
  * @property string|null $deadline
  * @property string $status
@@ -316,9 +318,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCompleted($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCompletedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCompletionTime($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Task whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereDeadline($value)
- * @method static \Illuminate\Database\Eloquent\Builder|Task whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereDislikes($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Task whereInProgress($value)
@@ -443,6 +445,7 @@ namespace App\Models{
  * @property string|null $achievements
  * @property string|null $created_at
  * @property string|null $updated_at
+ * @property-read UserProfile|null $profile
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|UserProfile newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|UserProfile newQuery()
@@ -480,7 +483,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $user_id
- * @property string $balance The balance of the user wallet.
+ * @property string $balance
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\HistoryPay> $historyPaysFrom
@@ -505,17 +508,17 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $new_id
+ * @property int $news_id
  * @property int $user_id
  * @property string|null $text
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news query()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereNewId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereNewsId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|comments_news whereUserId($value)
@@ -528,11 +531,11 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $offer_id
  * @property int $user_id
  * @property string|null $text
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|comments_offer query()

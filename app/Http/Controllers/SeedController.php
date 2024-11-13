@@ -75,8 +75,8 @@ class SeedController extends Controller
         }
 
         Seed::create($seedWords);
-        $checkpoint = 'Сид-фраза успешно сохранена.';
+        $success = 'Поздравляем с регистрацией!';
 
-        return redirect()->back()->with('checkpoint', $checkpoint);
+        return redirect()->back()->with('success', $success);
     }
 }

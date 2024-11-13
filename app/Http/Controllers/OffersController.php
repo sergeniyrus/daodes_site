@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\Offers; // Добавляем модель Offer
 use App\Models\CategoryOffers; // Добавляем модель CategoryOffers
+use Illuminate\Support\Facades\Log;
 
 class OffersController extends Controller
 {
@@ -50,6 +51,8 @@ class OffersController extends Controller
             'filename' => ['nullable', 'image', 'max:2048']
         ]);
 
+        Log::info('$validate');
+        
         $img = $request->hasFile('filename')
             ? $this->uploadToIPFS($request->file('filename'))
             : 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
@@ -120,11 +123,11 @@ class OffersController extends Controller
     public function categoryStore(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255|unique:category_offers,category_name',
+            'name' => 'required|string|max:255|unique:category_offers,name',
         ]);
 
         try {
-            CategoryOffers::create(['category_name' => $request->name]); // Используем модель CategoryOffers
+            CategoryOffers::create(['name' => $request->name]); // Используем модель CategoryOffers
         } catch (\Exception $e) {
             \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
             return back()->withErrors(['name' => 'Не удалось добавить категорию.']);
@@ -146,11 +149,11 @@ class OffersController extends Controller
         $category = CategoryOffers::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|string|max:255|unique:category_offers,category_name,' . $id,
+            'name' => 'required|string|max:255|unique:category_offers,name,' . $id,
         ]);
 
         try {
-            $category->update(['category_name' => $request->name]);
+            $category->update(['name' => $request->name]);
             return redirect()->route('offerscategories.index')->with('success', 'Категория обновлена');
         } catch (\Exception $e) {
             \Log::error('Ошибка при обновлении категории: ' . $e->getMessage());

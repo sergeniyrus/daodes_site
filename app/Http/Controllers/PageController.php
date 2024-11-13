@@ -42,8 +42,9 @@ class PageController extends Controller
             // Определяем имя представления на основе значения state
             switch ($text->state) {
                 case null:
-                    $viewFile = 'offers.spam';
-                    break;
+                    case 0:
+                        $viewFile = 'offers.spam';
+                        break;
                 case 1:
                     $viewFile = 'offers.discussion';
                     break;

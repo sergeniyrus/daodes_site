@@ -175,7 +175,7 @@ a.all_post {
                                 <span class="rown">
                                     @php
                                         $commentCount = DB::table('comments_news')
-                                            ->where('new_id', $new->id)
+                                            ->where('news_id', $new->id)
                                             ->count();
                                     @endphp
                                     {{ $commentCount }}

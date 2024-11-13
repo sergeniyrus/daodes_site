@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use App\Models\News;
 use App\Models\CategoryNews;
 
+
 class NewsController extends Controller
 {
     // Метод для отображения всех новостей
@@ -80,6 +81,9 @@ class NewsController extends Controller
         return 'https://daodes.space/ipfs/' . $data['Hash'];
     }
 
+    
+
+
     // Метод для редактирования новости
     public function edit($id)
     {
@@ -141,15 +145,15 @@ class NewsController extends Controller
     public function categoryStore(Request $request)
 {
     $request->validate([
-        'name' => 'required|string|max:255|unique:category_news,category_name',
+        'name' => 'required|string|max:255|unique:category_news,name',
     ]);
 
     try {
-        CategoryNews::create(['category_name' => $request->name]);
+        CategoryNews::create(['name' => $request->name]);
     } catch (\Exception $e) {
         // Записываем ошибку в лог для диагностики
         \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
-        return back()->withErrors(['category_name' => 'Не удалось добавить категорию.']);
+        return back()->withErrors(['name' => 'Не удалось добавить категорию.']);
     }
 
     return redirect()->route('newscategories.index')->with('success', 'Категория добавлена');
@@ -169,12 +173,12 @@ class NewsController extends Controller
     $category = CategoryNews::findOrFail($id);
 
     $request->validate([
-        'name' => 'required|string|max:255|unique:category_news,category_name,' . $id
+        'name' => 'required|string|max:255|unique:category_news,name,' . $id
     ]);
 
     try {
         // Обновление категории
-        $category->update(['category_name' => $request->name]);
+        $category->update(['name' => $request->name]);
         
         return redirect()->route('newscategories.index')->with('success', 'Категория обновлена');
     } catch (\Exception $e) {

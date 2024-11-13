@@ -45,7 +45,7 @@ a#tab_category {
 <?php
 $category = DB::table($category_name)
     ->where('id', $category_id)
-    ->value('category_name');
+    ->value('name');
 ?>
 <div class="item-3">
     <div class="category_post">
@@ -68,7 +68,7 @@ $category = DB::table($category_name)
                 if ($num_p >= 1) :
                     $categories = DB::table($category_name)
                         ->where('id', $single_news->category_id)
-                        ->value('category_name');
+                        ->value('name');
             ?>
             <div class="tab_category">
                 <a id="tab_category" href="/category/<?php echo $post . '/' . $category->id; ?>">

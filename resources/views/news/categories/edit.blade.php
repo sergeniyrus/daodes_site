@@ -102,7 +102,7 @@
         @method('PUT')
         <div class="form-group">
             <label for="name">Название категории:</label>
-            <input type="text" name="name" id="name" class="input_dark" value="{{ old('name', $category->category_name) }}" required>
+            <input type="text" name="name" id="name" class="input_dark" value="{{ old('name', $category->name) }}" required>
         </div>
 
         <button type="submit" class="blue_btn">

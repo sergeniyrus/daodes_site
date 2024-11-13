@@ -101,7 +101,7 @@
             <tbody>
                 @foreach($categories as $category)
                 <tr>
-                    <td>{{ $category->category_name }}</td>
+                    <td>{{ $category->name }}</td>
                     <td>
                         <a href="{{ route('offerscategories.edit', $category->id) }}" class="blue_btn" title="Редактировать">
                             <i class="fas fa-edit"></i>
