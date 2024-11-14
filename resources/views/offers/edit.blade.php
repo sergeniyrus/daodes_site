@@ -196,58 +196,8 @@
         </form>
     </div>
 
-    
-    <script>
-        const fileInput = document.getElementById('file-input');
-        const previewImage = document.getElementById('preview');
-        let cropper;
-
-        fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
-
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-
-                    if (cropper) {
-                        cropper.destroy();
-                    }
-                    cropper = new Cropper(previewImage, {
-                        aspectRatio: 1,
-                        viewMode: 1,
-                        background: false,
-                        scalable: false,
-                        zoomable: false,
-                    });
-                };
-                reader.readAsDataURL(file);
-            } else {
-                previewImage.style.display = 'none';
-                if (cropper) {
-                    cropper.destroy();
-                }
-            }
-
-            document.getElementById('file-name').textContent = file ? file.name : 'Файл не выбран';
-        });
-
-        // Инициализация CKEditor
-        ClassicEditor
-    .create(document.querySelector('#editor'), {
-        ckfinder: {
-            uploadUrl: '{{ route('upload.image') }}',
-            options: {
-                onError: function(error) {
-                    console.error('Error during file upload:', error);
-                }
-            }
-        },
-        
-    })
-    .catch(error => {
-        console.error('Editor error:', error);
-    });
-    </script>
+    {{-- // Инициализация cropper --}}
+    <script src="{{ asset('js/image-cropper.js') }}"></script>
+    {{-- // Инициализация CKEditor --}}
+    <script src="{{ asset('js/ckeditor.js') }}"></script>
 @endsection

@@ -81,9 +81,11 @@
         /* Стили для превью изображения */
         #preview {
             max-width: 100%;
-            margin-top: 10px;
+            height: auto;
+            margin: 10px auto;
             border: 1px solid #d7fc09;
             border-radius: 10px;
+            object-fit: contain;
             display: none;
             /* Скрыт по умолчанию */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
@@ -98,32 +100,43 @@
         }
 
         .ck-toolbar {
-            background-color: #333333 !important; /* Тёмный фон */
-            border-bottom: 1px solid #d7fc09 !important; /* Добавление границы */
+            background-color: #333333 !important;
+            /* Тёмный фон */
+            border-bottom: 1px solid #d7fc09 !important;
+            /* Добавление границы */
         }
 
         /* Изменение цвета кнопок на панели инструментов */
         .ck-toolbar button {
-            color: #f8f9fa !important; /* Светлый цвет текста */
-            background-color: #0b0c18 !important; /* Темный фон кнопок */
-            border: 1px solid #d7fc09 !important; /* Цвет границ кнопок */
+            color: #f8f9fa !important;
+            /* Светлый цвет текста */
+            background-color: #0b0c18 !important;
+            /* Темный фон кнопок */
+            border: 1px solid #d7fc09 !important;
+            /* Цвет границ кнопок */
         }
 
         /* Цвет кнопок при наведении */
         .ck-toolbar button:hover {
-            background-color: #d7fc09 !important; /* Желтый фон при наведении */
-            color: #1a1a1a !important; /* Тёмный текст при наведении */
+            background-color: #d7fc09 !important;
+            /* Желтый фон при наведении */
+            color: #1a1a1a !important;
+            /* Тёмный текст при наведении */
         }
 
         /* Цвет для активных кнопок */
         .ck-toolbar button.ck-on {
-            background-color: #d7fc09 !important; /* Желтый фон */
-            color: #1a1a1a !important; /* Тёмный текст */
+            background-color: #d7fc09 !important;
+            /* Желтый фон */
+            color: #1a1a1a !important;
+            /* Тёмный текст */
         }
 
         .ck-editor__editable {
-            color: #bbbbbb !important; /* Тёмный цвет текста */
-            background-color: #1a1a1a !important; /* Тёмный фон */
+            color: #bbbbbb !important;
+            /* Тёмный цвет текста */
+            background-color: #1a1a1a !important;
+            /* Тёмный фон */
             font-size: 16px !important;
         }
     </style>
@@ -191,59 +204,10 @@
         </form>
     </div>
 
-    
-    <script>
-        const fileInput = document.getElementById('file-input');
-        const previewImage = document.getElementById('preview');
-        let cropper;
+{{-- // Инициализация cropper --}}
+    <script src="{{ asset('js/image-cropper.js') }}"></script>
 
-        fileInput.addEventListener('change', function(event) {
-            const file = event.target.files[0];
+    {{-- // Инициализация CKEditor --}}
+    <script src="{{ asset('js/ckeditor.js') }}"></script>
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = 'block';
-
-                    // Инициализация cropper.js после загрузки изображения
-                    if (cropper) {
-                        cropper.destroy();
-                    }
-                    cropper = new Cropper(previewImage, {
-                        aspectRatio: 1,
-                        viewMode: 1,
-                        background: false,
-                        scalable: false, // Отключение масштабирования
-                        zoomable: false, // Отключение масштабирования колесом мыши
-                    });
-                };
-                reader.readAsDataURL(file);
-            } else {
-                previewImage.style.display = 'none';
-                if (cropper) {
-                    cropper.destroy();
-                }
-            }
-
-            document.getElementById('file-name').textContent = file ? file.name : 'Файл не выбран';
-        });
-
-        // Инициализация CKEditor
-        ClassicEditor
-    .create(document.querySelector('#editor'), {
-        ckfinder: {
-            uploadUrl: '{{ route('upload.image') }}',
-            options: {
-                onError: function(error) {
-                    console.error('Error during file upload:', error);
-                }
-            }
-        },
-        
-    })
-    .catch(error => {
-        console.error('Editor error:', error);
-    });
-    </script>
 @endsection

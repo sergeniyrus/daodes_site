@@ -155,23 +155,7 @@
     </form>
 </div>
 
-<script>
-    // Инициализация CKEditor
-    ClassicEditor
-    .create(document.querySelector('#editor'), {
-        ckfinder: {
-            uploadUrl: '{{ route('upload.image') }}',
-            options: {
-                onError: function(error) {
-                    console.error('Error during file upload:', error);
-                }
-            }
-        },
-        
-    })
-    .catch(error => {
-        console.error('Editor error:', error);
-    });
-</script>
+{{-- // Инициализация CKEditor --}}
+<script src="{{ asset('js/ckeditor.js') }}"></script>
 
 @endsection
