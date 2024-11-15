@@ -1,0 +1,94 @@
+.ck-toolbar {
+  background-color: #333333 !important;
+  border-bottom: 1px solid gold !important;
+  max-width: 95% !important;
+}
+
+.ck-toolbar button {
+  color: #f8f9fa !important;
+  background-color: #2b2c2e !important;
+  border: 1px solid gold !important;
+}
+
+.ck-toolbar button:hover {
+  background-color: gold !important;
+  color: #1a1a1a !important;
+}
+
+.ck-toolbar button.ck-on {
+  background-color: gold !important;
+  color: #1a1a1a !important;
+}
+
+.ck-editor__editable {
+  color: #bbbbbb !important;
+  background-color: #1a1a1a !important;
+  font-size: 16px !important;
+}
+
+/* Адаптация для экранов до 320px (очень маленькие экраны, например, старые телефоны) */
+@media (max-width: 320px) {
+  .ck-toolbar button {
+      font-size: 11px;
+      padding: 5px 8px;
+  }
+
+  .ck-editor__editable {
+      font-size: 12px !important;
+      min-height: 120px;
+      /* Уменьшаем минимальную высоту для маленьких экранов */
+  }
+}
+
+/* Адаптация для экранов от 320px до 450px (малые экраны, мобильные телефоны) */
+@media (min-width: 321px) and (max-width: 450px) {
+  .ck-toolbar button {
+      font-size: 12px;
+      padding: 6px 10px;
+  }
+
+  .ck-editor__editable {
+      font-size: 14px !important;
+      min-height: 150px;
+      /* Немного увеличиваем высоту для этих экранов */
+  }
+}
+
+/* Адаптация для экранов от 450px до 600px (мобильные устройства среднего размера) */
+@media (min-width: 451px) and (max-width: 600px) {
+  .ck-toolbar button {
+      font-size: 13px;
+      padding: 7px 12px;
+  }
+
+  .ck-editor__editable {
+      font-size: 15px !important;
+      min-height: 180px;
+  }
+}
+
+/* Адаптация для экранов от 601px до 900px (планшеты) */
+@media (min-width: 601px) and (max-width: 900px) {
+  .ck-toolbar button {
+      font-size: 13px;
+      padding: 7px 12px;
+  }
+
+  .ck-editor__editable {
+      font-size: 15px !important;
+      min-height: 180px;
+  }
+}
+
+/* Адаптация для экранов более 900px (десктопы) */
+@media (min-width: 901px) {
+  .ck-toolbar button {
+      font-size: 14px;
+      padding: 8px 12px;
+  }
+
+  .ck-editor__editable {
+      font-size: 16px !important;
+      min-height: 200px;
+  }
+}

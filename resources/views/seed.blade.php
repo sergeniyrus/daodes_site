@@ -68,9 +68,9 @@
     </style>
 
     <div class="modal-content">
-        <div class="imgcontainer">
+        {{-- <div class="imgcontainer"> --}}
             <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
-        </div>
+        {{-- </div> --}}
         <div class="container">
             @if (isset($message))
                 <p style="font-size: 18px; color:red;">{{ $message }}</p>

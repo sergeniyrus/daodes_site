@@ -1,0 +1,86 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'StandardPoster';
+  src: url('/public/fonts/StandardPoster.eot');
+  src: local('☺'), url('/public/fonts/StandardPoster.woff') format('woff'), url('/public/fonts/StandardPoster.ttf') format('truetype'), url('/public/fonts/StandardPoster.svg') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  color: #ffffff;
+  background-color: #0B0C18;
+  background-image: url("https://ipfs.sweb.ru/ipfs/QmTpCH5y3AkDhVBgDLUKuTRbkKV69EEvGzzgwLhQMtsWZ3?filename=bg01.jpg");
+  opacity: 1;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+  font-family: Firefly, DejaVu Sans, sans-serif;
+  font-size: clamp(14px, 2vw, 20px);
+}
+
+h1 {
+  font-size: clamp(24px, 5vw, 40px); /* Пример для h1 */
+}
+
+h2 {
+  font-size: clamp(22px, 4vw, 36px); /* Пример для h2 */
+}
+
+h3 {
+  font-size: clamp(20px, 3vw, 32px); /* Пример для h3 */
+}
+
+h4 {
+  font-size: clamp(18px, 2.5vw, 28px); /* Пример для h4 */
+}
+
+h5 {
+  font-size: clamp(16px, 2vw, 24px); /* Пример для h5 */
+}
+
+h6 {
+  font-size: clamp(14px, 2vw, 20px); /* Пример для h5 */
+}
+
+p {
+  font-size: clamp(12px, 2vw, 18px); /* Пример для параграфов */
+}
+
+img {
+  max-width: 100%;
+}
+
+/* Header */
+/* блок вход регистрация */
+.header {
+  background-color: #000000cf;
+  margin: 20px auto;
+  border: 1px solid gold;
+  max-width: 80%;
+  min-width: 300px;
+  border-radius: 30px;
+  text-align: center;
+}
+
+
+
+/* .imgcontainer {  
+  border-radius: 50%;  
+} */
+img.avatar {
+  border-radius: 50%;
+  border: 2px solid gold;
+  margin: 25px auto 25px auto;
+}

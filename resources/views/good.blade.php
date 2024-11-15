@@ -1,8 +1,7 @@
 @extends('template')
 
-@section('title_page')
-    {{-- тайтл --}} Good
-@endsection
+@section('title_page', 'Системное сообщенеи')
+    
 <style>
     .good {
   min-width: 60%;
@@ -59,7 +58,7 @@
         </h2><br>
         <h2>прошло успешно!</h2>
         <br>
-        <a href="/page/{{ $post }}/{{ $id }}" >
+        <a href="/{{ $post }}/{{ $id }}" >
             <h2 class="blue_btn">посмотреть</h2>
         </a>
         <br>

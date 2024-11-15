@@ -52,19 +52,19 @@ In DAODES
             background-color: #0b0c18;
             border: 1px solid #fff;
             border-radius: 20px;
-            color: #fff;
+            /* color: #fff; */
             padding: 20px;
-            max-width: 70%;
+            max-width: 50%;
             min-width: 280px;
             margin: 20px auto 20px auto;
             text-align: center;
             /* font-size: min(max(50%, 1.5vw), 80%); */
         }
 </style>
-<div class="box-content">
-    <div class="imgcontainer ">
+<div class="header">
+    {{-- <div class="imgcontainer "> --}}
         <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
-    </div>
+    {{-- </div> --}}
     
         <div class="regwin">
             

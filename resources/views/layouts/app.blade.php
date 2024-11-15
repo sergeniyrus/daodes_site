@@ -4,10 +4,10 @@
 @endsection
 
 @section('main')
-    <div id="box-content">
-        <div class="imgcontainer">
+    <div id="header">
+        {{-- <div class="imgcontainer"> --}}
             <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
-        </div>
+        {{-- </div> --}}
         <div class="container">
 
             {{ $slot }}

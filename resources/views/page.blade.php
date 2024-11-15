@@ -20,6 +20,7 @@
 
 @section('main')
     <style>
+        
         .flex-container {
             width: 90%;
             height: 100%;
@@ -445,35 +446,7 @@ a.eror_com {
     color: #f8f9fa;
 }
 
-.ck-toolbar {
-            background-color: #333333 !important; /* Тёмный фон */
-            border-bottom: 1px solid #d7fc09 !important; /* Добавление границы */
-        }
 
-        /* Изменение цвета кнопок на панели инструментов */
-        .ck-toolbar button {
-            color: #f8f9fa !important; /* Светлый цвет текста */
-            background-color: #0b0c18 !important; /* Темный фон кнопок */
-            border: 1px solid #d7fc09 !important; /* Цвет границ кнопок */
-        }
-
-        /* Цвет кнопок при наведении */
-        .ck-toolbar button:hover {
-            background-color: #d7fc09 !important; /* Желтый фон при наведении */
-            color: #1a1a1a !important; /* Тёмный текст при наведении */
-        }
-
-        /* Цвет для активных кнопок */
-        .ck-toolbar button.ck-on {
-            background-color: #d7fc09 !important; /* Желтый фон */
-            color: #1a1a1a !important; /* Тёмный текст */
-        }
-
-        .ck-editor__editable {
-            color: #bbbbbb !important; /* Тёмный цвет текста */
-            background-color: #1a1a1a !important; /* Тёмный фон */
-            font-size: 16px !important;
-        }
     </style>
     <br>
     <div class="flex-container">
@@ -634,5 +607,6 @@ a.eror_com {
         </div>
     @endif
     {{-- // Инициализация CKEditor --}}
+    <link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
     <script src="{{ asset('js/ckeditor.js') }}"></script>
 @endsection

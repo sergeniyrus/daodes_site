@@ -9,16 +9,88 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\News;
 use App\Models\CategoryNews;
-
+use App\Models\Page;  // Подключаем модель страницы
 
 class NewsController extends Controller
 {
-    // Метод для отображения всех новостей
-    public function news()
-    {
-        $news = DB::table('news')->get();
-        return view('news')->with('news', $news);
+
+public function list(Request $request)
+{
+    // Получаем параметры фильтрации и сортировки
+    $sort = $request->input('sort', 'new'); // new (по умолчанию) или old
+    $category = $request->input('category', null); // ID категории или null
+    $perPage = $request->input('perPage', 5); // Количество записей на страницу
+
+    // Запрос к базе данных с учетом фильтров
+    $query = DB::table('news');
+
+    if ($category) {
+        $query->where('category_id', $category);
     }
+
+    $query->orderBy('created_at', $sort === 'new' ? 'desc' : 'asc');
+
+    // Получаем пагинированный результат
+    $news = $query->paginate($perPage);
+
+    // Получаем категории для фильтра
+    $categories = DB::table('category_news')->pluck('name', 'id');
+
+    // Количество комментариев для каждой новости
+    $commentCount = [];
+    foreach ($news as $item) {
+        $commentCount[$item->id] = DB::table('comments_news')
+            ->where('news_id', $item->id)
+            ->count();
+    }
+
+    // Передаем данные в представление
+    return view('news.list', compact('news', 'commentCount', 'categories', 'sort', 'category', 'perPage'));
+}
+
+
+
+
+
+
+    // Метод для отображения страницы (для страницы/контента)
+    public function show($id)
+{
+    // Получаем новость по ID
+    $news = DB::table('news')->where('id', $id)->first();
+
+    if ($news) {
+        // Увеличиваем количество просмотров на 1
+        DB::table('news')->where('id', $id)->increment('views', 1);
+
+        // Получаем название категории по category_id
+        $categoryName = DB::table('category_news')
+            ->where('id', $news->category_id)
+            ->value('name'); // Получаем значение поля 'category_name'
+        
+        // Получаем комментарии для этой новости
+        $comments = DB::table('comments_news')
+            ->where('news_id', $news->id)
+            ->orderBy('created_at', 'desc') // Сортировка по дате (от новых к старым)
+            ->get();
+
+        // Получаем количество комментариев
+        $commentCount = $comments->count();
+
+        // Возвращаем представление с данными
+        return view('news.show', compact('news', 'categoryName', 'comments', 'commentCount'));
+    } else {
+        // Если новость не найдена, возвращаем ошибку или пустой результат
+        return abort(404);
+    }
+}
+
+
+
+
+
+
+
 
     // Метод для отображения формы добавления новости
     public function add()
@@ -30,7 +102,6 @@ class NewsController extends Controller
     // Метод для создания новой записи новости
     public function create(Request $request): RedirectResponse
     {
-        // Валидация данных
         $validated = $request->validate([
             'title' => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
@@ -53,7 +124,6 @@ class NewsController extends Controller
             'views' => 0
         ]);
 
-        // Получаем ID новой записи и перенаправляем пользователя
         $id = $news->id;
         return redirect()->route('good', ['post' => 'news', 'id' => $id, 'action' => 'create']);
     }
@@ -80,9 +150,6 @@ class NewsController extends Controller
         $data = json_decode($response->getBody()->getContents(), true);
         return 'https://daodes.space/ipfs/' . $data['Hash'];
     }
-
-    
-
 
     // Метод для редактирования новости
     public function edit($id)
@@ -143,22 +210,20 @@ class NewsController extends Controller
 
     // Метод для сохранения новой категории
     public function categoryStore(Request $request)
-{
-    $request->validate([
-        'name' => 'required|string|max:255|unique:category_news,name',
-    ]);
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:category_news,name',
+        ]);
 
-    try {
-        CategoryNews::create(['name' => $request->name]);
-    } catch (\Exception $e) {
-        // Записываем ошибку в лог для диагностики
-        \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
-        return back()->withErrors(['name' => 'Не удалось добавить категорию.']);
+        try {
+            CategoryNews::create(['name' => $request->name]);
+        } catch (\Exception $e) {
+            \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
+            return back()->withErrors(['name' => 'Не удалось добавить категорию.']);
+        }
+
+        return redirect()->route('newscategories.index')->with('success', 'Категория добавлена');
     }
-
-    return redirect()->route('newscategories.index')->with('success', 'Категория добавлена');
-}
-
 
     // Метод для редактирования категории
     public function categoryEdit($id)
@@ -169,27 +234,21 @@ class NewsController extends Controller
 
     // Метод для обновления категории
     public function categoryUpdate(Request $request, $id)
-{
-    $category = CategoryNews::findOrFail($id);
+    {
+        $category = CategoryNews::findOrFail($id);
 
-    $request->validate([
-        'name' => 'required|string|max:255|unique:category_news,name,' . $id
-    ]);
+        $request->validate([
+            'name' => 'required|string|max:255|unique:category_news,name,' . $id
+        ]);
 
-    try {
-        // Обновление категории
-        $category->update(['name' => $request->name]);
-        
-        return redirect()->route('newscategories.index')->with('success', 'Категория обновлена');
-    } catch (\Exception $e) {
-        // Запись ошибки в лог
-        \Log::error('Ошибка при обновлении категории: ' . $e->getMessage());
-        
-        // Сообщение об ошибке
-        return redirect()->back()->withErrors(['name' => 'Не удалось обновить категорию. Пожалуйста, попробуйте еще раз.']);
+        try {
+            $category->update(['name' => $request->name]);
+            return redirect()->route('newscategories.index')->with('success', 'Категория обновлена');
+        } catch (\Exception $e) {
+            \Log::error('Ошибка при обновлении категории: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['name' => 'Не удалось обновить категорию. Пожалуйста, попробуйте еще раз.']);
+        }
     }
-}
-
 
     // Метод для удаления категории
     public function categoryDestroy($id)

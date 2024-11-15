@@ -12,7 +12,7 @@
             src: url(http://example.com/fonts/firefly.ttf) format('truetype');
         }
         body {
-            font-family: Firefly, DejaVu Sans, sans-serif;
+            
         }
         .container { width: 100%; padding: 20px; font-family: Firefly, DejaVu Sans, sans-serif; }
         h1, h2 { text-align: center; }
