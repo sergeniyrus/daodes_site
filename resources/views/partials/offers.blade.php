@@ -4,7 +4,7 @@
         <img src="<?php echo $offer->img; ?>" alt="" />
     </div>
     <div class="windows-string">
-        <a href="/page/offers/<?php echo $offer->id; ?>">
+        <a href="/offers/<?php echo $offer->id; ?>">
             <div class="windows-new-title">
                 <?php echo $offer->title; ?>
             </div>

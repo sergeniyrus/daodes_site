@@ -36,7 +36,7 @@ class VoteController extends Controller
         }
 
         // Перенаправление на указанный URL после голосования
-        return redirect()->to('https://daodes.space/page/offers/' . $offer_id);
+        return redirect()->to('https://daodes.space/offers/' . $offer_id);
     }
 
     

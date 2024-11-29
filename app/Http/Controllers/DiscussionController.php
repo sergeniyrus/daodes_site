@@ -30,7 +30,7 @@ class DiscussionController extends Controller
             ['vote' => $vote, 'created_at' => now(), 'updated_at' => now()]
         );
 
-        return redirect()->to('https://daodes.space/page/offers/' . $offer_id);
+        return redirect()->to('https://daodes.space/offers/' . $offer_id);
     }
 
 }

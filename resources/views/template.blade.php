@@ -41,7 +41,8 @@
     <!-- * Вставляем стили -->
     {{-- <link rel="stylesheet" href="css/main.css"> --}}
     @vite(['resources/css/app.css', 'resources/css/main.css', 'resources/js/app.js', 'resources/js/block.js', 'resources/js/bt_top.js'])
-
+    
+    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="DAODES_Robot" data-size="large" data-auth-url="https://daodes.space/" data-request-access="write"></script>
 </head>
 
 <body>

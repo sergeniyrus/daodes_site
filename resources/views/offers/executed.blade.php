@@ -12,7 +12,7 @@
             ?>
 
             @if(isset($pdfIpfsCid))
-                <div class="msg">Решение в 
+                <div class="login_prompt" style="text-align: center">Решение в 
                   <a href="https://daodes.space/ipfs/{{ $pdfIpfsCid }}" target="_blank" style="color: gold">IPFS</a>
                 </div>
             @else

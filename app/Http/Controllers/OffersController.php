@@ -7,32 +7,99 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
-use App\Models\Offers; // Добавляем модель Offer
-use App\Models\CategoryOffers; // Добавляем модель CategoryOffers
+use App\Models\Offers; 
+use App\Models\CategoryOffers; 
 use Illuminate\Support\Facades\Log;
+use Carbon\Carbon;
 
 class OffersController extends Controller
 {
-    // Метод для отображения всех предложений в DAO
-    public function dao()
-    {
-        $offers = DB::table('offers')->get();
-        return view('dao')->with('offers', $offers);
+    
+    public function list(Request $request)
+{
+    // Получаем параметры фильтрации и сортировки
+    $sort = $request->input('sort', 'new'); // new (по умолчанию) или old
+    $category = $request->input('category', null); // ID категории или null
+    $perPage = $request->input('perPage', 5); // Количество записей на страницу
+    $state = $request->input('state', null); // Фильтр по статусу
+
+    // Запрос к базе данных с учетом фильтров
+    $query = DB::table('offers');
+
+    if ($category) {
+        $query->where('category_id', $category);
     }
 
-    // Метод для отображения всех предложений
-    public function offers()
-    {
-        $offers = DB::table('offers')->get();
-        return view('offers')->with('offers', $offers);
+    if ($state !== null) {
+        $query->where('state', $state);
     }
+
+    // Обработка сортировки
+    if ($sort === 'new') {
+        $query->orderBy('created_at', 'desc');
+    } elseif ($sort === 'old') {
+        $query->orderBy('created_at', 'asc');
+    }
+
+    // Получаем пагинированный результат
+    $offers = $query->paginate($perPage);
+
+    // Получаем категории для фильтра
+    $categories = DB::table('category_offers')->pluck('name', 'id');
+
+    // Получаем список статусов, по которым есть предложения
+    $statesWithOffers = DB::table('offers')
+        ->select('state', DB::raw('COUNT(*) as count'))
+        ->groupBy('state')
+        ->pluck('count', 'state');
+
+    // Количество комментариев для каждой новости
+    $commentCount = [];
+    foreach ($offers as $item) {
+        $commentCount[$item->id] = DB::table('comments_offers')
+            ->where('offer_id', $item->id)
+            ->count();
+    }
+
+    // Передаем данные в представление
+    return view('offers.list', compact('offers', 'commentCount', 'categories', 'sort', 'category', 'perPage', 'state', 'statesWithOffers'));
+}
+
+
+
 
     // Метод для отображения конкретного предложения по ID
-    public function offer($id)
-    {
-        $offer = DB::table('offers')->where('id', $id)->first();
-        return view('offer')->with('offer', $offer);
+    // Метод для отображения страницы (для страницы/контента)
+    public function show($id)
+{
+    // Получаем новость по ID
+    $offers = DB::table('offers')->where('id', $id)->first();
+
+    if ($offers) {
+        // Увеличиваем количество просмотров на 1
+        DB::table('offers')->where('id', $id)->increment('views', 1);
+
+        // Получаем название категории по category_id
+        $categoryName = DB::table('category_offers')
+            ->where('id', $offers->category_id)
+            ->value('name'); // Получаем значение поля 'category_name'
+        
+        // Получаем комментарии для этой новости
+        $comments = DB::table('comments_offers')
+            ->where('offer_id', $offers->id)
+            ->orderBy('created_at', 'desc') // Сортировка по дате (от новых к старым)
+            ->get();
+
+        // Получаем количество комментариев
+        $commentCount = $comments->count();
+
+        // Возвращаем представление с данными
+        return view('offers.show', compact('offers', 'categoryName', 'comments', 'commentCount'));
+    } else {
+        // Если новость не найдена, возвращаем ошибку или пустой результат
+        return abort(404);
     }
+}
 
     // Метод для отображения формы добавления нового предложения
     public function add()
@@ -187,4 +254,5 @@ class OffersController extends Controller
         $data = json_decode($response->getBody()->getContents(), true);
         return 'https://daodes.space/ipfs/' . $data['Hash'];
     }
+    
 }

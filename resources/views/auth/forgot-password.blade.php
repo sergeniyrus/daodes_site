@@ -20,7 +20,7 @@
 
     <div class="form-container">
         <h1>Восстановление пароля</h1>
-        <form method="POST" action="{{ route('custom.password.submit') }}">
+        <form method="POST" action="{{ route('password.keyword') }}">
             @csrf
 
             <!-- Username -->

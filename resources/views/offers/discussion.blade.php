@@ -1,3 +1,124 @@
+<style>
+    /* блок формы голосования */
+    .left_box {
+        width: 100%;
+        font-size: min(max(50%, 1.5vw), 90%);
+        color: aqua;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .vote_box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .form-vote {
+        width: 100%;
+    }
+
+    /* Радио-кнопки с картинками */
+    .img_vote {
+        position: relative;
+        margin: 0 10px;
+    }
+
+    .img_vote input[type="radio"] {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        z-index: 2;
+    }
+
+    .img_vote img {
+        display: block;
+        width: 100px;
+        height: auto;
+        border: 3px solid transparent;
+        transition: border-color 0.3s;
+    }
+
+    .img_vote input[type="radio"]:checked+img {
+        border-color: #f00;
+        border-radius: 50%;
+    }
+
+    /* Таблица с результатами */
+    .results-table {
+        /* width: 100%; */
+        border-collapse: collapse;
+        margin: 20px auto;
+        font-size: 1rem;
+        color: gold;
+    }
+
+    .results-table td {
+        padding: 10px;
+        vertical-align: middle;
+    }
+
+    .results-table .text-right {
+        text-align: right;
+        font-weight: bold;
+    }
+
+    /* Прогресс-бары */
+    .progress-bar {
+        width: 100%;
+        background-color: #f3f3f3;
+        border: 1px solid gold;
+        border-radius: 5px;
+        overflow: hidden;
+        height: 14px;
+        margin: 5px 0;
+    }
+
+    .progress {
+        height: 100%;
+        text-align: center;
+        line-height: 14px;
+        color: transparent;
+        transition: width 0.3s ease;
+    }
+
+    /* Общая стилизация */
+    .result-container {
+        width: 95%;
+        margin: 20px auto;
+        padding: 10px;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .text-center {
+        text-align: center;
+        font-size: 1.2rem;
+        color: gold;
+        margin-bottom: 10px;
+    }
+    .tbr fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: center;
+    justify-content: center;
+}
+
+.vote_ratio {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+}
+</style>
 <div class="left_box">
     @auth
         <?php
@@ -20,9 +141,9 @@
                     <form action="{{ route('discussion.store') }}" method="post">
                         @csrf
                         <fieldset class="tbr">
-                            <legend>
-                                <h4>Готов голосовать?</h4>
-                            </legend>
+                            
+                            <h1 style="text-align: center; font-size:1.5rem">Готов голосовать?</h1>
+                            
                             <div class="vote_ratio">
                                 <label for="choice1" class="img_vote">
                                     <input type="radio" id="choice1" class="choice1" name="vote" value="1"
@@ -45,7 +166,7 @@
                 <div class="msg">Вы ещё не высказали своё мнение в комментариях. Пожалуйста выскажитесь.</div>
             @endif
         @else
-            <div class="msg">Ваше мнение учтено</div>
+            <div class="msg"><h1 style="text-align: center; font-size:1.5rem">Ваше мнение учтено</h1></div>
 
 
             <?php
@@ -138,14 +259,15 @@
                 echo 'Предложение отклонено по итогам обсуждений';
             }
             if ($no_percentage >= 25) {
-                DB::table('offers')
-                    ->where('id', $offer_id)
-                    ->update([
-                        'state' => 2,
-                        'start_vote' => now(), // Или можно использовать now()
-                    ]);
-                echo 'Запускаем голосование!';
-            }
+    DB::table('offers')
+        ->where('id', $offer_id)
+        ->update([
+            'state' => 2,
+            'start_vote' => now()->setTimezone('UTC'), // Устанавливаем время в UTC
+        ]);
+    echo 'Запускаем голосование!';
+}
+
             ?>
         @endif
     @else

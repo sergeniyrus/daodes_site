@@ -1,16 +1,16 @@
 .container {
   padding: 15px;
-  margin: 0 auto;
+  margin: 20px auto 0 auto;
   max-width: 800px;
-  background-color: rgba(30, 32, 30, 0.753);
+  background-color: #000000cf;
   border-radius: 15px;
   border: 1px solid gold;
   color: #f8f9fa;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-  margin-top: 30px;
+  
 }
 
-.news-header {
+.offers-header {
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -45,14 +45,19 @@
   gap: 20px 0; /* Задаём отступы по вертикали */
 }
 
-.task-title,
 .task-info {            
   display: block;            
 }
 
+.task-title {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
 .task-title h5 {
-  color: #00ffff;
-  margin: 0;
+  color: #00ffff;  
   font-size: 1.5rem;
 }
 
@@ -83,13 +88,13 @@
   margin-right: 10px;
 }
 
-.news-title {
+.offers-title {
   text-align: center;
   color: #00ffff;
   margin-bottom: 20px;
 }
 
-.news-content {
+.offers-content {
   color: #ffffff;
   margin-bottom: 20px;
   font-size: 0.9rem;
@@ -138,7 +143,7 @@
 
 .card {
   border-radius: 10px;
-  border: 1px solid #CD57D4;
+  border: 1px solid rgb(255, 0, 255);
   background-color: #2b2c2e;
   margin-bottom: 20px;
   padding: 15px;
@@ -151,7 +156,7 @@
   background-color: #2b2c2e;
   padding: 20px;
   border-radius: 10px;
-  border: 1px solid #CD57D4;
+  border: 1px solid rgb(255, 0, 255);
   margin-top: 30px;
 }
 
@@ -160,7 +165,7 @@
   
   color: #00ffff;
   margin-bottom: 20px;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-family: 'StandardPoster';
 }
 
@@ -239,18 +244,13 @@ textarea:focus {
   border-color: #00ffff;
 }
 
-
-
-
-
-
 /* Основной стиль фильтров */
 .filters {
   margin-bottom: 20px;
   background-color: #2b2c2e;
-  padding: 15px;
+  padding: 15px 0;
   border-radius: 10px;
-  border: 1px solid #CD57D4;
+  border: 1px solid rgb(255, 0, 255);
   
 }
 
@@ -276,8 +276,7 @@ textarea:focus {
 /* Элементы фильтров */
 .filter-item {
   display: flex;
-  align-items: center;
-  
+  align-items: center;  
   margin-bottom: 0; /* Убираем отступы снизу */
   }
 
@@ -427,7 +426,7 @@ transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       padding: 10px;
   }
 
-  .news-header {
+  .offers-header {
       flex-direction: column;
       align-items: center;
       text-align: center;
@@ -521,7 +520,7 @@ transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   .img_post img{
     width: 400px;
   }
-  .news-content {
+  .offers-content {
       font-size: 0.85rem;
   }
 
@@ -542,4 +541,10 @@ transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   textarea {
       height: 100px;
   }
+
+  .filter2{
+    column-gap: 3px;
   }
+  }
+
+  

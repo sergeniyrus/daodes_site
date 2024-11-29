@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\News;
 use App\Models\CategoryNews;
-use App\Models\Page;  // Подключаем модель страницы
+use Illuminate\Support\Facades\Log;
 
 class NewsController extends Controller
 {
@@ -84,13 +84,6 @@ public function list(Request $request)
         return abort(404);
     }
 }
-
-
-
-
-
-
-
 
     // Метод для отображения формы добавления новости
     public function add()

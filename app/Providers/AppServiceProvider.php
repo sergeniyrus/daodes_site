@@ -3,21 +3,28 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Telegram\Commands\StartCommand;
 
 class AppServiceProvider extends ServiceProvider
 {
     /**
-     * Register any application services.
+     * Регистрация сервисов.
+     *
+     * @return void
      */
-    public function register(): void
+    public function boot()
     {
-        //
+        // Регистрируем кастомные команды
+        $telegram = app('telegram.bot');
+        $telegram->addCommand(StartCommand::class);
     }
 
     /**
-     * Bootstrap any application services.
+     * Регистрация сервисов приложения.
+     *
+     * @return void
      */
-    public function boot(): void
+    public function register()
     {
         //
     }

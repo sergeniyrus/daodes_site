@@ -10,9 +10,6 @@
             <h1>Новости</h1>
         </div>
 
-
-
-
         <div class="filters">
             <form action="{{ route('news.index') }}" method="GET" class="">
                 <div class="filters2">
@@ -67,16 +64,17 @@
             @forelse($news as $newsItem)
                 <div class="card shadow-sm">
                     <div class="">
+                        <div class="task-title">
+                            <a href="{{ route('news.show', $newsItem->id) }}" class="btn blue_btn">
+                                <h5>{{ $newsItem->title }}</h5>
+                            </a>
+                        </div>
                         <div class="news-header">
                             <div class="img_post">
                                 <img src="{{ $newsItem->img }}" alt="Image for {{ $newsItem->title }}" />
                             </div>
                             <div class="rows-title">
-                                <div class="task-title">
-                                    <a href="{{ route('news.show', $newsItem->id) }}" class="btn blue_btn">
-                                        <h5>{{ $newsItem->title }}</h5>
-                                    </a>
-                                </div>
+                                
                                 <div class="task-info">
                                     <p class="task-category"><i class="fas fa-folder-open"></i>
                                         @php

@@ -21,7 +21,8 @@ use App\Http\Controllers\{
     CategoryController,
     PageController,
     UserProfileController,
-    UploadController
+    UploadController,
+    TelegramController
 };
 
 // Главная страница
@@ -34,7 +35,7 @@ Route::get('good/{post}/{id}/{action}', [HomeController::class, 'good'])->name('
 // Разделы
 //Route::get('roadmap', [RoadMapController::class, 'roadmap'])->name('roadmap');
 
-Route::get('/dao', [DController::class, 'offers'])->name('dao');
+//Route::get('/dao', [DController::class, 'offers'])->name('dao');
 
 //Route::get('/category/{post}/{id}', [CategoryController::class, 'categorySort'])->name('category.sort');
 //Route::get('/page/{post}/{id}', [PageController::class, 'page_sort'])->name('page.sort');
@@ -75,15 +76,22 @@ Route::prefix('newscategories')->name('newscategories.')->middleware('auth')->gr
 
 
 // Управление предложениями
-Route::get('/offers', [OffersController::class, 'index'])->name('offers.index');
-Route::middleware('auth')->prefix('offers')->group(function () {
-    // Основные маршруты для предложений    
-    Route::get('/add', [OffersController::class, 'add'])->name('offers.add');
-    Route::post('/create', [OffersController::class, 'create'])->name('offers.create')->middleware('verified');    
-    // Редактирование и удаление предложений
-    Route::get('/{id}/edit', [OffersController::class, 'edit'])->name('offers.edit');
-    Route::put('/{id}', [OffersController::class, 'update'])->name('offers.update')->middleware('verified');
-    Route::delete('/{id}', [OffersController::class, 'destroy'])->name('offers.destroy');
+Route::get('/offers/add', [OffersController::class, 'add'])->name('offers.add')->middleware('auth');
+// Управление новостями
+Route::prefix('offers')->group(function () {
+    // Маршруты для всех пользователей
+    Route::get('/', [OffersController::class, 'list'])->name('offers.index');
+    Route::get('/{id}', [OffersController::class, 'show'])->name('offers.show'); // Просмотр полной новости
+    
+    // Только авторизованные пользователи могут добавлять, редактировать и удалять новости
+    Route::middleware('auth')->group(function () {
+        //Route::get('/add', [OffersController::class, 'add'])->name('offers.add');
+        Route::post('/create', [OffersController::class, 'create'])->name('offers.create');
+        
+        Route::get('/{id}/edit', [OffersController::class, 'edit'])->name('offers.edit');
+        Route::put('/{id}', [OffersController::class, 'update'])->name('offers.update');
+        Route::delete('/{id}', [OffersController::class, 'destroy'])->name('offers.destroy');
+    });
 });
     // Управление категориями предложений
 Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')->group(function () {
@@ -96,15 +104,14 @@ Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')
 });
 
 // Комментарии
-Route::post('/comments', [CommentController::class, 'offers'])->name('comments.offers');
-Route::post('/comments', [CommentController::class, 'news'])->name('comments.news');
+Route::post('/commentsoffers', [CommentController::class, 'offers'])->name('comments.offers');
+
+Route::post('/commentsnews', [CommentController::class, 'news'])->name('comments.news');
+
 // Спам, обсуждения, голосования
 Route::post('/spam', [SpamController::class, 'store'])->name('spam.store');
 Route::post('/discussion', [DiscussionController::class, 'store'])->name('discussion.store');
 Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
-
-
-
 
 
 // Seed фраза
@@ -166,8 +173,6 @@ Route::middleware('auth')->prefix('taskscategories')->name('taskscategories.')->
     Route::delete('/{taskCategory}', [TasksCategoryController::class, 'destroy'])->name('destroy');
 });
 
-
-
 // Профиль пользователя
 Route::middleware('auth')->prefix('profile')->name('profile.')->group(function () {
     Route::get('/', [ProfileController::class, 'edit'])->name('edit');
@@ -194,5 +199,14 @@ Route::post('/upload-image', [UploadController::class, 'uploadImage'])->name('up
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
+
+
+Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
+
+Route::domain('deschat.daodes.space')->group(function () {
+    Route::get('/', function () {
+        return redirect('/');
+    });
+});
 
 require __DIR__.'/auth.php';
