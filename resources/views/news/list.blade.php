@@ -103,7 +103,7 @@
                     </div>
                 </div>
             @empty
-                <p>Нет новостей для отображения.</p>
+                <p style="text-align: center">Нет новостей для отображения.</p>
             @endforelse
         </div>
 

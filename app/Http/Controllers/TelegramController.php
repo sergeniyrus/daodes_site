@@ -7,16 +7,6 @@ use Illuminate\Http\Request;
 
 class TelegramController extends Controller
 {
-    public function sendMessage()
-    {
-        $response = Telegram::sendMessage([
-            'chat_id' => '350029587', // Укажите ID чата или имя пользователя
-            'text' => 'Привет! Это сообщение из Laravel.',
-        ]);
-
-        return $response;
-    }
-
     public function webhook(Request $request)
     {
         // Получаем обновление от Telegram
@@ -27,11 +17,31 @@ class TelegramController extends Controller
             $message = $update->getMessage()->getText();
             $chatId = $update->getMessage()->getChat()->getId();
 
-            // Отправляем сообщение обратно в тот же чат
-            Telegram::sendMessage([
-                'chat_id' => $chatId,
-                'text' => "Вы написали: $message",
-            ]);
+            // Обработка команды /start
+            if ($message === '/start') {
+                $keyboard = [
+                    'inline_keyboard' => [[
+                        [
+                            'text' => 'Открыть приложение',
+                            'web_app' => ['url' => 'https://daodes.space'] // Ваш URL
+                        ]
+                    ]]
+                ];
+
+                // Отправляем сообщение с кнопкой
+                Telegram::sendMessage([
+                    'chat_id' => $chatId,
+                    'text' => 'Добро пожаловать! Нажмите кнопку ниже, чтобы открыть приложение.',
+                    'reply_markup' => json_encode($keyboard)
+                ]);
+            }
+            // Проверка других сообщений (если нужно)
+            else {
+                Telegram::sendMessage([
+                    'chat_id' => $chatId,
+                    'text' => "Вы написали: $message",
+                ]);
+            }
         }
 
         // Ответ Telegram, чтобы подтвердить успешную обработку вебхука

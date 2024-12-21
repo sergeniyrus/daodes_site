@@ -8,15 +8,15 @@
 <link rel="stylesheet" href="{{ asset('css/news.css') }}">
     <div class="container my-5">
         <div class="news-header">
-            <div class="task-title">
-                <h5>{{ $news->title }}</h5>
-            </div>
+            
             <div class="img_post">
                 <img src="{{ $news->img }}" alt="Image for {{ $news->title }}" />
             </div>
 
             <div class="rows-title">
-                
+                <div class="task-title">
+                <h5>{{ $news->title }}</h5>
+            </div>
                 <div class="task-info">
                     <p class="task-category"><i class="fas fa-folder-open"></i> {{ $categoryName }}</p>
                 </div>

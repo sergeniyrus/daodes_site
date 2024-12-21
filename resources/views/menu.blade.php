@@ -18,11 +18,11 @@
             <span class="logo_name"><img src="/img/bottom/tasks2.png" alt="Биржа заданий"></span></a>
     </div>
     <div class="header-menu has-submenu" id="wallet-menu">
-        <a href="https://daodes.space/wallet" title="Кошелёк">
-            <span><img src="/img/bottom/wallet2.png" alt="Кошелёк"></span></a>
+        <a href="https://deschat.daodes.space/chatify" title="DESChat">
+            <span><img src="/img/bottom/deschat.png" alt="DESChat"></span></a>
     </div>
     <div class="header-menu" id="paper-menu">
-        <a href="https://goo.su/fwRzC" title="White paper" target="_blank">
+        <a href="https://1drv.ms/w/c/5a7adc7e00e1bf69/EWm_4QB-3HoggFq07AEAAAABQpjB8fDjRd_X53NmjBrYfw" title="White paper" target="_blank">
             <span><img src="/img/bottom/paper.png" alt="White paper"></span>
         </a>
     </div>

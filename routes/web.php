@@ -203,6 +203,8 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 
 Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
 
+
+
 Route::domain('deschat.daodes.space')->group(function () {
     Route::get('/', function () {
         return redirect('/');
