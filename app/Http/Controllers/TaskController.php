@@ -38,18 +38,23 @@ public function test () {
 
     public function show(Task $task)
 {
-    // Загружаем связанные данные: категория и предложения
-    $task->load('category');
+    // Загружаем связанные данные
+    $task->load('category', 'user', 'bids'); // Загрузка связи с пользователем и предложениями
 
-    // Сортируем предложения по цене, дням и часам выполнения
-    $bids = $task->bids()
-        ->orderBy('price', 'asc') // сортировка по цене
-        ->orderBy('days', 'asc') // сортировка по количеству дней
-        ->orderBy('hours', 'asc') // сортировка по количеству часов
-        ->get();
+    // Убедитесь, что задача связана с пользователем
+    if (!$task->user) {
+        return redirect()->route('tasks.list')->withErrors('Автор задачи не найден.');
+    }
 
     // Преобразуем срок выполнения задачи в объект Carbon
     $task->deadline = Carbon::parse($task->deadline);
+
+    // Сортируем предложения
+    $bids = $task->bids()
+        ->orderBy('price', 'asc')
+        ->orderBy('days', 'asc')
+        ->orderBy('hours', 'asc')
+        ->get();
 
     return view('tasks.show', compact('task', 'bids'));
 }

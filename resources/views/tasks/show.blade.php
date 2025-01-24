@@ -413,9 +413,10 @@
                         ->where('id', $task->accepted_bid_id)
                         ->first();
                 @endphp
+
                 <div class="bid">
                     <p><strong class="task-line">Фрилансер:</strong> {{ $acceptedBid->user->name }}</p>
-                    <p><strong class="task-line">Цена:</strong> {{ $acceptedBid->price }} DESCoin</p>
+                    <p><strong class="task-line">Цена:</strong> {{ $acceptedBid->price }} $</p>
                     <p><strong class="task-line">Время выполнения:</strong> {{ $acceptedBid->days }} дней
                         {{ $acceptedBid->hours }} часов</p>
                     <p><strong class="task-line">Комментарий:</strong> {{ $acceptedBid->comment }}</p>

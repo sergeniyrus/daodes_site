@@ -22,7 +22,8 @@ use App\Http\Controllers\{
     PageController,
     UserProfileController,
     UploadController,
-    TelegramController
+    TelegramController,
+    MessagesController
 };
 
 // Главная страница
@@ -203,12 +204,15 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 
 Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
 
+//Route::get('/chatify', [\App\Http\Controllers\ChatifyController::class, 'index'])->name('chat');
+
+Route::get('/chatify', [MessagesController::class, 'index'])->name('chatify');
 
 
-Route::domain('deschat.daodes.space')->group(function () {
-    Route::get('/', function () {
-        return redirect('/');
-    });
-});
+// Route::domain('deschat.daodes.space')->group(function () {
+//     Route::get('/', function () {
+//         return redirect('/');
+//     });
+// });
 
 require __DIR__.'/auth.php';

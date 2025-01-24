@@ -18,7 +18,7 @@
             <span class="logo_name"><img src="/img/bottom/tasks2.png" alt="Биржа заданий"></span></a>
     </div>
     <div class="header-menu has-submenu" id="wallet-menu">
-        <a href="https://deschat.daodes.space/chatify" title="DESChat">
+        <a href="https://daodes.space/chatify" title="DESChat">
             <span><img src="/img/bottom/deschat.png" alt="DESChat"></span></a>
     </div>
     <div class="header-menu" id="paper-menu">

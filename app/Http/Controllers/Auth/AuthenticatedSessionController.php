@@ -25,37 +25,23 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request): RedirectResponse
     {
-        // Perform local authentication
         $request->authenticate();
 
         $request->session()->regenerate();
 
-        // Send a login request to the first project to get the token
-        $response = Http::post('http://daodes.space/api/login', [
-            'name' => $request->input('name'),
-            'password' => $request->input('password'),
-        ]);
-
-        if ($response->successful()) {
-            // Store the access token in the session
-            $accessToken = $response->json()['access_token'];
-            $request->session()->put('access_token', $accessToken);
-        } else {
-            return back()->withErrors(['message' => 'Failed to get access token from the first project']);
-        }
-
-        // Retrieve the previous URL from the session
+        // Получаем предыдущий URL из сессии
         $intendedUrl = $request->session()->pull('url.intended', route('dashboard'));
 
-        // Check if the intended URL is the home page
+        // Проверяем, является ли предыдущий URL главной страницей
         if ($intendedUrl === route('home')) {
-            // Redirect to dashboard if it's the home page
+            // Если это главная страница, перенаправляем на роут dashboard
             return redirect()->route('dashboard');
         }
 
-        // Otherwise, redirect to the intended page
+        // В противном случае перенаправляем на страницу, с которой пришли
         return redirect()->intended($intendedUrl);
     }
+
 
     /**
      * Destroy an authenticated session.
