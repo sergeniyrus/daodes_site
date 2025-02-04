@@ -159,7 +159,7 @@
             <!-- Заголовок как кнопка -->
             <p class="card-text">
                 @if (strlen($task->content) > 260)
-                    {{ Str::limit($task->content, 260) }}...
+                {!! Str::limit($task->content, 260) !!}
                     <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-link">→ Читать дальше ←</a>
                 @else
                     {{ $task->content }}

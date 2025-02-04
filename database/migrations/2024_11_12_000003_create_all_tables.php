@@ -154,11 +154,12 @@ return new class extends Migration
                 // Дополнительные поля
                 $table->unsignedBigInteger('accepted_bid_id')->nullable(); // Поле для хранения ID принятого предложения
                 $table->timestamp('start_time')->nullable(); // Время начала работы
-                $table->boolean('in_progress')->default(false); // Статус задачи: в процессе или нет
-                $table->boolean('completed')->default(false);  // Статус задачи: завершена или нет
+                $table->timestamp('end_time')->nullable();
                 $table->timestamp('completion_time')->nullable(); // Время завершения задачи
+
+                $table->boolean('completed')->default(false);  // Статус задачи: завершена или нет                
                 $table->integer('rating')->nullable(); // Рейтинг задачи
-                $table->timestamp('completed_at')->nullable(); // Время завершения задачи
+                //$table->timestamp('completed_at')->nullable(); // Время завершения задачи
 
                 // Временные метки
                 $table->timestamps();

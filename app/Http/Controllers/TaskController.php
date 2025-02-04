@@ -2,62 +2,51 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
+use App\Models\Bid;
+use App\Models\TaskVote;
+use App\Models\TaskCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
-use App\Models\Task;
-use App\Models\Bid;
-use App\Models\TaskVote;
-use App\Models\TaskCategory; // Модель для категорий
 
 class TaskController extends Controller
 {
     // Отображение страницы создания задачи
     public function create()
     {
-        Log::info('ВОТ! читаем controller create');
-        $categories = TaskCategory::all(); // Загружаем категории для выбора
-        return view('tasks.create', compact('categories')); // Передаем категории в представление
+        $categories = TaskCategory::all();
+        return view('tasks.create', compact('categories'));
     }
 
-public function test () {
-    Log::info('ВОТ! читаем controller test');
-    return view('tasks.test');
-}
-
-    // Отображение списка открытых задач
+    // Отображение списка задач
     public function list()
     {
-        Log::info('List читаем controller list');
-        // Логика получения задач с фильтрацией по категориям (если применимо)
-        $tasks = Task::with('category')->paginate(10); // Пример с пагинацией
+        $tasks = Task::with('category')->paginate(10);
         $categories = TaskCategory::all();
         return view('tasks.list', compact('tasks', 'categories'));
     }
 
+    // Отображение конкретной задачи
     public function show(Task $task)
-{
-    // Загружаем связанные данные
-    $task->load('category', 'user', 'bids'); // Загрузка связи с пользователем и предложениями
+    {
+        $task->load('category', 'user', 'bids');
 
-    // Убедитесь, что задача связана с пользователем
-    if (!$task->user) {
-        return redirect()->route('tasks.list')->withErrors('Автор задачи не найден.');
+        if (!$task->user) {
+            return redirect()->route('tasks.list')->withErrors('Автор задачи не найден.');
+        }
+
+        $task->deadline = Carbon::parse($task->deadline);
+
+        $bids = $task->bids()
+            ->orderBy('price', 'asc')
+            ->orderBy('days', 'asc')
+            ->orderBy('hours', 'asc')
+            ->get();
+
+        return view('tasks.show', compact('task', 'bids'));
     }
-
-    // Преобразуем срок выполнения задачи в объект Carbon
-    $task->deadline = Carbon::parse($task->deadline);
-
-    // Сортируем предложения
-    $bids = $task->bids()
-        ->orderBy('price', 'asc')
-        ->orderBy('days', 'asc')
-        ->orderBy('hours', 'asc')
-        ->get();
-
-    return view('tasks.show', compact('task', 'bids'));
-}
 
     // Создание новой задачи
     public function store(Request $request)
@@ -67,7 +56,7 @@ public function test () {
             'content' => 'required|string',
             'deadline' => 'required|date',
             'budget' => 'required|numeric',
-            'category_id' => 'required|exists:category_tasks,id', // Проверка существования категории
+            'category_id' => 'required|exists:task_categories,id',
         ]);
 
         Task::create([
@@ -75,293 +64,260 @@ public function test () {
             'content' => $request->content,
             'deadline' => $request->deadline,
             'budget' => $request->budget,
-            'status' => 'open',
+            'status' => Task::STATUS_OPEN,
             'user_id' => Auth::id(),
-            'category_id' => $request->category_id, // Добавляем категорию
+            'category_id' => $request->category_id,
         ]);
 
         return redirect()->route('tasks.index')->with('success', 'Задание успешно добавлено!');
     }
 
-    // Подать предложение на задачу
-    public function bid(Request $request, Task $task)
-{
-    $request->validate([
-        'price' => 'required|numeric',
-        'days' => 'required|integer|min:0',
-        'hours' => 'required|integer|min:0|max:23',
-        'comment' => 'nullable|string|max:255',
-    ]);
-
-    // Проверка, есть ли уже предложение от этого фрилансера
-    $existingBid = $task->bids()->where('user_id', Auth::id())->first();
-
-    if ($existingBid) {
-        return redirect()->back()->with('error', 'Вы уже подали предложение на это задание.');
-    }
-
-    // Создаем новое предложение
-    $task->bids()->create([
-        'user_id' => Auth::id(),
-        'price' => $request->price,
-        'days' => $request->days,
-        'hours' => $request->hours,
-        'comment' => $request->comment,
-    ]);
-
-    return redirect()->route('tasks.show', $task)->with('success', 'Ваше предложение успешно подано.');
-}
-
-
-
-    // Лайк задачи
-    public function like(Task $task)
-    {
-        $userId = Auth::id();
-        $existingVote = TaskVote::where('task_id', $task->id)
-                                ->where('user_id', $userId)
-                                ->first();
-
-        if ($existingVote) {
-            if (!$existingVote->is_like) {
-                // Если был дизлайк, меняем на лайк
-                $existingVote->update(['is_like' => true]);
-            } else {
-                // Если уже стоит лайк, убираем его
-                $existingVote->delete();
-            }
-        } else {
-            // Если голос еще не был добавлен
-            TaskVote::create([
-                'task_id' => $task->id,
-                'user_id' => $userId,
-                'is_like' => true,
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Ваш голос учтен!');
-    }
-
-    // Дизлайк задачи
-    public function dislike(Task $task)
-    {
-        $userId = Auth::id();
-        $existingVote = TaskVote::where('task_id', $task->id)
-                                ->where('user_id', $userId)
-                                ->first();
-
-        if ($existingVote) {
-            if ($existingVote->is_like) {
-                // Если был лайк, меняем на дизлайк
-                $existingVote->update(['is_like' => false]);
-            } else {
-                // Если уже стоит дизлайк, убираем его
-                $existingVote->delete();
-            }
-        } else {
-            // Если голос еще не был добавлен
-            TaskVote::create([
-                'task_id' => $task->id,
-                'user_id' => $userId,
-                'is_like' => false,
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Ваш голос учтен!');
-    }
-
-    // Редактирование задачи
+    // Редактирование задачи (только для автора)
     public function edit(Task $task)
     {
-        if ($task->user_id != Auth::id()) {
-            abort(403);
+        if ($task->user_id !== Auth::id()) {
+            abort(403, 'У вас нет прав на редактирование этой задачи.');
         }
 
-        $categories = TaskCategory::all(); // Получаем все категории для выбора при редактировании
+        $categories = TaskCategory::all();
         return view('tasks.edit', compact('task', 'categories'));
     }
 
-    // Удаление задачи
-    public function destroy(Task $task)
-    {
-        if ($task->user_id != Auth::id()) {
-            abort(403);
-        }
-
-        $task->delete();
-
-        return redirect()->route('tasks.index')->with('success', 'Задание успешно удалено!');
-    }
-
-    // Обновление задачи
+    // Обновление задачи (только для автора)
     public function update(Request $request, Task $task)
     {
-        // Валидация данных
-        $validatedData = $request->validate([
+        if ($task->user_id !== Auth::id()) {
+            abort(403, 'У вас нет прав на редактирование этой задачи.');
+        }
+
+        $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'deadline' => 'required|date',
-            'budget' => 'required|numeric|min:0',
-            'category_id' => 'required|exists:category_tasks,id', // Категория должна существовать
+            'budget' => 'required|numeric',
+            'category_id' => 'required|exists:task_categories,id',
         ]);
 
-        // Обновление задачи
-        $task->update($validatedData);
+        $task->update($request->only(['title', 'content', 'deadline', 'budget', 'category_id']));
 
-        // Перенаправляем с сообщением об успехе
-        return redirect()->route('tasks.store')->with('success', 'Задание успешно обновлено!');
+        return redirect()->route('tasks.show', $task)->with('success', 'Задание успешно обновлено!');
     }
 
-    public function complete(Task $task)
-{
-    // Проверяем, что текущий пользователь — это автор задания
-    if (Auth::id() !== $task->user_id) {
-        return redirect()->back()->with('error', 'Вы не можете завершить это задание.');
-    }
-
-    // Фиксируем время завершения задания
-    $task->completion_time = now();
-    $task->status = 'completed'; // Устанавливаем статус "Завершено"
-    $task->completed = true;
-    $task->save();
-
-    // Остановка таймера (если используется, например, через JavaScript)
-    // Логика остановки таймера может быть реализована на клиенте.
-
-    // Вычисляем разницу времени между предложенным сроком и временем завершения
-    $startTime = $task->start_time; // Время, когда задание было начато
-    $endTime = $task->completion_time; // Время завершения
-    $proposedDuration = Carbon::parse($startTime)
-        ->addDays($task->acceptedBid->days)  // Дни, предложенные фрилансером
-        ->addHours($task->acceptedBid->hours); // Часы, предложенные фрилансером
-
-    // Рассчитываем разницу между предложенным временем выполнения и фактическим
-    $difference = $proposedDuration->diffForHumans($endTime, ['parts' => 3]);
-
-    // Формируем сообщение в зависимости от того, раньше или позже задача выполнена
-    if ($endTime < $proposedDuration) {
-        $message = "Вы завершили задание на {$difference} раньше срока.";
-    } else {
-        $message = "Вы завершили задание с опозданием на {$difference}.";
-    }
-    // Возвращаем пользователя обратно на страницу задачи с выводом сообщения
-    return redirect()->route('tasks.show', $task)->with('success', $message);
-    
-}
-
-
-public function rate(Request $request, Task $task)
-{
-    // Убедитесь, что пользователь — это автор задания и задание завершено
-    if (Auth::id() == $task->user_id && $task->completed && !$task->rating) {
-        $rating = $request->input('rating');
-        if ($rating >= 1 && $rating <= 10) {
-            $task->rating = $rating;
-            $task->save();
+    // Удаление задачи (только для автора)
+    public function destroy(Task $task)
+    {
+        if ($task->user_id !== Auth::id()) {
+            abort(403, 'У вас нет прав на удаление этой задачи.');
         }
-    }
-    return redirect()->back();
-}
 
-public function startWork(Task $task)
+        $task->delete();
+        return redirect()->route('tasks.index')->with('success', 'Задание успешно удалено!');
+    }
+
+    // Подача предложения (только одно предложение от пользователя)
+    public function bid(Request $request, Task $task)
+    {
+        if ($task->status !== Task::STATUS_OPEN) {
+            return redirect()->back()->with('error', 'Прием предложений закрыт.');
+        }
+
+        if ($task->bids()->where('user_id', Auth::id())->exists()) {
+            return redirect()->back()->with('error', 'Вы уже подали предложение на это задание.');
+        }
+
+        $request->validate([
+            'price' => 'required|numeric',
+            'days' => 'required|integer|min:0',
+            'hours' => 'required|integer|min:0|max:23',
+            'comment' => 'nullable|string|max:255',
+        ]);
+
+        $task->bids()->create([
+            'user_id' => Auth::id(),
+            'price' => $request->price,
+            'days' => $request->days,
+            'hours' => $request->hours,
+            'comment' => $request->comment,
+        ]);
+
+        return redirect()->route('tasks.show', $task)->with('success', 'Ваше предложение успешно подано.');
+    }
+
+    // Принятие предложения (только для автора)
+    public function acceptBid(Task $task, Bid $bid)
+    {
+        if ($task->user_id !== Auth::id()) {
+            abort(403, 'У вас нет прав на принятие предложений.');
+        }
+
+        $task->update([
+            'accepted_bid_id' => $bid->id,
+            'status' => Task::STATUS_NEGOTIATION,
+        ]);
+
+        return redirect()->back()->with('success', 'Предложение принято. Свяжитесь с фрилансером.');
+    }
+
+// Лайк задачи
+public function like(Task $task)
 {
-    // Проверяем, может ли текущий пользователь начать работу над задачей
-    if (
-        (Auth::id() !== $task->user_id && Auth::id() !== $task->acceptedBid->user_id) 
-        || $task->accepted_bid_id === null 
-        || $task->in_progress
-    ) {
-        return redirect()->back()->withErrors('Вы не можете начать работу над этой задачей.');
+    $userId = Auth::id();
+    $existingVote = TaskVote::where('task_id', $task->id)
+                            ->where('user_id', $userId)
+                            ->first();
+
+    if ($existingVote) {
+        if (!$existingVote->is_like) {
+            // Если был дизлайк, меняем на лайк
+            $existingVote->update(['is_like' => true]);
+        } else {
+            // Если уже стоит лайк, убираем его
+            $existingVote->delete();
+        }
+    } else {
+        // Если голос еще не был добавлен
+        TaskVote::create([
+            'task_id' => $task->id,
+            'user_id' => $userId,
+            'is_like' => true,
+        ]);
     }
 
-    // Устанавливаем текущее время в UTC как время начала работы
-    $task->start_time = now()->setTimezone('UTC'); // Указываем таймзону UTC
-    $task->in_progress = true;
-    $task->status = 'in_progress'; // Устанавливаем статус как "in_progress"
-    $task->save();
+    return redirect()->back()->with('success', 'Ваш голос учтен!');
+}
 
-    // Перенаправляем на страницу с задачей с сообщением об успехе
-    return redirect()->back()
-        ->with('success', 'Задача теперь в работе.')
-        ->with('start_time', $task->start_time); // Передаём start_time через сессию
+// Дизлайк задачи
+public function dislike(Task $task)
+{
+    $userId = Auth::id();
+    $existingVote = TaskVote::where('task_id', $task->id)
+                            ->where('user_id', $userId)
+                            ->first();
+
+    if ($existingVote) {
+        if ($existingVote->is_like) {
+            // Если был лайк, меняем на дизлайк
+            $existingVote->update(['is_like' => false]);
+        } else {
+            // Если уже стоит дизлайк, убираем его
+            $existingVote->delete();
+        }
+    } else {
+        // Если голос еще не был добавлен
+        TaskVote::create([
+            'task_id' => $task->id,
+            'user_id' => $userId,
+            'is_like' => false,
+        ]);
+    }
+
+    return redirect()->back()->with('success', 'Ваш голос учтен!');
 }
 
 
 
+    // Начало работы (только для фрилансера)
+    public function startWork(Task $task)
+    {
+        if ($task->acceptedBid->user_id !== Auth::id()) {
+            abort(403, 'Только выбранный фрилансер может начать работу.');
+        }
 
+        $task->update([
+            'status' => Task::STATUS_IN_PROGRESS,
+            'start_time' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Работа начата! Таймер запущен.');
+    }
+
+//фрилансер на проверку
+// Завершение работы (только для фрилансера)
 public function freelancerComplete(Task $task)
 {
-    // Проверяем, что текущий пользователь — это фрилансер, который принял это задание
-    if (Auth::id() !== $task->acceptedBid->user_id) {
-        return redirect()->back()->with('error', 'Вы не можете завершить это задание.');
+    if ($task->acceptedBid->user_id !== Auth::id()) {
+        abort(403, 'Только выбранный фрилансер может завершить задачу.');
     }
 
-    // Фиксируем время завершения задания
-    $task->completed_at = now();
-    $task->status = 'on_review'; // Устанавливаем статус "На проверке"
-    $task->save();
+    $task->update([
+        'status' => Task::STATUS_ON_REVIEW,
+        'end_time' => now(),
+    ]);
 
-    // Остановка таймера (если используется, например, через JavaScript)
-    // Логика остановки таймера может быть реализована на клиенте, поэтому здесь это просто комментарий.
-    // Например, вы можете сохранить текущее время в отдельном поле или использовать событие JS для остановки.
-
-    // Вычисляем разницу времени между предложенным сроком и временем завершения
-    $startTime = $task->start_time; // Время, когда задание было начато
-    $endTime = $task->completed_at; // Время завершения
-    $proposedDuration = Carbon::parse($startTime)
-        ->addDays($task->acceptedBid->days)  // Дни, предложенные фрилансером
-        ->addHours($task->acceptedBid->hours); // Часы, предложенные фрилансером
-
-    // Рассчитываем разницу между предложенным временем выполнения и фактическим
-    $difference = $proposedDuration->diffForHumans($endTime, ['parts' => 3]);
-
-    // Формируем сообщение в зависимости от того, раньше или позже задача выполнена
-    if ($endTime < $proposedDuration) {
-        $message = "Вы выполнили задание на {$difference} раньше срока.";
-    } else {
-        $message = "Вы выполнили задание с опозданием на {$difference}.";
-    }
-
-    // Возвращаем пользователя обратно на страницу задачи с выводом сообщения
-    return redirect()->route('tasks.show', $task)->with('success', $message);
+    return redirect()->back()->with('success', 'Задача отправлена на проверку.');
 }
 
+    // Завершение работы (только для Автора)
+    public function Complete(Task $task)
+    {
+        if ($task->user_id !== Auth::id()) {
+            abort(403, 'Только Автор может завершить задачу.');
+        }
 
+        $task->update([
+            'status' => Task::STATUS_COMPLETED,
+            
+        ]);
 
-
-    public function fail(Task $task)
-{
-    // Проверка, что только владелец задания может пометить его как проваленное
-    if (auth()->id() !== $task->user_id) {
-        return redirect()->back()->withErrors(['error' => 'У вас нет прав на это действие.']);
+        return redirect()->back()->with('success', 'Задача выполнена!');
     }
 
-    // Логика обработки проваленного задания
-    $task->in_progress = false;
-    $task->completed = false;
-    $task->status = false;
-    $task->accepted_bid_id = null;
-    $task->save();
-
-    return redirect()->back()->with('status', 'Задание помечено как проваленное.');
-}
-
+// Продолжение задачи (только для автора) кнопка доработать
 public function continueTask(Task $task)
 {
-    // Проверка авторизации: только автор задания может его продолжить
-    if (auth()->id() !== $task->user_id) {
-        return redirect()->route('tasks.show', $task)->with('error', 'У вас нет прав для продолжения этого задания.');
+    // Проверка, что текущий пользователь — это автор задачи
+    if ($task->user_id !== Auth::id()) {
+        abort(403, 'У вас нет прав для продолжения этого задания.');
     }
 
-    // Проверяем, что задание на проверке и его можно вернуть в работу
-    if ($task->status === 'on_review') {
-        $task->status = 'in_progress';  // Возвращаем статус "в работе"
-        $task->save();
-
-        return redirect()->route('tasks.show', $task)->with('success', 'Задание возвращено в работу.');
+    // Проверка, что задача находится на проверке
+    if ($task->status !== Task::STATUS_ON_REVIEW) {
+        return redirect()->back()->with('error', 'Невозможно продолжить это задание.');
     }
 
-    return redirect()->route('tasks.show', $task)->with('error', 'Невозможно продолжить это задание.');
+    // Возвращаем задачу в статус "В работе"
+    $task->update([
+        'status' => Task::STATUS_IN_PROGRESS,
+        'start_time' => now(), // Сбрасываем таймер
+    ]);
+
+    return redirect()->back()->with('success', 'Задание возвращено в работу.');
 }
 
+// Задача провалена только для автора
+public function fail(Task $task)
+{
+
+// Проверка, что текущий пользователь — это автор задачи
+if ($task->user_id !== Auth::id()) {
+    abort(403, 'У вас нет прав для этого задания.');
+}
+
+// Проверка, что задача находится на проверке
+if ($task->status !== Task::STATUS_ON_REVIEW) {
+    return redirect()->back()->with('error', 'Невозможно продолжить это задание.');
+}
+
+    $task->update([
+        'status' => 'failed',
+        
+    ]);
+    return redirect()->back()->with('success', 'Задание помечено как проваленное');
+}
+
+    // Оценка задачи (только для автора)
+    public function rate(Request $request, Task $task)
+    {
+        if ($task->user_id !== Auth::id()) {
+            abort(403, 'Только автор может оценить задачу.');
+        }
+
+        $request->validate([
+            'rating' => 'required|integer|between:-10,10',
+        ]);
+
+        $task->update(['rating' => $request->rating]);
+
+        return redirect()->back()->with('success', 'Оценка сохранена.');
+    }
 }

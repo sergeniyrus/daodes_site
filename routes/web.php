@@ -144,10 +144,25 @@ Route::get('/tasks', [TaskController::class, 'list'])->name('tasks.index');
 Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
 
 Route::get('/addtask', [TaskController::class, 'create'])->name('addtask')->middleware('auth');
+Route::post('/tasks/{task}/accept-bid/{bid}', [TaskController::class, 'acceptBid'])
+    ->name('tasks.accept-bid')
+    ->middleware('auth');
+
+    Route::post('/tasks/{task}/continue', [TaskController::class, 'continueTask'])
+    ->name('tasks.continue')
+    ->middleware('auth');
+
+    Route::post('/tasks/{task}/freelancerComplete', [TaskController::class, 'freelancerComplete'])
+    ->name('tasks.freelancerComplete')
+    ->middleware('auth');
+
+    Route::post('/tasks/{task}/fail', [TaskController::class, 'fail'])
+    ->name('tasks.fail')
+    ->middleware('auth');
 
 Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {    
 
-    Route::get('/create', [TaskController::class, 'create'])->name('create');
+//ds-    Route::get('/create', [TaskController::class, 'create'])->name('create');
     Route::post('/', [TaskController::class, 'store'])->name('store');    
     Route::post('/{task}/bid', [TaskController::class, 'bid'])->name('bid');
     Route::post('/{task}/like', [TaskController::class, 'like'])->name('like');
@@ -155,10 +170,15 @@ Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
     Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('edit');
     Route::put('/{task}', [TaskController::class, 'update'])->name('update');
     Route::delete('/{task}', [TaskController::class, 'destroy'])->name('destroy');
+    Route::post('/tasks/{task}/continue', [TaskController::class, 'continueTask'])->name('tasks.continue'); //ds+
     Route::post('/{task}/complete', [TaskController::class, 'complete'])->name('complete');
     Route::post('/{task}/rate', [TaskController::class, 'rate'])->name('rate');
     Route::post('/{task}/start-work', [TaskController::class, 'startWork'])->name('start_work');
     Route::post('/{task}/fail', [TaskController::class, 'fail'])->name('fail');
+
+    Route::post('/tasks/{task}/accept', [TaskController::class, 'acceptTask'])->name('tasks.accept');
+    Route::post('/tasks/{task}/revision', [TaskController::class, 'requestRevision'])->name('tasks.revision');
+
 });
 
 // Принятие предложений

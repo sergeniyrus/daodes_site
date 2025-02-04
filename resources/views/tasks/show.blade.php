@@ -5,264 +5,289 @@
 @endsection
 
 @section('main')
-<style>
-    .task-details,
-    .bid,
-    form {
-        background-color: #0b0c18ce;
-        padding: 20px;
-        margin: 0px auto 20px auto;
-        width: 90%;
-    }
-
-    .rating-stars {
-        display: flex;
-        gap: 5px;
-    }
-
-    .star {
-        font-size: 2rem;
-        color: transparent;
-        cursor: pointer;
-        border-radius: 5px;
-        padding: 2px;
-    }
-
-    .star_off {
-        border: 1px solid #ffdf00;
-    }
-
-    .star.filled {
-        color: #ffdf00;
-        border-color: #ffdf00;
-    }
-
-    .timer {
-        font-size: 1.5rem;
-        color: #f8f9fa;
-        margin-top: 10px;
-    }
-
-    .task-details {
-        border-radius: 10px;
-        border: 2px solid #f8f9fa;
-        margin: 20px auto;
-    }
-
-    .bid {
-        border: 1px solid #d7fc09;
-        border-radius: 10px;
-    }
-
-    .bid-form {
-        padding: 20px;
-        border: 2px solid #007bff;
-        border-top: none;
-        width: 45%;
-        margin: 0% auto;
-    }
-
-    .form-group {
-        margin: 20px 50px;
-    }
-
-    .task-line {
-        color: #00ccff;
-    }
-
-    .task-line2 {
-        color: #ffffff;
-    }
-
-    .task-info {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        color: #d7fc09;
-        margin-top: 10px;
-    }
-
-    .task-title {
-        flex: 1;
-        text-align: center;
-        color: #00ccff;
-    }
-
-    .task-wrapper {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 10px;
-    }
-
-    .task-budget,
-    .task-deadline,
-    .task-category {
-        font-size: 0.875rem;
-        margin: 0 10px;
-    }
-
-    .bid-title {
-        text-align: center;
-        color: #00ccff;
-        margin: 20px;
-    }
-
-    /* основные для кнопок */
-    .button-container {
-        text-align: center;
-    }
-
-    .blue_btn {
-        display: inline-block;
-        color: #ffffff;
-        font-size: large;
-        background: #0b0c18;
-        padding: 15px 30px;
-        border: 1px solid #d7fc09;
-        border-radius: 10px;
-        box-shadow: 0 0 20px #000;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
-    }
-
-    .blue_btn:hover {
-        box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-        transform: scale(1.05);
-        color: #ffffff;
-        background: #0b0c18;
-    }
-
-    .icon-like,
-    .icon-dislike,
-    .icon-edit,
-    .icon-delete {
-        font-size: 1.2em;
-        margin-right: 5px;
-        color: #d7fc09;
-    }
-
-    .icon-like {
-        color: #4CAF50;
-    }
-
-    .icon-dislike {
-        color: #FF5722;
-    }
-
-    .icon-edit {
-        color: #2196F3;
-    }
-
-    .icon-delete {
-        color: #F44336;
-    }
-
-    input,
-    textarea {
-        background-color: #000000;
-        color: #fff;
-        border: 1px solid #a0ff08;
-        border-radius: 5px;
-        width: 100%;
-        padding: 10px;
-        margin: 10px auto 15px auto;
-    }
-
-    label {
-        color: #f8f9fa;
-    }
-
-    .bid-form {
-        padding: 20px;
-        margin: 0 auto;
-        max-width: 800px;
-        background-color: rgba(20, 20, 20, 0.9);
-        border-radius: 20px;
-        border: 1px solid #d7fc09;
-        color: #f8f9fa;
-        font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
-        margin-top: 30px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    }
-
-    .bid-form .form-group label {
-        color: #d7fc09;
-        font-size: 1.2rem;
-        display: block;
-        margin: 10px 0;
-        text-align: left;
-        font-weight: bold;
-        
-    }
-
-    .input_dark, textarea {
-        background-color: #1a1a1a;
-        color: #a0ff08;
-        border: 1px solid #d7fc09;
-        border-radius: 5px;
-        width: 100%;
-        padding: 12px;
-        margin-top: 5px;
-        transition: border 0.3s ease;
-    }
-
-    .input_dark:focus, textarea:focus {
-        border: 1px solid #a0ff08;
-        outline: none;
-        box-shadow: 0 0 5px #d7fc09;
-    }
-
-    .blue_btn {
-        display: inline-block;
-        color: #ffffff;
-        font-size: 1.2rem;
-        background: #0b0c18;
-        padding: 12px 25px;
-        border: 1px solid #d7fc09;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        cursor: pointer;
-        transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
-        margin-top: 20px;
-    }
-
-    .blue_btn:hover {
-        box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-        transform: scale(1.05);
-        background: #1a1a1a;
-    }
-
-    .alert {
-        padding: 15px;
-        background-color: #f44336;
-        color: white;
-        margin-top: 20px;
-    }
-
-    @media (max-width: 768px) {
-        .task-wrapper {
-            flex-direction: column;
-            align-items: center;
+    <style>
+        .task-details,
+        .bid,
+        form {
+            background-color: #0b0c18ce;
+            padding: 20px;
+            margin: 0px auto 20px auto;
+            width: 90%;
         }
 
-        .task-info {
-            justify-content: space-around;
-            width: 100%;
+        .rating-stars {
+            /* align-content: center; */
+            /* display: flex; */
+            gap: 5px;
+        }
+
+        .star {
+            font-size: 2rem;
+            color: transparent;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 2px;
+        }
+
+        .star_off {
+            border: 1px solid #ffdf00;
+        }
+
+        .star.filled {
+            color: #ffdf00;
+            border-color: #ffdf00;
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            color: #f8f9fa;
             margin-top: 10px;
         }
 
-        .task-info p {
-            margin: 5px 0;
+        .task-details {
+            border-radius: 10px;
+            border: 2px solid #f8f9fa;
+            margin: 20px auto;
         }
-    }
 
-    @media (max-width: 480px) {
-        .task-info {
-            flex-direction: column;
-            align-items: center;
+        .bid {
+            border: 1px solid #d7fc09;
+            border-radius: 10px;
         }
-    }
-</style>
+
+        .bid-form {
+            padding: 20px;
+            border: 2px solid #007bff;
+            border-top: none;
+            width: 45%;
+            margin: 0% auto;
+        }
+
+        .form-group {
+            margin: 20px 50px;
+        }
+
+        .task-line {
+            color: #00ccff;
+        }
+
+        .task-line2 {
+            color: #ffffff;
+        }
+
+        .task-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #d7fc09;
+            margin-top: 10px;
+        }
+
+        .task-title {
+            flex: 1;
+            text-align: center;
+            color: #00ccff;
+        }
+
+        .task-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .task-budget,
+        .task-deadline,
+        .task-category {
+            font-size: 0.875rem;
+            margin: 0 10px;
+        }
+
+        .bid-title {
+            text-align: center;
+            color: #00ccff;
+            margin: 20px;
+        }
+
+        /* основные для кнопок */
+        .button-container {
+            text-align: center;
+        }
+
+        .blue_btn {
+            display: inline-block;
+            color: #ffffff;
+            font-size: large;
+            background: #0b0c18;
+            padding: 15px 30px;
+            border: 1px solid #d7fc09;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #000;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        .blue_btn:hover {
+            box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+            transform: scale(1.05);
+            color: #ffffff;
+            background: #0b0c18;
+        }
+
+        .icon-like,
+        .icon-dislike,
+        .icon-edit,
+        .icon-delete {
+            font-size: 1.2em;
+            margin-right: 5px;
+            color: #d7fc09;
+        }
+
+        .icon-like {
+            color: #4CAF50;
+        }
+
+        .icon-dislike {
+            color: #FF5722;
+        }
+
+        .icon-edit {
+            color: #2196F3;
+        }
+
+        .icon-delete {
+            color: #F44336;
+        }
+
+        input,
+        textarea {
+            background-color: #000000;
+            color: #fff;
+            border: 1px solid #a0ff08;
+            border-radius: 5px;
+            width: 100%;
+            padding: 10px;
+            margin: 10px auto 15px auto;
+        }
+
+        label {
+            color: #f8f9fa;
+        }
+
+        .bid-form {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+            background-color: rgba(20, 20, 20, 0.9);
+            border-radius: 20px;
+            border: 1px solid #d7fc09;
+            color: #f8f9fa;
+            font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
+            margin-top: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .bid-form .form-group label {
+            color: #d7fc09;
+            font-size: 1.2rem;
+            display: block;
+            margin: 10px 0;
+            text-align: left;
+            font-weight: bold;
+
+        }
+
+        .input_dark,
+        textarea {
+            background-color: #1a1a1a;
+            color: #a0ff08;
+            border: 1px solid #d7fc09;
+            border-radius: 5px;
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            transition: border 0.3s ease;
+        }
+
+        .input_dark:focus,
+        textarea:focus {
+            border: 1px solid #a0ff08;
+            outline: none;
+            box-shadow: 0 0 5px #d7fc09;
+        }
+
+        .blue_btn {
+            display: inline-block;
+            color: #ffffff;
+            font-size: 1.2rem;
+            background: #0b0c18;
+            padding: 12px 25px;
+            border: 1px solid #d7fc09;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .blue_btn:hover {
+            box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+            transform: scale(1.05);
+            background: #1a1a1a;
+        }
+
+        .alert {
+            padding: 15px;
+            background-color: #f44336;
+            color: white;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .task-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .task-info {
+                justify-content: space-around;
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .task-info p {
+                margin: 5px 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .task-info {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        .circle-rating {
+            display: flex;
+            gap: 5px;
+        }
+
+        circle {
+            font-size: 1.5rem;
+            color: #666;
+            margin: 0 2px;
+        }
+
+        .circle.filled {
+            color: #ff4444;
+        }
+
+        .review-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+    </style>
 
     <!-- Задание биржи -->
     <div class="task-details">
@@ -282,14 +307,15 @@
                 <p>{!! $task->content !!}</p>
             </div>
             <div class="task-author">
-                <p><strong>Автор задачи:</strong> 
-                    <a href="{{ route('user_profile.show', ['id' => $task->user_id]) }}" title="Profile" style="color: #d7fc09; text-decoration: none;">
+                <p><strong>Автор задачи:</strong>
+                    <a href="{{ route('user_profile.show', ['id' => $task->user_id]) }}" title="Profile"
+                        style="color: #d7fc09; text-decoration: none;">
                         {{ $task->user->name }}
                     </a>
                 </p>
             </div>
         </div>
-        
+
 
         <br>
 
@@ -347,34 +373,49 @@
                 </form>
             @endif
 
-            @if ($task->accepted_bid_id && !$task->in_progress && Auth::id() == $task->user_id)
-                <form action="{{ route('tasks.start_work', $task) }}" method="POST" style="display:inline;"
-                    class="likebtn">
+            @if ($task->status === 'negotiation')
+                @if (Auth::id() == $task->acceptedBid->user_id)
+                    <form action="{{ route('tasks.start-work', $task) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="blue_btn">🚀 Приступить к работе</button>
+                    </form>
+                @else
+                    <p class="text-warning">Свяжитесь с автором для уточнения деталей</p>
+                @endif
+            @endif
+
+            @if ($task->status === 'in_progress' && Auth::id() == $task->acceptedBid->user_id)
+                <form action="{{ route('tasks.freelancerComplete', $task) }}" method="POST">
                     @csrf
-                    <button type="submit" class="blue_btn">🚀 Приступить</button>
+                    <button type="submit" class="blue_btn">✅ Готово, проверяйте!</button>
                 </form>
             @endif
 
-            @if ($task->in_progress && $task->status === 'on_review')
-                @if (Auth::id() == $task->user_id)
-                    <form action="{{ route('tasks.complete', $task) }}" method="POST" class="likebtn"
-                        style="display:inline;">
+            @if ($task->status === 'on_review' && Auth::id() == $task->user_id)
+                <div class="review-actions">
+                    <form action="{{ route('tasks.complete', $task) }}" method="POST">
                         @csrf
-                        <button type="submit" class="blue_btn">✅ Задание выполнено</button>
+                        <button type="submit" class="blue_btn">✅ Принимаю</button>
                     </form>
 
-                    <!-- Кнопка "Продолжить" добавлена здесь -->
-                    <form action="{{ route('tasks.continue', $task) }}" method="POST" class="likebtn"
-                        style="display:inline;">
+                    <form action="{{ route('tasks.continue', $task) }}" method="POST">
                         @csrf
-                        <button type="submit" class="blue_btn">▶️ Продолжить</button>
+                        <button type="submit" class="blue_btn">🛠 Нужно доделать</button>
                     </form>
 
-                    <form action="{{ route('tasks.fail', $task) }}" method="POST" class="likebtn" style="display:inline;">
+                    <form action="{{ route('tasks.fail', $task) }}" method="POST">
                         @csrf
                         <button type="submit" class="blue_btn">❌ Задание провалено</button>
                     </form>
-                @endif
+                </div>
+            @endif
+
+            @if ($task->status === 'failed')
+                <div class="rating-failed">
+                    @for ($i = 1; $i <= 10; $i++)
+                        <span class="circle {{ $i <= abs($task->rating) ? 'filled' : '' }}">●</span>
+                    @endfor
+                </div>
             @endif
         </div>
         <br>
@@ -398,6 +439,8 @@
                         Задание на проверке
                     @elseif ($task->status === 'in_progress')
                         Задание в работе
+                        @elseif ($task->status === 'failed')
+                        Задание провалено, ждём новые предложения
                     @elseif ($task->accepted_bid_id)
                         Принятое предложение
                     @else
@@ -408,10 +451,7 @@
 
             @if ($task->accepted_bid_id)
                 @php
-                    $acceptedBid = $task
-                        ->bids()
-                        ->where('id', $task->accepted_bid_id)
-                        ->first();
+                    $acceptedBid = $task->bids()->where('id', $task->accepted_bid_id)->first();
                 @endphp
 
                 <div class="bid">
@@ -432,7 +472,7 @@
 
                     @if (Auth::id() == $acceptedBid->user_id)
                         @if ($task->status === 'in_progress' && !$task->completed)
-                            <form action="{{ route('tasks.freelancer-complete', $task) }}" method="POST" class="likebtn">
+                            <form action="{{ route('tasks.complete', $task) }}" method="POST" class="likebtn">
                                 @csrf
                                 <button type="submit" class="blue_btn">✅ Задание выполнено</button>
                             </form>
@@ -446,7 +486,8 @@
                     <div class="bid">
                         <p class="task-line2">
                             <strong class="task-line">Фрилансер:</strong>
-                            <a href="{{ route('user_profile.show', ['id' => $bid->user->id]) }}" title="Profile" style="color: #d7fc09; text-decoration: none;">
+                            <a href="{{ route('user_profile.show', ['id' => $bid->user->id]) }}" title="Profile"
+                                style="color: #d7fc09; text-decoration: none;">
                                 {{ $bid->user->name }}
                             </a>
                         </p>
@@ -467,9 +508,9 @@
         </div>
 
         <!-- Раздел оценки исполнителя -->
-        @if ($task->completed && $task->accepted_bid_id && Auth::id() == $task->user_id)
+        @if(($task->status === 'completed') && (Auth::id() == $task->user_id) && ($task->rating == NULL))
             <div class="rating-form">
-                <h3>Оценить исполнителя</h3>
+                <div class="bid-title">Оцените исполнителя
                 <form action="{{ route('tasks.rate', $task) }}" method="POST">
                     @csrf
                     <div class="rating-stars">
@@ -478,7 +519,7 @@
                         @endfor
                     </div>
                     <input type="hidden" name="rating" id="rating" value="0">
-                    <button type="submit" class="blue_btn">Поставить оценку</button>
+                    <button type="submit" class="blue_btn">Поставить оценку</button></div>
                 </form>
             </div>
         @endif
@@ -490,10 +531,11 @@
                     <p style="text-align: center; color:#ffdf00">Вы уже подали предложение на это задание.</p>
                 @else
                     <div class="bid-form">
-                        <form action="{{ route('tasks.bid', $task) }}" method="POST" style="border: 1px solid #00ccff; border-radius: 15px;">
+                        <form action="{{ route('tasks.bid', $task) }}" method="POST"
+                            style="border: 1px solid #00ccff; border-radius: 15px;">
                             @csrf
                             <fieldset>
-                                <legend  style="text-align: center">
+                                <legend style="text-align: center">
                                     <h3>Подать предложение</h3>
                                 </legend>
                                 <div class="form-group">
@@ -612,10 +654,7 @@
         @if ($task->in_progress && $task->start_time)
             @php
                 // Получаем предложение, которое было принято
-                $acceptedBid = $task
-                    ->bids()
-                    ->where('id', $task->accepted_bid_id)
-                    ->first();
+                $acceptedBid = $task->bids()->where('id', $task->accepted_bid_id)->first();
             @endphp
             @if ($acceptedBid)
                 startTimer({{ $acceptedBid->days }}, {{ $acceptedBid->hours }}, '{{ $task->start_time }}');
