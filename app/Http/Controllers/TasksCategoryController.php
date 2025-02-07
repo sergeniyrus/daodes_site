@@ -17,7 +17,7 @@ class TasksCategoryController extends Controller
     // Отобразить форму для создания новой категории
     public function create()
     {
-        return view('tasks.categories.create');
+        return view('tasks.categories.addtask');
     }
 
     // Сохранить новую категорию

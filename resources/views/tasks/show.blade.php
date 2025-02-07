@@ -15,9 +15,7 @@
             width: 90%;
         }
 
-        .rating-stars {
-            /* align-content: center; */
-            /* display: flex; */
+        .rating-stars, .rating-circle {
             gap: 5px;
         }
 
@@ -42,6 +40,7 @@
             font-size: 1.5rem;
             color: #f8f9fa;
             margin-top: 10px;
+            text-align: center;
         }
 
         .task-details {
@@ -81,6 +80,7 @@
             align-items: center;
             color: #d7fc09;
             margin-top: 10px;
+            margin-right: 20px;
         }
 
         .task-title {
@@ -236,10 +236,12 @@
         }
 
         .alert {
-            padding: 15px;
-            background-color: #f44336;
-            color: white;
-            margin-top: 20px;
+            padding: 5px;
+            background-color: green;
+            
+            max-width: 50%;
+            text-align: center;
+            margin-top: 10px;
         }
 
         @media (max-width: 768px) {
@@ -266,21 +268,25 @@
             }
         }
 
-        .circle-rating {
-            display: flex;
-            gap: 5px;
+        
+
+        .circle {
+            font-size: 2rem;
+            color: transparent;
+            cursor: pointer;
+            border-radius: 5px;
+            padding: 2px;
+            
         }
 
-        circle {
-            font-size: 1.5rem;
-            color: #666;
-            margin: 0 2px;
+        .circle_off {
+            
+            border: 1px solid #ffdf00;
         }
-
         .circle.filled {
-            color: #ff4444;
+            color: #ff0000; /* Красный цвет для заполненных кружков */
+    
         }
-
         .review-actions {
             display: flex;
             gap: 10px;
@@ -300,31 +306,35 @@
                     <p class="task-category"><i class="fas fa-folder-open"></i>
                         {{ $task->category ? $task->category->name : 'Без категории' }}</p>
                     <p class="task-budget"><i class="fas fa-dollar-sign"></i> {{ $task->budget }}</p>
-                    <p class="task-deadline"><i class="fas fa-clock"></i> {{ $task->deadline }}</p>
+                    <p class="task-deadline">
+                        <i class="fas fa-clock"></i> {{ \Carbon\Carbon::parse($task->deadline)->translatedFormat('j.m.Y') }}
+                    </p>
+                    <div class="task-author">
+                        <p><strong>&copy;</strong>
+                            <a href="{{ route('user_profile.show', ['id' => $task->user_id]) }}" title="Profile"
+                                style="color: #d7fc09; text-decoration: none;">
+                                {{ $task->user->name }}
+                            </a>
+                        </p>
+                    </div>
                 </div>
             </div>
             <div>
                 <p>{!! $task->content !!}</p>
             </div>
-            <div class="task-author">
-                <p><strong>Автор задачи:</strong>
-                    <a href="{{ route('user_profile.show', ['id' => $task->user_id]) }}" title="Profile"
-                        style="color: #d7fc09; text-decoration: none;">
-                        {{ $task->user->name }}
-                    </a>
-                </p>
-            </div>
+            
         </div>
-
 
         <br>
 
         <!-- Таймер задания, виден всем пользователям -->
         @if ($task->status === 'in_progress')
-            <div id="timer" class="timer" style="display:none;"></div>
-            <p id="start_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>
-            <p id="end_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>
-            <p id="current_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>
+            <div class="timer">
+                <div id="timer" class="timer" style="display:none;"></div>
+                <p id="start_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>
+                <p id="end_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>
+                <p id="current_time_display" style="color: #f8f9fa; font-size: 1.2rem;"></p>
+            </div>
         @endif
 
         @if ($task->completed && $task->rating)
@@ -340,27 +350,13 @@
 
         <!-- Кнопки управления заданием -->
         <div class="button-container">
-            <!-- Лайк и дизлайк -->
-            <form action="{{ route('tasks.like', $task) }}" method="POST" class="likebtn" style="display:inline;">
-                @csrf
-                <button type="submit" class="blue_btn">
-                    <i class="fas fa-thumbs-up icon-like"></i> <!-- Иконка лайка -->
-                    ({{ $task->votes()->where('is_like', true)->count() }})
-                </button>
-            </form>
-            <form action="{{ route('tasks.dislike', $task) }}" method="POST" class="likebtn" style="display:inline;">
-                @csrf
-                <button type="submit" class="blue_btn">
-                    <i class="fas fa-thumbs-down icon-dislike"></i> <!-- Иконка дизлайка -->
-                    ({{ $task->votes()->where('is_like', false)->count() }})
-                </button>
-            </form>
+            
 
             @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
                 <form action="{{ route('tasks.edit', $task) }}" method="GET" class="likebtn" style="display:inline;">
                     @csrf
                     <button type="submit" class="blue_btn" title="Редактировать">
-                        <i class="fas fa-edit icon-edit"></i> <!-- Иконка редактирования -->
+                        <i class="fas fa-edit icon-edit"></i>
                     </button>
                 </form>
 
@@ -368,7 +364,7 @@
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="blue_btn" title="Удалить">
-                        <i class="fas fa-trash-alt icon-delete"></i> <!-- Иконка удаления -->
+                        <i class="fas fa-trash-alt icon-delete"></i>
                     </button>
                 </form>
             @endif
@@ -379,8 +375,6 @@
                         @csrf
                         <button type="submit" class="blue_btn">🚀 Приступить к работе</button>
                     </form>
-                @else
-                    <p class="text-warning">Свяжитесь с автором для уточнения деталей</p>
                 @endif
             @endif
 
@@ -410,22 +404,15 @@
                 </div>
             @endif
 
-            @if ($task->status === 'failed')
-                <div class="rating-failed">
-                    @for ($i = 1; $i <= 10; $i++)
-                        <span class="circle {{ $i <= abs($task->rating) ? 'filled' : '' }}">●</span>
-                    @endfor
+            
+            @if (session('success'))
+                <div class="alert" style="color:#ffdf00; text-align:center">
+                    {{ session('success') }}
                 </div>
             @endif
+
         </div>
         <br>
-
-        @if (session('success'))
-            <div class="alert alert-success" style="color:#ffdf00; text-align:center">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <br>
         <hr>
 
@@ -439,10 +426,10 @@
                         Задание на проверке
                     @elseif ($task->status === 'in_progress')
                         Задание в работе
-                        @elseif ($task->status === 'failed')
+                    @elseif ($task->status === 'failed')
                         Задание провалено, ждём новые предложения
-                    @elseif ($task->accepted_bid_id)
-                        Принятое предложение
+                    @elseif ($task->status === 'negotiation')
+                        Предложение на согласовании
                     @else
                         Предложения исполнителей
                     @endif
@@ -461,25 +448,26 @@
                         {{ $acceptedBid->hours }} часов</p>
                     <p><strong class="task-line">Комментарий:</strong> {{ $acceptedBid->comment }}</p>
 
-                    @if ($task->accepted_bid_id && !$task->in_progress && Auth::id() == $task->acceptedBid->user_id)
+                    {{-- @if ($task->accepted_bid_id && !$task->in_progress && Auth::id() == $task->acceptedBid->user_id)
                         <form action="{{ route('tasks.start_work', $task) }}" method="POST" class="likebtn"
                             style="display:inline;">
                             @csrf
                             <br>
                             <button type="submit" class="blue_btn">🚀 Приступить</button>
                         </form>
-                    @endif
+                    @endif --}}
 
-                    @if (Auth::id() == $acceptedBid->user_id)
+                    {{-- @if (Auth::id() == $acceptedBid->user_id)
                         @if ($task->status === 'in_progress' && !$task->completed)
-                            <form action="{{ route('tasks.complete', $task) }}" method="POST" class="likebtn">
+                            <form action="{{ route('tasks.freelancerComplete', $task) }}" method="POST"
+                                class="likebtn">
                                 @csrf
                                 <button type="submit" class="blue_btn">✅ Задание выполнено</button>
                             </form>
                         @elseif ($task->status === 'on_review')
                             <p style="text-align: center; color:#ffdf00"><span>Задание на проверке</span></p>
                         @endif
-                    @endif
+                    @endif --}}
                 </div>
             @else
                 @foreach ($task->bids as $bid)
@@ -508,19 +496,38 @@
         </div>
 
         <!-- Раздел оценки исполнителя -->
-        @if(($task->status === 'completed') && (Auth::id() == $task->user_id) && ($task->rating == NULL))
+        @if ($task->status === 'completed' && Auth::id() == $task->user_id && $task->rating == null)
             <div class="rating-form">
                 <div class="bid-title">Оцените исполнителя
+                    <form action="{{ route('tasks.rate', $task) }}" method="POST">
+                        @csrf
+                        <div class="rating-stars">
+                            @for ($i = 1; $i <= 10; $i++)
+                                <span class="star star_off" data-value="{{ $i }}">★</span>
+                            @endfor
+                        </div>
+                        <input type="hidden" name="rating" id="rating" value="0">
+                        <button type="submit" class="blue_btn">Поставить оценку</button>
+                    </form>
+                </div>
+            </div>
+        @endif
+        
+        @if ($task->status === 'failed' && Auth::id() == $task->user_id && $task->rating == null)
+        <div class="rating-form">
+            <div class="bid-title">Оцените исполнителя
                 <form action="{{ route('tasks.rate', $task) }}" method="POST">
                     @csrf
-                    <div class="rating-stars">
-                        @for ($i = 1; $i <= 10; $i++)
-                            <span class="star star_off" data-value="{{ $i }}">★</span>
-                        @endfor
+                    <div class="rating-circle">                   
+                @for ($i = 1; $i <= 10; $i++)
+                    <span class="circle circle_off"  data-value="{{ -$i }}">&not;</span>
+                @endfor
                     </div>
-                    <input type="hidden" name="rating" id="rating" value="0">
-                    <button type="submit" class="blue_btn">Поставить оценку</button></div>
-                </form>
+            <input type="hidden" name="rating" id="rating" value="0">
+            <button type="submit" class="blue_btn">Поставить оценку</button>
+        </form>
+    </div>
+</div>
             </div>
         @endif
 
@@ -536,10 +543,10 @@
                             @csrf
                             <fieldset>
                                 <legend style="text-align: center">
-                                    <h3>Подать предложение</h3>
+                                    <h3  style="text-align: center">Подать предложение</h3>
                                 </legend>
                                 <div class="form-group">
-                                    <label for="price">Цена (DESCoin):</label>
+                                    <label for="price">Ваша цена:</label>
                                     <input type="number" name="price" id="price" class="input_dark" required>
                                 </div>
                                 <div class="form-group">
@@ -551,11 +558,11 @@
                                     <input type="number" name="hours" id="hours" class="input_dark" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="comment">Комментарий:</label>
+                                    <label for="comment">КСообщение:</label>
                                     <textarea name="comment" id="comment" class="input_dark" rows="3"></textarea>
                                 </div>
                                 <div class="text-center">
-                                    <button type="submit" class="blue_btn">Отправить предложение</button>
+                                    <button type="submit" class="blue_btn">Подать предложение</button>
                                 </div>
                             </fieldset>
                         </form>
@@ -586,84 +593,108 @@
                 }
             });
         });
+    </script>
+<script>
+    // Скрипт для динамического выставления отрицательного рейтинга
+    document.querySelectorAll('.circle').forEach(circle => {
+        circle.addEventListener('click', function() {
+            const ratingValue = this.getAttribute('data-value'); // Получаем значение рейтинга (отрицательное)
+            document.getElementById('rating').value = ratingValue; // Устанавливаем значение в скрытое поле
 
-        //скрипт таймера и времени
+            // Убираем класс filled у всех кружков
+            document.querySelectorAll('.circle').forEach(c => {
+                c.classList.remove('filled');
+            });
 
-        let countdownTimer;
+            // Добавляем класс filled текущему кружку и всем предыдущим
+            this.classList.add('filled');
+            let prevSibling = this.previousElementSibling;
+            while (prevSibling) {
+                prevSibling.classList.add('filled');
+                prevSibling = prevSibling.previousElementSibling;
+            }
+        });
+    });
+</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let countdownTimer;
 
-        function startTimer(days, hours, startTime) {
-            // Конвертируем время начала в миллисекунды (UTC)
-            const startTimeMillis = new Date(startTime + 'Z').getTime(); // Обратите внимание на добавление 'Z'
+            function startTimer(days, hours, startTime) {
+                console.log("Получено: ", days, " дней,", hours, " часов, начало в", startTime);
 
-            // Преобразуем дни и часы в миллисекунды
-            const totalTime = (days * 24 * 60 * 60 * 1000) + (hours * 60 * 60 * 1000);
-
-            // Рассчитываем конечное время в миллисекундах
-            const endTime = startTimeMillis + totalTime;
-
-            // Отображаем таймер
-            const timerDiv = document.getElementById('timer');
-            timerDiv.style.display = 'block';
-
-            // Отображаем время начала задачи
-            const startDate = new Date(startTimeMillis);
-            const startTimeDisplay = document.getElementById('start_time_display');
-            startTimeDisplay.innerHTML = `Время начала работы: ${startDate.toUTCString()}`;
-
-            // Рассчитываем и отображаем время завершения задачи
-            const endDate = new Date(endTime);
-            const endTimeDisplay = document.getElementById('end_time_display');
-            endTimeDisplay.innerHTML = `Предполагаемое время завершения: ${endDate.toUTCString()}`;
-            // Обновление текущего времени каждую секунду
-            setInterval(function() {
-                const now = new Date(); // Получаем текущее время
-                const currentTimeDisplay = document.getElementById('current_time_display');
-                currentTimeDisplay.innerHTML = `Текущее время UTC: ${now.toUTCString()}`;
-            }, 1000);
-
-            countdownTimer = setInterval(function() {
-                // Получаем текущее время в UTC
-                const now = new Date().getTime(); // getTime() всегда возвращает UTC
-
-                const remainingTime = endTime - now;
-
-                // Когда время вышло
-                if (remainingTime <= 0) {
-                    clearInterval(countdownTimer);
-                    timerDiv.innerHTML = "Время вышло, задание на проверке.";
+                // Конвертируем время начала в миллисекунды (ISO-формат)
+                const startTimeMillis = new Date(startTime.replace(" ", "T") + "Z").getTime();
+                if (isNaN(startTimeMillis)) {
+                    console.error("Ошибка: Неверный формат времени начала:", startTime);
                     return;
                 }
 
-                // Вычисление дней, часов, минут и секунд
-                const seconds = Math.floor((remainingTime / 1000) % 60);
-                const minutes = Math.floor((remainingTime / 1000 / 60) % 60);
-                const hoursLeft = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
-                const daysLeft = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+                // Рассчитываем конечное время
+                const totalTime = (days * 24 * 60 * 60 * 1000) + (hours * 60 * 60 * 1000);
+                const endTime = startTimeMillis + totalTime;
 
-                timerDiv.innerHTML =
-                    `До завершения работы над заданием осталось: ${daysLeft} дн. ${hoursLeft} ч. ${minutes} мин. ${seconds} сек.`;
-            }, 1000);
+                // Получаем элементы
+                const timerDiv = document.getElementById('timer');
+                const startTimeDisplay = document.getElementById('start_time_display');
+                const endTimeDisplay = document.getElementById('end_time_display');
+                const currentTimeDisplay = document.getElementById('current_time_display');
 
-            // Лог для проверки значений
-            console.log("Переданные значения: дни = ", days, "часы = ", hours);
+                if (!timerDiv) {
+                    console.error("Ошибка: Не найден элемент #timer");
+                    return;
+                }
 
+                timerDiv.style.display = 'block';
 
-        }
+                // Отображаем время начала
+                if (startTimeDisplay) {
+                    startTimeDisplay.innerHTML = `Время начала: ${new Date(startTimeMillis).toLocaleString()}`;
+                }
 
-        // Если задача в работе, запускаем таймер при загрузке страницы
-        @if ($task->in_progress && $task->start_time)
-            @php
-                // Получаем предложение, которое было принято
-                $acceptedBid = $task->bids()->where('id', $task->accepted_bid_id)->first();
-            @endphp
-            @if ($acceptedBid)
-                startTimer({{ $acceptedBid->days }}, {{ $acceptedBid->hours }}, '{{ $task->start_time }}');
+                // Отображаем время завершения
+                if (endTimeDisplay) {
+                    endTimeDisplay.innerHTML = `Время завершения: ${new Date(endTime).toLocaleString()}`;
+                }
+
+                // Обновляем текущее время каждую секунду
+                setInterval(() => {
+                    if (currentTimeDisplay) {
+                        currentTimeDisplay.innerHTML = `Текущее время: ${new Date().toLocaleString()}`;
+                    }
+                }, 1000);
+
+                // Таймер обратного отсчета
+                countdownTimer = setInterval(() => {
+                    const now = new Date().getTime();
+                    const remainingTime = endTime - now;
+
+                    if (remainingTime <= 0) {
+                        clearInterval(countdownTimer);
+                        timerDiv.innerHTML = "⏳ Время вышло, задание на проверке.";
+                        return;
+                    }
+
+                    const seconds = Math.floor((remainingTime / 1000) % 60);
+                    const minutes = Math.floor((remainingTime / 1000 / 60) % 60);
+                    const hoursLeft = Math.floor((remainingTime / (1000 * 60 * 60)) % 24);
+                    const daysLeft = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
+
+                    timerDiv.innerHTML =
+                        `⏳ Осталось: ${daysLeft} д. ${hoursLeft} ч. ${minutes} мин. ${seconds} сек.`;
+                }, 1000);
+            }
+
+            // Запуск таймера, если задание в процессе
+            @if ($task->status === 'in_progress' && $task->start_time)
+                @php
+                    $acceptedBid = $task->bids()->where('id', $task->accepted_bid_id)->first();
+                @endphp
+                @if ($acceptedBid)
+                    startTimer({{ $acceptedBid->days }}, {{ $acceptedBid->hours }}, '{{ $task->start_time }}');
+                @endif
             @endif
-        @endif
-
-        function stopTimer() {
-            clearInterval(timer); // Здесь 'timer' — это переменная, где хранится ваш таймер
-        }
+        });
     </script>
 
 

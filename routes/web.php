@@ -48,12 +48,12 @@ Route::prefix('news')->group(function () {
     // Маршруты для всех пользователей
     Route::get('/', [NewsController::class, 'list'])->name('news.index');
     Route::get('/{id}', [NewsController::class, 'show'])->name('news.show'); // Просмотр полной новости
-    
+
     // Только авторизованные пользователи могут добавлять, редактировать и удалять новости
     Route::middleware('auth')->group(function () {
         //Route::get('/add', [NewsController::class, 'add'])->name('news.add');
         Route::post('/create', [NewsController::class, 'create'])->name('news.create');
-        
+
         Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
         Route::put('/{id}', [NewsController::class, 'update'])->name('news.update');
         Route::delete('/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
@@ -83,18 +83,18 @@ Route::prefix('offers')->group(function () {
     // Маршруты для всех пользователей
     Route::get('/', [OffersController::class, 'list'])->name('offers.index');
     Route::get('/{id}', [OffersController::class, 'show'])->name('offers.show'); // Просмотр полной новости
-    
+
     // Только авторизованные пользователи могут добавлять, редактировать и удалять новости
     Route::middleware('auth')->group(function () {
         //Route::get('/add', [OffersController::class, 'add'])->name('offers.add');
         Route::post('/create', [OffersController::class, 'create'])->name('offers.create');
-        
+
         Route::get('/{id}/edit', [OffersController::class, 'edit'])->name('offers.edit');
         Route::put('/{id}', [OffersController::class, 'update'])->name('offers.update');
         Route::delete('/{id}', [OffersController::class, 'destroy'])->name('offers.destroy');
     });
 });
-    // Управление категориями предложений
+// Управление категориями предложений
 Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')->group(function () {
     Route::get('/', [OffersController::class, 'categoryIndex'])->name('index');
     Route::get('/create', [OffersController::class, 'categoryCreate'])->name('create');
@@ -143,27 +143,38 @@ Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () 
 Route::get('/tasks', [TaskController::class, 'list'])->name('tasks.index');
 Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
 
-Route::get('/addtask', [TaskController::class, 'create'])->name('addtask')->middleware('auth');
+Route::get('/addtask', [TaskController::class, 'create'])
+    ->name('addtask')
+    ->middleware('auth');
+    Route::post('/tasks/create', [TaskController::class, 'store'])
+    ->name('tasks.create')
+    ->middleware('auth');
+
 Route::post('/tasks/{task}/accept-bid/{bid}', [TaskController::class, 'acceptBid'])
     ->name('tasks.accept-bid')
     ->middleware('auth');
 
-    Route::post('/tasks/{task}/continue', [TaskController::class, 'continueTask'])
+Route::post('/tasks/{task}/continue', [TaskController::class, 'continueTask'])
     ->name('tasks.continue')
     ->middleware('auth');
 
-    Route::post('/tasks/{task}/freelancerComplete', [TaskController::class, 'freelancerComplete'])
+Route::post('/tasks/{task}/freelancerComplete', [TaskController::class, 'freelancerComplete'])
     ->name('tasks.freelancerComplete')
     ->middleware('auth');
 
-    Route::post('/tasks/{task}/fail', [TaskController::class, 'fail'])
+Route::post('/tasks/{task}/fail', [TaskController::class, 'fail'])
     ->name('tasks.fail')
     ->middleware('auth');
 
-Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {    
+Route::post('/tasks/store', [TaskController::class, 'store'])
+    ->name('tasks.store')
+    ->middleware('auth');
 
-//ds-    Route::get('/create', [TaskController::class, 'create'])->name('create');
-    Route::post('/', [TaskController::class, 'store'])->name('store');    
+
+Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
+
+    //ds-    Route::get('/create', [TaskController::class, 'create'])->name('create');
+
     Route::post('/{task}/bid', [TaskController::class, 'bid'])->name('bid');
     Route::post('/{task}/like', [TaskController::class, 'like'])->name('like');
     Route::post('/{task}/dislike', [TaskController::class, 'dislike'])->name('dislike');
@@ -178,7 +189,6 @@ Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
 
     Route::post('/tasks/{task}/accept', [TaskController::class, 'acceptTask'])->name('tasks.accept');
     Route::post('/tasks/{task}/revision', [TaskController::class, 'requestRevision'])->name('tasks.revision');
-
 });
 
 // Принятие предложений
@@ -209,8 +219,7 @@ Route::middleware(['auth'])->prefix('user-profile')->name('user_profile.')->grou
     Route::get('/edit/{id}', [UserProfileController::class, 'edit'])->name('edit');
     Route::put('/update/{id}', [UserProfileController::class, 'update'])->name('update');
 
-Route::get('/{id?}', [UserProfileController::class, 'index'])->name('show');
-
+    Route::get('/{id?}', [UserProfileController::class, 'index'])->name('show');
 });
 // Загрузка изображений для CKEditor
 Route::post('/upload-image', [UploadController::class, 'uploadImage'])->name('upload.image');
@@ -235,4 +244,4 @@ Route::get('/chatify', [MessagesController::class, 'index'])->name('chatify');
 //     });
 // });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

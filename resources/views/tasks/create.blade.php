@@ -86,14 +86,24 @@
         </div>
     @endif
 
-    <form action="{{ route('tasks.store') }}" method="POST">
+    <form action="{{ route('tasks.create') }}" method="POST">
         @csrf
-
+    
+        @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+    
         <div class="form-group">
             <label for="title">Заголовок задачи:</label>
             <input type="text" name="title" id="title" class="input_dark" required>
         </div>
-
+    
         <div class="form-group">
             <label for="category_id">Категория:</label>
             <select name="category_id" id="category_id" class="input_dark" required>
@@ -103,24 +113,22 @@
                 @endforeach
             </select>
         </div>
-
+    
         <div class="form-group">
             <label for="content">Описание задачи:</label>
-            <textarea name="content" id="editor" class="input_dark" rows="5" required placeholder="Введите задание..."></textarea>
+            <textarea name="content" id="editor" class="input_dark" rows="5" placeholder="Введите задание... required"></textarea>
         </div>
-
+    
         <div class="form-group">
             <label for="deadline">Дедлайн:</label>
             <input type="date" name="deadline" id="deadline" class="input_dark" required>
         </div>
-
+    
         <div class="form-group">
             <label for="budget">Бюджет:</label>
             <input type="number" name="budget" id="budget" class="input_dark" step="0.01" required>
         </div>
-
-        
-
+    
         <div class="text-center">
             <button type="submit" class="blue_btn"><i class="fas fa-plus-circle"></i> Создать задачу</button>
         </div>
@@ -130,5 +138,14 @@
 {{-- // Инициализация CKEditor --}}
 <link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
 <script src="{{ asset('js/ckeditor.js') }}"></script>
+<script>
+document.querySelector('form').addEventListener('submit', function (e) {
+    const categorySelect = document.getElementById('category_id');
+    if (!categorySelect.value) {
+        e.preventDefault();
+        alert('Пожалуйста, выберите категорию.');
+    }
+});
 
+</script>
 @endsection

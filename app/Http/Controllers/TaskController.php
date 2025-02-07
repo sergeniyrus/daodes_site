@@ -51,15 +51,23 @@ class TaskController extends Controller
     // Создание новой задачи
     public function store(Request $request)
     {
+        
+        Log::info('Запрос получен:', $request->all());
+
+        // Валидация данных
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'deadline' => 'required|date',
             'budget' => 'required|numeric',
-            'category_id' => 'required|exists:task_categories,id',
+            'category_id' => 'required|exists:category_tasks,id', // Исправлено на 'categories'
         ]);
-
-        Task::create([
+    
+        // Логирование всех данных из запроса
+        Log::info('Данные задания:', $request->all());
+    
+        // Создание задания
+        $task = Task::create([
             'title' => $request->title,
             'content' => $request->content,
             'deadline' => $request->deadline,
@@ -68,7 +76,11 @@ class TaskController extends Controller
             'user_id' => Auth::id(),
             'category_id' => $request->category_id,
         ]);
-
+    
+        // Логирование успешного создания задания
+        Log::info('Задание успешно создано:', $task->toArray());
+    
+        // Перенаправление с сообщением об успехе
         return redirect()->route('tasks.index')->with('success', 'Задание успешно добавлено!');
     }
 
@@ -155,64 +167,10 @@ class TaskController extends Controller
             'status' => Task::STATUS_NEGOTIATION,
         ]);
 
-        return redirect()->back()->with('success', 'Предложение принято. Свяжитесь с фрилансером.');
+        return redirect()->back()->with('success', 'Предложение отправлено. Свяжитесь с фрилансером.');
     }
 
-// Лайк задачи
-public function like(Task $task)
-{
-    $userId = Auth::id();
-    $existingVote = TaskVote::where('task_id', $task->id)
-                            ->where('user_id', $userId)
-                            ->first();
 
-    if ($existingVote) {
-        if (!$existingVote->is_like) {
-            // Если был дизлайк, меняем на лайк
-            $existingVote->update(['is_like' => true]);
-        } else {
-            // Если уже стоит лайк, убираем его
-            $existingVote->delete();
-        }
-    } else {
-        // Если голос еще не был добавлен
-        TaskVote::create([
-            'task_id' => $task->id,
-            'user_id' => $userId,
-            'is_like' => true,
-        ]);
-    }
-
-    return redirect()->back()->with('success', 'Ваш голос учтен!');
-}
-
-// Дизлайк задачи
-public function dislike(Task $task)
-{
-    $userId = Auth::id();
-    $existingVote = TaskVote::where('task_id', $task->id)
-                            ->where('user_id', $userId)
-                            ->first();
-
-    if ($existingVote) {
-        if ($existingVote->is_like) {
-            // Если был лайк, меняем на дизлайк
-            $existingVote->update(['is_like' => false]);
-        } else {
-            // Если уже стоит дизлайк, убираем его
-            $existingVote->delete();
-        }
-    } else {
-        // Если голос еще не был добавлен
-        TaskVote::create([
-            'task_id' => $task->id,
-            'user_id' => $userId,
-            'is_like' => false,
-        ]);
-    }
-
-    return redirect()->back()->with('success', 'Ваш голос учтен!');
-}
 
 
 
