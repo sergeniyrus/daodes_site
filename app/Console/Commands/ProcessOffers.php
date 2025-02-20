@@ -76,11 +76,11 @@ class ProcessOffers extends Command
 
            // Log::info("Processing offer ID $offer_id. Hours elapsed: $hoursElapsed, Za: $za_percentage%, No: $no_percentage%.");
 
-            if ($hoursElapsed > 72 || $za_percentage > 50 || $no_percentage > 50) {
-                if ($za_percentage > 50) {
+            if ($hoursElapsed > 72 || $za_percentage > 30 || $no_percentage > 30) {
+                if ($za_percentage > 30) {
                     $newState = 4; // Принято "за"
                     Log::info("Offer ID $offer_id state updated to 4 (Za > 50%).");
-                } elseif ($no_percentage > 50) {
+                } elseif ($no_percentage > 30) {
                     $newState = 5; // Принято "против"
                     Log::info("Offer ID $offer_id state updated to 5 (No > 50%).");
                 } elseif ($hoursElapsed > 72) {

@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title_page', 'Профиль пользователя')
+@section('title_page', 'User profile')
 
 @section('main')
 <style>

@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title_page', 'Кошелёк')
+@section('title_page', 'Wallet')
 
 @section('main')
     <style>
@@ -78,32 +78,30 @@
     }
     </style>
 
-    <div class="container">
-        <div class="text-center mb-4">
-            <h1>Мой кошелек</h1>
-        </div>
-
-        <!-- Вывод сообщения из сессии, если оно есть -->
-        @if(session('info'))
-            <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
-        @elseif(session('error'))
-            <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
-        @endif
-
-        <div class="text-center">
-            <!-- Используем условие, чтобы проверить, если avatar_url есть, то вставить его -->
-            <img src="{{ $UserProfile->avatar_url ?? '/img/main/img_avatar.jpg' }}" alt="Avatar" class="avatar">
-        </div>
-
-        <div class="balance">
-            <p>Баланс: {{ rtrim(rtrim(number_format($wallet->balance, 8, '.', ''), '0'), '.') }} descoin</p>
-        </div>
-
-        <div style="text-align: center">
-            <a href="{{ route('wallet.transfer.form') }}" class="blue_btn">{{ __('Перевести') }}</a>
-            <a href="{{ route('wallet.history') }}" class="blue_btn">{{ __('История') }}</a>
-        </div>
-
-        
+<div class="container">
+    <div class="text-center mb-4">
+        <h1>My Wallet</h1>
     </div>
+
+    <!-- Display session message if it exists -->
+    @if(session('info'))
+        <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
+    @elseif(session('error'))
+        <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
+    @endif
+
+    <div class="text-center">
+        <!-- Use a condition to check if avatar_url exists, then insert it -->
+        <img src="{{ $UserProfile->avatar_url ?? '/img/main/img_avatar.jpg' }}" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="balance">
+        <p>Balance: {{ rtrim(rtrim(number_format($wallet->balance, 8, '.', ''), '0'), '.') }} descoin</p>
+    </div>
+
+    <div style="text-align: center">
+        <a href="{{ route('wallet.transfer.form') }}" class="blue_btn">{{ __('Transfer') }}</a>
+        <a href="{{ route('wallet.history') }}" class="blue_btn">{{ __('History') }}</a>
+    </div>
+</div>
 @endsection

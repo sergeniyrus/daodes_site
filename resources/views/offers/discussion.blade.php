@@ -125,13 +125,13 @@
         $user = Auth::user();
         $user_id = $user->id;
         
-        // Получаем id предложения из маршрута, если переменная не передана
+        // Get the offer ID from the route if the variable is not passed
         $offer_id = $offer_id ?? request()->route('id');
         
-        // Проверяем, оставил ли пользователь комментарий к этому предложению
+        // Check if the user has commented on this offer
         $hasCommented = DB::table('comments_offers')->where('offer_id', $offer_id)->where('user_id', $user_id)->exists();
         
-        // Проверяем, голосовал ли пользователь за это предложение
+        // Check if the user has voted for this offer
         $hasVoted = DB::table('discussions')->where('offer_id', $offer_id)->where('user_id', $user_id)->exists();
         ?>
 
@@ -142,7 +142,7 @@
                         @csrf
                         <fieldset class="tbr">
                             
-                            <h1 style="text-align: center; font-size:1.5rem">Готов голосовать?</h1>
+                            <h1 style="text-align: center; font-size:1.5rem">Ready to vote?</h1>
                             
                             <div class="vote_ratio">
                                 <label for="choice1" class="img_vote">
@@ -158,19 +158,19 @@
                             </div>
                             <input type="hidden" name="offer_id" value="{{ $offer_id }}">
                             <input type="image" src="{{ asset('/img/icons_post/voting.png') }}" class="img_bt"
-                                title="Голосовать">
+                                title="Vote">
                         </fieldset>
                     </form>
                 </div>
             @else
-                <div class="msg">Вы ещё не высказали своё мнение в комментариях. Пожалуйста выскажитесь.</div>
+                <div class="msg">You have not yet expressed your opinion in the comments. Please share your thoughts.</div>
             @endif
         @else
-            <div class="msg"><h1 style="text-align: center; font-size:1.5rem">Ваше мнение учтено</h1></div>
+            <div class="msg"><h1 style="text-align: center; font-size:1.5rem">Your opinion has been counted</h1></div>
 
 
             <?php
-            // Проверяем, что переменная $offer_id определена
+            // Check if the $offer_id variable is defined
             if (isset($offer_id)) {
                 $totalUsers = DB::table('users')->count();
                 $totalUsers -= 2;
@@ -204,11 +204,11 @@
             }
             ?><fieldset class="tbr">
                 <legend>
-                    <h4>Результаты:</h4>
+                    <h4>Results:</h4>
                 </legend>
                 <table class="tbrv">
                     <tr>
-                        <td>Отклоняем:</td>
+                        <td>Rejected:</td>
                         <td class="right_td">{{ $yes ?? 0 }}</td>
                     </tr>
                     <tr>
@@ -221,7 +221,7 @@
                         <td class="right_td"> {{ $za_percentage ?? 2 }}%</td>
                     </tr>
                     <tr>
-                        <td>Голосуем:</td>
+                        <td>Voted:</td>
                         <td class="right_td">{{ $no }}</td>
                     </tr>
                     <tr>
@@ -234,7 +234,7 @@
                         <td class="right_td"> {{ $no_percentage }}%</td>
                     </tr>
                     <tr>
-                        <td>Не смотрели:</td>
+                        <td>Not viewed:</td>
                         <td class="right_td">{{ $vozd ?? 0 }}</td>
                     </tr>
                     <tr>
@@ -249,28 +249,27 @@
                     </tr>
                 </table>
             </fieldset>
-            {{-- проверка условий прохождения --}}
+            {{-- Check passing conditions --}}
             <?php if ($za_percentage >= 25) {
-                // {{-- // отправляем в отклонённые --}}
+                // {{-- // Move to rejected --}}
                 DB::table('offers')
                     ->where('id', $offer_id)
                     ->update(['state' => 5]);
             
-                echo 'Предложение отклонено по итогам обсуждений';
+                echo 'The offer has been rejected based on the discussion results';
             }
             if ($no_percentage >= 25) {
-    DB::table('offers')
-        ->where('id', $offer_id)
-        ->update([
-            'state' => 2,
-            'start_vote' => now()->setTimezone('UTC'), // Устанавливаем время в UTC
-        ]);
-    echo 'Запускаем голосование!';
-}
-
+                DB::table('offers')
+                    ->where('id', $offer_id)
+                    ->update([
+                        'state' => 2,
+                        'start_vote' => now()->setTimezone('UTC'), // Set time in UTC
+                    ]);
+                echo 'Starting the vote!';
+            }
             ?>
         @endif
     @else
-        <div class="msg">Необходимо <a href="/login" class="eror_com">войти</a></div>
+        <div class="msg">You need to <a href="/login" class="eror_com">log in</a></div>
     @endauth
 </div>

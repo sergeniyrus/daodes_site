@@ -1,6 +1,6 @@
 <style>
-  /* блок формы голосования */
-  .left_box {
+    /* блок формы голосования */
+    .left_box {
         width: 100%;
         font-size: min(max(50%, 1.5vw), 90%);
         color: aqua;
@@ -50,43 +50,43 @@
     }
 
     .vote_ratio {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px 0;
-}
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 20px 0;
+    }
 
-.img_vote {
-    position: relative;
-    margin: 0 10px;
-}
+    .img_vote {
+        position: relative;
+        margin: 0 10px;
+    }
 
-.img_vote input[type="radio"] {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    z-index: 2;
-}
+    .img_vote input[type="radio"] {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        opacity: 0;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        z-index: 2;
+    }
 
-.img_vote img {
-    display: block;
-    width: 100px;
-    /* Ширина картинки */
-    height: auto;
-    border: 3px solid transparent;
-    /* Начальный цвет рамки */
-    transition: border-color 0.3s;
-}
+    .img_vote img {
+        display: block;
+        width: 100px;
+        /* Ширина картинки */
+        height: auto;
+        border: 3px solid transparent;
+        /* Начальный цвет рамки */
+        transition: border-color 0.3s;
+    }
 
-.img_vote input[type="radio"]:checked+img {
-    border-color: #f00;
-    /* Цвет рамки для выбранного элемента */
-}
+    .img_vote input[type="radio"]:checked+img {
+        border-color: #f00;
+        /* Цвет рамки для выбранного элемента */
+    }
 
     /* Таблица с результатами */
     .results-table {
@@ -143,8 +143,6 @@
         color: gold;
         margin-bottom: 10px;
     }
-
-
 </style>
 
 <div class="left_box">
@@ -153,44 +151,40 @@
         $user = Auth::user();
         $user_id = $user->id;
         
-        $offer_id = $offer_id ?? request()->route('id'); // Получаем id предложения из маршрута, если переменная не передана
+        $offer_id = $offer_id ?? request()->route('id'); // Get the offer ID from the route if the variable is not passed
         
         $hasVoted = DB::table('spam')->where('offer_id', $offer_id)->where('user_id', $user_id)->exists();
         ?>
 
         @if (!$hasVoted)
-        <h1 style="text-align: center; font-size:1.5rem">Спам/не спам</h1>
+            <h1 style="text-align: center; font-size:1.5rem">Spam / Not Spam</h1>
             <div class="vote_box">
                 <form action="{{ route('spam.store') }}" class="form-vote" method="post">
                     @csrf
-                    
-                        
-                            
-                        
-                        <div class="vote_ratio">
-                            <label for="choice1" class="img_vote">
-                                <input type="radio" id="choice1" class="choice1" name="vote" value="1"
-                                    class="ratio_l">
-                                <img class="img_bt_l" src="{{ asset('/img/icons_post/spam.png') }}" alt="">
-                            </label>
-                            <label for="choice2" class="img_vote">
-                                <input type="radio" id="choice2" class="choice2" name="vote" value="0"
-                                    class="ratio_r">
-                                <img class="img_bt_r" src="{{ asset('/img/icons_post/nospam.png') }}" alt="">
-                            </label>
-                        </div>
-                        <div class="btn_vote">
-                            <input type="hidden" name="offer_id" value="{{ $offer_id }}">
-                            <input type="image" src="{{ asset('/img/icons_post/voting.png') }}" class="img_bt"
-                                title="Голосовать">
-                        </div>
-                    
+
+                    <div class="vote_ratio">
+                        <label for="choice1" class="img_vote">
+                            <input type="radio" id="choice1" class="choice1" name="vote" value="1"
+                                class="ratio_l">
+                            <img class="img_bt_l" src="{{ asset('/img/icons_post/spam.png') }}" alt="">
+                        </label>
+                        <label for="choice2" class="img_vote">
+                            <input type="radio" id="choice2" class="choice2" name="vote" value="0"
+                                class="ratio_r">
+                            <img class="img_bt_r" src="{{ asset('/img/icons_post/nospam.png') }}" alt="">
+                        </label>
+                    </div>
+                    <div class="btn_vote">
+                        <input type="hidden" name="offer_id" value="{{ $offer_id }}">
+                        <input type="image" src="{{ asset('/img/icons_post/voting.png') }}" class="img_bt"
+                            title="Vote">
+                    </div>
                 </form>
             </div>
         @else
-        <h1 style="text-align: center; font-size:1.5rem">Ваше мнение учтено</h1>
+            <h1 style="text-align: center; font-size:1.5rem">Your opinion has been recorded</h1>
             <?php
-            // Проверяем, что переменная $offer_id определена
+            // Check if the $offer_id variable is defined
             if (isset($offer_id)) {
                 $totalUsers = DB::table('users')->count();
                 $totalUsers -= 2;
@@ -223,12 +217,12 @@
                 $vozd_percentage = round($vozd_percentage, 2);
             }
             ?><fieldset class="tbr">
-                
-                    <h1 style="text-align: center; font-size:1.5rem">Результаты:</h1>
-                
+
+                <h1 style="text-align: center; font-size:1.5rem">Results:</h1>
+
                 <table class="results-table">
                     <tr>
-                        <td>Спам:</td>
+                        <td>Spam:</td>
                         <td class="text-right">{{ $yes ?? 0 }}</td>
                     </tr>
                     <tr>
@@ -242,7 +236,7 @@
                         <td class="text-right">{{ $za_percentage ?? 0 }}%</td>
                     </tr>
                     <tr>
-                        <td>Не спам:</td>
+                        <td>Not Spam:</td>
                         <td class="text-right">{{ $no ?? 0 }}</td>
                     </tr>
                     <tr>
@@ -256,7 +250,7 @@
                         <td class="text-right">{{ $no_percentage ?? 0 }}%</td>
                     </tr>
                     <tr>
-                        <td>Не смотрели:</td>
+                        <td>Not Viewed:</td>
                         <td class="text-right">{{ $vozd ?? 0 }}</td>
                     </tr>
                     <tr>
@@ -270,38 +264,33 @@
                         <td class="text-right">{{ $vozd_percentage ?? 0 }}%</td>
                     </tr>
                 </table>
-                
+
             </fieldset>
-            {{-- проверка условий спам не спам --}}
+            {{-- Check spam/not spam conditions --}}
             <?php if ($za_percentage >= 25) {
-                // находим гада
-                $authorId = DB::table('users')
-                    ->where('id', $text->user_id)
-                    ->value('id');
+                // Find the author
+                $authorId = DB::table('users')->where('id', $text->user_id)->value('id');
             
-                // {{-- // Удаление предложения --}}
+                // Delete the offer
                 DB::table('offers')->where('id', $offer_id)->delete();
-                // Добавляем автора в спам список спамеров
+                // Add the author to the spammers list
                 DB::table('spamers')->insert([
                     'user_id' => $authorId,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);
             
-                echo 'Пост удалён как спам';
+                echo 'Post deleted as spam';
             }
             if ($no_percentage >= 25) {
                 DB::table('offers')
                     ->where('id', $offer_id)
                     ->update(['state' => 1]);
-                echo 'Проверка пройдена';
+                echo 'Verification passed';
             }
             ?>
         @endif
     @else
-        <div class="msg">Необходимо <a href="/login" class="eror_com">войти</a></div>
+        <div class="msg">You need to <a href="/login" class="eror_com">log in</a></div>
     @endauth
-
-
-
 </div>

@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title_page', 'Обозреватель')
+@section('title_page', 'Translation history')
 
 @section('main')
 <style>
@@ -140,7 +140,7 @@
 </style>
 
 <div class="container">
-    <h1>История переводов</h1>
+    <h1>Transfer History</h1>
     
     @if(session('success'))
         <div class="alert">
@@ -152,25 +152,25 @@
         <table class="table-auto center-table custom-table">
             <thead>
                 <tr>
-                    <th class="px-4 py-2">Дата</th>
-                    <th class="px-4 py-2">Отправитель</th>
-                    <th class="px-4 py-2">Получатель</th>
-                    <th class="px-4 py-2">Сумма</th>
-                    <th class="px-4 py-2">Комиссия</th>
+                    <th class="px-4 py-2">Date</th>
+                    <th class="px-4 py-2">Sender</th>
+                    <th class="px-4 py-2">Recipient</th>
+                    <th class="px-4 py-2">Amount</th>
+                    <th class="px-4 py-2">Fee</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($historyPays as $pay)
                     <tr>
-                        <td class="px-4 py-2" data-label="Дата">{{ $pay->created_at }}</td>
-                        <td class="px-4 py-2" data-label="Отправитель">
-                            {{ optional($pay->fromWallet->user)->name ?? 'Неизвестно' }}
+                        <td class="px-4 py-2" data-label="Date">{{ $pay->created_at }}</td>
+                        <td class="px-4 py-2" data-label="Sender">
+                            {{ optional($pay->fromWallet->user)->name ?? 'Unknown' }}
                         </td>
-                        <td class="px-4 py-2" data-label="Получатель">
-                            {{ optional($pay->toWallet->user)->name ?? 'Неизвестно' }}
+                        <td class="px-4 py-2" data-label="Recipient">
+                            {{ optional($pay->toWallet->user)->name ?? 'Unknown' }}
                         </td>
-                        <td class="px-4 py-2" data-label="Сумма">{{ rtrim(rtrim(number_format($pay->amount, 8, '.', ''), '0'), '.') }} descoin</td>
-                        <td class="px-4 py-2" data-label="Комиссия">{{ rtrim(rtrim(number_format($pay->fee, 8, '.', ''), '0'), '.') }} descoin</td>
+                        <td class="px-4 py-2" data-label="Amount">{{ rtrim(rtrim(number_format($pay->amount, 8, '.', ''), '0'), '.') }} descoin</td>
+                        <td class="px-4 py-2" data-label="Fee">{{ rtrim(rtrim(number_format($pay->fee, 8, '.', ''), '0'), '.') }} descoin</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -178,7 +178,7 @@
     </div>
 
     <div class="pagination-center">
-        {{ $historyPays->links('vendor.pagination.custom') }}
+        {{ $historyPays->links() }}
         <div class="pagination-info">
             Showing {{ $historyPays->firstItem() }} to {{ $historyPays->lastItem() }} of {{ $historyPays->total() }} results
         </div>

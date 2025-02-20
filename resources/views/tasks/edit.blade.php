@@ -65,17 +65,17 @@
 
 <div class="container">
     <div class="text-center mb-4">
-        <h1 class="display-4">Редактировать задание</h1>
+        <h1 class="display-4">Edit Task</h1>
     </div>
 
-    <!-- Вывод флеш-сообщений об успехе -->
+    <!-- Display success flash messages -->
     @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
     @endif
 
-    <!-- Вывод ошибок валидации -->
+    <!-- Display validation errors -->
     @if($errors->any())
         <div class="alert alert-danger">
             <ul>
@@ -86,34 +86,34 @@
         </div>
     @endif
 
-    <!-- Форма редактирования задачи -->
+    <!-- Task editing form -->
     <form action="{{ route('tasks.update', $task) }}" method="POST">
         @csrf
-        @method('PUT') <!-- Указываем метод PUT для обновления -->
+        @method('PUT') <!-- Specify the PUT method for updating -->
 
         <div class="form-group">
-            <label for="title">Заголовок задачи:</label>
+            <label for="title">Task Title:</label>
             <input type="text" name="title" id="title" value="{{ old('title', $task->title) }}" required class="input_dark">
         </div>
 
         <div class="form-group">
-            <label for="content">Описание задачи:</label>
-            <textarea name="content" id="editor" rows="5" required class="input_dark">{{ old('contentn', $task->content) }}</textarea>
+            <label for="content">Task Description:</label>
+            <textarea name="content" id="editor" rows="5" required class="input_dark">{{ old('content', $task->content) }}</textarea>
         </div>
 
         <div class="form-group">
-            <label for="deadline">Дедлайн:</label>
+            <label for="deadline">Deadline:</label>
             <input type="date" name="deadline" id="deadline" value="{{ old('deadline', $task->deadline) }}" required class="input_dark">
         </div>
 
         <div class="form-group">
-            <label for="budget">Бюджет:</label>
+            <label for="budget">Budget:</label>
             <input type="number" name="budget" id="budget" step="0.01" value="{{ old('budget', $task->budget) }}" required class="input_dark">
         </div>
 
-        <!-- Добавляем выбор категории -->
+        <!-- Add category selection -->
         <div class="form-group">
-            <label for="category_id">Категория:</label>
+            <label for="category_id">Category:</label>
             <select name="category_id" id="category_id" class="input_dark" required>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}" {{ $category->id == old('category_id', $task->category_id) ? 'selected' : '' }}>
@@ -124,7 +124,7 @@
         </div>
 
         <div class="text-center">
-            <button type="submit" class="blue_btn"><i class="fas fa-save"></i> Сохранить изменения</button>
+            <button type="submit" class="blue_btn"><i class="fas fa-save"></i> Save Changes</button>
         </div>
     </form>
 </div>

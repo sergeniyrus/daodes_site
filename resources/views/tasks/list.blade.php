@@ -138,7 +138,7 @@
 
 <div class="container my-5">
     <div class="text-center mb-4">
-        <h1 class="display-4">Биржа заданий</h1>
+        <h1 class="display-4">Task Exchange</h1>
     </div>
 
     @forelse($tasks as $task)
@@ -148,35 +148,44 @@
                 <div class="task-title">
                     <a href="{{ route('tasks.show', $task) }}" class="btn blue_btn">{{ $task->title }}</a> 
                 </div>    
-                <!-- Информация о категории, бюджете и сроке -->
+                <!-- Information about category, budget, and deadline -->
                 <div class="task-info">    
-                    <p class="task-category"><i class="fas fa-folder-open"></i> {{ $task->category ? $task->category->name : 'Без категории' }}</p>
-                    <p class="task-budget"><i class="fas fa-dollar-sign"></i> {{ $task->budget }} руб.</p>
-                    <p class="task-deadline"><i class="fas fa-clock"></i> {{ $task->deadline }}</p>
+                    <p class="task-category"><i class="fas fa-folder-open"></i> {{ $task->category ? $task->category->name : 'No category' }}</p>
+                    <p class="task-budget"><i class="fas fa-dollar-sign"></i> {{ $task->budget }} USD</p>
+                    <p class="task-deadline"><i class="fas fa-clock"></i> {{ $task->deadline->format('Y-m-d') }}</p>
+                
+                <div class="task-author">
+                    <p><strong>&copy;</strong>
+                        <a href="{{ route('user_profile.show', ['id' => $task->user_id]) }}" title="Profile"
+                            style="color: #d7fc09; text-decoration: none;">
+                            {{ $task->user->name }}
+                        </a>
+                    </p>
                 </div>
             </div>
+            </div>
 
-            <!-- Заголовок как кнопка -->
+            <!-- Title as a button -->
             <p class="card-text">
                 @if (strlen($task->content) > 260)
                 {!! Str::limit($task->content, 260) !!}
-                    <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-link">→ Читать дальше ←</a>
+                    <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-link">→ Read more ←</a>
                 @else
-                    {{ $task->content }}
+                    {!! $task->content !!}
                 @endif
             </p>
         </div>
     </div>
 @empty
     <div style="text-align: center">
-        <p>Заданий нет, можете <a href="{{ route('addtask') }}">создать задание</a>.</p>
+        <p>No tasks available, you can <a href="{{ route('addtask') }}">create a task</a>.</p>
     </div>
 @endforelse
 <?php
-Log::info('List читаем file');
+Log::info('Reading file list');
 ?>
 
-    <!-- Пагинация -->
+    <!-- Pagination -->
     <div class="pagination">
         {{ $tasks->links() }}
     </div>

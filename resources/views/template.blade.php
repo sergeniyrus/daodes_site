@@ -74,9 +74,9 @@
 
     @include('partials.infotrade')
 
-    <div class="marquee">
+    {{-- <div class="marquee">
         <p>Ведётся доработка, не обращайте внимание на некоторые недостатки, кривости, а обо всех найденных неполадках сообщайте в телеграм @sergeniyrus</p>
-    </div>
+    </div> --}}
     <!-- Кнопочное меню -->
 
     @include('menu')
@@ -91,7 +91,7 @@
     <!-- Подвал-->
     @include('footer')
 
-
+    {{-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> --}}
 </body>
 
 </html>

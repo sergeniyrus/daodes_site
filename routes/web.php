@@ -6,7 +6,7 @@ use App\Http\Controllers\{
     NewsController,
     OffersController,
     SeedController,
-    Auth\KeywordResetPasswordController,
+    KeywordResetPasswordController,
     WalletController,
     VoteController,
     CommentController,

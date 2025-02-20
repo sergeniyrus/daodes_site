@@ -67,69 +67,69 @@
         }
     </style>
 
-    <div class="modal-content">
-        {{-- <div class="imgcontainer"> --}}
-            <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
-        {{-- </div> --}}
-        <div class="container">
-            @if (isset($message))
-                <p style="font-size: 18px; color:red;">{{ $message }}</p>
+<div class="modal-content">
+    {{-- <div class="imgcontainer"> --}}
+        <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
+    {{-- </div> --}}
+    <div class="container">
+        @if (isset($message))
+            <p style="font-size: 18px; color:red;">{{ $message }}</p>
+        @else
+            @if (session('success'))
+                <p style="font-size: 18px; color: green;">
+                    {{ session('success') }}
+                </p>
+            @elseif(session('error'))
+                <p style="font-size: 18px; color: red;">
+                    {{ session('error') }}
+                </p>
             @else
-                @if (session('success'))
-                    <p style="font-size: 18px; color: green;">
-                        {{ session('success') }}
-                    </p>
-                @elseif(session('error'))
-                    <p style="font-size: 18px; color: red;">
-                        {{ session('error') }}
-                    </p>
-                @else
-                    <form method="post" action="{{ route('seed.save') }}">
-                        @csrf
-                        <div class="tabseed">
-                            <h2>Ваша сид-фраза:</h2><br>
-                            <div id="seedPhrase" class="seed-phrase" style="display: inline-block;">
-                                @foreach ($words as $index => $word)
-                                    <span> {{ $word }} </span> <input type="hidden" name="word{{ $index }}"
-                                        value="{{ $word }}">
-                                @endforeach
-                                <span> {{ $keyword }} </span> <input type="hidden" name="word23"
-                                    value="{{ $keyword }}">
-                            </div>
-                            <br><br>
-                            <p class="save-phrase">Обязательно запишите её в надёжном месте! Востановить её будет невозможно!</p>
+                <form method="post" action="{{ route('seed.save') }}">
+                    @csrf
+                    <div class="tabseed">
+                        <h2>Your Seed Phrase:</h2><br>
+                        <div id="seedPhrase" class="seed-phrase" style="display: inline-block;">
+                            @foreach ($words as $index => $word)
+                                <span> {{ $word }} </span> <input type="hidden" name="word{{ $index }}"
+                                    value="{{ $word }}">
+                            @endforeach
+                            <span> {{ $keyword }} </span> <input type="hidden" name="word23"
+                                value="{{ $keyword }}">
                         </div>
-                        <br>
-                        <div class="flex items-center justify-center mt-4">
-                            <x-primary-button id="saveButton" class="ms-4 btn-disabled" disabled>
-                                {{ __('Я Сохранил сид-фразу') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
-<br>
-                    <div class="flex items-center justify-center mt-4">
-                        <x-primary-button onclick="copytext('#hiddenSeed')" class="ms-4">
-                            Копировать сид-фразу
-                        </x-primary-button>
+                        <br><br>
+                        <p class="save-phrase">Make sure to write it down in a safe place! It will be impossible to recover!</p>
                     </div>
                     <br>
-                    <div id="copyMessage" style="display: none; font-size: 18px; color: green;">
-                        Сид-фраза скопирована в буфер обмена.
+                    <div class="flex items-center justify-center mt-4">
+                        <x-primary-button id="saveButton" class="ms-4 btn-disabled" disabled>
+                            {{ __('I Have Saved the Seed Phrase') }}
+                        </x-primary-button>
                     </div>
+                </form>
+                <br>
+                <div class="flex items-center justify-center mt-4">
+                    <x-primary-button onclick="copytext('#hiddenSeed')" class="ms-4">
+                        Copy Seed Phrase
+                    </x-primary-button>
+                </div>
+                <br>
+                <div id="copyMessage" style="display: none; font-size: 18px; color: green;">
+                    Seed phrase copied to clipboard.
+                </div>
 
-                    @if(isset($words) && isset($keyword))
-                    <!-- Скрытый блок с сид-фразой в одну строку -->
-                    <div id="hiddenSeed" class="hidden-seed">
-                        @foreach ($words as $word)
-                            {{ $word }}
-                        @endforeach
-                        {{ $keyword }}
-                    </div>
-                    @endif
+                @if(isset($words) && isset($keyword))
+                <!-- Hidden block with the seed phrase in one line -->
+                <div id="hiddenSeed" class="hidden-seed">
+                    @foreach ($words as $word)
+                        {{ $word }}
+                    @endforeach
+                    {{ $keyword }}
+                </div>
                 @endif
             @endif
-        </div>
+        @endif
     </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -139,7 +139,7 @@
             $tmp.val($(el).text().trim().replace(/\s+/g, ' ')).select();
             document.execCommand("copy");
             $tmp.remove();
-            alert("Сид-фраза скопирована в буфер обмена");
+            alert("Seed phrase copied to clipboard.");
 
             // Активируем кнопку "Я Сохранил сид-фразу" после копирования
             var saveButton = document.getElementById('saveButton');

@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title_page', 'Перевод средств')
+@section('title_page', 'Transfer')
 
 @section('main')
     <style>
@@ -53,75 +53,75 @@
         }
     </style>
 
-    <div class="container">
-        <div class="text-center mb-4">
-            <h1>Перевод средств</h1>
-        </div>
+<div class="container">
+    <div class="text-center mb-4">
+        <h1>Fund Transfer</h1>
+    </div>
 
-        <!-- Вывод сообщения из сессии, если оно есть -->
-        @if(session('info'))
-            <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
-        @elseif(session('error'))
-            <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
+    <!-- Display session message if it exists -->
+    @if(session('info'))
+        <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
+    @elseif(session('error'))
+        <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
+    @endif
+
+    <div class="text-center">
+        <!-- Use a condition to check if avatar_url exists, then insert it -->
+        <img src="{{ e($UserProfile->avatar_url ?? '/img/main/img_avatar.jpg') }}" alt="Avatar" class="avatar">
+    </div>
+
+    <div class="container">
+        @if (session('error'))
+            <div class="font-medium text-red-600 text-sm">
+                {{ session('error') }}
+            </div>
         @endif
 
-        <div class="text-center">
-            <!-- Используем условие, чтобы проверить, если avatar_url есть, то вставить его -->
-            <img src="{{ $UserProfile->avatar_url ?? '/img/main/img_avatar.jpg' }}" alt="Avatar" class="avatar">
-        </div>
+        @if ($errors->any())
+            <div class="font-medium text-red-600 text-sm">
+                <ul class="mt-3 list-disc list-inside text-sm text-red-600">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
 
-        <div class="container">
-            @if (session('error'))
-                <div class="font-medium text-red-600 text-sm">
-                    {{ session('error') }}
-                </div>
-            @endif
+        <br>
 
-            @if ($errors->any())
-                <div class="font-medium text-red-600 text-sm">
-                    <ul class="mt-3 list-disc list-inside text-sm text-red-600">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
+        <form action="{{ route('wallet.transfer') }}" method="post">
+            @csrf
 
-            <br>
-
-            <form  action="{{ route('wallet.transfer') }}" method="post">
-                @csrf
-
-                <div>
-                    <x-input-label for="recipient" :value="__('Логин получателя')" />
-                    <x-text-input id="recipient" class="block mt-1 w-full" type="text" name="recipient" :value="old('recipient')" required autofocus />
-                    @error('recipient')
-                        <div class="font-medium text-red-600">{{ $message }}</div>
-                    @enderror
-                </div>
-            
-                <div class="mt-4">
-                    <x-input-label for="amount" :value="__('Сумма (без учёта комиссии)')" />
-                    <x-text-input id="amount" class="block mt-1 w-full" type="number" step="0.01" name="amount" :value="old('amount')" required />
-                    @error('amount')
-                        <div class="font-medium text-red-600">{{ $message }}</div>
-                    @enderror
-                </div>
-            
-                <div class="mt-4">
-                    <x-input-label for="seed_phrase" :value="__('Ваша Сид-фраза')" />
-                    <x-text-input id="seed_phrase" class="block mt-1 w-full" type="text" name="seed_phrase" :value="old('seed_phrase')" required />
-                    @error('seed_phrase')
-                        <div class="font-medium text-red-600">{{ $message }}</div>
-                    @enderror
-                </div>
-            
-                <div class="flex items-center justify-center mt-4">
-                    <x-primary-button  class="blue_btn">
-                        {{ __('Перевести') }}
-                    </x-primary-button>
-                </div>
-            </form>
-        </div>
+            <div>
+                <x-input-label for="recipient" :value="__('Recipient\'s Username')" />
+                <x-text-input id="recipient" class="block mt-1 w-full" type="text" name="recipient" value="{{ old('recipient') }}" required autofocus />
+                @error('recipient')
+                    <div class="font-medium text-red-600">{{ $message }}</div>
+                @enderror
+            </div>
+        
+            <div class="mt-4">
+                <x-input-label for="amount" :value="__('Amount (excluding commission)')" />
+                <x-text-input id="amount" class="block mt-1 w-full" type="number" step="0.01" name="amount" value="{{ old('amount') }}" required />
+                @error('amount')
+                    <div class="font-medium text-red-600">{{ $message }}</div>
+                @enderror
+            </div>
+        
+            <div class="mt-4">
+                <x-input-label for="seed_phrase" :value="__('Your Seed Phrase')" />
+                <x-text-input id="seed_phrase" class="block mt-1 w-full" type="text" name="seed_phrase" value="{{ old('seed_phrase') }}" required />
+                @error('seed_phrase')
+                    <div class="font-medium text-red-600">{{ $message }}</div>
+                @enderror
+            </div>
+        
+            <div class="flex items-center justify-center mt-4">
+                <x-primary-button class="blue_btn">
+                    {{ __('Transfer') }}
+                </x-primary-button>
+            </div>
+        </form>
     </div>
+</div>
 @endsection

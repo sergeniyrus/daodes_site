@@ -122,12 +122,12 @@ class UserProfileController extends Controller
 
         // Обновляем остальные данные профиля
         $profile->fill($request->except(['filename']));
-        
+
         Log::info('Данные перед обновлением записей в БД:', $profile->toArray());
         $profile->save();
 
         return redirect()->route('user_profile.edit', $profile->id)
-                         ->with('info', 'Профиль успешно обновлен!');
+            ->with('info', 'The profile has been successfully updated!');
     }
 
     private function uploadToIPFS($file)

@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title_page', 'Профиль пользователя')
+@section('title_page', 'User profile')
 
 @section('main')
 <style>
@@ -96,9 +96,9 @@
 
 <div class="container">
     <div class="text-center mb-4">
-        <h1>Профиль пользователя</h1>
+        <h1>User Profile</h1>
     </div>
-<!-- Вывод сообщения из сессии, если оно есть -->
+<!-- Display session message if it exists -->
 @if(session('info'))
 <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
 @elseif(session('error'))
@@ -108,53 +108,55 @@
     @if($userProfile)
         <div class="card shadow-sm">
             <div class="card-body">
-                <!-- Аватар и имя пользователя в одном блоке -->
+                <!-- Avatar and username in one block -->
                 <div class="profile-header">
-                    <h2 class="user-name">{{ $userProfile->user->name ?? 'Без имени' }}</h2>
-                    <img src="{{ $userProfile->avatar_url }}" alt="Аватар" class="avatar-img">
+                    <h2 class="user-name">{{ $userProfile->user->name ?? 'No Name' }}</h2>
+                    <img src="{{ $userProfile->avatar_url }}" alt="Avatar" class="avatar-img">
                 </div>
 
-                <!-- Основная информация -->
+                <!-- Basic Information -->
                 <div class="category-block">
-                    <div class="section-title">Основная информация</div>
-                    <p class="card-text"><label>Роль:</label> {{ $userProfile->role ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Никнейм Telegramm:</label> {{ $userProfile->nickname ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Пол:</label> {{ $userProfile->gender ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Дата рождения:</label> {{ $userProfile->birth_date ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Часовой пояс:</label> {{ $userProfile->timezone ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Языки:</label> {{ $userProfile->languages ?? 'Не указано' }}</p>
+                    <div class="section-title">Basic Information</div>
+                    <p class="card-text"><label>Role:</label> {{ $userProfile->role ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Telegram Nickname:</label> <a href="https://t.me/{{ $userProfile->nickname ?? 'Not specified' }}" target="_blank" style="color:aqua">
+                        {{ $userProfile->nickname ?? 'Not specified' }}
+                    </a></p>
+                    <p class="card-text"><label>Gender:</label> {{ $userProfile->gender ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Date of Birth:</label> {{ $userProfile->birth_date ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Timezone:</label> {{ $userProfile->timezone ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Languages:</label> {{ $userProfile->languages ?? 'Not specified' }}</p>
                 </div>
 
-                <!-- Образование и навыки -->
+                <!-- Education and Skills -->
                 <div class="category-block">
-                    <div class="section-title">Образование и навыки</div>
-                    <p class="card-text"><label>Образование:</label> {{ $userProfile->education ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Специализация:</label> {{ $userProfile->specialization ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Резюме:</label> {{ $userProfile->resume ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Портфолио:</label> {{ $userProfile->portfolio ?? 'Не указано' }}</p>
+                    <div class="section-title">Education and Skills</div>
+                    <p class="card-text"><label>Education:</label> {{ $userProfile->education ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Specialization:</label> {{ $userProfile->specialization ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Resume:</label> {{ $userProfile->resume ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Portfolio:</label> {{ $userProfile->portfolio ?? 'Not specified' }}</p>
                 </div>
 
-                <!-- Активность и достижения -->
+                <!-- Activity and Achievements -->
                 <div class="category-block">
-                    <div class="section-title">Активность и достижения</div>
-                    {{-- <p class="card-text"><label>Адрес кошелька:</label> {{ $userProfile->wallet_address ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Рейтинг:</label> {{ $userProfile->rating ?? 'Не указано' }}</p> --}}
-                    <p class="card-text"><label>Уровень доверия:</label> {{ $userProfile->trust_level ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>SBT-токены:</label> {{ $userProfile->sbt_tokens ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Задачи выполнены:</label> {{ $userProfile->tasks_completed ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Задачи провалены:</label> {{ $userProfile->tasks_failed ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Рекомендации:</label> {{ $userProfile->recommendations ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Лог активности:</label> {{ $userProfile->activity_log ?? 'Не указано' }}</p>
-                    <p class="card-text"><label>Достижения:</label> {{ $userProfile->achievements ?? 'Не указано' }}</p>
+                    <div class="section-title">Activity and Achievements</div>
+                    {{-- <p class="card-text"><label>Wallet Address:</label> {{ $userProfile->wallet_address ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Rating:</label> {{ $userProfile->rating ?? 'Not specified' }}</p> --}}
+                    <p class="card-text"><label>Trust Level:</label> {{ $userProfile->trust_level ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>SBT Tokens:</label> {{ $userProfile->sbt_tokens ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Tasks Completed:</label> {{ $userProfile->tasks_completed ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Tasks Failed:</label> {{ $userProfile->tasks_failed ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Recommendations:</label> {{ $userProfile->recommendations ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Activity Log:</label> {{ $userProfile->activity_log ?? 'Not specified' }}</p>
+                    <p class="card-text"><label>Achievements:</label> {{ $userProfile->achievements ?? 'Not specified' }}</p>
                 </div>
 
-                <!-- Кнопка для перехода к редактированию профиля -->
-                <a href="{{ route('user_profile.edit', $userProfile->user_id) }}" class="btn blue_btn">Редактировать</a>
+                <!-- Button to edit the profile -->
+                <a href="{{ route('user_profile.edit', $userProfile->user_id) }}" class="btn blue_btn">Edit</a>
             </div>
         </div>
     @else
         <div class="text-center">
-            <p>Нет доступного профиля для отображения.</p>
+            <p>No profile available to display.</p>
         </div>
     @endif
 </div>

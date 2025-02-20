@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Log;
 
 class TaskController extends Controller
 {
-    // Отображение страницы создания задачи
+    // Display the task creation page
     public function create()
     {
         $categories = TaskCategory::all();
         return view('tasks.create', compact('categories'));
     }
 
-    // Отображение списка задач
+    // Display the list of tasks
     public function list()
     {
         $tasks = Task::with('category')->paginate(10);
@@ -28,13 +28,13 @@ class TaskController extends Controller
         return view('tasks.list', compact('tasks', 'categories'));
     }
 
-    // Отображение конкретной задачи
+    // Display a specific task
     public function show(Task $task)
     {
         $task->load('category', 'user', 'bids');
 
         if (!$task->user) {
-            return redirect()->route('tasks.list')->withErrors('Автор задачи не найден.');
+            return redirect()->route('tasks.list')->withErrors('Task author not found.');
         }
 
         $task->deadline = Carbon::parse($task->deadline);
@@ -48,25 +48,24 @@ class TaskController extends Controller
         return view('tasks.show', compact('task', 'bids'));
     }
 
-    // Создание новой задачи
+    // Create a new task
     public function store(Request $request)
     {
-        
-        Log::info('Запрос получен:', $request->all());
+        Log::info('Request received:', $request->all());
 
-        // Валидация данных
+        // Validate the data
         $request->validate([
             'title' => 'required|string|max:255',
             'content' => 'required|string',
             'deadline' => 'required|date',
             'budget' => 'required|numeric',
-            'category_id' => 'required|exists:category_tasks,id', // Исправлено на 'categories'
+            'category_id' => 'required|exists:category_tasks,id', // Corrected to 'categories'
         ]);
-    
-        // Логирование всех данных из запроса
-        Log::info('Данные задания:', $request->all());
-    
-        // Создание задания
+
+        // Log all data from the request
+        Log::info('Task data:', $request->all());
+
+        // Create the task
         $task = Task::create([
             'title' => $request->title,
             'content' => $request->content,
@@ -76,30 +75,30 @@ class TaskController extends Controller
             'user_id' => Auth::id(),
             'category_id' => $request->category_id,
         ]);
-    
-        // Логирование успешного создания задания
-        Log::info('Задание успешно создано:', $task->toArray());
-    
-        // Перенаправление с сообщением об успехе
-        return redirect()->route('tasks.index')->with('success', 'Задание успешно добавлено!');
+
+        // Log successful task creation
+        Log::info('Task successfully created:', $task->toArray());
+
+        // Redirect with a success message
+        return redirect()->route('tasks.index')->with('success', 'Task successfully added!');
     }
 
-    // Редактирование задачи (только для автора)
+    // Edit a task (only for the author)
     public function edit(Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'У вас нет прав на редактирование этой задачи.');
+            abort(403, 'You do not have permission to edit this task.');
         }
 
         $categories = TaskCategory::all();
         return view('tasks.edit', compact('task', 'categories'));
     }
 
-    // Обновление задачи (только для автора)
+    // Update a task (only for the author)
     public function update(Request $request, Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'У вас нет прав на редактирование этой задачи.');
+            abort(403, 'You do not have permission to edit this task.');
         }
 
         $request->validate([
@@ -107,34 +106,34 @@ class TaskController extends Controller
             'content' => 'required|string',
             'deadline' => 'required|date',
             'budget' => 'required|numeric',
-            'category_id' => 'required|exists:task_categories,id',
+            'category_id' => 'required|numeric:category_id,id',
         ]);
 
         $task->update($request->only(['title', 'content', 'deadline', 'budget', 'category_id']));
 
-        return redirect()->route('tasks.show', $task)->with('success', 'Задание успешно обновлено!');
+        return redirect()->route('tasks.show', $task)->with('success', 'Task successfully updated!');
     }
 
-    // Удаление задачи (только для автора)
+    // Delete a task (only for the author)
     public function destroy(Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'У вас нет прав на удаление этой задачи.');
+            abort(403, 'You do not have permission to delete this task.');
         }
 
         $task->delete();
-        return redirect()->route('tasks.index')->with('success', 'Задание успешно удалено!');
+        return redirect()->route('tasks.index')->with('success', 'Task successfully deleted!');
     }
 
-    // Подача предложения (только одно предложение от пользователя)
+    // Submit a bid (only one bid per user)
     public function bid(Request $request, Task $task)
     {
         if ($task->status !== Task::STATUS_OPEN) {
-            return redirect()->back()->with('error', 'Прием предложений закрыт.');
+            return redirect()->back()->with('error', 'Bid submission is closed.');
         }
 
         if ($task->bids()->where('user_id', Auth::id())->exists()) {
-            return redirect()->back()->with('error', 'Вы уже подали предложение на это задание.');
+            return redirect()->back()->with('error', 'You have already submitted a bid for this task.');
         }
 
         $request->validate([
@@ -152,14 +151,14 @@ class TaskController extends Controller
             'comment' => $request->comment,
         ]);
 
-        return redirect()->route('tasks.show', $task)->with('success', 'Ваше предложение успешно подано.');
+        return redirect()->route('tasks.show', $task)->with('success', 'Your bid has been successfully submitted.');
     }
 
-    // Принятие предложения (только для автора)
+    // Accept a bid (only for the author)
     public function acceptBid(Task $task, Bid $bid)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'У вас нет прав на принятие предложений.');
+            abort(403, 'You do not have permission to accept bids.');
         }
 
         $task->update([
@@ -167,18 +166,14 @@ class TaskController extends Controller
             'status' => Task::STATUS_NEGOTIATION,
         ]);
 
-        return redirect()->back()->with('success', 'Предложение отправлено. Свяжитесь с фрилансером.');
+        return redirect()->back()->with('success', 'Bid accepted. Please contact the freelancer.');
     }
 
-
-
-
-
-    // Начало работы (только для фрилансера)
+    // Start work (only for the freelancer)
     public function startWork(Task $task)
     {
         if ($task->acceptedBid->user_id !== Auth::id()) {
-            abort(403, 'Только выбранный фрилансер может начать работу.');
+            abort(403, 'Only the selected freelancer can start work.');
         }
 
         $task->update([
@@ -186,88 +181,85 @@ class TaskController extends Controller
             'start_time' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'Работа начата! Таймер запущен.');
+        return redirect()->back()->with('success', 'Work started! Timer is running.');
     }
 
-//фрилансер на проверку
-// Завершение работы (только для фрилансера)
-public function freelancerComplete(Task $task)
-{
-    if ($task->acceptedBid->user_id !== Auth::id()) {
-        abort(403, 'Только выбранный фрилансер может завершить задачу.');
+    // Freelancer submits task for review
+    public function freelancerComplete(Task $task)
+    {
+        if ($task->acceptedBid->user_id !== Auth::id()) {
+            abort(403, 'Only the selected freelancer can complete the task.');
+        }
+
+        $task->update([
+            'status' => Task::STATUS_ON_REVIEW,
+            'end_time' => now(),
+        ]);
+
+        return redirect()->back()->with('success', 'Task submitted for review.');
     }
 
-    $task->update([
-        'status' => Task::STATUS_ON_REVIEW,
-        'end_time' => now(),
-    ]);
-
-    return redirect()->back()->with('success', 'Задача отправлена на проверку.');
-}
-
-    // Завершение работы (только для Автора)
+    // Complete the task (only for the author)
     public function Complete(Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'Только Автор может завершить задачу.');
+            abort(403, 'Only the author can complete the task.');
         }
 
         $task->update([
             'status' => Task::STATUS_COMPLETED,
-            
         ]);
 
-        return redirect()->back()->with('success', 'Задача выполнена!');
+        return redirect()->back()->with('success', 'Task completed!');
     }
 
-// Продолжение задачи (только для автора) кнопка доработать
-public function continueTask(Task $task)
-{
-    // Проверка, что текущий пользователь — это автор задачи
-    if ($task->user_id !== Auth::id()) {
-        abort(403, 'У вас нет прав для продолжения этого задания.');
+    // Continue the task (only for the author) - "Revise" button
+    public function continueTask(Task $task)
+    {
+        // Check if the current user is the task author
+        if ($task->user_id !== Auth::id()) {
+            abort(403, 'You do not have permission to continue this task.');
+        }
+
+        // Check if the task is under review
+        if ($task->status !== Task::STATUS_ON_REVIEW) {
+            return redirect()->back()->with('error', 'Cannot continue this task.');
+        }
+
+        // Return the task to "In Progress" status
+        $task->update([
+            'status' => Task::STATUS_IN_PROGRESS,
+            'start_time' => now(), // Reset the timer
+        ]);
+
+        return redirect()->back()->with('success', 'Task returned to work.');
     }
 
-    // Проверка, что задача находится на проверке
-    if ($task->status !== Task::STATUS_ON_REVIEW) {
-        return redirect()->back()->with('error', 'Невозможно продолжить это задание.');
+    // Mark the task as failed (only for the author)
+    public function fail(Task $task)
+    {
+        // Check if the current user is the task author
+        if ($task->user_id !== Auth::id()) {
+            abort(403, 'You do not have permission for this task.');
+        }
+
+        // Check if the task is under review
+        if ($task->status !== Task::STATUS_ON_REVIEW) {
+            return redirect()->back()->with('error', 'Cannot continue this task.');
+        }
+
+        $task->update([
+            'status' => 'failed',
+        ]);
+
+        return redirect()->back()->with('success', 'Task marked as failed.');
     }
 
-    // Возвращаем задачу в статус "В работе"
-    $task->update([
-        'status' => Task::STATUS_IN_PROGRESS,
-        'start_time' => now(), // Сбрасываем таймер
-    ]);
-
-    return redirect()->back()->with('success', 'Задание возвращено в работу.');
-}
-
-// Задача провалена только для автора
-public function fail(Task $task)
-{
-
-// Проверка, что текущий пользователь — это автор задачи
-if ($task->user_id !== Auth::id()) {
-    abort(403, 'У вас нет прав для этого задания.');
-}
-
-// Проверка, что задача находится на проверке
-if ($task->status !== Task::STATUS_ON_REVIEW) {
-    return redirect()->back()->with('error', 'Невозможно продолжить это задание.');
-}
-
-    $task->update([
-        'status' => 'failed',
-        
-    ]);
-    return redirect()->back()->with('success', 'Задание помечено как проваленное');
-}
-
-    // Оценка задачи (только для автора)
+    // Rate the task (only for the author)
     public function rate(Request $request, Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'Только автор может оценить задачу.');
+            abort(403, 'Only the author can rate the task.');
         }
 
         $request->validate([
@@ -276,6 +268,6 @@ if ($task->status !== Task::STATUS_ON_REVIEW) {
 
         $task->update(['rating' => $request->rating]);
 
-        return redirect()->back()->with('success', 'Оценка сохранена.');
+        return redirect()->back()->with('success', 'Rating saved.');
     }
 }

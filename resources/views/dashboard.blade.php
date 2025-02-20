@@ -1,9 +1,9 @@
 <x-guest-layout>
     <p class="task-line">
-        Вы вошли в систему!
+        You are logged in!
     </p>
     <br>
     <p  class="task-line2">
-        Полноценная панель управления находится в разработке.
+        A full-fledged control panel is under development.
     </p>
 </x-guest-layout>

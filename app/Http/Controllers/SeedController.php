@@ -25,7 +25,7 @@ class SeedController extends Controller
             ->exists();
 
         if ($onseedExists) {
-            $message = "Сид-фраза уже была получена.";
+            $message = "The seed phrase has already been received.";
             return view('seed', [
                 'keyword' => $keyword,
                 'message' => $message,
@@ -71,11 +71,11 @@ class SeedController extends Controller
         $storedSeedExists = Seed::where('user_id', $user_id)->exists();
 
         if ($storedSeedExists) {
-            return redirect()->back()->with('error', 'Сид-фраза была сохранена.');
+            return redirect()->back()->with('error', 'The seed phrase has been saved.');
         }
 
         Seed::create($seedWords);
-        $success = 'Поздравляем с регистрацией!';
+        $success = 'Congratulations on registering!';
 
         return redirect()->back()->with('success', $success);
     }
