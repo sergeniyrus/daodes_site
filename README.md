@@ -107,4 +107,4 @@ DAODES is not just a platform but a new paradigm for interaction in Web3. We off
 
 **Thank you for your attention! Let's build the future together!**
 
-[Become part of the team](https://daodes.space/register)
+<a href="https://daodes.space/register" target="_blank">Become part of the team</a>
