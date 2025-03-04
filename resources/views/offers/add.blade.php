@@ -1,7 +1,7 @@
 @extends('template')
 
 @section('title_page')
-    Создать предложение
+Create an offer
 @endsection
 
 @section('main')
@@ -96,48 +96,48 @@
         
     </style>
 
-    <div class="container">
-        <h2 class="text-center">Создать предложение</h2>
+<div class="container">
+    <h2 class="text-center">Create Offer</h2>
 
-        <form id="offers-form" method="POST" action="{{ route('offers.create') }}" enctype="multipart/form-data">
-            @csrf
+    <form id="offers-form" method="POST" action="{{ route('offers.create') }}" enctype="multipart/form-data">
+        @csrf
 
-            <div class="form-group">
-                <label for="title">Название предложения</label>
-                <input type="text" name="title" class="input_dark" />
+        <div class="form-group">
+            <label for="title">Offer Title</label>
+            <input type="text" name="title" class="input_dark" value="{{ htmlspecialchars(old('title'), ENT_QUOTES, 'UTF-8') }}" />
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select name="category" class="input_dark">
+                <option value="0" selected>Select a category</option>
+                @foreach (DB::table('category_offers')->get() as $category)
+                    <option value="{{ htmlspecialchars($category->id, ENT_QUOTES, 'UTF-8') }}">{{ htmlspecialchars($category->name, ENT_QUOTES, 'UTF-8') }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="filename">Image</label>
+            <div class="file-input-wrapper">
+                <img id="preview" src="#" alt="Image preview">
+                <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">Choose file</button>
+                <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+                <div id="file-name">No file chosen</div>
             </div>
+            <p style="color: red; text-align: center; margin-top: 20px; font-size:0.9rem;">The image must be 1:1. The file name must be in English.</p>
+        </div>
 
-            <div class="form-group">
-                <label for="category">Тема</label>
-                <select name="category" class="input_dark">
-                    <option value="0" selected>Выберите категорию</option>
-                    @foreach (DB::table('category_offers')->get() as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+        <div class="form-group">
+            <label for="content">Offer Content</label>
+            <textarea id="editor" name="content" rows="10" placeholder="Enter the offer text">{{ htmlspecialchars(old('content'), ENT_QUOTES, 'UTF-8') }}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label for="filename">Картинка</label>
-                <div class="file-input-wrapper">
-                    <img id="preview" src="#" alt="Превью изображения">
-                    <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">Выберите файл</button>
-                    <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
-                    <div id="file-name">Файл не выбран</div>
-                </div>
-                <p style="color: red; text-align: center; margin-top: 20px; font-size:0.9rem;">Изображение должно быть 1:1. Имя файла должно быть на английском.</p>
-            </div>
-
-            <div class="form-group">
-                <label for="content">Содержание предложения</label>
-                <textarea id="editor" name="content" rows="10" placeholder="Введите текст предложения"></textarea>
-            </div>
-
-            <div style="text-align: center;">
-                <button type="submit" class="blue_btn">Создать предложение</button>
-            </div>
-        </form>
-    </div>
+        <div style="text-align: center;">
+            <button type="submit" class="blue_btn">Create Offer</button>
+        </div>
+    </form>
+</div>
 
     
     {{-- // Инициализация cropper --}}

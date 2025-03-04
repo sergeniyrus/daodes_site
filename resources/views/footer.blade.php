@@ -16,7 +16,7 @@
         }
 
         .icons-img {
-            width: 100%;
+            /* width: 100%; */
             margin-left: 10px;
             margin-right: 10px;
         }
@@ -28,11 +28,11 @@
 
         .scrollup {
             width: 50px;
-            height: 52px;
+            height: 60px;
             opacity: 0.7;
             position: fixed;
-            bottom: 50px;
-            right: 50px;
+            bottom: 30px;
+            left: 30px;
             text-indent: -9999px;
             background: url("https://ipfs.sweb.ru/ipfs/QmPHW1dLQUytt9rzxAJbpeJXs67Lu9BzK5m3k8hAZh4qr3/public/main/b_top.png") no-repeat;
         }
@@ -43,11 +43,11 @@
             <div class="icons-img">
                 <a href="https://t.me/des_info_chat"><img src="/img/icons_ss/Telegram_white.svg" alt="" /></a>
             </div>
-            <div class="icons-img">
+            {{-- <div class="icons-img">
                 <a href="https://vk.com/daodes_space"><img src="/img/icons_ss/VK_white.svg" alt="" /></a>
-            </div>
+            </div> --}}
             <div class="icons-img">
-                <a href="https://www.youtube.com/channel/UCukOsQwfyqApUuFX8UtisTg"><img
+                <a href="https://youtu.be/ferfRPs7sEE?si=pX3sQeEhPpQ1UR_N"><img
                         src="/img/icons_ss/Youtube_white.svg" alt="" /></a>
             </div>
         </div>

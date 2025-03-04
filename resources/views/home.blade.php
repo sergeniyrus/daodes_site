@@ -23,7 +23,7 @@
                 color: #ffffff;
                 background: #0b0c18;
                 padding: 5px 10px;
-                font-size: 0.875rem;
+                font-size: 1.3rem;
                 border: 1px solid gold;
                 border-radius: 10px;
                 transition: box-shadow 0.3s ease, transform 0.3s ease;
@@ -59,7 +59,7 @@
             <div class="">
                 <!-- <h1>Decentralized Ecosystems Based on DAO</h1> -->
                 {{-- <strong>Decentralized Ecosystems Based on DAO</strong> --}}
-                <img src="/img/home/1.png">
+                <img src="/img/home/1.png" class="spacer">
                 <p class="spacer">
                     DAODES presents an innovative decentralized ecosystem built on the principles of DAO (Decentralized
                     Autonomous Organization). Our mission is to create a universal platform for Web3 that integrates
@@ -92,7 +92,7 @@
                 <!-- Описания с якорями -->
                 <p class="spacer" id="custom-blockchain">
                     {{-- <strong>Custom Blockchain Based on Cosmos SDK</strong> --}}
-                    <img src="/img/home/2.png">
+                    <img src="/img/home/2.png" class="spacer">
                     We have developed a high-performance blockchain using the open-source Cosmos SDK. It offers scalability,
                     security, and compatibility with other blockchains in the Cosmos ecosystem. Additionally, it supports
                     smart contracts and cross-chain interoperability.
@@ -100,7 +100,7 @@
 
                 <p class="spacer" id="decentralized-messenger">
                     {{-- <strong>Unique Decentralized Messenger</strong> --}}
-                    <img src="/img/home/3.png">
+                    <img src="/img/home/3.png" class="spacer">
                     Our decentralized messenger ensures complete data privacy and security. It integrates with the DAODES
                     ecosystem for community management and voting, making it applicable in business, education, and social
                     projects.
@@ -108,14 +108,14 @@
 
                 <p class="spacer" id="native-coin">
                     {{-- <strong>Native Coin and Stablecoins</strong> --}}
-                    <img src="/img/home/4.png">
+                    <img src="/img/home/4.png" class="spacer">
                     DAODES native token (DDS) is used for transaction fees, voting, and staking. We also offer stablecoins
                     pegged to fiat currencies and crypto assets to ensure stability and convenience in transactions.
                 </p>
 
                 <p class="spacer" id="web3-platform">
                     {{-- <strong>Web3 Application Platform</strong> --}}
-                    <img src="/img/home/5.png">
+                    <img src="/img/home/5.png" class="spacer">
                     Our platform provides a universal environment for developing and launching decentralized applications
                     (dApps). It supports various sectors, including finance, education, logistics, gaming, and social
                     projects.
@@ -123,21 +123,21 @@
 
                 <p class="spacer" id="decision-making">
                     {{-- <strong>Unique Decision-Making System</strong> --}}
-                    <img src="/img/home/6.png">
+                    <img src="/img/home/6.png" class="spacer">
                     DAO decisions are recorded in IPFS (InterPlanetary File System) to ensure transparency and immutability.
                     Every community member can submit proposals and participate in voting.
                 </p>
 
                 <p class="spacer" id="task-exchange">
                     {{-- <strong>Task Exchange Platform</strong> --}}
-                    <img src="/img/home/7.png">
+                    <img src="/img/home/7.png" class="spacer">
                     Our task exchange platform allows users to find contractors and complete tasks. Payments can be made in
                     DAODES tokens or stablecoins, and a rating system ensures service quality.
                 </p>
 
                 <p class="spacer" id="reward-system">
                     {{-- <strong>Reward System</strong> --}}
-                    <img src="/img/home/8.png">
+                    <img src="/img/home/8.png" class="spacer">
                     Application developers receive up to 30% of transactions in their programs, incentivizing the creation
                     of
                     high-quality and in-demand dApps.
@@ -145,7 +145,7 @@
 
                 <p class="spacer" id="proof-of-time">
                     {{-- <strong>Proof of Time (PoT) Consensus</strong> --}}
-                    <img src="/img/home/9.png">
+                    <img src="/img/home/9.png" class="spacer">
                     Our innovative consensus algorithm, Proof of Time (PoT), considers the time spent in the network,
                     ensuring
                     fair reward distribution and preventing centralization.
@@ -153,7 +153,7 @@
 
                 <p class="spacer" id="activity-tracking">
                     {{-- <strong>Activity Tracking System</strong> --}}
-                    <img src="/img/home/10.png">
+                    <img src="/img/home/10.png" class="spacer">
                     We track each participant's contribution to the ecosystem's development and limit a single participant's
                     influence share to no more than 8%, ensuring decentralization.
                 </p>
@@ -161,7 +161,7 @@
                 <!-- Market and Opportunities -->
                 <p class="spacer" id="market-opportunities">
                     {{-- <strong>Market and Opportunities</strong> --}}
-                    <img src="/img/home/11.png">
+                    <img src="/img/home/11.png" class="spacer">
                     The Web3 and DAO market is growing rapidly, and DAODES occupies a unique niche by combining technologies
                     and tools for creating decentralized ecosystems. Our platform is suitable for businesses, government
                     organizations, startups, and communities.
@@ -170,7 +170,7 @@
                 <!-- Financial Model -->
                 <p class="spacer" id="financial-model">
                     {{-- <strong>Financial Model</strong> --}}
-                    <img src="/img/home/12.png">
+                    <img src="/img/home/12.png" class="spacer">
                     Primary revenue sources include transaction fees, platform usage fees, staking, and token issuance.
                     Investments will be directed toward blockchain development, marketing, and team expansion.
                 </p>
@@ -178,7 +178,7 @@
                 <!-- Roadmap -->
                 <p class="spacer" id="roadmap">
                     {{-- <strong>Roadmap</strong> --}}
-                    <img src="/img/home/13.png">
+                    <img src="/img/home/13.png" class="spacer">
                     <strong>2025–2026:</strong> Launch of the main blockchain network, DDS token issuance, release of the
                     messenger, and task exchange.
                     <br>
@@ -189,7 +189,7 @@
 
                 <!-- команда -->
                 <div class="spacer" id="team">
-                    <img src="/img/home/14.png">
+                    <img src="/img/home/14.png" class="spacer">
                     <h1>Our Team — Our Strength</h1>
                     <p><strong>Sergey</strong> — Technical Lead. <strong>Expert in programming with extensive
                             experience.</strong> Passionate about innovation and new technologies.
@@ -209,7 +209,7 @@
                 <!-- Conclusion -->
 
                 <p class="spacer" id="conclusion">
-                    <img src="/img/home/15.png">
+                    <img src="/img/home/15.png" class="spacer">
                     DAODES is not just a platform but a new paradigm for interaction in Web3. We offer investors a unique
                     opportunity to be part of the revolution in decentralized technologies.
                 </p>

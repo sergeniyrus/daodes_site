@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
@@ -25,20 +25,20 @@
 </head>
 <body>
     <div class="container">
-        <div class="date">Дата: {{ \Carbon\Carbon::now()->format('d.m.Y') }} г.</div>
-        <h1>Решение по предложению</h1>
+        <div class="date">Date: {{ \Carbon\Carbon::now()->format('d.m.Y') }}</div>
+        <h1>Offer Decision</h1>
         <div class="section">
             <h2>{{ $offer->title }}</h2>
             {!! $offer->content !!}
         </div>
         <div class="stats">
-            <h3>Результаты голосования</h3>
-            <p><strong>За:</strong> {{ $za_percentage }}%</p>
-            <p><strong>Против:</strong> {{ $no_percentage }}%</p>
-            <p><strong>Не голосовало:</strong> {{ $vozd_percentage }}%</p>
+            <h3>Voting Results</h3>
+            <p><strong>For:</strong> {{ $za_percentage }}%</p>
+            <p><strong>Against:</strong> {{ $no_percentage }}%</p>
+            <p><strong>Did not vote:</strong> {{ $vozd_percentage }}%</p>
         </div>
         <div class="section comments">
-            <h3>Обсуждение:</h3>
+            <h3>Discussion:</h3>
             @foreach ($comments as $comment)
                 <div class="comment">
                     <p><strong>{{ $comment->author }}:</strong> {!! $comment->content !!}</p>
@@ -46,21 +46,21 @@
             @endforeach
         </div>
         <div class="section votes">
-            <h3>Голоса участников:</h3>
+            <h3>Participants' Votes:</h3>
             @foreach ($votes as $vote)
                 <div class="vote">
-                    <p><strong>{{ $vote->user }}:</strong> {{ $vote->vote == 1 ? 'За' : 'Против' }}</p>
+                    <p><strong>{{ $vote->user }}:</strong> {{ $vote->vote == 1 ? 'For' : 'Against' }}</p>
                 </div>
             @endforeach
         </div>
         <?php 
 if ($za_percentage > $no_percentage) {
-    echo '<h1>Предложение принято.</h1>';
+    echo '<h1>The offer has been accepted.</h1>';
 } elseif ($za_percentage < $no_percentage) {
-    echo '<h1>Предложение отклонено.</h1>';
+    echo '<h1>The offer has been rejected.</h1>';
 } else {
-    // Обработка случая, когда проценты равны
-    echo '<h1>Решение не принято, так как голоса за и против равны.</h1>';
+    // Handling the case where percentages are equal
+    echo '<h1>No decision was made, as the votes for and against are equal.</h1>';
 }
 ?>
 

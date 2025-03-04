@@ -4,8 +4,8 @@
     
 <style>
     .good {
-  min-width: 60%;
-  max-width: 80%;
+  /* min-width: 60%; */
+  max-width: 500px;
   height: auto;
   margin: 50px auto;
   color: rgb(255, 255, 255);

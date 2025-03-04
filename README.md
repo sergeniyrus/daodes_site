@@ -1,66 +1,110 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# DAODES: Decentralized Ecosystems Based on DAO
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+![DAODES Banner](public/img/home/1.png)
 
-## About Laravel
+DAODES presents an innovative decentralized ecosystem built on the principles of DAO (Decentralized Autonomous Organization). Our mission is to create a universal platform for Web3 that integrates blockchain technology, decentralized applications, and unique tools for management and interaction.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Key Advantages of DAODES
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- [Custom Blockchain Based on Cosmos SDK](#custom-blockchain)
+- [Unique Decentralized Messenger](#decentralized-messenger)
+- [Native Coin and Stablecoins](#native-coin)
+- [Web3 Application Platform](#web3-platform)
+- [Unique Decision-Making System](#decision-making)
+- [Task Exchange Platform](#task-exchange)
+- [Reward System](#reward-system)
+- [Proof of Time (PoT) Consensus](#proof-of-time)
+- [Activity Tracking System](#activity-tracking)
+- [Market and Opportunities](#market-opportunities)
+- [Financial Model](#financial-model)
+- [Roadmap](#roadmap)
+- [Team](#team)
+- [Conclusion](#conclusion)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Custom Blockchain Based on Cosmos SDK
+![Custom Blockchain](publicpublic/img/home/2.png)
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+We have developed a high-performance blockchain using the open-source Cosmos SDK. It offers scalability, security, and compatibility with other blockchains in the Cosmos ecosystem. Additionally, it supports smart contracts and cross-chain interoperability.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Unique Decentralized Messenger
+![Decentralized Messenger](public/img/home/3.png)
 
-## Laravel Sponsors
+Our decentralized messenger ensures complete data privacy and security. It integrates with the DAODES ecosystem for community management and voting, making it applicable in business, education, and social projects.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### Native Coin and Stablecoins
+![Native Coin](public/img/home/4.png)
 
-### Premium Partners
+DAODES native token (DDS) is used for transaction fees, voting, and staking. We also offer stablecoins pegged to fiat currencies and crypto assets to ensure stability and convenience in transactions.
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Web3 Application Platform
+![Web3 Platform](public/img/home/5.png)
 
-## Contributing
+Our platform provides a universal environment for developing and launching decentralized applications (dApps). It supports various sectors, including finance, education, logistics, gaming, and social projects.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Unique Decision-Making System
+![Decision-Making System](public/img/home/6.png)
 
-## Code of Conduct
+DAO decisions are recorded in IPFS (InterPlanetary File System) to ensure transparency and immutability. Every community member can submit proposals and participate in voting.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Task Exchange Platform
+![Task Exchange](public/img/home/7.png)
 
-## Security Vulnerabilities
+Our task exchange platform allows users to find contractors and complete tasks. Payments can be made in DAODES tokens or stablecoins, and a rating system ensures service quality.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Reward System
+![Reward System](public/img/home/8.png)
 
-## License
+Application developers receive up to 30% of transactions in their programs, incentivizing the creation of high-quality and in-demand dApps.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Proof of Time (PoT) Consensus
+![Proof of Time](public/img/home/9.png)
+
+Our innovative consensus algorithm, Proof of Time (PoT), considers the time spent in the network, ensuring fair reward distribution and preventing centralization.
+
+### Activity Tracking System
+![Activity Tracking](public/img/home/10.png)
+
+We track each participant's contribution to the ecosystem's development and limit a single participant's influence share to no more than 8%, ensuring decentralization.
+
+### Market and Opportunities
+![Market Opportunities](public/img/home/11.png)
+
+The Web3 and DAO market is growing rapidly, and DAODES occupies a unique niche by combining technologies and tools for creating decentralized ecosystems. Our platform is suitable for businesses, government organizations, startups, and communities.
+
+### Financial Model
+![Financial Model](public/img/home/12.png)
+
+Primary revenue sources include transaction fees, platform usage fees, staking, and token issuance. Investments will be directed toward blockchain development, marketing, and team expansion.
+
+### Roadmap
+![Roadmap](public/img/home/13.png)
+
+- **2025–2026:** Launch of the main blockchain network, DDS token issuance, release of the messenger, and task exchange.
+- **2026:** Integration with major blockchain ecosystems, launch of the dApp platform.
+- **2027:** Expansion of DAO functionality, entry into the international market.
+
+### Team
+![Team](public/img/home/14.png)
+
+#### Our Team — Our Strength
+
+- **Sergey** — Technical Lead. Expert in programming with extensive experience. Passionate about innovation and new technologies.
+- **Denis** — Marketing Guru. Enthusiast of blockchain and its potential. Sees the societal benefits of technology.
+- **Valery** — Project Author and Team Visionary. Unites the team and guides the project.
+
+Aims to benefit humanity through the project's technologies.
+
+### Conclusion
+![Conclusion](public/img/home/15.png)
+
+DAODES is not just a platform but a new paradigm for interaction in Web3. We offer investors a unique opportunity to be part of the revolution in decentralized technologies.
+
+---
+
+**Thank you for your attention! Let's build the future together!**
+
+[Become part of the team](/register)

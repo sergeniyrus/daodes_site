@@ -1,7 +1,7 @@
 @extends('template')
 
 @section('title_page')
-    Редактировать предложение
+Edit the offer
 @endsection
 
 @section('main')
@@ -104,69 +104,69 @@
         
     </style>
 
-    <div class="container">
-        <h2 class="text-center">Редактировать предложение</h2>
+<div class="container">
+    <h2 class="text-center">Edit Offer</h2>
 
-        <!-- Validation Errors -->
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+    <!-- Validation Errors -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-        <form id="offer-form" method="POST" action="{{ route('offers.update', ['id' => $offer->id]) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+    <form id="offer-form" method="POST" action="{{ route('offers.update', ['id' => $offer->id]) }}" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
 
-            <div class="form-group">
-                <label for="title">Название предложения</label>
-                <input type="text" name="title" class="input_dark" value="{{ old('title', $offer->title) }}">
-            </div>
+        <div class="form-group">
+            <label for="title">Offer Title</label>
+            <input type="text" name="title" class="input_dark" value="{{ old('title', $offer->title) }}">
+        </div>
 
-            <div class="form-group">
-                <label for="category">Категория</label>
-                <select name="category" class="input_dark">
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ $category->id == $offer->category_id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select name="category" class="input_dark">
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" {{ $category->id == $offer->category_id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="filename">Изображение предложения</label>
-                <div class="file-input-wrapper">
-                    <!-- Если изображение существует, показываем его, иначе скрываем -->
-                    <img id="preview" src="{{ $offer->img ?? '#' }}" alt="Превью изображения"
-                        style="display: {{ $offer->img ? 'block' : 'none' }}; max-width: 100px;">
-            
-                    <div class="file-info">
-                        <!-- Если изображение есть, выводим имя файла, иначе пишем "Файл не выбран" -->
-                        <span id="file-name" class="file-name">{{ $offer->img ? basename($offer->img) : 'Файл не выбран' }}</span>
-                        <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">
-                            Выберите файл
-                        </button>
-                        <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
-                    </div>
+        <div class="form-group">
+            <label for="filename">Offer Image</label>
+            <div class="file-input-wrapper">
+                <!-- If an image exists, show it; otherwise, hide it -->
+                <img id="preview" src="{{ $offer->img ?? '#' }}" alt="Image Preview"
+                    style="display: {{ $offer->img ? 'block' : 'none' }}; max-width: 100px;">
+        
+                <div class="file-info">
+                    <!-- If an image exists, display the file name; otherwise, show "No file chosen" -->
+                    <span id="file-name" class="file-name">{{ $offer->img ? basename($offer->img) : 'No file chosen' }}</span>
+                    <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">
+                        Choose File
+                    </button>
+                    <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
                 </div>
-                <p style="color: red; text-align: center; font-size: 0.9rem;">Изображение должно быть 1:1. Имя файла должно быть на английском.</p>
             </div>
-            
-            <div class="form-group">
-                <label for="content">Содержание предложения</label>
-                <textarea id="editor" name="content" rows="10" class="input_dark">{{ old('content', $offer->content) }}</textarea>
-            </div>
+            <p style="color: red; text-align: center; font-size: 0.9rem;">The image must be 1:1. The file name must be in English.</p>
+        </div>
+        
+        <div class="form-group">
+            <label for="content">Offer Content</label>
+            <textarea id="editor" name="content" rows="10" class="input_dark">{{ old('content', $offer->content) }}</textarea>
+        </div>
 
-            <div style="text-align: center;">
-                <button type="submit" class="blue_btn">Сохранить изменения</button>
-            </div>
-        </form>
-    </div>
+        <div style="text-align: center;">
+            <button type="submit" class="blue_btn">Save Changes</button>
+        </div>
+    </form>
+</div>
 
     {{-- // Инициализация cropper --}}
     <script src="{{ asset('js/image-cropper.js') }}"></script>

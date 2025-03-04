@@ -36,7 +36,7 @@ Route::get('good/{post}/{id}/{action}', [HomeController::class, 'good'])->name('
 // Разделы
 //Route::get('roadmap', [RoadMapController::class, 'roadmap'])->name('roadmap');
 
-//Route::get('/dao', [DController::class, 'offers'])->name('dao');
+Route::get('/white_paper', [DController::class, 'whitepaper'])->name('white_paper');
 
 //Route::get('/category/{post}/{id}', [CategoryController::class, 'categorySort'])->name('category.sort');
 //Route::get('/page/{post}/{id}', [PageController::class, 'page_sort'])->name('page.sort');
@@ -71,10 +71,6 @@ Route::prefix('newscategories')->name('newscategories.')->middleware('auth')->gr
     Route::put('/{id}', [NewsController::class, 'categoryUpdate'])->name('update');
     Route::delete('/{id}', [NewsController::class, 'categoryDestroy'])->name('destroy');
 });
-
-
-
-
 
 // Управление предложениями
 Route::get('/offers/add', [OffersController::class, 'add'])->name('offers.add')->middleware('auth');

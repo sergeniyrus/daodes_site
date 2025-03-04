@@ -173,20 +173,20 @@
 <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
 <div class="knopkodav">
     <div class="header-menu" id="home-menu">
-        <a href="https://daodes.space/home" title="Home">
+        <a href="/home" title="Home">
             <span class="logo_name"><img src="/img/bottom/home.png" alt="Home"></span>
         </a>
     </div>
     <div class="header-menu has-submenu" id="news-menu">
-        <a href="https://daodes.space/news" title="News">
+        <a href="/news" title="News">
             <span class="logo_name"><img src="/img/bottom/dn.webp" alt="News"></span></a>
     </div>
     <div class="header-menu has-submenu" id="dao-menu">
-        <a href="https://daodes.space/offers" title="Decision Making">
+        <a href="/offers" title="Decision Making">
             <span class="logo_name"><img src="/img/bottom/dd.jpg" alt="Decision Making"></span></a>
     </div>
     <div class="header-menu has-submenu" id="tasks-menu">
-        <a href="https://daodes.space/tasks" title="Task Marketplace">
+        <a href="/tasks" title="Task Marketplace">
             <span class="logo_name"><img src="/img/bottom/tasks2.png" alt="Task Marketplace"></span></a>
     </div>
     {{-- <div class="header-menu has-submenu" id="wallet-menu">
@@ -194,7 +194,7 @@
             <span><img src="/img/bottom/deschat.png" alt="DESChat"></span></a>
     </div> --}}
     <div class="header-menu" id="paper-menu">
-        <a href="https://1drv.ms/w/c/5a7adc7e00e1bf69/Efnfo2ZmMMxCrn_3JBLp_u4B6ihEtWHcoonUQMxvUx7WVw?e=uHdILI" title="White paper" target="_blank">
+        <a href="/white_paper" title="White paper">
             <span><img src="/img/bottom/paper.png" alt="White paper"></span>
         </a>
     </div>
