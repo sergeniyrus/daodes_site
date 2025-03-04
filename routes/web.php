@@ -16,8 +16,8 @@ use App\Http\Controllers\{
     TasksCategoryController,
     BidController,
     HomeController,
-    RoadMapController,
-    DController,
+    TeamController,
+    WpController,
     CategoryController,
     PageController,
     UserProfileController,
@@ -33,10 +33,10 @@ Route::get('home', [HomeController::class, 'home'])->name('home.alt');
 // Маршрут с дополнительными параметрами
 Route::get('good/{post}/{id}/{action}', [HomeController::class, 'good'])->name('good');
 
-// Разделы
-//Route::get('roadmap', [RoadMapController::class, 'roadmap'])->name('roadmap');
+// team
+Route::get('team', [TeamController::class, 'team'])->name('team');
 
-Route::get('/white_paper', [DController::class, 'whitepaper'])->name('white_paper');
+Route::get('/white_paper', [WpController::class, 'whitepaper'])->name('white_paper');
 
 //Route::get('/category/{post}/{id}', [CategoryController::class, 'categorySort'])->name('category.sort');
 //Route::get('/page/{post}/{id}', [PageController::class, 'page_sort'])->name('page.sort');
@@ -227,11 +227,11 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 
-Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
+//Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
 
 //Route::get('/chatify', [\App\Http\Controllers\ChatifyController::class, 'index'])->name('chat');
 
-Route::get('/chatify', [MessagesController::class, 'index'])->name('chatify');
+//Route::get('/chatify', [MessagesController::class, 'index'])->name('chatify');
 
 
 // Route::domain('deschat.daodes.space')->group(function () {
