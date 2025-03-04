@@ -8,16 +8,16 @@ DAODES presents an innovative decentralized ecosystem built on the principles of
 
 ---
 
-- [Custom Blockchain Based on Cosmos SDK](#custom-blockchain)
-- [Unique Decentralized Messenger](#decentralized-messenger)
-- [Native Coin and Stablecoins](#native-coin)
-- [Web3 Application Platform](#web3-platform)
-- [Unique Decision-Making System](#decision-making)
-- [Task Exchange Platform](#task-exchange)
+- [Custom Blockchain Based on Cosmos SDK](#custom-blockchain-based-on-cosmos-sdk)
+- [Unique Decentralized Messenger](#unique-decentralized-messenger)
+- [Native Coin and Stablecoins](#native-coin-and-stablecoins)
+- [Web3 Application Platform](#web3-application-platform)
+- [Unique Decision-Making System](#unique-decision-making-system)
+- [Task Exchange Platform](#task-exchange-platform)
 - [Reward System](#reward-system)
-- [Proof of Time (PoT) Consensus](#proof-of-time)
-- [Activity Tracking System](#activity-tracking)
-- [Market and Opportunities](#market-opportunities)
+- [Proof of Time (PoT) Consensus](#proof-of-time-pot-consensus)
+- [Activity Tracking System](#activity-tracking-system)
+- [Market and Opportunities](#market-and-opportunities)
 - [Financial Model](#financial-model)
 - [Roadmap](#roadmap)
 - [Team](#team)
@@ -26,7 +26,7 @@ DAODES presents an innovative decentralized ecosystem built on the principles of
 ---
 
 ### Custom Blockchain Based on Cosmos SDK
-![Custom Blockchain](publicpublic/img/home/2.png)
+![Custom Blockchain](public/img/home/2.png)
 
 We have developed a high-performance blockchain using the open-source Cosmos SDK. It offers scalability, security, and compatibility with other blockchains in the Cosmos ecosystem. Additionally, it supports smart contracts and cross-chain interoperability.
 
@@ -107,4 +107,4 @@ DAODES is not just a platform but a new paradigm for interaction in Web3. We off
 
 **Thank you for your attention! Let's build the future together!**
 
-[Become part of the team](/register)
+[Become part of the team](https://daodes.space/register)
