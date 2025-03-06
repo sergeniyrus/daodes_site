@@ -134,7 +134,7 @@
             <div class="file-input-wrapper">
                 <!-- If an avatar exists, show it; otherwise, do not display the image -->
                 <img id="preview" src="{{ $profile->avatar_url ?? '#' }}" alt="Image Preview"
-                    style="display: {{ $profile->avatar_url ? 'block' : 'none' }};">
+                    style="display: {{ $profile->avatar_url ? 'block' : 'none' }};  max-width: 100px;">
 
                 <div class="file-info">
                     <!-- If an avatar exists, display the file name; otherwise, show "No file chosen" -->
@@ -252,7 +252,7 @@
     </form>
 </div>
 
-    <script>
+    {{-- <script>
         document.getElementById("file-input").onchange = function(event) {
             const file = event.target.files[0];
             const fileNameElement = document.getElementById("file-name");
@@ -271,5 +271,7 @@
                 fileNameElement.textContent = "The file is not selected";
             }
         };
-    </script>
+    </script> --}}
+    {{-- // Инициализация cropper --}}
+    <script src="{{ asset('js/image-cropper.js') }}"></script>
 @endsection

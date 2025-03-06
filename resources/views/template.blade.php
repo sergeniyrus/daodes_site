@@ -43,6 +43,9 @@
     @vite(['resources/css/app.css', 'resources/css/main.css', 'resources/js/app.js', 'resources/js/block.js', 'resources/js/bt_top.js'])
     
     <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="DAODES_Robot" data-size="large" data-auth-url="https://daodes.space/" data-request-access="write"></script>
+
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
 </head>
 
 <body>
@@ -70,6 +73,13 @@
                 transform: translateX(-100%);
             }
         }
+        .avatar-img {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid gold;
+    }
     </style>
 
     @include('partials.infotrade')

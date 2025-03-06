@@ -1,20 +1,5 @@
-<style>
-  
-  p {
-      margin-bottom: 20px;
-  }
-  ul {
-      list-style-type: disc;
-      margin-left: 20px;
-      margin-bottom: 20px;
-  }
-  ul li {
-      margin-bottom: 10px;
-  }
-</style>
-
 <div>
-  <p>When conducting financial transactions on the DES network, fees will be charged for each such transaction and distributed within the project as follows:</p>
+  <h4>When conducting financial transactions on the DES network, fees will be charged for each such transaction and distributed within the project as follows:</h4>
   <ul>
       <li><strong>30%:</strong> Remuneration to the creators of DES ecosystem products from transactions taking place directly on their applications.</li>
       <li><strong>20%:</strong> Reward for validators/delegators.</li>

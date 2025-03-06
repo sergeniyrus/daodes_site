@@ -1,33 +1,3 @@
-<style>
-    p {
-      margin-bottom: 20px;
-  }
-  ul {
-      list-style-type: disc;
-      margin-left: 20px;
-      margin-bottom: 20px;
-  }
-  ul li {
-      margin-bottom: 10px;
-  }
-  ol {
-      list-style-type: decimal;
-      margin-left: 20px;
-      margin-bottom: 20px;
-  }
-  ol li {
-      margin-bottom: 10px;
-  }
-  ol ul {
-      list-style-type: circle;
-      margin-left: 20px;
-      margin-top: 10px;
-  }
-  ol ul li {
-      margin-bottom: 5px;
-  }
-</style>
-
 <div>
   <h2>Token Implementation During Investment Rounds</h2>
   <p>The implementation of tokens during the investment rounds for project development will occur in two stages:</p>

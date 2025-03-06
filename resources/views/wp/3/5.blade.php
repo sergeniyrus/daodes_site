@@ -1,20 +1,5 @@
-<style>
-  
-  p {
-      margin-bottom: 20px;
-  }
-  ul {
-      list-style-type: disc;
-      margin-left: 20px;
-      margin-bottom: 20px;
-  }
-  ul li {
-      margin-bottom: 10px;
-  }
-</style>
-
 <div>
-  <p>Distribution of the Remaining 200,000,000 DES (20% of the Issue)</p>
+  <h4>Distribution of the Remaining 200,000,000 DES (20% of the Issue)</h4>
   <p>The remaining 200,000,000 DES (20% of the total issue) is distributed as follows:</p>
   <ul>
       <li><strong>40,000,000 DES (4%):</strong> Sent to the DES coin liquidity pool paired with coins from List 2, which can be adjusted by the decision of the community. The purchase of coins into the liquidity pools is implemented through the release of stablecoins backed by DES coins. These stablecoins are exchanged for targeted cryptocurrencies, which are subsequently sent to liquidity pools paired with the DES coin. This ensures the liquidity of the DES coin without spilling it into the market, which could lead to a value dump.</li>

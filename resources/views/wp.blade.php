@@ -44,14 +44,6 @@
                 width: 100%;
             }
 
-            /* .spacer {
-                                margin-bottom: 50px;
-                            }
-
-                            .pubble-app {
-                                margin: 0px auto;
-                            } */
-
             .big {
                 font-style: bold;
                 font-size: 3rem;
@@ -59,11 +51,12 @@
 
             .chapter-container {
                 margin: 15px 0;
-                border: 1px solid #2c3e50;
+                border: 1px solid #154472;
                 border-radius: 8px;
                 overflow: hidden;
                 background: #0b0c18ce;
                 height: auto;
+                transition: all 0.3s ease;
             }
 
             .chapter-header {
@@ -74,6 +67,7 @@
                 justify-content: space-between;
                 align-items: center;
                 transition: all 0.3s ease;
+                position: relative;
             }
 
             .chapter-header:hover {
@@ -82,6 +76,20 @@
 
             .chapter-header.active {
                 background: #34495e;
+            }
+
+            .chapter-header::after {
+                content: "▼";
+                font-size: 0.8em;
+                color: #d7fc09;
+                position: absolute;
+                right: 25px;
+                transition: transform 0.3s ease;
+            }
+
+            .chapter-header.active::after {
+                content: "▲";
+                transform: rotate(270deg);
             }
 
             .chapter-title {
@@ -102,29 +110,23 @@
 
             .subchapters {
                 max-height: 0;
-                /* overflow: hidden; */
-                transition: max-height 0.3s ease-out;
-                overflow: visible;
-                /* Изменено с hidden на visible */
-                position: relative;
-                /* Добавлено для корректной работы z-index */
-                z-index: 1;
-                /* Добавлено, чтобы содержимое было поверх других элементов */
-                overflow: visible;
-                /* Разрешаем содержимому выходить за пределы */
+                overflow: hidden;
+                transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+
             }
 
             .subchapter-item {
-                padding: 12px 25px;
-                border-top: 1px solid #2c3e50;
+                padding: 15px 25px;
+                border-top: 1px solid rgba(44, 62, 80, 0.5);
                 background: #0b0c18ce;
                 color: #ffffff;
                 transition: background 0.2s ease;
                 cursor: pointer;
                 position: relative;
-                /* Добавлено для корректной работы z-index */
+                transition: all 0.2s ease;
                 z-index: 2;
-                /* Добавлено, чтобы содержимое было поверх других элементов */
+
             }
 
             .subchapter-item:hover {
@@ -135,6 +137,24 @@
                 background: #1a1a2e;
             }
 
+            .subchapter-item::before {
+                content: "";
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 8px;
+                height: 8px;
+                background: #d7fc09;
+                border-radius: 50%;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+
+            .subchapter-item:hover::before {
+                opacity: 1;
+            }
+
             .subchapter-number {
                 color: #d7fc09;
                 margin-right: 10px;
@@ -143,21 +163,27 @@
             .subchapter-content {
                 max-height: 0;
                 overflow: hidden;
-                transition: max-height 0.3s ease-out;
-                padding: 0 10px;
+                transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                padding: 0 20px;
                 margin-top: 10px 0;
                 background: #0b0c18ce;
-                /* Добавлено, чтобы фон был виден */
                 position: relative;
-                /* Добавлено для корректной работы z-index */
                 z-index: 3;
-                /* Добавлено, чтобы содержимое было поверх других элементов */
+
             }
 
             .subchapter-content.open {
                 margin-top: 10px;
                 max-height: 1000vh;
+                padding: 15px 20px;
+                border: 1px solid rgba(255, 255, 255, 0.3);
             }
+
+            .active-chapter {
+                border-color: #00ccff;
+                box-shadow: 0 0 15px rgba(0, 204, 255, 0.2);
+            }
+
 
             p {
                 margin-bottom: 20px;
@@ -167,7 +193,7 @@
                 margin-bottom: 30px;
             }
 
-            .pros-cons h3 {
+            .pros-cons h3,h4, h2 {
                 color: #4CAF50;
             }
 
@@ -178,6 +204,36 @@
 
             .pros-cons ul li {
                 margin-bottom: 10px;
+            }
+
+            ul {
+                list-style-type: disc;
+                margin-left: 20px;
+                margin-bottom: 20px;
+            }
+
+            ul li {
+                margin-bottom: 10px;
+            }
+
+            ol {
+                list-style-type: upper-alpha;
+                margin-left: 20px;
+                margin-bottom: 20px;
+            }
+
+            ol li {
+                margin-bottom: 10px;
+            }
+
+            ol ul {
+                list-style-type: disc;
+                margin-left: 20px;
+                margin-top: 10px;
+            }
+
+            ol ul li {
+                margin-bottom: 5px;
             }
 
             @keyframes slideDown {
@@ -203,7 +259,7 @@
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
                         <h3 class="chapter-title">Introduction</h3>
-                        <span class="toggle-icon">▶</span>
+
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
@@ -219,7 +275,7 @@
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
                         <h3 class="chapter-title">Description of the market</h3>
-                        <span class="toggle-icon">▶</span>
+
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
@@ -262,7 +318,7 @@
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
                         <h3 class="chapter-title">Product description and proposed solution method</h3>
-                        <span class="toggle-icon">▶</span>
+
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
@@ -301,7 +357,7 @@
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
                         <h3 class="chapter-title">Tokenomics</h3>
-                        <span class="toggle-icon">▶</span>
+
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
@@ -366,7 +422,7 @@
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
                         <h3 class="chapter-title">Project management</h3>
-                        <span class="toggle-icon">▶</span>
+
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
@@ -407,10 +463,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="chapter-container">
+                {{-- <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
                         <h3 class="chapter-title">Team story</h3>
-                        <span class="toggle-icon">▶</span>
+
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
@@ -420,49 +476,73 @@
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> --}}
 
             </div>
         </div>
     </main>
     <script>
-        // Функция для раскрытия/скрытия глав
+        // Глобальная переменная для отслеживания открытой главы
+        let openChapter = null;
+
         function toggleChapter(header) {
             const container = header.parentElement;
             const subchapters = container.querySelector('.subchapters');
-            const icon = header.querySelector('.toggle-icon');
+            const isOpening = !container.classList.contains('active-chapter');
 
-            // Переключаем классы для анимации и стилей
-            header.classList.toggle('active');
-            icon.classList.toggle('rotated');
+            // Закрываем все другие главы
+            document.querySelectorAll('.chapter-container').forEach(chapter => {
+                if (chapter !== container) {
+                    chapter.classList.remove('active-chapter');
+                    chapter.querySelector('.subchapters').style.maxHeight = null;
+                    chapter.querySelector('.chapter-header').classList.remove('active');
+                }
+            });
 
-            // Раскрываем или скрываем подразделы
-            if (subchapters.style.maxHeight) {
-                subchapters.style.maxHeight = null; // Скрываем
+            // Обрабатываем текущую главу
+            container.classList.toggle('active-chapter', isOpening);
+            header.classList.toggle('active', isOpening);
+
+            if (isOpening) {
+                subchapters.style.maxHeight = subchapters.scrollHeight + "px";
+                openChapter = container;
             } else {
-                subchapters.style.maxHeight = subchapters.scrollHeight + "px"; // Раскрываем
+                subchapters.style.maxHeight = null;
+                openChapter = null;
             }
         }
 
-        // Функция для раскрытия/скрытия подразделов
         function toggleSubchapter(item) {
             const content = item.querySelector('.subchapter-content');
-            content.classList.toggle('open');
+            const isOpening = !content.classList.contains('open');
 
-            // Обновляем высоту родительского контейнера (.subchapters)
-            const subchapters = item.closest('.subchapters');
-            if (content.classList.contains('open')) {
-                // Увеличиваем высоту, чтобы вместить раскрытый контент
-                subchapters.style.maxHeight = subchapters.scrollHeight + content.scrollHeight + "px";
-            } else {
-                // Уменьшаем высоту, так как контент скрыт
-                subchapters.style.maxHeight = subchapters.scrollHeight - content.scrollHeight + "px";
+            // Закрываем все подразделы в текущей главе
+            item.parentElement.querySelectorAll('.subchapter-content').forEach(c => {
+                if (c !== content) {
+                    c.classList.remove('open');
+                    c.style.maxHeight = null;
+                    c.parentElement.classList.remove('active');
+                }
+            });
+
+            // Обновляем текущий подраздел
+            item.classList.toggle('active', isOpening);
+            content.classList.toggle('open', isOpening);
+            content.style.maxHeight = isOpening ? content.scrollHeight + "px" : null;
+
+            // Обновляем высоту родительской главы
+            if (openChapter) {
+                const subchapters = openChapter.querySelector('.subchapters');
+                subchapters.style.maxHeight = subchapters.scrollHeight + (isOpening ? content.scrollHeight : -content
+                    .scrollHeight) + "px";
             }
         }
 
-        // Инициализация по умолчанию: скрываем все подразделы
-        document.querySelectorAll('.subchapters').forEach(sub => {
-            sub.style.maxHeight = null;
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.subchapters').forEach(sub => {
+                sub.style.maxHeight = null;
+            });
         });
     </script>
 @endsection

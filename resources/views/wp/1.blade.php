@@ -3,7 +3,7 @@
 </header>
 
 <section>
-  <h2>Introduction to Web3.0</h2>
+  <h2 class="pros-cons">Introduction to Web3.0</h2>
   <p>To open the doors to the world of web3.0 for everyone, to simplify the task of getting acquainted with and understanding this global change in the Internet for all. To help them avoid mistakes when introducing the new Internet into their lives.</p>
   <p><strong>What mistake does practically every beginner make when starting their journey in crypto technology?</strong> This mistake is the main enemy of the technology itself. It is KYC authorization on exchanges!</p>
   <p>How to buy or receive your first tokens and where to store them? On centralized reliable exchanges in the form of Drops, Launchpads, or simply buy the desired currencies? Perhaps. But by starting your journey this way, you leave an indelible mark.</p>
@@ -12,7 +12,7 @@
 </section>
 
 <section>
-  <h2>Integrating Telegram with Blockchain</h2>
+  <h2  class="pros-cons">Integrating Telegram with Blockchain</h2>
   <p>To introduce the world of blockchain and cryptocurrency, we suggest combining a product used by over 700 million users (Telegram messenger) with blockchain technology. Integrate into the messenger's base code the ability to:</p>
   <ul>
       <li>Create decentralized chats without being tied to the main account.</li>
@@ -24,7 +24,7 @@
 </section>
 
 <section>
-  <h2>Our Mission</h2>
+  <h2  class="pros-cons">Our Mission</h2>
   <p>To create our project together, we, as the first small group of enthusiasts, decided to study and take the best of existing offerings in the market. To combine the strongest ideas and solutions into one maximally scalable, decentralized, and secure Blockchain.</p>
   <p>Observing the development of the blockchain industry, it can be noticed that initially, the main emphasis was placed on decentralization and security, which were perfectly provided by PoW blockchains with the network's proper development. Over time, the development of decentralized product ecosystems required an increase in network scalability. The industry began to move in this direction by replacing the poorly scalable PoW consensus with a much more adaptable PoS consensus and its derivatives. However, PoS consensus noticeably suffers in terms of decentralization.</p>
   <p>Thus, different stages of industry development highlight different priorities. In the DES project team, we are convinced that the inevitable upcoming stage of WEB3.0, like the air, requires blockchains that equally address all three problems of the blockchain trilemma, namely:</p>
@@ -38,7 +38,7 @@
 </section>
 
 <section>
-  <h2>Our Goals</h2>
+  <h2  class="pros-cons">Our Goals</h2>
   <p>We strive to create a project that allows:</p>
   <ul>
       <li>Newcomers to easily and quickly familiarize themselves with the world of web3.</li>
@@ -49,7 +49,7 @@
 </section>
 
 <section>
-  <h2>DES Ecosystem</h2>
+  <h2  class="pros-cons">DES Ecosystem</h2>
   <p>In addition to this, the DES project is creating its own ecosystem of decentralized products:</p>
   <ul>
       <li><strong>Ecosystem of a centralized messenger</strong> (based on the open-source code of Telegram (with enhancements and additions, including all its existing benefits, including user database) with a decentralized section for secure messaging exchange and the creation of a decentralized ecosystem of add-ons to it.</li>
@@ -60,7 +60,7 @@
 </section>
 
 <section>
-  <h2>DES Token</h2>
+  <h2  class="pros-cons">DES Token</h2>
   <p>Additionally, the project will have its own utility token DES with deflationary tokenomics, which will be used for:</p>
   <ul>
       <li>Algorithmic regulation of the ecosystem support of the project's stablecoin.</li>
@@ -73,5 +73,5 @@
 </section>
 
 <footer>
-  <p>Join us in revolutionizing the world of Blockchain and Web3.0!</p>
+  <h2  class="pros-cons">Join us in revolutionizing the world of Blockchain and Web3.0!</h2>
 </footer>

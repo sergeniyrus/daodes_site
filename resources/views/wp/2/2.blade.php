@@ -10,7 +10,7 @@
       <li><strong>Photo hosting (hybrid):</strong> Similar to video hosting, but for photos.</li>
       <li><strong>Audio hosting (hybrid):</strong> For storing and transmitting audio files.</li>
       <li><strong>NFT-generation of audio, photo, video, and PDF content:</strong> The ability to create NFTs from media files.</li>
-      <li><strong>Synchronous audio transfers:</strong> A feature for real-time automatic audio translation.</li>
+      <li><strong>Synchronous audio translating:</strong> A feature for real-time automatic audio translation.</li>
       <li><strong>Decentralized audio and video calls:</strong> Secure calls through a decentralized network.</li>
       <li><strong>"Portfolio Analyst":</strong> A module that allows you to monitor the trends of portfolio assets in one place, including graphs (thumbnail on the main page and full on the page) and the cost from the moment of purchase in the portfolio and for periods.</li>
       <li><strong>The button for quick transfer of crypts to stables:</strong> Useful in case of a sharp drop in the alt market. To automate the process across the entire portfolio at once.</li>

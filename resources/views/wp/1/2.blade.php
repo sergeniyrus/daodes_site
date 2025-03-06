@@ -1,22 +1,3 @@
-<style>
-    p {
-        margin-bottom: 20px;
-    }
-
-    .pros-cons {
-        margin-bottom: 30px;
-    }
-
-    .pros-cons ul {
-        list-style-type: disc;
-        margin-left: 20px;
-    }
-
-    .pros-cons ul li {
-        margin-bottom: 10px;
-    }
-</style>
-
 <div>
     <p>In the current realities of the development of decentralized solutions, more and more WEB3 applications are
         gradually appearing.0. Including messengers.</p>

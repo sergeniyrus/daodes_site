@@ -1,26 +1,3 @@
-<style>
-    p {
-        margin-bottom: 20px;
-    }
-
-    .pros-cons {
-        margin-bottom: 30px;
-    }
-
-    .pros-cons h3 {
-        color: #4CAF50;
-    }
-
-    .pros-cons ul {
-        list-style-type: disc;
-        margin-left: 20px;
-    }
-
-    .pros-cons ul li {
-        margin-bottom: 10px;
-    }
-</style>
-
 <h1>Challenges and Solutions</h1>
 
 <p>The losses of the global economy from cyber threats have more than tripled over the past 4 years and amounted to an

@@ -87,13 +87,74 @@ class Task extends Model
         return $this->status === self::STATUS_OPEN;
     }
 
+    public function isNegotiation()
+    {
+        return $this->status === self::STATUS_NEGOTIATION;
+    }
+
     public function isInProgress()
     {
         return $this->status === self::STATUS_IN_PROGRESS;
     }
 
+    public function isOnReview()
+    {
+        return $this->status === self::STATUS_ON_REVIEW;
+    }
+
     public function isCompleted()
     {
         return $this->status === self::STATUS_COMPLETED;
+    }
+
+    public function isFailed()
+    {
+        return $this->status === self::STATUS_FAILED;
+    }
+
+    public function setStatus($status)
+    {
+        if (!array_key_exists($status, self::getStatuses())) {
+            throw new \InvalidArgumentException("Invalid status: {$status}");
+        }
+
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getStatusText()
+    {
+        $statuses = self::getStatuses();
+        return $statuses[$this->status] ?? 'Неизвестный статус';
+    }
+
+    public function canUpdateStatus($newStatus)
+    {
+        if ($this->status === self::STATUS_COMPLETED || $this->status === self::STATUS_FAILED) {
+            return false;
+        }
+
+        return array_key_exists($newStatus, self::getStatuses());
+    }
+
+    public function getNextStatus()
+    {
+        switch ($this->status) {
+            case self::STATUS_OPEN:
+                return self::STATUS_NEGOTIATION;
+            case self::STATUS_NEGOTIATION:
+                return self::STATUS_IN_PROGRESS;
+            case self::STATUS_IN_PROGRESS:
+                return self::STATUS_ON_REVIEW;
+            case self::STATUS_ON_REVIEW:
+                return self::STATUS_COMPLETED;
+            default:
+                return null;
+        }
+    }
+
+    public function canBeDeleted()
+    {
+        return in_array($this->status, [self::STATUS_OPEN, self::STATUS_NEGOTIATION]);
     }
 }

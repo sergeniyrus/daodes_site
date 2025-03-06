@@ -190,14 +190,8 @@
                 <!-- команда -->
                 <div class="spacer" id="team">
                     <img src="/img/home/14.png" class="spacer">
-                    <h1>Our Team — Our Strength</h1>
-                    <p><strong>Sergey</strong> — Technical Lead. <strong>Expert in programming with extensive
-                            experience.</strong> Passionate about innovation and new technologies.
-                    </p>
-                    <p><strong>Denis</strong> — Marketing Guru. <strong>Enthusiast of blockchain and its potential.</strong>
-                        Sees the societal benefits of technology.
-                    </p>
-                    <p><strong>Valery</strong> — Project Author and Team Visionary<strong> Unites the team and guides the project.</strong></p>
+                    <h1>Our Team — Our Strength</h1><br>
+                    <h2>For more information about our team, see this <a href="/team" style="color:aqua">link</a></h2>
                     <br>
                     <h1>
                         Aims to benefit humanity through the project's technologies.

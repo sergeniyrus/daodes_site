@@ -1,4 +1,4 @@
-<p>When designing a decentralized OS, the DES project will focus on the following aspects:</p>
+<h4>When designing a decentralized OS, the DES project will focus on the following aspects:</h4>
 <ul>
     <li><strong>DES OS eliminates the risks of censorship and data leaks:</strong> All data is encrypted and distributed
         over the network (analogous to IPFS + Tor).</li>
