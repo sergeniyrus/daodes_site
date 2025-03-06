@@ -92,10 +92,6 @@ Primary revenue sources include transaction fees, platform usage fees, staking, 
 
 #### Our Team — Our Strength
 
-- **Sergey** — Technical Lead. Expert in programming with extensive experience. Passionate about innovation and new technologies.
-- **Denis** — Marketing Guru. Enthusiast of blockchain and its potential. Sees the societal benefits of technology.
-- **Valery** — Project Author and Team Visionary. Unites the team and guides the project.
-
 **For more information about our team, see the <a href="https://daodes.space/team" target="_blank">link</a>**
 
 Aims to benefit humanity through the project's technologies.
