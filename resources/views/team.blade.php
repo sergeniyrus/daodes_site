@@ -219,9 +219,9 @@ football.</p>',
                                     'name' => 'Denis Bizhko',
                                     'description' => 'CMO Marketing Guru.',
                                     'details' => [
-                                        'Age' => '30?',
-                                        'Skills' => '?',
-                                        'Experience in industry' => '?',
+                                        'Age' => '35',
+                                        'Skills' => 'Marketing, Attracting traffic, interacting with the audience.',
+                                        'Experience in industry' => '5 age',
                                         'About me' => '<p>Believes that blockchain technology should be accessible to everyone.</p> <h3>With over five years of
         experience in the crypto space, he has contributed significantly to various Experience:</h3>
     <ul>
@@ -235,7 +235,7 @@ football.</p>',
         <li><strong style="color: gold">Current Role:</strong> Serves as the CMO of the DAO DES project, acting as the eyes, ears, and
             mouthpiece of the project.</li>
     </ul>',
-                                        'Hobbies' => 'bicycle',
+                                        'Hobbies' => 'Playing on musical instruments, soccer',
                                         'Contact' => 'bizhkod@daodes.space',
                                     ],
                                 ],
