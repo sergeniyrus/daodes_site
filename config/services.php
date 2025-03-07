@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'ipfs' => [
+    'host' => env('IPFS_HOST', 'localhost'),
+    'port' => env('IPFS_PORT', 5001),
+],
+
 ];

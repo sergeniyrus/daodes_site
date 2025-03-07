@@ -42,7 +42,7 @@
     {{-- <link rel="stylesheet" href="css/main.css"> --}}
     @vite(['resources/css/app.css', 'resources/css/main.css', 'resources/js/app.js', 'resources/js/block.js', 'resources/js/bt_top.js'])
     
-    <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="DAODES_Robot" data-size="large" data-auth-url="https://daodes.space/" data-request-access="write"></script>
+    {{-- <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="DAODES_Robot" data-size="large" data-auth-url="https://daodes.space/" data-request-access="write"></script> --}}
 
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
@@ -81,23 +81,14 @@
         border: 1px solid gold;
     }
     </style>
-
-    @include('partials.infotrade')
+    {{-- @include('partials.infotrade') --}}
 
     {{-- <div class="marquee">
         <p>Ведётся доработка, не обращайте внимание на некоторые недостатки, кривости, а обо всех найденных неполадках сообщайте в телеграм @sergeniyrus</p>
     </div> --}}
-    <!-- Кнопочное меню -->
-
     @include('menu')
-
-
-
     <!-- вставка всего в шаблон -->
-
-
     @yield('main')
-
     <!-- Подвал-->
     @include('footer')
 

@@ -92,18 +92,24 @@
         transform: scale(1.05);
         background: #0b0c18;
     }
+
+    .button-container {
+        display: flex;
+        justify-content: center; /* Центрирование кнопок */
+        margin-top: 20px; /* Отступ сверху */
+    }
 </style>
 
 <div class="container">
     <div class="text-center mb-4">
         <h1>User Profile</h1>
     </div>
-<!-- Display session message if it exists -->
-@if(session('info'))
-<div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
-@elseif(session('error'))
-<div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
-@endif
+    <!-- Display session message if it exists -->
+    @if(session('info'))
+    <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
+    @elseif(session('error'))
+    <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
+    @endif
 
     @if($userProfile)
         <div class="card shadow-sm">
@@ -139,8 +145,6 @@
                 <!-- Activity and Achievements -->
                 <div class="category-block">
                     <div class="section-title">Activity and Achievements</div>
-                    {{-- <p class="card-text"><label>Wallet Address:</label> {{ $userProfile->wallet_address ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Rating:</label> {{ $userProfile->rating ?? 'Not specified' }}</p> --}}
                     <p class="card-text"><label>Trust Level:</label> {{ $userProfile->trust_level ?? 'Not specified' }}</p>
                     <p class="card-text"><label>SBT Tokens:</label> {{ $userProfile->sbt_tokens ?? 'Not specified' }}</p>
                     <p class="card-text"><label>Tasks Completed:</label> {{ $userProfile->tasks_completed ?? 'Not specified' }}</p>
@@ -150,8 +154,19 @@
                     <p class="card-text"><label>Achievements:</label> {{ $userProfile->achievements ?? 'Not specified' }}</p>
                 </div>
 
-                <!-- Button to edit the profile -->
-                <a href="{{ route('user_profile.edit', $userProfile->user_id) }}" class="btn blue_btn">Edit</a>
+                <!-- Кнопка в зависимости от того, чей это профиль -->
+                <div class="button-container">
+                    @if($userProfile->user_id == auth()->id())
+                        <!-- Если это профиль текущего пользователя, показываем кнопку "Редактировать" -->
+                        <a href="{{ route('user_profile.edit', $userProfile->user_id) }}" class="btn blue_btn">Edit</a>
+                    @else
+                        <!-- Если это чужой профиль, показываем кнопку "Написать в чат" -->
+                        <form method="POST" action="{{ route('chats.createOrOpen', $userProfile->user_id) }}" style="display: inline;">
+                            @csrf
+                            <button type="submit" class="btn blue_btn">Write to the chat</button>
+                        </form>
+                    @endif
+                </div>
             </div>
         </div>
     @else

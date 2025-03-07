@@ -18,13 +18,26 @@ use App\Http\Controllers\{
     HomeController,
     TeamController,
     WpController,
-    CategoryController,
-    PageController,
     UserProfileController,
     UploadController,
-    TelegramController,
-    MessagesController
+    ChatController,
 };
+
+Route::middleware('auth')->group(function () {
+    Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
+    Route::get('/chats/create', [ChatController::class, 'create'])->name('chats.create');
+    Route::post('/chats', [ChatController::class, 'store'])->name('chats.store');
+    Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
+    Route::post('/chats/{chat}/messages', [ChatController::class, 'sendMessage'])->name('messages.send');
+    Route::get('/notifications', [ChatController::class, 'notifications'])->name('chats.notifications');
+    Route::post('/notifications/{notification}/mark-as-read', [ChatController::class, 'markAsRead'])->name('notifications.markAsRead');
+});
+Route::post('/chats/create-with-user/{userId}', [ChatController::class, 'createWithUser'])
+    ->name('chats.createWithUser');
+
+Route::post('/chats/create-or-open/{userId}', [ChatController::class, 'createOrOpen'])
+    ->name('chats.createOrOpen');
+    
 
 // Главная страница
 Route::view('/', 'home')->name('home');
@@ -142,7 +155,7 @@ Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show')
 Route::get('/addtask', [TaskController::class, 'create'])
     ->name('addtask')
     ->middleware('auth');
-    Route::post('/tasks/create', [TaskController::class, 'store'])
+Route::post('/tasks/create', [TaskController::class, 'store'])
     ->name('tasks.create')
     ->middleware('auth');
 
@@ -228,11 +241,6 @@ Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
 
 
 //Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
-
-//Route::get('/chatify', [\App\Http\Controllers\ChatifyController::class, 'index'])->name('chat');
-
-//Route::get('/chatify', [MessagesController::class, 'index'])->name('chatify');
-
 
 // Route::domain('deschat.daodes.space')->group(function () {
 //     Route::get('/', function () {

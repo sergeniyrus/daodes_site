@@ -89,6 +89,38 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $name
+ * @property string $type
+ * @property int|null $user1_id
+ * @property int|null $user2_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read mixed $unread_messages_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Message> $messages
+ * @property-read int|null $messages_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $participants
+ * @property-read int|null $participants_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereUser1Id($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereUser2Id($value)
+ */
+	class Chat extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property int $offer_id
  * @property int $user_id
  * @property string|null $text
@@ -185,6 +217,37 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int $chat_id
+ * @property int $sender_id
+ * @property string|null $message
+ * @property string|null $ipfs_cid
+ * @property int $is_read
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Chat $chat
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Notification> $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \App\Models\User $sender
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereChatId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereIpfsCid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereIsRead($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereMessage($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereSenderId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUpdatedAt($value)
+ */
+	class Message extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property string $title
  * @property string $content
  * @property string|null $img
@@ -209,6 +272,31 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereViews($value)
  */
 	class News extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $message_id
+ * @property int $is_read
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Message $message
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification whereIsRead($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification whereMessageId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification whereUserId($value)
+ */
+	class Notification extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -439,7 +527,9 @@ namespace App\Models{
  * @property string|null $messenger_color
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Bid> $bids
  * @property-read int|null $bids_count
- * @property-read \Illuminate\Notifications\DatabaseNotificationCollection<int, \Illuminate\Notifications\DatabaseNotification> $notifications
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Chat> $chats
+ * @property-read int|null $chats_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Notification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \App\Models\UserProfile|null $profile
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Seed> $seeds

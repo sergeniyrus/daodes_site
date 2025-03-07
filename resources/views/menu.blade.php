@@ -17,29 +17,46 @@
         <a href="/tasks" title="Task Marketplace">
             <span class="logo_name"><img src="/img/bottom/tasks2.png" alt="Task Marketplace"></span></a>
     </div>
-    {{-- <div class="header-menu has-submenu" id="wallet-menu">
-        <a href="https://daodes.space/chatify" title="DESChat">
-            <span><img src="/img/bottom/deschat.png" alt="DESChat"></span></a>
-    </div> --}}
-    <div class="header-menu" id="paper-menu">
+
+    <div class="header-menu" id="">
         <a href="/white_paper" title="White paper">
             <span><img src="/img/bottom/paper.png" alt="White paper"></span>
         </a>
     </div>
-    <div class="header-menu" id="paper-menu">
+    <div class="header-menu has-submenu" id="wallet-menu">
+        <a href="/chats" title="DESChat">
+            <span><img src="/img/bottom/deschat.png" alt="DESChat"></span></a>
+    </div>
+    <div class="header-menu" id="">
         <a href="/team" title="Team">
             <span><img src="/img/bottom/team.png" alt="Team"></span>
         </a>
     </div>
 
+
+    @php
+    $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
+        ->where('is_read', false)
+        ->count();
+@endphp
+@if ($unreadCount > 0)
+    <a href="/notifications"><span class="notifications">
+            {{ $unreadCount }}
+        </span></a>
+@endif
+
+
+
     <div class="auth-buttons">
         @if (Auth::check())
-            <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="Profile"  style="border-radius:50%">
+            <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="Profile" style="border-radius:50%">
                 <span class="logo_name">
                     <img src="{{ Auth::user()->profile && Auth::user()->profile->avatar_url ? Auth::user()->profile->avatar_url : 'https://daodes.space/ipfs/QmPdPDwGSrfWYxomC3u9FLBtB9MGH8iqVGRZ9TLPxZTekj' }}"
-                        alt="Profile"  class="avatar-img">
+                        alt="Profile" class="avatar-img">
+
                 </span>
-            </a>
+            </a> 
+
 
             <a href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();" title="Logout">
@@ -86,33 +103,54 @@
 
     // Define paths and submenus
     const submenus = {
-        "/news": [
-            { href: "/news", text: "Back to News" },
-            @auth
+            "/news": [{
+                    href: "/news",
+                    text: "Back to News"
+                },
+                @auth
                 @if (Auth::user()->access_level >= 3)
-                    { href: "/news/add", text: "Add News" },
-                    { href: "/newscategories", text: "Manage Categories" },
+                    {
+                        href: "/news/add",
+                        text: "Add News"
+                    }, {
+                        href: "/newscategories",
+                        text: "Manage Categories"
+                    },
                 @endif
             @endauth
         ],
-        "/offers": [
-            { href: "/offers", text: "Back to Offers" },
+        "/offers": [{
+                href: "/offers",
+                text: "Back to Offers"
+            },
             @auth
-                @if (Auth::user()->access_level >= 3)
-                    { href: "/offers/add", text: "Add Offer" },
-                    { href: "/offerscategories", text: "Edit Categories" },
-                @endif
-            @endauth
-        ],
-        "/tasks": [
-            { href: "/tasks", text: "Back to Tasks" },
-            @auth
-                @if (Auth::user()->access_level >= 3)
-                    { href: "/addtask", text: "Create Task" },
-                    { href: "/taskscategories", text: "Edit Categories" },
-                @endif
-            @endauth
-        ],
+            @if (Auth::user()->access_level >= 3)
+                {
+                    href: "/offers/add",
+                    text: "Add Offer"
+                }, {
+                    href: "/offerscategories",
+                    text: "Edit Categories"
+                },
+            @endif
+        @endauth
+    ],
+    "/tasks": [{
+            href: "/tasks",
+            text: "Back to Tasks"
+        },
+        @auth
+        @if (Auth::user()->access_level >= 3)
+            {
+                href: "/addtask",
+                text: "Create Task"
+            }, {
+                href: "/taskscategories",
+                text: "Edit Categories"
+            },
+        @endif
+    @endauth
+    ],
     };
 
     // Get submenu and button elements

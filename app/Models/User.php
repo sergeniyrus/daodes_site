@@ -4,19 +4,16 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
+
     protected $fillable = [
         'name',
+        //'email',  Добавлено поле email
         'keyword',
         'password',
     ];
@@ -38,8 +35,7 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'password' => 'hashed', // Убрано email_verified_at
         ];
     }
 
@@ -60,17 +56,32 @@ class User extends Authenticatable
     }
 
     /**
-     * Define the relationship with seeds (example from your original code).
+     * Define the relationship with seeds.
      */
     public function seeds()
     {
         return $this->hasMany(Seed::class);
     }
 
-    // В модели User
-public function profile()
-{
-    return $this->hasOne(UserProfile::class);
-}
+    /**
+     * Define the relationship with the user's profile.
+     */
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
+    }
 
+    /**
+     * Define the relationship with chats.
+     */
+    public function chats(): BelongsToMany
+    {
+        return $this->belongsToMany(Chat::class, 'chat_user', 'user_id', 'chat_id');
+    }
+
+    // В модели User
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class);
+    }
 }
