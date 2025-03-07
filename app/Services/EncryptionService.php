@@ -25,7 +25,7 @@ class EncryptionService
         try {
             return Crypto::encrypt($data, $this->key);
         } catch (Exception $e) {
-            Log::error('Ошибка шифрования: ' . $e->getMessage());
+          //  Log::error('Ошибка шифрования: ' . $e->getMessage());
             throw new Exception("Ошибка шифрования: " . $e->getMessage());
         }
     }
@@ -38,7 +38,7 @@ class EncryptionService
         try {
             return Crypto::decrypt($encryptedData, $this->key);
         } catch (Exception $e) {
-            Log::error('Ошибка дешифрования: ' . $e->getMessage());
+           // Log::error('Ошибка дешифрования: ' . $e->getMessage());
             throw new Exception("Ошибка дешифрования: " . $e->getMessage());
         }
     }

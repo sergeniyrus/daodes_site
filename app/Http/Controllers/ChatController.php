@@ -5,19 +5,27 @@ namespace App\Http\Controllers;
 use App\Models\Chat;
 use App\Models\Message;
 use App\Models\Notification;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Services\EncryptionService;
+use GuzzleHttp\Client;
+
 
 class ChatController extends Controller
 {
     // Список чатов
     public function index()
-    {
-        $groupChats = Chat::where('type', 'group')->paginate(10);
-        $privateChats = Chat::where('type', 'personal')->paginate(10);
-        return view('chats.index', compact('groupChats', 'privateChats'));
-    }
+{
+    // Получаем групповые чаты с пагинацией
+    $groupChats = Chat::where('type', 'group')->paginate(10);
+
+    // Получаем личные чаты с пагинацией
+    $privateChats = Chat::where('type', 'personal')->paginate(10);
+
+    return view('chats.index', compact('groupChats', 'privateChats'));
+}
 
     // Страница создания чата
     public function create()
@@ -28,115 +36,294 @@ class ChatController extends Controller
 
     // Сохранение нового чата
     public function store(Request $request)
-    {
-        $type = count($request->users) === 1 ? 'personal' : 'group';
+{
+    // Определяем тип чата: personal (на двоих) или group
+    $type = count($request->users) === 1 ? 'personal' : 'group';
 
-        $rules = [
-            'users' => 'required|array',
+    // Правила валидации
+    $rules = [
+        'users' => 'required|array',
+    ];
+
+    // Для групповых чатов добавляем проверку на уникальность названия (игнорируя регистр)
+    if ($type === 'group') {
+        $rules['name'] = [
+            'required',
+            'string',
+            'max:255',
+            function ($attribute, $value, $fail) {
+                // Проверяем уникальность названия, игнорируя регистр
+                $exists = Chat::whereRaw('LOWER(name) = LOWER(?)', [$value])->exists();
+                if ($exists) {
+                    $fail('Чат с таким названием уже существует.');
+                }
+            },
         ];
-
-        if ($type === 'group') {
-            $rules['name'] = [
-                'required',
-                'string',
-                'max:255',
-                function ($attribute, $value, $fail) {
-                    $exists = Chat::whereRaw('LOWER(name) = LOWER(?)', [$value])->exists();
-                    if ($exists) {
-                        $fail('Чат с таким названием уже существует.');
-                    }
-                },
-            ];
-        } else {
-            $rules['name'] = 'nullable';
-        }
-
-        $request->validate($rules, [
-            'name.unique' => 'Чат с таким названием уже существует.',
-            'name.required' => 'Название чата обязательно для групповых чатов.',
-            'users.required' => 'Выберите хотя бы одного участника.',
-        ]);
-
-        if ($type === 'personal') {
-            $otherUserId = $request->users[0];
-            $existingChat = Chat::whereHas('users', function ($query) use ($otherUserId) {
-                $query->where('user_id', auth()->id());
-            })->whereHas('users', function ($query) use ($otherUserId) {
-                $query->where('user_id', $otherUserId);
-            })
-                ->withCount('users')
-                ->having('users_count', '=', 2)
-                ->first();
-
-            if ($existingChat) {
-                return redirect()->route('chats.show', $existingChat->id)
-                    ->with('info', 'Чат с этим пользователем уже существует.');
-            }
-        }
-
-        $chat = Chat::create([
-            'name' => $type === 'personal' ? 'personal' : $request->name,
-            'type' => $type,
-        ]);
-
-        $chat->users()->attach(array_merge($request->users, [auth()->id()]));
-
-        return redirect()->route('chats.show', $chat->id)
-            ->with('success', 'Чат успешно создан!');
+    } else {
+        $rules['name'] = 'nullable'; // Для чатов на двоих название не требуется
     }
+
+    // Валидация запроса с кастомными сообщениями
+    $request->validate($rules, [
+        'name.unique' => 'Чат с таким названием уже существует.',
+        'name.required' => 'Название чата обязательно для групповых чатов.',
+        'users.required' => 'Выберите хотя бы одного участника.',
+    ]);
+
+    // Если это чат на двоих, проверяем, существует ли уже такой чат
+    if ($type === 'personal') {
+        $otherUserId = $request->users[0]; // ID второго пользователя
+
+        // Проверяем, существует ли уже чат между текущим пользователем и выбранным пользователем
+        $existingChat = Chat::whereHas('users', function ($query) use ($otherUserId) {
+            $query->where('user_id', auth()->id());
+        })->whereHas('users', function ($query) use ($otherUserId) {
+            $query->where('user_id', $otherUserId);
+        })
+        ->withCount('users') // Добавляем подсчет количества пользователей в чате
+        ->having('users_count', '=', 2) // Фильтруем только чаты с двумя пользователями
+        ->first();
+
+        // Если чат уже существует, перенаправляем на него
+        if ($existingChat) {
+            return redirect()->route('chats.show', $existingChat->id)
+                ->with('info', 'Чат с этим пользователем уже существует.');
+        }
+    }
+
+    // Создаем новый чат
+    $chat = Chat::create([
+        'name' => $type === 'personal' ? 'personal' : $request->name, // Для чатов на двоих название не нужно
+        'type' => $type, // Указываем тип чата
+    ]);
+
+    // Добавляем участников
+    $chat->users()->attach(array_merge($request->users, [auth()->id()]));
+
+    // Перенаправляем на страницу чата
+    return redirect()->route('chats.show', $chat->id)
+        ->with('success', 'Чат успешно создан!');
+}
 
     // Страница чата
     public function show($chatId)
-    {
-        $chat = Chat::with(['users', 'messages.sender'])->findOrFail($chatId);
-        $userId = auth()->id();
+{
+    // Находим чат
+    $chat = Chat::with(['users', 'messages.sender'])->findOrFail($chatId);
 
-        Notification::whereHas('message', function ($query) use ($chatId) {
-            $query->where('chat_id', $chatId);
-        })
-            ->where('user_id', $userId)
-            ->where('is_read', false)
-            ->update(['is_read' => true]);
+    // Получаем ID текущего пользователя
+    $userId = auth()->id();
 
-        return view('chats.show', compact('chat'));
-    }
+    // Помечаем все уведомления из этого чата как прочитанные
+    Notification::whereHas('message', function ($query) use ($chatId) {
+        $query->where('chat_id', $chatId); // Фильтруем уведомления по ID чата
+    })
+    ->where('user_id', $userId) // Фильтруем уведомления для текущего пользователя
+    ->where('is_read', false) // Фильтруем только непрочитанные уведомления
+    ->update(['is_read' => true]); // Помечаем как прочитанные
 
-    // Отправка сообщения
-    public function sendMessage(Request $request, $chatId)
-    {
-        $request->validate([
-            'message' => 'required|string|max:1000|regex:/^[\p{L}\p{N}\s.,!?-]+$/u',
+    return view('chats.show', compact('chat'));
+}
+
+// Отправка сообщения
+public function sendMessage(Request $request, $chatId)
+{
+    $request->validate([
+        'message' => 'required|string|max:1000|regex:/^[\p{L}\p{N}\s.,!?-]+$/u',
+    ]);
+
+    try {
+        // Загружаем сообщение в IPFS
+        $messageModel = new Message();
+        $cid = $messageModel->uploadMessageToIPFS($request->input('message'));
+
+        // Сохраняем сообщение в БД
+        $message = Message::create([
+            'chat_id' => $chatId,
+            'sender_id' => auth()->id(),
+            'message' => null, // Основное сообщение не сохраняем в БД
+            'ipfs_cid' => $cid, // Сохраняем CID из IPFS
         ]);
 
-        try {
-            // Загружаем сообщение в IPFS
-            $messageModel = new Message();
-            $cid = $messageModel->uploadMessageToIPFS($request->input('message'));
-
-            // Сохраняем сообщение в БД
-            $message = Message::create([
-                'chat_id' => $chatId,
-                'sender_id' => auth()->id(),
-                'message' => null, // Основное сообщение не сохраняем в БД
-                'ipfs_cid' => $cid, // Сохраняем CID из IPFS
-            ]);
-
-            // Создаем уведомления для всех участников чата (кроме отправителя)
-            $chat = Chat::findOrFail($chatId);
-            foreach ($chat->users as $user) {
-                if ($user->id !== auth()->id()) {
-                    Notification::create([
-                        'user_id' => $user->id,
-                        'message_id' => $message->id,
-                        'is_read' => false,
-                    ]);
-                }
+        // Создаем уведомления для всех участников чата (кроме отправителя)
+        $chat = Chat::findOrFail($chatId);
+        foreach ($chat->users as $user) {
+            if ($user->id !== auth()->id()) {
+                Notification::create([
+                    'user_id' => $user->id,
+                    'message_id' => $message->id,
+                    'is_read' => false,
+                ]);
             }
-
-            return redirect()->back()->with('success', 'Сообщение отправлено!');
-        } catch (\Exception $e) {
-            Log::error('Ошибка при отправке сообщения: ' . $e->getMessage());
-            return redirect()->back()->with('error', 'Ошибка при отправке сообщения.');
         }
+
+        return redirect()->back()->with('success', 'Сообщение отправлено!');
+    } catch (\Exception $e) {
+        Log::error('Ошибка при отправке сообщения: ' . $e->getMessage());
+        return redirect()->back()->with('error', 'Ошибка при отправке сообщения.');
+    }
+}
+
+    // Вспомогательный метод для загрузки сообщения в IPFS
+    private function uploadMessage($message)
+{
+    Log::info('Uploading message to IPFS', ['messageLength' => strlen($message)]);
+
+    try {
+        // Шифруем сообщение
+        $encryptionService = new EncryptionService();
+        $encryptedMessage = $encryptionService->encrypt($message);
+
+        // Логируем зашифрованные данные
+        // Log::info('Зашифрованные данные', [
+        //     'encryptedMessageLength' => strlen($encryptedMessage),
+        //     'encryptedMessageSample' => substr($encryptedMessage, 0, 50), // Логируем первые 50 символов
+        // ]);
+
+        // Инициализация клиента Guzzle для работы с IPFS
+        $client = new Client([
+            'base_uri' => 'https://daodes.space'
+        ]);
+
+        // Отправка сообщения на IPFS
+        $response = $client->request('POST', '/api/v0/add', [
+            'multipart' => [
+                [
+                    'name'     => 'file',
+                    'contents' => $encryptedMessage,
+                    'filename' => 'message.txt', // Имя файла для IPFS
+                ]
+            ]
+        ]);
+
+        // Парсим ответ и извлекаем CID
+        $data = json_decode($response->getBody(), true);
+
+        if (isset($data['Hash'])) {
+            $cid = $data['Hash'];
+           // Log::info('Message uploaded to IPFS successfully', ['cid' => $cid]);
+            return $cid;
+        } else {
+          //  Log::error('IPFS error: No Hash in response', ['response' => $data]);
+            throw new \Exception('No valid response from IPFS');
+        }
+    } catch (\Exception $e) {
+       // Log::error('IPFS upload error: ' . $e->getMessage());
+        throw $e; // Пробрасываем исключение, чтобы обработать его в sendMessage
+    }
+}
+
+    // Уведомления
+    public function notifications()
+{
+    // Получаем текущего пользователя
+    $user = Auth::user();
+
+    // Загружаем только непрочитанные уведомления
+    $notifications = $user->notifications()
+        ->where('is_read', false)
+        ->with('message.chat') // Загружаем связанные сообщения и чаты
+        ->get();
+
+    // Группируем уведомления по чатам
+    $groupedNotifications = $notifications->groupBy(function ($notification) {
+        return $notification->message ? $notification->message->chat_id : null;
+    });
+
+    // Создаем коллекцию для уникальных чатов
+    $uniqueChats = collect();
+
+    foreach ($groupedNotifications as $chatId => $notificationsGroup) {
+        if ($chatId) {
+            $chat = $notificationsGroup->first()->message->chat;
+
+            // Подсчитываем общее количество непрочитанных сообщений в чате
+            $unreadCount = $chat->unreadMessagesCount($user->id);
+
+            // Добавляем чат в коллекцию с общим количеством непрочитанных сообщений
+            $uniqueChats->push([
+                'chat' => $chat,
+                'unread_count' => $unreadCount,
+            ]);
+        }
+    }
+
+    return view('chats.notifications', compact('uniqueChats'));
+}
+
+    // Пометка уведомления как прочитанного
+    public function markAsRead($notificationId)
+    {
+        // Находим уведомление текущего пользователя
+        $notification = Auth::user()->notifications()->findOrFail($notificationId);
+
+        // Помечаем уведомление как прочитанное
+        $notification->update(['is_read' => true]);
+
+        // Перенаправляем пользователя обратно
+        return redirect()->back()->with('success', 'Уведомление прочитано!');
+    }
+
+    // Создание чата с пользователем
+public function createWithUser($userId)
+{
+    // Находим пользователя, с которым создаем/открываем чат
+    $otherUser = User::findOrFail($userId);
+
+    // Проверяем, существует ли уже чат между текущим пользователем и выбранным пользователем
+    $chat = Chat::whereHas('users', function ($query) use ($userId) {
+        $query->where('user_id', auth()->id());
+    })->whereHas('users', function ($query) use ($userId) {
+        $query->where('user_id', $userId);
+    })
+    ->withCount('users') // Добавляем подсчет количества пользователей в чате
+    ->having('users_count', '=', 2) // Фильтруем только чаты с двумя пользователями
+    ->first();
+
+    // Если чат уже существует, перенаправляем на него
+    if ($chat) {
+        return redirect()->route('chats.show', $chat->id);
+    }
+
+    // Если чат не существует, создаем его
+    $chat = Chat::create([
+        'name' => 'personal', // Для чатов на двоих название не нужно
+        'type' => 'personal', // Указываем тип чата
+    ]);
+
+    // Добавляем текущего пользователя и выбранного пользователя в чат
+    $chat->users()->attach([auth()->id(), $userId]);
+
+    // Перенаправляем на страницу чата
+    return redirect()->route('chats.show', $chat->id);
+}
+
+    // Создание или открытие чата с пользователем
+    public function createOrOpen($userId)
+    {
+        // Находим пользователя, с которым создаем/открываем чат
+        $otherUser = User::findOrFail($userId);
+
+        // Проверяем, существует ли уже чат между текущим пользователем и выбранным пользователем
+        $chat = Chat::whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', auth()->id());
+        })->whereHas('users', function ($query) use ($userId) {
+            $query->where('user_id', $userId);
+        })
+            ->withCount('users') // Добавляем подсчет количества пользователей в чате
+            ->having('users_count', '=', 2) // Фильтруем только чаты с двумя пользователями
+            ->first();
+
+        // Если чат не существует, создаем его
+        if (!$chat) {
+            $chat = Chat::create([
+                'name' => 'personal', // Для чатов на двоих название не нужно
+                'type' => 'personal', // Указываем тип чата
+            ]);
+            $chat->users()->attach([auth()->id(), $userId]);
+        }
+
+        // Перенаправляем на страницу чата
+        return redirect()->route('chats.show', $chat->id);
     }
 }
