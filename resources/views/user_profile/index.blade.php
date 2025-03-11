@@ -1,7 +1,5 @@
 @extends('template')
-
-@section('title_page', 'User profile')
-
+@section('title_page', __('user_profile.title_page'))
 @section('main')
 <style>
     .container {
@@ -102,13 +100,14 @@
 
 <div class="container">
     <div class="text-center mb-4">
-        <h1>User Profile</h1>
+        <h1>{{ __('user_profile.user_profile') }}</h1>
     </div>
+
     <!-- Display session message if it exists -->
     @if(session('info'))
-    <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
+        <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
     @elseif(session('error'))
-    <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
+        <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
     @endif
 
     @if($userProfile)
@@ -116,54 +115,56 @@
             <div class="card-body">
                 <!-- Avatar and username in one block -->
                 <div class="profile-header">
-                    <h2 class="user-name">{{ $userProfile->user->name ?? 'No Name' }}</h2>
+                    <h2 class="user-name">{{ $userProfile->user->name ?? __('user_profile.not_specified') }}</h2>
                     <img src="{{ $userProfile->avatar_url }}" alt="Avatar" class="avatar-img">
                 </div>
 
                 <!-- Basic Information -->
                 <div class="category-block">
-                    <div class="section-title">Basic Information</div>
-                    <p class="card-text"><label>Role:</label> {{ $userProfile->role ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Telegram Nickname:</label> <a href="https://t.me/{{ $userProfile->nickname ?? 'Not specified' }}" target="_blank" style="color:aqua">
-                        {{ $userProfile->nickname ?? 'Not specified' }}
-                    </a></p>
-                    <p class="card-text"><label>Gender:</label> {{ $userProfile->gender ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Date of Birth:</label> {{ $userProfile->birth_date ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Timezone:</label> {{ $userProfile->timezone ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Languages:</label> {{ $userProfile->languages ?? 'Not specified' }}</p>
+                    <div class="section-title">{{ __('user_profile.basic_information') }}</div>
+                    <p class="card-text"><label>{{ __('user_profile.role') }}:</label> {{ $userProfile->role ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.telegram_nickname') }}:</label> 
+                        <a href="https://t.me/{{ $userProfile->nickname ?? __('user_profile.not_specified') }}" target="_blank" style="color:aqua">
+                            {{ $userProfile->nickname ?? __('user_profile.not_specified') }}
+                        </a>
+                    </p>
+                    <p class="card-text"><label>{{ __('user_profile.gender') }}:</label> {{ $userProfile->gender ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.date_of_birth') }}:</label> {{ $userProfile->birth_date ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.timezone') }}:</label> {{ $userProfile->timezone ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.languages') }}:</label> {{ $userProfile->languages ?? __('user_profile.not_specified') }}</p>
                 </div>
 
                 <!-- Education and Skills -->
                 <div class="category-block">
-                    <div class="section-title">Education and Skills</div>
-                    <p class="card-text"><label>Education:</label> {{ $userProfile->education ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Specialization:</label> {{ $userProfile->specialization ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Resume:</label> {{ $userProfile->resume ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Portfolio:</label> {{ $userProfile->portfolio ?? 'Not specified' }}</p>
+                    <div class="section-title">{{ __('user_profile.education_and_skills') }}</div>
+                    <p class="card-text"><label>{{ __('user_profile.education') }}:</label> {{ $userProfile->education ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.specialization') }}:</label> {{ $userProfile->specialization ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.resume') }}:</label> {{ $userProfile->resume ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.portfolio') }}:</label> {{ $userProfile->portfolio ?? __('user_profile.not_specified') }}</p>
                 </div>
 
                 <!-- Activity and Achievements -->
                 <div class="category-block">
-                    <div class="section-title">Activity and Achievements</div>
-                    <p class="card-text"><label>Trust Level:</label> {{ $userProfile->trust_level ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>SBT Tokens:</label> {{ $userProfile->sbt_tokens ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Tasks Completed:</label> {{ $userProfile->tasks_completed ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Tasks Failed:</label> {{ $userProfile->tasks_failed ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Recommendations:</label> {{ $userProfile->recommendations ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Activity Log:</label> {{ $userProfile->activity_log ?? 'Not specified' }}</p>
-                    <p class="card-text"><label>Achievements:</label> {{ $userProfile->achievements ?? 'Not specified' }}</p>
+                    <div class="section-title">{{ __('user_profile.activity_and_achievements') }}</div>
+                    <p class="card-text"><label>{{ __('user_profile.trust_level') }}:</label> {{ $userProfile->trust_level ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.sbt_tokens') }}:</label> {{ $userProfile->sbt_tokens ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.tasks_completed') }}:</label> {{ $userProfile->tasks_completed ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.tasks_failed') }}:</label> {{ $userProfile->tasks_failed ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.recommendations') }}:</label> {{ $userProfile->recommendations ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.activity_log') }}:</label> {{ $userProfile->activity_log ?? __('user_profile.not_specified') }}</p>
+                    <p class="card-text"><label>{{ __('user_profile.achievements') }}:</label> {{ $userProfile->achievements ?? __('user_profile.not_specified') }}</p>
                 </div>
 
                 <!-- Кнопка в зависимости от того, чей это профиль -->
                 <div class="button-container">
                     @if($userProfile->user_id == auth()->id())
                         <!-- Если это профиль текущего пользователя, показываем кнопку "Редактировать" -->
-                        <a href="{{ route('user_profile.edit', $userProfile->user_id) }}" class="btn blue_btn">Edit</a>
+                        <a href="{{ route('user_profile.edit', $userProfile->user_id) }}" class="btn blue_btn">{{ __('user_profile.edit') }}</a>
                     @else
                         <!-- Если это чужой профиль, показываем кнопку "Написать в чат" -->
                         <form method="POST" action="{{ route('chats.createOrOpen', $userProfile->user_id) }}" style="display: inline;">
                             @csrf
-                            <button type="submit" class="btn blue_btn">Write to the chat</button>
+                            <button type="submit" class="btn blue_btn">{{ __('user_profile.write_to_chat') }}</button>
                         </form>
                     @endif
                 </div>
@@ -171,7 +172,7 @@
         </div>
     @else
         <div class="text-center">
-            <p>No profile available to display.</p>
+            <p>{{ __('user_profile.no_profile_available') }}</p>
         </div>
     @endif
 </div>

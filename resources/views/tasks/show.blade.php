@@ -1,7 +1,6 @@
 @extends('template')
-
 @section('title_page')
-    Биржа заданий
+    {{ __('tasks.title_page') }}
 @endsection
 
 @section('main')
@@ -299,7 +298,7 @@
                 </div>
                 <div class="task-info">
                     <p class="task-category"><i class="fas fa-folder-open"></i>
-                        {{ $task->category ? $task->category->name : 'No category' }}
+                        {{ $task->category ? $task->category->name : __('tasks.no_category') }}
                     </p>
                     <p class="task-budget"><i class="fas fa-dollar-sign"></i> {{ $task->budget }}</p>
                     <p class="task-deadline">
@@ -335,7 +334,7 @@
         <!-- Task rating, visible if task is completed and rated -->
         @if ($task->status === 'completed' && $task->rating)
             <div class="task-rating" style="text-align: center">
-                <p><strong>Task completed and rated:</strong></p>
+                <p><strong>{{ __('tasks.task_completed_rated') }}</strong></p>
                 <div class="rating-stars" style="display: flex; justify-content: center; align-items: center;">
                     @for ($i = 1; $i <= 10; $i++)
                         <span class="star {{ $i <= $task->rating ? 'filled' : '' }}" style="font-size: 24px;">★</span>
@@ -348,7 +347,7 @@
         <!-- Task rating, visible if task is failed and rated -->
         @if ($task->status === 'failed' && $task->rating)
             <div class="task-rating" style="text-align: center">
-                <p><strong>Task failed and rated:</strong></p>
+                <p><strong>{{ __('tasks.task_failed_rated') }}</strong></p>
                 <div class="rating-stars" style="display: flex; justify-content: center; align-items: center;">
                     @for ($i = 1; $i <= abs($task->rating); $i++)
                         <span class="circle filled" style="font-size: 24px;">💩</span>
@@ -363,7 +362,7 @@
             @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
                 <form action="{{ route('tasks.edit', $task) }}" method="GET" style="display:inline;">
                     @csrf
-                    <button type="submit" class="blue_btn" title="Edit">
+                    <button type="submit" class="blue_btn" title="{{ __('tasks.edit') }}">
                         <i class="fas fa-edit icon-edit"></i>
                     </button>
                 </form>
@@ -371,7 +370,7 @@
                 <form action="{{ route('tasks.destroy', $task) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="blue_btn" title="Delete">
+                    <button type="submit" class="blue_btn" title="{{ __('tasks.delete') }}">
                         <i class="fas fa-trash-alt icon-delete"></i>
                     </button>
                 </form>
@@ -381,7 +380,7 @@
                 @if (Auth::id() == $task->acceptedBid->user_id)
                     <form action="{{ route('tasks.start_work', $task) }}" method="POST">
                         @csrf
-                        <button type="submit" class="blue_btn">🚀 Start work</button>
+                        <button type="submit" class="blue_btn">{{ __('tasks.start_work') }}</button>
                     </form>
                 @endif
             @endif
@@ -389,7 +388,7 @@
             @if ($task->status === 'in_progress' && Auth::id() == $task->acceptedBid->user_id)
                 <form action="{{ route('tasks.freelancerComplete', $task) }}" method="POST">
                     @csrf
-                    <button type="submit" class="blue_btn">✅ Done, please check!</button>
+                    <button type="submit" class="blue_btn">{{ __('tasks.done_check') }}</button>
                 </form>
             @endif
 
@@ -397,17 +396,17 @@
                 <div class="review-actions">
                     <form action="{{ route('tasks.complete', $task) }}" method="POST">
                         @csrf
-                        <button type="submit" class="blue_btn">✅ Accept</button>
+                        <button type="submit" class="blue_btn">{{ __('tasks.accept') }}</button>
                     </form>
 
                     <form action="{{ route('tasks.continue', $task) }}" method="POST">
                         @csrf
-                        <button type="submit" class="blue_btn">🛠 Needs more work</button>
+                        <button type="submit" class="blue_btn">{{ __('tasks.needs_more_work') }}</button>
                     </form>
 
                     <form action="{{ route('tasks.fail', $task) }}" method="POST">
                         @csrf
-                        <button type="submit" class="blue_btn">❌ Task failed</button>
+                        <button type="submit" class="blue_btn">{{ __('tasks.task_failed_button') }}</button>
                     </form>
                 </div>
             @endif
@@ -427,17 +426,17 @@
             <div class="bid-title">
                 <h1>
                     @if ($task->status === 'completed')
-                        Task completed
+                        {{ __('tasks.task_completed') }}
                     @elseif ($task->status === 'on_review')
-                        Task under review
+                        {{ __('tasks.task_on_review') }}
                     @elseif ($task->status === 'in_progress')
-                        Task in progress
+                        {{ __('tasks.task_in_progress') }}
                     @elseif ($task->status === 'failed')
-                        Task failed, waiting for new offers
+                        {{ __('tasks.task_failed') }}
                     @elseif ($task->status === 'negotiation')
-                        Offer under negotiation
+                        {{ __('tasks.offer_negotiation') }}
                     @else
-                        Freelancer offers
+                        {{ __('tasks.freelancer_offers') }}
                     @endif
                 </h1>
             </div>
@@ -448,36 +447,36 @@
                 @endphp
 
                 <div class="bid">
-                    <p><strong class="task-line">Freelancer:</strong>
+                    <p><strong class="task-line">{{ __('tasks.freelancer') }}:</strong>
                         <a href="{{ route('user_profile.show', ['id' => $acceptedBid->user->id]) }}" title="Profile"
                             style="color: #d7fc09; text-decoration: none;">
                             {{ $acceptedBid->user->name }}
                         </a>
                     </p>
-                    <p><strong class="task-line">Price:</strong> {{ $acceptedBid->price }} $</p>
-                    <p><strong class="task-line">Completion time:</strong> {{ $acceptedBid->days }} days
-                        {{ $acceptedBid->hours }} hours</p>
-                    <p><strong class="task-line">Comment:</strong> {{ $acceptedBid->comment }}</p>
+                    <p><strong class="task-line">{{ __('tasks.price') }}:</strong> {{ $acceptedBid->price }} $</p>
+                    <p><strong class="task-line">{{ __('tasks.completion_time') }}:</strong> {{ $acceptedBid->days }} {{ __('tasks.completion_days') }}
+                        {{ $acceptedBid->hours }} {{ __('tasks.completion_hours') }}</p>
+                    <p><strong class="task-line">{{ __('tasks.comment') }}:</strong> {{ $acceptedBid->comment }}</p>
                 </div>
             @else
                 @foreach ($task->bids as $bid)
                     <div class="bid">
                         <p class="task-line2">
-                            <strong class="task-line">Freelancer:</strong>
+                            <strong class="task-line">{{ __('tasks.freelancer') }}:</strong>
                             <a href="{{ route('user_profile.show', ['id' => $bid->user->id]) }}" title="Profile"
                                 style="color: #d7fc09; text-decoration: none;">
                                 {{ $bid->user->name }}
                             </a>
                         </p>
-                        <p class="task-line2"><strong class="task-line">Price:</strong> {{ $bid->price }} DESCoin</p>
-                        <p class="task-line2"><strong class="task-line">Completion time:</strong> {{ $bid->days }}
-                            days {{ $bid->hours }} hours</p>
-                        <p class="task-line2"><strong class="task-line">Comment:</strong> {{ $bid->comment }}</p>
+                        <p class="task-line2"><strong class="task-line">{{ __('tasks.price') }}:</strong> {{ $bid->price }} DESCoin</p>
+                        <p class="task-line2"><strong class="task-line">{{ __('tasks.completion_time') }}:</strong> {{ $bid->days }}
+                            {{ __('tasks.completion_days') }} {{ $bid->hours }} {{ __('tasks.completion_hours') }}</p>
+                        <p class="task-line2"><strong class="task-line">{{ __('tasks.comment') }}:</strong> {{ $bid->comment }}</p>
 
                         @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
                             <form action="{{ route('bids.accept', $bid) }}" method="POST" style="display:block;">
                                 @csrf
-                                <br><button type="submit" class="blue_btn">✔️ Accept offer</button>
+                                <br><button type="submit" class="blue_btn">{{ __('tasks.accept_offer') }}</button>
                             </form>
                         @endif
                     </div>
@@ -488,7 +487,7 @@
         <!-- Freelancer rating section -->
         @if ($task->status === 'completed' && Auth::id() == $task->user_id && $task->rating == null)
             <div class="rating-form">
-                <div class="bid-title">Rate the freelancer
+                <div class="bid-title">{{ __('tasks.rate_freelancer') }}
                     <form action="{{ route('tasks.rate', $task) }}" method="POST">
                         @csrf
                         <div class="rating-stars">
@@ -497,7 +496,7 @@
                             @endfor
                         </div>
                         <input type="hidden" name="rating" id="rating" value="0">
-                        <button type="submit" class="blue_btn">Submit rating</button>
+                        <button type="submit" class="blue_btn">{{ __('tasks.submit_rating') }}</button>
                     </form>
                 </div>
             </div>
@@ -505,7 +504,7 @@
 
         @if ($task->status === 'failed' && Auth::id() == $task->user_id && $task->rating == null)
             <div class="rating-form">
-                <div class="bid-title">Rate the freelancer
+                <div class="bid-title">{{ __('tasks.rate_freelancer') }}
                     <form action="{{ route('tasks.rate', $task) }}" method="POST">
                         @csrf
                         <div class="rating-circle">
@@ -514,7 +513,7 @@
                             @endfor
                         </div>
                         <input type="hidden" name="rating" id="rating" value="0">
-                        <button type="submit" class="blue_btn">Submit rating</button>
+                        <button type="submit" class="blue_btn">{{ __('tasks.submit_rating') }}</button>
                     </form>
                 </div>
             </div>
@@ -524,7 +523,7 @@
         <div class="container my-5">
             @if (Auth::check() && Auth::id() !== $task->user_id && !$task->accepted_bid_id)
                 @if ($task->bids()->where('user_id', Auth::id())->exists())
-                    <p style="text-align: center; color:#ffdf00">You have already submitted a proposal for this task.</p>
+                    <p style="text-align: center; color:#ffdf00">{{ __('tasks.already_submitted') }}</p>
                 @else
                     <div class="bid-form">
                         <form action="{{ route('tasks.bid', $task) }}" method="POST"
@@ -532,7 +531,7 @@
                             @csrf
                             <fieldset>
                                 <legend style="text-align: center">
-                                    <h3>Leave your suggestion</h3>
+                                    <h3>{{ __('tasks.leave_suggestion') }}</h3>
                                 </legend>
 
                                 <!-- Вывод ошибок валидации -->
@@ -560,35 +559,35 @@
 
                                 <!-- Поле "Your price" -->
                                 <div class="form-group">
-                                    <label for="price">Your price ($):</label>
+                                    <label for="price">{{ __('tasks.your_price') }}:</label>
                                     <input type="number" name="price" id="price" class="input_dark" required>
                                 </div>
 
                                 <!-- Поле "Completion time (days)" -->
                                 <div class="form-group">
-                                    <label for="days">Completion time (days):</label>
+                                    <label for="days">{{ __('tasks.completion_days') }}:</label>
                                     <input type="number" name="days" id="days" class="input_dark" required>
                                 </div>
 
                                 <!-- Поле "Completion time (hours)" -->
                                 <div class="form-group">
-                                    <label for="hours">Completion time (0-23 hours):</label>
+                                    <label for="hours">{{ __('tasks.completion_hours') }}:</label>
                                     <input type="number" name="hours" id="hours" class="input_dark" required>
 
-                                    <small class="form-text text-muted">The days and hours are summed up.</small>
+                                    <small class="form-text text-muted">{{ __('tasks.completion_hours_hint') }}</small>
                                 </div>
                                 <!-- Поле "Message" -->
                                 <div class="form-group">
-                                    <label for="comment">Message:</label>
+                                    <label for="comment">{{ __('tasks.message') }}:</label>
                                     <textarea name="comment" id="comment" class="input_dark" rows="3" maxlength="500" required></textarea>
                                     <small class="form-text text-muted">
-                                        The comment must contain at least 3 words and be at least 20 characters long.
+                                        {{ __('tasks.message_hint') }}
                                     </small>
                                 </div>
 
                                 <!-- Кнопка отправки -->
                                 <div class="text-center">
-                                    <button type="submit" class="blue_btn">Submit proposal</button>
+                                    <button type="submit" class="blue_btn">{{ __('tasks.submit_proposal') }}</button>
                                 </div>
                             </fieldset>
                         </form>
@@ -667,16 +666,16 @@
                 timerDiv.style.display = 'block';
 
                 if (startTimeDisplay) {
-                    startTimeDisplay.innerHTML = `Start time: ${new Date(startTimeMillis).toLocaleString()}`;
+                    startTimeDisplay.innerHTML = `{{ __('tasks.start_time') }}: ${new Date(startTimeMillis).toLocaleString()}`;
                 }
 
                 if (endTimeDisplay) {
-                    endTimeDisplay.innerHTML = `End time: ${new Date(endTime).toLocaleString()}`;
+                    endTimeDisplay.innerHTML = `{{ __('tasks.end_time') }}: ${new Date(endTime).toLocaleString()}`;
                 }
 
                 setInterval(() => {
                     if (currentTimeDisplay) {
-                        currentTimeDisplay.innerHTML = `Current time: ${new Date().toLocaleString()}`;
+                        currentTimeDisplay.innerHTML = `{{ __('tasks.current_time') }}: ${new Date().toLocaleString()}`;
                     }
                 }, 1000);
 
@@ -686,7 +685,7 @@
 
                     if (remainingTime <= 0) {
                         clearInterval(countdownTimer);
-                        timerDiv.innerHTML = "⏳ Time's up, task under review.";
+                        timerDiv.innerHTML = "{{ __('tasks.times_up') }}";
                         return;
                     }
 
@@ -696,7 +695,7 @@
                     const daysLeft = Math.floor(remainingTime / (1000 * 60 * 60 * 24));
 
                     timerDiv.innerHTML =
-                        `⏳ Time left: ${daysLeft} d. ${hoursLeft} h. ${minutes} min. ${seconds} sec.`;
+                        `{{ __('tasks.time_left') }} ${daysLeft} d. ${hoursLeft} h. ${minutes} min. ${seconds} sec.`;
                 }, 1000);
             }
 

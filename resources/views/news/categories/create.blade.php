@@ -67,9 +67,8 @@
     }
 
 </style>
-
 <div class="container my-5">
-    <h1>Добавить категорию Новостей</h1>
+    <h1>{{ __('category.add_category_title') }}</h1>
 
     @if($errors->any())
         <div class="alert alert-danger">
@@ -84,14 +83,13 @@
     <form action="{{ route('newscategories.store') }}" method="POST">
         @csrf
         <div class="form-group">
-            <label for="name">Название категории:</label>
+            <label for="name">{{ __('category.category_name_label') }}</label>
             <input type="text" name="name" id="name" class="input_dark" required>
         </div>
 
         <button type="submit" class="blue_btn">
-            <i class="fas fa-plus-circle"></i> Добавить категорию
+            {!! __('category.add_category_button') !!}
         </button>
     </form>
 </div>
-
 @endsection

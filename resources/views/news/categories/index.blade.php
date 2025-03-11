@@ -81,9 +81,8 @@
 
     
 </style>
-
 <div class="container">
-    <h2>Категории новостей</h2>
+    <h2>{{ __('category.categories_title') }}</h2>
     <div class="new_post">
         @if(session('success'))
             <br><div class="alert">
@@ -94,22 +93,22 @@
         <table class="table mt-4">
             <thead>
                 <tr>
-                    <th>Название</th>
-                    <th>Действия</th>
+                    <th>{{ __('category.category_name') }}</th>
+                    <th>{{ __('category.actions') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($categories as $category)
                 <tr>
-                    <td>{{ $category->name }}</td> <!-- Убедитесь, что здесь используется корректное поле названия -->
+                    <td>{{ $category->name }}</td>
                     <td>
-                        <a href="{{ route('newscategories.edit', $category->id) }}" class="blue_btn" title="Редактировать">
+                        <a href="{{ route('newscategories.edit', $category->id) }}" class="blue_btn" title="{{ __('category.edit') }}">
                             <i class="fas fa-edit"></i>
                         </a>
                         <form action="{{ route('newscategories.destroy', $category->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="blue_btn" title="Удалить">
+                            <button type="submit" class="blue_btn" title="{{ __('category.delete') }}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </form>
@@ -121,7 +120,7 @@
         
         <form action="{{ route('newscategories.create') }}" method="GET" style="display:inline;">
             <button type="submit" class="blue_btn">
-                <i class="fas fa-plus-circle"></i> Добавить категорию
+                {!! __('category.add_category_button') !!}
             </button>
         </form>
     </div>

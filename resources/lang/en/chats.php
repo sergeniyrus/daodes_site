@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'your_chats' => 'Your Chats',
+    'group_chats' => 'Group Chats',
+    'private_messages' => 'Private Messages',
+    'chat_name' => 'Chat Name',
+    'messages_count' => 'Messages Count',
+    'participants' => 'Participants',
+    'create_chat' => 'Create Chat',
+    'chat' => 'Chat',
+    'send' => 'Send',
+    'to_chats' => 'To Chats',
+    'new_chat' => 'New Chat',
+    'notifications' => 'Notifications',
+    'create_chat_title' => 'Create Chat',
+    'chat_name_label' => 'Chat Name',
+    'participants_label' => 'Participants',
+    'select_participants_hint' => 'Hold Ctrl (or Cmd on Mac) to select multiple participants.',
+    'select_all_hint' => 'Hold Ctrl + A to select all participants.',
+    'create' => 'Create',
+    'create_chat_with_user' => 'Create Chat with User',
+    'notifications_title' => 'Your Notifications',
+    'no_notifications' => 'No unread messages.',
+    'unread_messages_in_chat' => 'Unread messages in chat:',
+    'read' => 'Read',
+];

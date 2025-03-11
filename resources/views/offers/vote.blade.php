@@ -120,158 +120,6 @@
 }
 </style>
 
-{{-- <div class="left_box">
-    @auth
-        <?php
-        // $user = Auth::user();
-        // $user_id = $user->id;
-
-        // $offer_id = $offer_id ?? request()->route('id'); // Получаем id предложения из маршрута, если переменная не передана
-
-        // $hasVoted = DB::table('offer_votes')
-        //             ->where('offer_id', $offer_id)
-        //             ->where('user_id', $user_id)
-        //             ->exists();
-
-        // $startVoteTime = DB::table('offers')
-        //     ->select('start_vote')
-        //     ->where('id', $offer_id)
-        //     ->first();
-        // $startVoteTime = $startVoteTime->start_vote;
-
-        // if (!$hasVoted) {
-        ?>
-        <div class="vote_box">
-            <form action="{{ route('vote.store') }}" class="form-vote" method="post">
-                @csrf
-                <fieldset class="tbr">
-                    <h1 style="text-align: center; font-size:1.5rem">Голосовать</h1>
-                    <div class="vote_ratio">
-                        <label for="choice1" class="img_vote">
-                            <input type="radio" id="choice1" name="vote" value="1" class="ratio_l">
-                            <img class="img_bt circle" src="{{ asset('/img/icons_post/yes.png') }}" alt="">
-                        </label>
-                        <label for="choice2" class="img_vote">
-                            <input type="radio" id="choice2" name="vote" value="2" class="ratio_r">
-                            <img class="img_bt circle" src="{{ asset('/img/icons_post/no.png') }}" alt="">
-                        </label>
-                    </div>
-                    <input type="hidden" name="offer_id" value="{{ $offer_id }}">
-                    <input type="image" src="{{ asset('/img/icons_post/voting.png') }}" class="img_bt" title="Голосовать">
-                </fieldset>
-            </form>
-        </div>
-        <?php
-        //} else {
-        ?>
-        <div class="msg">
-            <h1 style="text-align: center; font-size:1.5rem">Ваше мнение учтено</h1>
-        </div>
-        <?php
-            // if (isset($offer_id)) {
-            //     $totalUsers = DB::table('users')->count() - 2;
-
-            //     $counts = DB::table('offer_votes')->select(DB::raw('vote, COUNT(*) as count'))
-            //         ->where('offer_id', $offer_id)
-            //         ->groupBy('vote')
-            //         ->get();
-
-            //     $za = $counts->where('vote', 1)->sum('count');
-            //     $no = $counts->where('vote', 2)->sum('count');
-
-            //     $totalVotes = $za + $no;
-            //     $vozd = $totalUsers - $totalVotes;
-
-            //     $za_percentage = $totalUsers > 0 ? round(($za * 100) / $totalUsers, 2) : 0;
-            //     $no_percentage = $totalUsers > 0 ? round(($no * 100) / $totalUsers, 2) : 0;
-            //     $vozd_percentage = $totalUsers > 0 ? round(($vozd * 100) / $totalUsers, 2) : 0;
-            // }
-        ?>
-
-        <h1 style="text-align: center; font-size:1.5rem">Результаты</h1>
-        <table class="results-table">
-            <tr>
-                <td>За:</td>
-                <td class="text-right">{{ $za ?? 0 }}</td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="progress-bar">
-                        <div class="progress" style="width:{{ $za_percentage ?? 0 }}%; background-color: green;">
-                            <span>&nbsp;</span>
-                        </div>
-                    </div>
-                </td>
-                <td class="text-right">{{ $za_percentage ?? 0 }}%</td>
-            </tr>
-            <tr>
-                <td>Против:</td>
-                <td class="text-right">{{ $no ?? 0 }}</td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="progress-bar">
-                        <div class="progress" style="width:{{ $no_percentage ?? 0 }}%; background-color: red;">
-                            <span>&nbsp;</span>
-                        </div>
-                    </div>
-                </td>
-                <td class="text-right">{{ $no_percentage ?? 0 }}%</td>
-            </tr>
-            <tr>
-                <td>Не голосовали:</td>
-                <td class="text-right">{{ $vozd ?? 0 }}</td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="progress-bar">
-                        <div class="progress" style="width:{{ $vozd_percentage ?? 0 }}%; background-color: #555;">
-                            <span>&nbsp;</span>
-                        </div>
-                    </div>
-                </td>
-                <td class="text-right">{{ $vozd_percentage ?? 0 }}%</td>
-            </tr>
-        </table>
-
-        <?php
-        }
-        ?>
-    @else
-        <div class="msg">Чтоб голосовать необходимо <a href="/login" class="eror_com">войти</a></div>
-    @endauth
-
-    <div class="msg">
-        <h6>До конца голосования осталось:</h6>
-        <div id="remaining-time" class="time-remaining"></div><br>
-    </div>
-
-    <script>
-        const startVoteTime = new Date("{{ $startVoteTime }} UTC"); // Явно указать UTC
-        const intervalHours = 72;
-
-        function updateTime() {
-            const now = new Date();
-            const voteStartDate = new Date(startVoteTime);
-            const endDate = new Date(voteStartDate.getTime() + intervalHours * 60 * 60 * 1000);
-            const timeDiff = endDate - now;
-
-            if (timeDiff <= 0) {
-                document.getElementById('remaining-time').innerHTML = 'Период голосования закончился!';
-                return;
-            }
-
-            const totalHours = Math.floor(timeDiff / (1000 * 60 * 60));
-            const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-
-            document.getElementById('remaining-time').innerHTML = `${totalHours}h ${minutes}m ${seconds}s`;
-        }
-
-        setInterval(updateTime, 1000);
-    </script>
-</div> --}}
-
 <div class="left_box">
     @auth
         <?php
@@ -297,7 +145,7 @@
             <form action="{{ route('vote.store') }}" class="form-vote" method="post">
                 @csrf
                 <fieldset class="tbr">
-                    <h1 style="text-align: center; font-size:1.5rem">Vote</h1>
+                    <h1 style="text-align: center; font-size:1.5rem">{{ __('offers.vote_title') }}</h1>
                     <div class="vote_ratio">
                         <label for="choice1" class="img_vote">
                             <input type="radio" id="choice1" name="vote" value="1" class="ratio_l">
@@ -317,7 +165,7 @@
         } else {
         ?>
         <div class="msg">
-            <h1 style="text-align: center; font-size:1.5rem">Your opinion has been counted</h1>
+            <h1 style="text-align: center; font-size:1.5rem">{{ __('offers.your_opinion_counted') }}</h1>
         </div>
         <?php
             if (isset($offer_id)) {
@@ -340,10 +188,10 @@
             }
         ?>
 
-        <h1 style="text-align: center; font-size:1.5rem">Results</h1>
+        <h1 style="text-align: center; font-size:1.5rem">{{ __('offers.results_title') }}</h1>
         <table class="results-table">
             <tr>
-                <td>For:</td>
+                <td>{{ __('offers.for_label') }}</td>
                 <td class="text-right">{{ $za ?? 0 }}</td>
             </tr>
             <tr>
@@ -357,7 +205,7 @@
                 <td class="text-right">{{ $za_percentage ?? 0 }}%</td>
             </tr>
             <tr>
-                <td>Against:</td>
+                <td>{{ __('offers.against_label') }}</td>
                 <td class="text-right">{{ $no ?? 0 }}</td>
             </tr>
             <tr>
@@ -371,7 +219,7 @@
                 <td class="text-right">{{ $no_percentage ?? 0 }}%</td>
             </tr>
             <tr>
-                <td>Did not vote:</td>
+                <td>{{ __('offers.did_not_vote_label') }}</td>
                 <td class="text-right">{{ $vozd ?? 0 }}</td>
             </tr>
             <tr>
@@ -390,11 +238,11 @@
         }
         ?>
     @else
-        <div class="msg">To vote, you need to <a href="/login" class="eror_com">log in</a></div>
+        <div class="msg">{!! __('offers.login_to_vote', ['link' => route('login')]) !!}</div>
     @endauth
 
     <div class="msg">
-        <h6>Time remaining until the end of voting:</h6>
+        <h6>{{ __('offers.time_remaining') }}</h6>
         <div id="remaining-time" class="time-remaining"></div><br>
     </div>
 
@@ -409,7 +257,7 @@
             const timeDiff = endDate - now;
 
             if (timeDiff <= 0) {
-                document.getElementById('remaining-time').innerHTML = 'The voting period has ended!';
+                document.getElementById('remaining-time').innerHTML = '{{ __('offers.voting_ended') }}';
                 return;
             }
 

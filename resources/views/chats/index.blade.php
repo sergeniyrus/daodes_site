@@ -1,5 +1,5 @@
 @extends('template')
-@section('title_page', 'Ваши чаты')
+@section('title_page', __('chats.your_chats'))
 @section('main')
     <style>
         .container {
@@ -87,16 +87,16 @@
         }
     </style>
     <div class="container">
-        <h1 class="big text-center">Ваши чаты</h1>
+        <h1 class="big text-center">{{ __('chats.your_chats') }}</h1>
 
         <!-- Групповые чаты -->
-        <h2 class="text-center" style="margin-top: 20px; color: gold;">Групповые чаты</h2>
+        <h2 class="text-center" style="margin-top: 20px; color: gold;">{{ __('chats.group_chats') }}</h2>
         <table class="chat-table">
             <thead>
                 <tr>
-                    <th>Название чата</th>
-                    <th>Кол-во сообщений</th>
-                    <th>Участники</th>
+                    <th>{{ __('chats.chat_name') }}</th>
+                    <th>{{ __('chats.messages_count') }}</th>
+                    <th>{{ __('chats.participants') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -128,12 +128,12 @@
         </div>
 
         <!-- Личные сообщения -->
-        <h2 class="text-center" style="margin-top: 40px; color: gold;">Личные сообщения</h2>
+        <h2 class="text-center" style="margin-top: 40px; color: gold;">{{ __('chats.private_messages') }}</h2>
         <table class="chat-table">
             <thead>
                 <tr>
-                    <th>Собеседник</th>
-                    <th>Кол-во сообщений</th>
+                    <th>{{ __('chats.chat_name') }}</th>
+                    <th>{{ __('chats.messages_count') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -159,7 +159,7 @@
 
         <!-- Кнопка "Создать чат" -->
         <div class="text-center" style="margin-top: 20px;">
-            <a href="{{ route('chats.create') }}" class="blue_btn">Создать чат</a>
+            <a href="{{ route('chats.create') }}" class="blue_btn">{{ __('chats.create_chat') }}</a>
         </div>
     </div>
 @endsection

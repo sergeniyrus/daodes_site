@@ -21,7 +21,11 @@ use App\Http\Controllers\{
     UserProfileController,
     UploadController,
     ChatController,
+    LanguageController,
 };
+
+// Маршрут для смены языка
+Route::get('/language/{locale}', [LanguageController::class, 'change'])->name('language.change');
 
 Route::middleware('auth')->group(function () {
     Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');

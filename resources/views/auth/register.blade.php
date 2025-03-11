@@ -1,7 +1,7 @@
 @extends('template')
 
 @section('title_page')
-    Регистрация
+    {{ __('registration.title_page') }}
 @endsection
 
 @section('main')
@@ -108,85 +108,86 @@
         }
     </style>
 
-<x-guest-layout>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
+    <x-guest-layout>
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form method="POST" action="{{ route('register') }}" class="form-container">
-        @csrf
+        <form method="POST" action="{{ route('register') }}" class="form-container">
+            @csrf
 
-        <!-- Username -->
-        <div>
-            <x-input-label for="name" :value="__('Username')" class="task-line"/>
-            <x-text-input 
-                id="name" 
-                class="input_row" 
-                type="text" 
-                name="name" 
-                :value="old('name')" 
-                required 
-                autofocus 
-                autocomplete="username" 
-                placeholder="Enter username"
-            />
-            <x-input-error :messages="$errors->get('name')" class="error-message" />
-        </div>
+            <!-- Username -->
+            <div>
+                <x-input-label for="name" :value="__('registration.username')" class="task-line"/>
+                <x-text-input 
+                    id="name" 
+                    class="input_row" 
+                    type="text" 
+                    name="name" 
+                    :value="old('name')" 
+                    required 
+                    autofocus 
+                    autocomplete="username" 
+                    placeholder="{{ __('registration.username_placeholder') }}"
+                />
+                <x-input-error :messages="$errors->get('name')" class="error-message" />
+            </div>
 
-        <!-- Keyword -->
-        <div class="mt-4">
-            <x-input-label for="keyword" :value="__('Keyword')" class="task-line"/>
-            <x-text-input 
-                id="keyword" 
-                class="input_row" 
-                type="text" 
-                name="keyword" 
-                :value="old('keyword')" 
-                required 
-                autocomplete="keyword" 
-                placeholder="Enter keyword"
-            />
-            <x-input-error :messages="$errors->get('keyword')" class="error-message" />
-        </div>
+            <!-- Keyword -->
+            <div class="mt-4">
+                <x-input-label for="keyword" :value="__('registration.keyword')" class="task-line"/>
+                <x-text-input 
+                    id="keyword" 
+                    class="input_row" 
+                    type="text" 
+                    name="keyword" 
+                    :value="old('keyword')" 
+                    required 
+                    autocomplete="keyword" 
+                    placeholder="{{ __('registration.keyword_placeholder') }}"
+                />
+                <x-input-error :messages="$errors->get('keyword')" class="error-message" />
+            </div>
 
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" class="task-line" />
-            <x-text-input 
-                id="password" 
-                class="input_row" 
-                type="password" 
-                name="password" 
-                required 
-                autocomplete="new-password" 
-                placeholder="Enter password"
-            />
-            <x-input-error :messages="$errors->get('password')" class="error-message" />
-        </div>
+            <!-- Password -->
+            <div class="mt-4">
+                <x-input-label for="password" :value="__('registration.password')" class="task-line" />
+                <x-text-input 
+                    id="password" 
+                    class="input_row" 
+                    type="password" 
+                    name="password" 
+                    required 
+                    autocomplete="new-password" 
+                    placeholder="{{ __('registration.password_placeholder') }}"
+                />
+                <x-input-error :messages="$errors->get('password')" class="error-message" />
+            </div>
 
-        <!-- Confirm Password -->
-        <div class="mt-4">
-            <x-input-label for="password_confirmation" :value="__('Confirm Password')" class="task-line" />
-            <x-text-input 
-                id="password_confirmation" 
-                class="input_row" 
-                type="password" 
-                name="password_confirmation" 
-                required 
-                autocomplete="new-password" 
-                placeholder="Confirm password"
-            />
-            <x-input-error :messages="$errors->get('password_confirmation')" class="error-message" />
-        </div>
-        <br>
-        <!-- Submit and Register Buttons -->
-        <div class="button-container">
-            <button type="submit" title="Register" class="likebtn">
-                <img src="img/bottom/registrat.png" alt="Register" class="blue_btn">
-            </button>
-            <a href="{{ route('login') }}" class="likebtn" title="Login">
-                <img src="img/bottom/login.png" alt="Login" class="blue_btn">
-            </a>
-        </div>
-    </form>
-</x-guest-layout>
+            <!-- Confirm Password -->
+            <div class="mt-4">
+                <x-input-label for="password_confirmation" :value="__('registration.confirm_password')" class="task-line" />
+                <x-text-input 
+                    id="password_confirmation" 
+                    class="input_row" 
+                    type="password" 
+                    name="password_confirmation" 
+                    required 
+                    autocomplete="new-password" 
+                    placeholder="{{ __('registration.confirm_password_placeholder') }}"
+                />
+                <x-input-error :messages="$errors->get('password_confirmation')" class="error-message" />
+            </div>
+            <br>
+
+            <!-- Submit and Register Buttons -->
+            <div class="button-container">
+                <button type="submit" title="{{ __('registration.register_button') }}" class="likebtn">
+                    <img src="img/bottom/registrat.png" alt="{{ __('registration.register_button') }}" class="blue_btn">
+                </button>
+                <a href="{{ route('login') }}" class="likebtn" title="{{ __('registration.login_button') }}">
+                    <img src="img/bottom/login.png" alt="{{ __('registration.login_button') }}" class="blue_btn">
+                </a>
+            </div>
+        </form>
+    </x-guest-layout>
 @endsection

@@ -102,68 +102,67 @@
         
     </style>
 
-    <div class="container">
-        <h2 class="text-center">Создать новость</h2>
+<div class="container">
+    <h2 class="text-center">{{ __('admin_news.create_news_title') }}</h2>
 
-        <!-- Validation Errors -->
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
+    <!-- Validation Errors -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    <form id="news-form" method="POST" action="{{ route('news.create') }}" enctype="multipart/form-data">
+        @csrf
+
+        <div class="form-group">
+            <label for="title">{{ __('admin_news.news_title') }}</label>
+            <input type="text" name="title" class="input_dark" value="{{ old('title') }}" placeholder="{{ __('admin_news.news_title_placeholder') }}">
+        </div>
+
+        <div class="form-group">
+            <label for="category">{{ __('admin_news.category') }}</label>
+            <select name="category" class="input_dark">
+                <option value="0" selected>{{ __('admin_news.select_category') }}</option>
+                @foreach (DB::table('category_news')->get() as $category)
+                    <option value="{{ $category->id }}">{{ $category->name }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="filename">{{ __('admin_news.news_image') }}</label>
+            <div class="file-input-wrapper">
+                <!-- Превью изображения -->
+                <img id="preview" src="#" alt="Превью изображения">
+
+                <!-- Кнопка для загрузки изображения -->
+                <button type="button" class="blue_btn"
+                    onclick="document.getElementById('file-input').click();">{{ __('admin_news.choose_file') }}</button>
+
+                <!-- Поле загрузки файла (скрыто) -->
+                <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+
+                <!-- Название выбранного файла -->
+                <div id="file-name">{{ __('admin_news.no_file_selected') }}</div>
             </div>
-        @endif
+            <p style="color: red; text-align: center; margin-top: 20px; font-size:0.9rem;">{{ __('admin_news.image_requirements') }}</p>
+        </div>
 
-        <form id="news-form" method="POST" action="{{ route('news.create') }}" enctype="multipart/form-data">
-            @csrf
+        <div class="form-group">
+            <label for="content">{{ __('admin_news.news_content') }}</label>
+            <textarea id="editor" name="content" rows="10" placeholder="{{ __('admin_news.news_content_placeholder') }}">{{ old('content') }}</textarea>
+        </div>
 
-            <div class="form-group">
-                <label for="title">Название новости</label>
-                <input type="text" name="title" class="input_dark" value="{{ old('title') }}">
-            </div>
-
-            <div class="form-group">
-                <label for="category">Тема</label>
-                <select name="category" class="input_dark">
-                    <option value="0" selected>Выберите категорию</option>
-                    @foreach (DB::table('category_news')->get() as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="filename">Картинка новости</label>
-                <div class="file-input-wrapper">
-                    <!-- Превью изображения -->
-                    <img id="preview" src="#" alt="Превью изображения">
-
-                    <!-- Кнопка для загрузки изображения -->
-                    <button type="button" class="blue_btn"
-                        onclick="document.getElementById('file-input').click();">Выберите файл</button>
-
-                    <!-- Поле загрузки файла (скрыто) -->
-                    <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
-
-                    <!-- Название выбранного файла -->
-                    <div id="file-name">Файл не выбран</div>
-                </div>
-                <p style="color: red; text-align: center; margin-top: 20px; font-size:0.9rem;">Изображение должно быть 1:1.
-                    Имя файла должно быть на английском.</p>
-            </div>
-
-            <div class="form-group">
-                <label for="content">Содержание новости</label>
-                <textarea id="editor" name="content" rows="10" placeholder="Введите текст новости">{{ old('content') }}</textarea>
-            </div>
-
-            <div style="text-align: center;">
-                <button type="submit" class="blue_btn" style="input_dark">Создать новость</button>
-            </div>
-        </form>
-    </div>
+        <div style="text-align: center;">
+            <button type="submit" class="blue_btn" style="input_dark">{{ __('admin_news.create_news_button') }}</button>
+        </div>
+    </form>
+</div>
 
 {{-- // Инициализация cropper --}}
     <script src="{{ asset('js/image-cropper.js') }}"></script>

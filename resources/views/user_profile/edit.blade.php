@@ -1,8 +1,6 @@
 @extends('template')
 
-@section('title_page')
-    Edit profile
-@endsection
+@section('title_page', __('user_profile.edit_profile'))
 
 @section('main')
     <style>
@@ -115,7 +113,7 @@
     </style>
 
 <div class="container">
-    <h2 style="text-align: center">Edit Profile</h2><br>
+    <h2 style="text-align: center">{{ __('user_profile.edit_profile') }}</h2><br>
 
     <!-- Display session message if it exists -->
     @if (session('info'))
@@ -130,18 +128,16 @@
 
         <!-- Image Upload -->
         <div class="form-group">
-            <label for="filename">Avatar</label>
+            <label for="filename">{{ __('user_profile.avatar') }}</label>
             <div class="file-input-wrapper">
-                <!-- If an avatar exists, show it; otherwise, do not display the image -->
                 <img id="preview" src="{{ $profile->avatar_url ?? '#' }}" alt="Image Preview"
                     style="display: {{ $profile->avatar_url ? 'block' : 'none' }};  max-width: 100px;">
 
                 <div class="file-info">
-                    <!-- If an avatar exists, display the file name; otherwise, show "No file chosen" -->
                     <span id="file-name"
-                        class="file-name">{{ $profile->avatar_url ? basename($profile->avatar_url) : 'No file chosen' }}</span>
+                        class="file-name">{{ $profile->avatar_url ? basename($profile->avatar_url) : __('user_profile.no_file_chosen') }}</span>
                     <button type="button" class="blue_btn"
-                        onclick="document.getElementById('file-input').click();">Choose File</button>
+                        onclick="document.getElementById('file-input').click();">{{ __('user_profile.choose_file') }}</button>
                     <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
                 </div>
             </div>
@@ -149,48 +145,48 @@
 
         <!-- Role -->
         <div class="form-group">
-            <label for="role">Role</label>
+            <label for="role">{{ __('user_profile.role') }}</label>
             <select class="input_dark" name="role">
-                <option value="executor" {{ old('role', $profile->role) == 'executor' ? 'selected' : '' }}>Executor</option>
-                <option value="client" {{ old('role', $profile->role) == 'client' ? 'selected' : '' }}>Client</option>
-                <option value="both" {{ old('role', $profile->role) == 'both' ? 'selected' : '' }}>Both</option>
+                <option value="executor" {{ old('role', $profile->role) == 'executor' ? 'selected' : '' }}>{{ __('user_profile.executor') }}</option>
+                <option value="client" {{ old('role', $profile->role) == 'client' ? 'selected' : '' }}>{{ __('user_profile.client') }}</option>
+                <option value="both" {{ old('role', $profile->role) == 'both' ? 'selected' : '' }}>{{ __('user_profile.both') }}</option>
             </select>
         </div>
 
         <!-- Telegram Nickname -->
         <div class="form-group">
-            <label for="nickname">Telegram Nickname</label>
+            <label for="nickname">{{ __('user_profile.telegram_nickname') }}</label>
             <input type="text" class="input_dark" name="nickname" value="{{ old('nickname', $profile->nickname) }}"
-                placeholder="{{ $profile->nickname ?: 'no data' }}">
+                placeholder="{{ $profile->nickname ?: __('user_profile.not_specified') }}">
         </div>
 
         <!-- Gender -->
         <div class="form-group">
-            <label for="gender">Gender:</label>
+            <label for="gender">{{ __('user_profile.gender') }}:</label>
             <select name="gender" class="input_dark">
-                <option value="" {{ old('gender', $profile->gender) == '' ? 'selected' : '' }}>Not specified</option>
-                <option value="male" {{ old('gender', $profile->gender) == 'male' ? 'selected' : '' }}>Male</option>
-                <option value="female" {{ old('gender', $profile->gender) == 'female' ? 'selected' : '' }}>Female</option>
+                <option value="" {{ old('gender', $profile->gender) == '' ? 'selected' : '' }}>{{ __('user_profile.not_specified') }}</option>
+                <option value="male" {{ old('gender', $profile->gender) == 'male' ? 'selected' : '' }}>{{ __('user_profile.male') }}</option>
+                <option value="female" {{ old('gender', $profile->gender) == 'female' ? 'selected' : '' }}>{{ __('user_profile.female') }}</option>
             </select>
         </div>
 
         <!-- Date of Birth -->
         <div class="form-group">
-            <label for="birthdate">Date of Birth:</label>
+            <label for="birthdate">{{ __('user_profile.date_of_birth') }}:</label>
             <input type="date" class="input_dark" name="birth_date"
                 value="{{ old('birth_date', $profile->birth_date) }}">
         </div>
 
         <!-- Communication Languages -->
         <div class="form-group">
-            <label for="languages">Communication Languages:</label>
+            <label for="languages">{{ __('user_profile.languages') }}:</label>
             <textarea class="input_dark" name="languages"
-                placeholder="{{ $profile->languages ? $profile->languages : 'no data' }}">{{ old('languages', $profile->languages) }}</textarea>
+                placeholder="{{ $profile->languages ? $profile->languages : __('user_profile.not_specified') }}">{{ old('languages', $profile->languages) }}</textarea>
         </div>
 
         <!-- Timezone -->
         <div class="form-group">
-            <label for="timezone">Timezone:</label>
+            <label for="timezone">{{ __('user_profile.timezone') }}:</label>
             <select class="input_dark" name="timezone">
                 <option value="UTC-12:00" {{ $profile->timezone == 'UTC-12:00' ? 'selected' : '' }}>UTC-12:00</option>
                 <option value="UTC-11:00" {{ $profile->timezone == 'UTC-11:00' ? 'selected' : '' }}>UTC-11:00</option>
@@ -222,56 +218,54 @@
 
         <!-- Education -->
         <div class="form-group">
-            <label for="education">Education:</label>
-            <textarea class="input_dark" name="education" placeholder="{{ $profile->education ?: 'no data' }}">{{ old('education', $profile->education) }}</textarea>
+            <label for="education">{{ __('user_profile.education') }}:</label>
+            <textarea class="input_dark" name="education" placeholder="{{ $profile->education ?: __('user_profile.not_specified') }}">{{ old('education', $profile->education) }}</textarea>
         </div>
 
         <!-- Specialization -->
         <div class="form-group">
-            <label for="specialization">Specialization:</label>
+            <label for="specialization">{{ __('user_profile.specialization') }}:</label>
             <input type="text" class="input_dark" name="specialization"
                 value="{{ old('specialization', $profile->specialization) }}"
-                placeholder="{{ $profile->specialization ?: 'no data' }}">
+                placeholder="{{ $profile->specialization ?: __('user_profile.not_specified') }}">
         </div>
 
         <!-- Resume -->
         <div class="form-group">
-            <label for="resume">Resume:</label>
-            <textarea class="input_dark" name="resume" placeholder="{{ $profile->resume ?: 'no data' }}">{{ old('resume', $profile->resume) }}</textarea>
+            <label for="resume">{{ __('user_profile.resume') }}:</label>
+            <textarea class="input_dark" name="resume" placeholder="{{ $profile->resume ?: __('user_profile.not_specified') }}">{{ old('resume', $profile->resume) }}</textarea>
         </div>
 
         <!-- Portfolio -->
         <div class="form-group">
-            <label for="portfolio">Portfolio:</label>
-            <textarea class="input_dark" name="portfolio" placeholder="{{ $profile->portfolio ?: 'no data' }}">{{ old('portfolio', $profile->portfolio) }}</textarea>
+            <label for="portfolio">{{ __('user_profile.portfolio') }}:</label>
+            <textarea class="input_dark" name="portfolio" placeholder="{{ $profile->portfolio ?: __('user_profile.not_specified') }}">{{ old('portfolio', $profile->portfolio) }}</textarea>
         </div>
 
         <div class="text-center">
-            <button type="submit" class="blue_btn"><i class="fas fa-save"></i> Save Changes</button>
+            <button type="submit" class="blue_btn"><i class="fas fa-save"></i> {{ __('user_profile.save_changes') }}</button>
         </div>
     </form>
 </div>
 
-    {{-- <script>
-        document.getElementById("file-input").onchange = function(event) {
-            const file = event.target.files[0];
-            const fileNameElement = document.getElementById("file-name");
-            const previewElement = document.getElementById("preview");
+<script>
+    document.getElementById("file-input").onchange = function(event) {
+        const file = event.target.files[0];
+        const fileNameElement = document.getElementById("file-name");
+        const previewElement = document.getElementById("preview");
 
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    previewElement.src = e.target.result;
-                    previewElement.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-                fileNameElement.textContent = file.name;
-            } else {
-                previewElement.style.display = 'none';
-                fileNameElement.textContent = "The file is not selected";
-            }
-        };
-    </script> --}}
-    {{-- // Инициализация cropper --}}
-    <script src="{{ asset('js/image-cropper.js') }}"></script>
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewElement.src = e.target.result;
+                previewElement.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+            fileNameElement.textContent = file.name;
+        } else {
+            previewElement.style.display = 'none';
+            fileNameElement.textContent = "{{ __('user_profile.no_file_chosen') }}";
+        }
+    };
+</script>
 @endsection

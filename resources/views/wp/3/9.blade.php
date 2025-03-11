@@ -1,41 +1,42 @@
-<div>
-    <h2>Reward System for Creators and Investors in the DES Project</h2>
-    <p>The DES project implements a reward system for creators and investors of applications based on the DES
-        blockchain. It is implemented as follows:</p>
+    <h2>{{ __('wp/3/9.title') }}</h2>
+    <p>{{ __('wp/3/9.paragraph1') }}</p>
 
-    <h3>Application Registration and DAO Creation</h3>
+    <h3>{{ __('wp/3/9.registration_title') }}</h3>
     <ol>
-        <li><strong>Application Registration:</strong> The creator of the application registers it in the system by
-            creating an application questionnaire. This includes a description, goals, objectives, a preliminary
-            assessment of the required investment volumes, and an NFT-zoned version of the White Paper as proof of
-            authorship.</li>
-        <li><strong>Approval by the Expert Group:</strong> After the questionnaire is approved by the expert group of
-            the community, the author gains the ability to create a DAO. A wallet for attracting investments is linked
-            to this DAO.</li>
+        @foreach (__('wp/3/9.registration_list') as $item)
+            @php
+                $parts = explode(':', $item, 2); // Разделяем строку на 2 части
+                $title = $parts[0]; // Первая часть (до ":")
+                $description = isset($parts[1]) ? $parts[1] : ''; // Вторая часть (после ":"), если есть
+            @endphp
+            <li><strong>{{ $title }}:</strong> {{ $description }}</li>
+        @endforeach
     </ol>
 
-    <h3>Wallet Groups and Investment Attraction</h3>
+    <h3>{{ __('wp/3/9.wallets_title') }}</h3>
     <ul>
-        <li><strong>"Creator" Group of Wallets:</strong> Linked to the DAO wallet to reward activists and creators.</li>
-        <li><strong>"Investor" Group of Wallets:</strong> Linked to the DAO wallet to reward project investors.</li>
-        <li><strong>Investment Attraction:</strong> After community support, it becomes possible to attract investments
-            into the linked DAO wallet.</li>
+        @foreach (__('wp/3/9.wallets_list') as $item)
+            @php
+                $parts = explode(':', $item, 2); // Разделяем строку на 2 части
+                $title = $parts[0]; // Первая часть (до ":")
+                $description = isset($parts[1]) ? $parts[1] : ''; // Вторая часть (после ":"), если есть
+            @endphp
+            <li><strong>{{ $title }}:</strong> {{ $description }}</li>
+        @endforeach
     </ul>
 
-    <h3>Revenue Distribution</h3>
-    <p>After collecting the target amount in the DAO wallet and launching the application, 30% of the total volume of
-        transactions for the product will be credited to the linked wallet. Payments will be made in accordance with the
-        register of wallets linked as "Creator" and "Investor".</p>
+    <h3>{{ __('wp/3/9.revenue_title') }}</h3>
+    <p>{{ __('wp/3/9.revenue_paragraph') }}</p>
     <ul>
-        <li><strong>Creator Wallets:</strong> Shares between the wallets of creators and activists are determined by the
-            proportion of management tokens held by participants.</li>
-        <li><strong>Investor Wallets:</strong> Shares are divided according to the proportion of each investor's
-            contribution to the total investment in the application.</li>
+        @foreach (__('wp/3/9.revenue_list') as $item)
+            @php
+                $parts = explode(':', $item, 2); // Разделяем строку на 2 части
+                $title = $parts[0]; // Первая часть (до ":")
+                $description = isset($parts[1]) ? $parts[1] : ''; // Вторая часть (после ":"), если есть
+            @endphp
+            <li><strong>{{ $title }}:</strong> {{ $description }}</li>
+        @endforeach
     </ul>
 
-    <h3>Consulting and Ecosystem Development</h3>
-    <p>If necessary, application creators can involve DES ecosystem development managers for consulting on application
-        development. These managers will receive a percentage of the total volume of product transactions. For more
-        information about DES ecosystem development managers, see the section "Accounting for Activity in the DES
-        Project".</p>
-</div>
+    <h3>{{ __('wp/3/9.consulting_title') }}</h3>
+    <p>{{ __('wp/3/9.consulting_paragraph') }}</p>

@@ -1,5 +1,7 @@
 @extends('template')
-@section('title_page', 'Добавить категорию Предложений')
+
+@section('title_page', __('category.add_offer_category_title')) <!-- Перевод заголовка страницы -->
+
 @section('main')
 
 <style>
@@ -68,7 +70,7 @@
 </style>
 
 <div class="container my-5">
-    <h1>Добавить категорию Предложений</h1>
+    <h1>{{ __('category.categories_title') }}</h1> <!-- Перевод заголовка -->
 
     @if($errors->any())
         <div class="alert alert-danger">
@@ -83,12 +85,12 @@
     <form action="{{ route('offerscategories.store') }}" method="POST">
         @csrf
         <div class="form-group">
-            <label for="name">Название категории:</label>
+            <label for="name">{{ __('category.category_name_label') }}</label> <!-- Перевод метки -->
             <input type="text" name="name" id="name" class="input_dark" required>
         </div>
 
         <button type="submit" class="blue_btn">
-            <i class="fas fa-plus-circle"></i> Добавить категорию
+             {!! __('category.add_category_button') !!} <!-- Перевод текста кнопки -->
         </button>
     </form>
 </div>

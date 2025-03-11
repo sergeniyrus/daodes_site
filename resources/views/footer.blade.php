@@ -55,5 +55,5 @@
             <h4>DAO DES 2024</h4>
         </div>
     </div>
-    <a href="#" class="scrollup">Наверх</a>
+    <a href="#" class="scrollup">Up</a>
 </footer>

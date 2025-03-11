@@ -1,5 +1,5 @@
 @extends('template')
-@section('title_page', 'Чат')
+@section('title_page', __('chats.chat'))
 @section('main')
 <style>
   .container {
@@ -138,24 +138,15 @@
 }
 </style>
 <div class="container">
-    <h1 class="big"> {{ $chat->getChatNameForUser(auth()->id()) }}</h1>
+    <h1 class="big">{{ $chat->getChatNameForUser(auth()->id()) }}</h1>
     <div class="chat-messages mb-4">
         @foreach ($chat->messages as $message)
-            @php
-                // Логируем информацию о сообщении
-                Log::info('Отображение сообщения', [
-                    'message_id' => $message->id,
-                    'sender_id' => $message->sender_id,
-                    'chat_id' => $chat->id,
-                    'message_content' => $message->message,
-                ]);
-            @endphp
             <div class="card mb-2 {{ $message->sender_id === auth()->id() ? 'bg-primary text-white' : 'bg-light' }}">
                 <div class="card-body">
                     <h5 class="card-title">{{ $message->sender->name }} 
-                      <small>{{ $message->created_at->format('H:i, d M') }}</small></h5>
+                        <small>{{ $message->created_at->format('H:i, d M') }}</small></h5>
                     <p class="card-text">
-                        {{ $message->message }} <!-- Отображаем сообщение как есть -->
+                        {{ $message->message }}
                     </p>
                 </div>
             </div>
@@ -165,13 +156,13 @@
         @csrf
         <div class="input-group">
             <textarea name="message" class="form-control input_dark" rows="1" required id="messageInput"></textarea>
-            <button type="submit" class="blue_btn">Отправить</button>
+            <button type="submit" class="blue_btn">{{ __('chats.send') }}</button>
         </div>
     </form>
     <div class="additional-buttons">
-        <a href="/chats" class="blue_btn">К чатам</a>
-        <a href="/chats/create" class="blue_btn">Новый чат</a>
-        <a href="/notifications" class="blue_btn">Уведомления</a>
+        <a href="/chats" class="blue_btn">{{ __('chats.to_chats') }}</a>
+        <a href="/chats/create" class="blue_btn">{{ __('chats.new_chat') }}</a>
+        <a href="/notifications" class="blue_btn">{{ __('chats.notifications') }}</a>
     </div>
 </div>
 <script>

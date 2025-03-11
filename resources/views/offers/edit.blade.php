@@ -103,9 +103,8 @@ Edit the offer
         }
         
     </style>
-
 <div class="container">
-    <h2 class="text-center">Edit Offer</h2>
+    <h2 class="text-center">{{ __('admin_offers.edit_offer_title') }}</h2>
 
     <!-- Validation Errors -->
     @if ($errors->any())
@@ -123,12 +122,12 @@ Edit the offer
         @method('PUT')
 
         <div class="form-group">
-            <label for="title">Offer Title</label>
+            <label for="title">{{ __('admin_offers.offer_title') }}</label>
             <input type="text" name="title" class="input_dark" value="{{ old('title', $offer->title) }}">
         </div>
 
         <div class="form-group">
-            <label for="category">Category</label>
+            <label for="category">{{ __('admin_offers.category') }}</label>
             <select name="category" class="input_dark">
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}" {{ $category->id == $offer->category_id ? 'selected' : '' }}>
@@ -139,7 +138,7 @@ Edit the offer
         </div>
 
         <div class="form-group">
-            <label for="filename">Offer Image</label>
+            <label for="filename">{{ __('admin_offers.image') }}</label>
             <div class="file-input-wrapper">
                 <!-- If an image exists, show it; otherwise, hide it -->
                 <img id="preview" src="{{ $offer->img ?? '#' }}" alt="Image Preview"
@@ -147,23 +146,23 @@ Edit the offer
         
                 <div class="file-info">
                     <!-- If an image exists, display the file name; otherwise, show "No file chosen" -->
-                    <span id="file-name" class="file-name">{{ $offer->img ? basename($offer->img) : 'No file chosen' }}</span>
+                    <span id="file-name" class="file-name">{{ $offer->img ? basename($offer->img) : __('admin_offers.no_file_chosen') }}</span>
                     <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">
-                        Choose File
+                        {{ __('admin_offers.choose_file') }}
                     </button>
                     <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
                 </div>
             </div>
-            <p style="color: red; text-align: center; font-size: 0.9rem;">The image must be 1:1. The file name must be in English.</p>
+            <p style="color: red; text-align: center; font-size: 0.9rem;">{{ __('admin_offers.image_requirements') }}</p>
         </div>
-        
+
         <div class="form-group">
-            <label for="content">Offer Content</label>
+            <label for="content">{{ __('admin_offers.offer_content') }}</label>
             <textarea id="editor" name="content" rows="10" class="input_dark">{{ old('content', $offer->content) }}</textarea>
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="blue_btn">Save Changes</button>
+            <button type="submit" class="blue_btn">{{ __('admin_offers.save_changes_button') }}</button>
         </div>
     </form>
 </div>

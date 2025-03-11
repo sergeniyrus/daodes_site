@@ -1,30 +1,23 @@
-<div>
-    <h2>Modified DPoS Consensus Mechanism</h2>
-    <p>For the most part, consensus will run on the Tendermint BFT engine. However, it will be modified to implement a
-        non-standard, upgraded DPoS (Delegated Proof of Stake) consensus mechanism.</p>
+    <h2>{{ __('wp/4/1.title') }}</h2>
+    <p>{{ __('wp/4/1.paragraph1') }}</p>
 
-    <h3>Key Differences from Standard DPoS</h3>
+    <h3>{{ __('wp/4/1.differences_title') }}</h3>
     <ul>
-        <li><strong>Delegator Pool (P1):</strong> In standard DPoS, delegators delegate their tokens directly to a
-            chosen validator. In our modified DPoS, delegators delegate their funds to a general Pool of Delegators
-            (P1). The total amount in this pool is considered as 100% for the block of delegators.</li>
-        <li><strong>Validator Pool (P2):</strong> Validators form their own pool (P2), which determines their voting
-            power. Validators are selected based on their contributions and performance within the network.</li>
-        <li><strong>Voting Power Limitation:</strong> The project enforces a condition at both the blockchain and DAO
-            levels that no participant can hold more than 8% of the total voting power.</li>
+        @foreach (__('wp/4/1.differences_list') as $item)
+            @php
+                $parts = explode(':', $item, 2); // Разделяем строку на 2 части
+                $title = $parts[0]; // Первая часть (до ":")
+                $description = isset($parts[1]) ? $parts[1] : ''; // Вторая часть (после ":"), если есть
+            @endphp
+            <li><strong>{{ $title }}:</strong> {{ $description }}</li>
+        @endforeach
     </ul>
 
-    <h3>DAO-Based Project Management</h3>
-    <p>All project management is based on the principles of a DAO (Decentralized Autonomous Organization). The DAO is
-        managed by active project participants who contribute to the project through various actions, such as:</p>
+    <h3>{{ __('wp/4/1.dao_title') }}</h3>
+    <p>{{ __('wp/4/1.dao_paragraph1') }}</p>
     <ul>
-        <li>Programming and development</li>
-        <li>Participating in hackathons</li>
-        <li>Copywriting and content creation</li>
-        <li>Translations and localization</li>
-        <li>Public relations (PR) and marketing</li>
-        <li>Proposing ideas for project improvements</li>
+        @foreach (__('wp/4/1.dao_list') as $item)
+            <li>{{ $item }}</li>
+        @endforeach
     </ul>
-    <p>These participants are rewarded based on their contributions, ensuring that the project benefits from a diverse
-        range of skills and expertise.</p>
-</div>
+    <p>{{ __('wp/4/1.dao_paragraph2') }}</p>

@@ -1,6 +1,6 @@
 @extends('template')
 @section('title_page')
-    White paper
+    {{ __('white_paper.title_page') }}
 @endsection
 @section('main')
     <main>
@@ -112,8 +112,6 @@
                 max-height: 0;
                 overflow: hidden;
                 transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-
             }
 
             .subchapter-item {
@@ -126,7 +124,6 @@
                 position: relative;
                 transition: all 0.2s ease;
                 z-index: 2;
-
             }
 
             .subchapter-item:hover {
@@ -169,7 +166,6 @@
                 background: #0b0c18ce;
                 position: relative;
                 z-index: 3;
-
             }
 
             .subchapter-content.open {
@@ -184,7 +180,6 @@
                 box-shadow: 0 0 15px rgba(0, 204, 255, 0.2);
             }
 
-
             p {
                 margin-bottom: 20px;
             }
@@ -193,7 +188,7 @@
                 margin-bottom: 30px;
             }
 
-            .pros-cons h3,h4, h2 {
+            .pros-cons h3, h4, h2 {
                 color: #4CAF50;
             }
 
@@ -253,17 +248,16 @@
             }
         </style>
         <div class="container">
-            <h1>Decentralized EcoSystems</h1>
-            <h1 class="big">White paper</h1>
+            <h1>{{ __('white_paper.main_title') }}</h1>
+            <h1 class="big">{{ __('white_paper.big_title') }}</h1>
             <div class="content">
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
-                        <h3 class="chapter-title">Introduction</h3>
-
+                        <h3 class="chapter-title">{{ __('white_paper.chapters.introduction') }}</h3>
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">Welcome to the DES Project </span>
+                            <span class="subchapter-number">{{ __('white_paper.subchapters.welcome') }}</span>
                             <div class="subchapter-content">
                                 @include('wp.1')
                             </div>
@@ -271,43 +265,41 @@
                     </div>
                 </div>
 
-
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
-                        <h3 class="chapter-title">Description of the market</h3>
-
+                        <h3 class="chapter-title">{{ __('white_paper.chapters.market_description') }}</h3>
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">1.1</span>Blockchain ecosystems
+                            <span class="subchapter-number">1.1</span>{{ __('white_paper.subchapters.blockchain_ecosystems') }}
                             <div class="subchapter-content">
                                 @include('wp.1.1')
                             </div>
                         </div>
 
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">1.2</span>Decentralized messengers
+                            <span class="subchapter-number">1.2</span>{{ __('white_paper.subchapters.decentralized_messengers') }}
                             <div class="subchapter-content">
                                 @include('wp.1.2')
                             </div>
                         </div>
 
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">1.3</span>Decentralized stablecoins
+                            <span class="subchapter-number">1.3</span>{{ __('white_paper.subchapters.decentralized_stablecoins') }}
                             <div class="subchapter-content">
                                 @include('wp.1.3')
                             </div>
                         </div>
 
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">1.4</span>Decentralized Exchanges (DEX)
+                            <span class="subchapter-number">1.4</span>{{ __('white_paper.subchapters.decentralized_exchanges') }}
                             <div class="subchapter-content">
                                 @include('wp.1.4')
                             </div>
                         </div>
 
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">1.5</span>Decentralized Shell and Operating System
+                            <span class="subchapter-number">1.5</span>{{ __('white_paper.subchapters.decentralized_shell_and_os') }}
                             <div class="subchapter-content">
                                 @include('wp.1.5')
                             </div>
@@ -317,36 +309,35 @@
 
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
-                        <h3 class="chapter-title">Product description and proposed solution method</h3>
-
+                        <h3 class="chapter-title">{{ __('white_paper.chapters.product_description') }}</h3>
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">2.1</span>Third-generation Decentralized Blockchain
+                            <span class="subchapter-number">2.1</span>{{ __('white_paper.subchapters.third_gen_blockchain') }}
                             <div class="subchapter-content">
                                 @include('wp.2.1')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">2.2</span>The uniqueness of the messenger
+                            <span class="subchapter-number">2.2</span>{{ __('white_paper.subchapters.messenger_uniqueness') }}
                             <div class="subchapter-content">
                                 @include('wp.2.2')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">2.3</span>The Ecosystem of Decentralized Stablecoins
+                            <span class="subchapter-number">2.3</span>{{ __('white_paper.subchapters.stablecoin_ecosystem') }}
                             <div class="subchapter-content">
                                 @include('wp.2.3')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">2.4</span>A decentralized exchange
+                            <span class="subchapter-number">2.4</span>{{ __('white_paper.subchapters.decentralized_exchange') }}
                             <div class="subchapter-content">
                                 @include('wp.2.4')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">2.5</span>A Decentralized Operating System
+                            <span class="subchapter-number">2.5</span>{{ __('white_paper.subchapters.decentralized_os') }}
                             <div class="subchapter-content">
                                 @include('wp.2.5')
                             </div>
@@ -356,128 +347,109 @@
 
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
-                        <h3 class="chapter-title">Tokenomics</h3>
-
+                        <h3 class="chapter-title">{{ __('white_paper.chapters.tokenomics') }}</h3>
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">3.1</span>Key characteristics
+                            <span class="subchapter-number">3.1</span>{{ __('white_paper.subchapters.key_characteristics') }}
                             <div class="subchapter-content">
                                 @include('wp.3.1')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">3.2</span>Description of token implementation and project
-                            economy
+                            <span class="subchapter-number">3.2</span>{{ __('white_paper.subchapters.token_implementation') }}
                             <div class="subchapter-content">
                                 @include('wp.3.2')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">3.3</span>Ways of earning for project participants and activists
+                            <span class="subchapter-number">3.3</span>{{ __('white_paper.subchapters.earning_ways') }}
                             <div class="subchapter-content">
                                 @include('wp.3.3')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">3.4</span>DES stablecoin emission collateral pool 20% of total
-                            emission
+                            <span class="subchapter-number">3.4</span>{{ __('white_paper.subchapters.stablecoin_emission') }}
                             <div class="subchapter-content">
                                 @include('wp.3.4')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">3.5</span>Distribution of the remaining 200,000,000 DES or 20%
-                            of emission
+                            <span class="subchapter-number">3.5</span>{{ __('white_paper.subchapters.distribution_remaining') }}
                             <div class="subchapter-content">
                                 @include('wp.3.5')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">3.6</span>Distribution of transaction fees
+                            <span class="subchapter-number">3.6</span>{{ __('white_paper.subchapters.transaction_fees') }}
                             <div class="subchapter-content">
                                 @include('wp.3.6')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">3.7</span>DES liquidity pool collateral
+                            <span class="subchapter-number">3.7</span>{{ __('white_paper.subchapters.liquidity_pool') }}
                             <div class="subchapter-content">
                                 @include('wp.3.7')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">3.8</span>Investment direction in DES ecosystem
+                            <span class="subchapter-number">3.8</span>{{ __('white_paper.subchapters.investment_direction') }}
                             <div class="subchapter-content">
                                 @include('wp.3.8')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">3.9</span>Reward for application creators
+                            <span class="subchapter-number">3.9</span>{{ __('white_paper.subchapters.app_creators_reward') }}
                             <div class="subchapter-content">
                                 @include('wp.3.9')
                             </div>
                         </div>
                     </div>
                 </div>
+
                 <div class="chapter-container">
                     <div class="chapter-header" onclick="toggleChapter(this)">
-                        <h3 class="chapter-title">Project management</h3>
-
+                        <h3 class="chapter-title">{{ __('white_paper.chapters.project_management') }}</h3>
                     </div>
                     <div class="subchapters">
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">4.1</span>Network consensus
+                            <span class="subchapter-number">4.1</span>{{ __('white_paper.subchapters.network_consensus') }}
                             <div class="subchapter-content">
                                 @include('wp.4.1')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">4.2</span>Encouraging validators and deligators
+                            <span class="subchapter-number">4.2</span>{{ __('white_paper.subchapters.encouraging_validators') }}
                             <div class="subchapter-content">
                                 @include('wp.4.2')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">4.3</span>Conditions for obtaining Validator status
+                            <span class="subchapter-number">4.3</span>{{ __('white_paper.subchapters.validator_status') }}
                             <div class="subchapter-content">
                                 @include('wp.4.3')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">4.4</span>Coin mining for creating value in the project
+                            <span class="subchapter-number">4.4</span>{{ __('white_paper.subchapters.coin_mining') }}
                             <div class="subchapter-content">
                                 @include('wp.4.4')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">4.5</span>Activity monitoring in DES project
+                            <span class="subchapter-number">4.5</span>{{ __('white_paper.subchapters.activity_monitoring') }}
                             <div class="subchapter-content">
                                 @include('wp.4.5')
                             </div>
                         </div>
                         <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">4.6</span>DES Arena
+                            <span class="subchapter-number">4.6</span>{{ __('white_paper.subchapters.des_arena') }}
                             <div class="subchapter-content">
                                 @include('wp.4.6')
                             </div>
                         </div>
                     </div>
                 </div>
-                {{-- <div class="chapter-container">
-                    <div class="chapter-header" onclick="toggleChapter(this)">
-                        <h3 class="chapter-title">Team story</h3>
-
-                    </div>
-                    <div class="subchapters">
-                        <div class="subchapter-item" onclick="toggleSubchapter(this)">
-                            <span class="subchapter-number">Team story</span>
-                            <div class="subchapter-content">
-                                @include('wp.2')
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
-
             </div>
         </div>
     </main>

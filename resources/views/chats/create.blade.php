@@ -1,5 +1,5 @@
 @extends('template')
-@section('title_page', 'Создать чат')
+@section('title_page', __('chats.create_chat_title'))
 @section('main')
 <style>
   .container {
@@ -151,62 +151,60 @@
     }
 </style>
 <div class="container">
-  <h1>Создать чат</h1>
-  @if ($errors->any())
-      <div class="alert alert-danger">
-          <ul>
-              @foreach ($errors->all() as $error)
-                  <li>{{ $error }}</li>
-              @endforeach
-          </ul>
-      </div>
-  @endif
-  <form method="POST" action="{{ route('chats.store') }}">
-    @csrf
-    <div class="form-group">
-        <label for="name" class="form-label">Название чата</label>
-        <input type="text" class="form-control input_dark" id="name" name="name" value="{{ old('name') }}" required>
-        <!-- Отображение ошибки для поля "name" -->
-        @error('name')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="form-group">
-        <label for="users" class="form-label">Участники</label>
-        <select multiple class="form-control input_dark" id="users" name="users[]" required>
-            @foreach ($users as $user)
-                @if ($user->id != 1 && $user->id != 2) <!-- Скрываем пользователей с id = 1 и id = 2 -->
-                    <option value="{{ $user->id }}" {{ in_array($user->id, old('users', [])) ? 'selected' : '' }}>
-                        {{ $user->name }}
-                    </option>
-                @endif
-            @endforeach
-        </select>
-        <!-- Отображение ошибки для поля "users" -->
-        @error('users')
-            <div class="text-danger">{{ $message }}</div>
-        @enderror
-        <p class="form-text text-muted ml-4 mt-4">Удерживайте Ctrl (или Cmd на Mac) для выбора нескольких участников. </p>
-        <p class="form-text text-muted ml-4">Удерживайте Ctrl + A, чтобы выбрать всех участников.</p>
-    </div>
-    <button type="submit" class="blue_btn">Создать</button>
-</form>
+    <h1>{{ __('chats.create_chat_title') }}</h1>
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    <form method="POST" action="{{ route('chats.store') }}">
+        @csrf
+        <div class="form-group">
+            <label for="name" class="form-label">{{ __('chats.chat_name_label') }}</label>
+            <input type="text" class="form-control input_dark" id="name" name="name" value="{{ old('name') }}" required>
+            @error('name')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+        </div>
+        <div class="form-group">
+            <label for="users" class="form-label">{{ __('chats.participants_label') }}</label>
+            <select multiple class="form-control input_dark" id="users" name="users[]" required>
+                @foreach ($users as $user)
+                    @if ($user->id != 1 && $user->id != 2)
+                        <option value="{{ $user->id }}" {{ in_array($user->id, old('users', [])) ? 'selected' : '' }}>
+                            {{ $user->name }}
+                        </option>
+                    @endif
+                @endforeach
+            </select>
+            @error('users')
+                <div class="text-danger">{{ $message }}</div>
+            @enderror
+            <p class="form-text text-muted ml-4 mt-4">{{ __('chats.select_participants_hint') }}</p>
+            <p class="form-text text-muted ml-4">{{ __('chats.select_all_hint') }}</p>
+        </div>
+        <button type="submit" class="blue_btn">{{ __('chats.create') }}</button>
+    </form>
 
-  <!-- Список пользователей с кнопками для создания чата -->
-  <div class="user-list">
-      <h3>Создать чат с пользователем:</h3>
-      @foreach ($users as $user)
-          @if ($user->id != 1 && $user->id != 2) <!-- Скрываем пользователей с id = 1 и id = 2 -->
-              <div class="user-item">
-                  <span>{{ $user->name }}</span>
-                  <form method="POST" action="{{ route('chats.createWithUser', $user->id) }}" style="display: inline;">
-                      @csrf
-                      <button type="submit" class="blue_btn">Создать чат</button>
-                  </form>
-              </div>
-          @endif
-      @endforeach
-  </div>
+    <!-- Список пользователей с кнопками для создания чата -->
+    <div class="user-list">
+        <h3>{{ __('chats.create_chat_with_user') }}</h3>
+        @foreach ($users as $user)
+            @if ($user->id != 1 && $user->id != 2)
+                <div class="user-item">
+                    <span>{{ $user->name }}</span>
+                    <form method="POST" action="{{ route('chats.createWithUser', $user->id) }}" style="display: inline;">
+                        @csrf
+                        <button type="submit" class="blue_btn">{{ __('chats.create') }}</button>
+                    </form>
+                </div>
+            @endif
+        @endforeach
+    </div>
 </div>
 <script>
     // Обработка Ctrl + A для выбора всех пользователей

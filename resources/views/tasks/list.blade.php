@@ -1,5 +1,5 @@
 @extends('template')
-@section('title_page', 'Биржа заданий')
+@section('title_page', __('tasks.title_page'))
 @section('main')
 
 <style>
@@ -138,7 +138,7 @@
 
 <div class="container my-5">
     <div class="text-center mb-4">
-        <h1 class="display-4">Task Exchange</h1>
+        <h1 class="display-4">{{ __('tasks.title_page') }}</h1>
     </div>
 
     @forelse($tasks as $task)
@@ -148,9 +148,8 @@
                 <div class="task-title">
                     <a href="{{ route('tasks.show', $task) }}" class="btn blue_btn">{{ $task->title }}</a> 
                 </div>    
-                <!-- Information about category, budget, and deadline -->
                 <div class="task-info">    
-                    <p class="task-category"><i class="fas fa-folder-open"></i> {{ $task->category ? $task->category->name : 'No category' }}</p>
+                    <p class="task-category"><i class="fas fa-folder-open"></i> {{ $task->category ? $task->category->name : __('tasks.no_category') }}</p>
                     <p class="task-budget"><i class="fas fa-dollar-sign"></i> {{ $task->budget }} USD</p>
                     <p class="task-deadline"><i class="fas fa-clock"></i> {{ $task->deadline->format('Y-m-d') }}</p>
                 
@@ -165,11 +164,10 @@
             </div>
             </div>
 
-            <!-- Title as a button -->
             <p class="card-text">
                 @if (strlen($task->content) > 260)
                 {!! Str::limit($task->content, 260) !!}
-                    <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-link">→ Read more ←</a>
+                    <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-link">{{ __('tasks.read_more') }}</a>
                 @else
                     {!! $task->content !!}
                 @endif
@@ -178,14 +176,10 @@
     </div>
 @empty
     <div style="text-align: center">
-        <p>No tasks available, you can <a href="{{ route('addtask') }}">create a task</a>.</p>
+        <p>{!! __('tasks.no_tasks', ['link' => '<a href="' . route('addtask') . '">' . __('tasks.create_task') . '</a>']) !!}</p>
     </div>
 @endforelse
-<?php
-Log::info('Reading file list');
-?>
 
-    <!-- Pagination -->
     <div class="pagination">
         {{ $tasks->links() }}
     </div>

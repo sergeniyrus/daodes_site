@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'your_chats' => 'Ваши чаты',
+    'group_chats' => 'Групповые чаты',
+    'private_messages' => 'Личные сообщения',
+    'chat_name' => 'Название чата',
+    'messages_count' => 'Кол-во сообщений',
+    'participants' => 'Участники',
+    'create_chat' => 'Создать чат',
+    'chat' => 'Чат',
+    'send' => 'Отправить',
+    'to_chats' => 'К чатам',
+    'new_chat' => 'Новый чат',
+    'notifications' => 'Уведомления',
+    'create_chat_title' => 'Создать чат',
+    'chat_name_label' => 'Название чата',
+    'participants_label' => 'Участники',
+    'select_participants_hint' => 'Удерживайте Ctrl (или Cmd на Mac) для выбора нескольких участников.',
+    'select_all_hint' => 'Удерживайте Ctrl + A, чтобы выбрать всех участников.',
+    'create' => 'Создать',
+    'create_chat_with_user' => 'Создать чат с пользователем',
+    'notifications_title' => 'Ваши уведомления',
+    'no_notifications' => 'Непрочитанных сообщений нет.',
+    'unread_messages_in_chat' => 'Непрочитанные сообщения в чате:',
+    'read' => 'Прочитать',
+];

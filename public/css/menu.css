@@ -166,6 +166,33 @@
   bottom: 35px;
 }
 
+.language-switcher {
+  display: flex;
+  flex-direction: column; /* Располагаем элементы вертикально */
+  gap: 5px; /* Расстояние между кнопками */
+  align-items: flex-start; /* Выравниваем по левому краю */
+}
+
+.language-switcher a {
+  text-decoration: none; /* Убираем подчеркивание */
+  color: #333; /* Цвет текста */
+  padding: 5px 10px; /* Отступы внутри кнопок */
+  border: 1px solid #ccc; /* Граница */
+  border-radius: 4px; /* Скругление углов */
+  transition: background-color 0.3s, color 0.3s; /* Плавные переходы */
+}
+
+.language-switcher a.active {
+  background-color: #007bff; /* Цвет фона для активной кнопки */
+  color: #fff; /* Цвет текста для активной кнопки */
+  border-color: #007bff; /* Цвет границы для активной кнопки */
+}
+
+.language-switcher a:hover {
+  background-color: #f0f0f0; /* Цвет фона при наведении */
+  color: #007bff; /* Цвет текста при наведении */
+}
+
 /* Адаптивность */
 @media (max-width: 768px) {
   .modal-content {

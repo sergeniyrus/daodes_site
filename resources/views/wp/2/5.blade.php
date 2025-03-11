@@ -1,11 +1,12 @@
-<h4>When designing a decentralized OS, the DES project will focus on the following aspects:</h4>
-<ul>
-    <li><strong>DES OS eliminates the risks of censorship and data leaks:</strong> All data is encrypted and distributed
-        over the network (analogous to IPFS + Tor).</li>
-    <li><strong>Logging in through a decentralized wallet eliminates hacking through logins/passwords:</strong> "Imagine
-        that you are working with documents in DES OS: Files are automatically encrypted and stored in a decentralized
-        repository. Access to the desktop is possible from any device via a DPN tunnel."</li>
-    <li><strong>Compatibility with all possible devices:</strong> The system will be designed to work seamlessly across
-        smartphones, tablets, PCs, and Smart TVs.</li>
-</ul>
-<p>(The section is in the process of writing.)</p>
+    <h4>{{ __('wp/2/5.title') }}</h4>
+    <ul>
+        @foreach (__('wp/2/5.aspects_list') as $item)
+            @php
+                $parts = explode(':', $item, 2); // Разделяем строку на 2 части
+                $title = $parts[0]; // Первая часть (до ":")
+                $description = isset($parts[1]) ? $parts[1] : ''; // Вторая часть (после ":"), если есть
+            @endphp
+            <li><strong>{{ $title }}:</strong> {{ $description }}</li>
+        @endforeach
+    </ul>
+    <p>{{ __('wp/2/5.note') }}</p>

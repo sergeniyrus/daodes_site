@@ -157,7 +157,7 @@
         ?>
 
         @if (!$hasVoted)
-            <h1 style="text-align: center; font-size:1.5rem">Spam / Not Spam</h1>
+            <h1 style="text-align: center; font-size:1.5rem">{{ __('offers.spam_not_spam_title') }}</h1>
             <div class="vote_box">
                 <form action="{{ route('spam.store') }}" class="form-vote" method="post">
                     @csrf
@@ -182,7 +182,7 @@
                 </form>
             </div>
         @else
-            <h1 style="text-align: center; font-size:1.5rem">Your opinion has been recorded</h1>
+            <h1 style="text-align: center; font-size:1.5rem">{{ __('offers.your_opinion_recorded') }}</h1>
             <?php
             // Check if the $offer_id variable is defined
             if (isset($offer_id)) {
@@ -218,11 +218,11 @@
             }
             ?><fieldset class="tbr">
 
-                <h1 style="text-align: center; font-size:1.5rem">Results:</h1>
+                <h1 style="text-align: center; font-size:1.5rem">{{ __('offers.results_title') }}</h1>
 
                 <table class="results-table">
                     <tr>
-                        <td>Spam:</td>
+                        <td>{{ __('offers.spam_label') }}</td>
                         <td class="text-right">{{ $yes ?? 0 }}</td>
                     </tr>
                     <tr>
@@ -236,7 +236,7 @@
                         <td class="text-right">{{ $za_percentage ?? 0 }}%</td>
                     </tr>
                     <tr>
-                        <td>Not Spam:</td>
+                        <td>{{ __('offers.not_spam_label') }}</td>
                         <td class="text-right">{{ $no ?? 0 }}</td>
                     </tr>
                     <tr>
@@ -250,7 +250,7 @@
                         <td class="text-right">{{ $no_percentage ?? 0 }}%</td>
                     </tr>
                     <tr>
-                        <td>Not Viewed:</td>
+                        <td>{{ __('offers.not_viewed_label') }}</td>
                         <td class="text-right">{{ $vozd ?? 0 }}</td>
                     </tr>
                     <tr>
@@ -280,17 +280,17 @@
                     'updated_at' => now(),
                 ]);
             
-                echo 'Post deleted as spam';
+                echo __('offers.post_deleted_as_spam');
             }
             if ($no_percentage >= 25) {
                 DB::table('offers')
                     ->where('id', $offer_id)
                     ->update(['state' => 1]);
-                echo 'Verification passed';
+                echo __('offers.verification_passed');
             }
             ?>
         @endif
     @else
-        <div class="msg">You need to <a href="/login" class="eror_com">log in</a></div>
+        <div class="msg">{!! __('offers.login_to_vote', ['link' => route('login')]) !!}</div>
     @endauth
 </div>

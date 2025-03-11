@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title_page', 'Управление категориями предложений')
+@section('title_page', __('category.manage_categories_title')) <!-- Перевод заголовка страницы -->
 
 @section('main')
 <style>
@@ -83,7 +83,7 @@
 </style>
 
 <div class="container">
-    <h2>Категории предложений</h2>
+    <h2>{{ __('category.categories_title') }}</h2> <!-- Перевод заголовка -->
     <div class="new_post">
         @if(session('success'))
             <br><div class="alert">
@@ -94,22 +94,22 @@
         <table class="table mt-4">
             <thead>
                 <tr>
-                    <th>Название</th>
-                    <th>Действия</th>
+                    <th>{{ __('category.category_name') }}</th> <!-- Перевод заголовка столбца -->
+                    <th>{{ __('category.actions') }}</th> <!-- Перевод заголовка столбца -->
                 </tr>
             </thead>
             <tbody>
                 @foreach($categories as $category)
                 <tr>
-                    <td>{{ $category->name }}</td>
+                    <td>{{ $category->name }}</td> <!-- Название категории из базы данных -->
                     <td>
-                        <a href="{{ route('offerscategories.edit', $category->id) }}" class="blue_btn" title="Редактировать">
+                        <a href="{{ route('offerscategories.edit', $category->id) }}" class="blue_btn" title="{{ __('category.edit') }}">
                             <i class="fas fa-edit"></i>
                         </a>
                         <form action="{{ route('offerscategories.destroy', $category->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="blue_btn" title="Удалить">
+                            <button type="submit" class="blue_btn" title="{{ __('category.delete') }}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </form>
@@ -121,7 +121,7 @@
 
         <form action="{{ route('offerscategories.create') }}" method="GET" style="display:inline;">
             <button type="submit" class="blue_btn">
-                <i class="fas fa-plus-circle"></i> Добавить категорию
+                 {!! __('category.add_category_button') !!} <!-- Перевод текста кнопки -->
             </button>
         </form>
     </div>

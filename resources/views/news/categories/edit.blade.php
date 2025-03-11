@@ -81,18 +81,15 @@
 
     
 </style>
-
 <div class="container my-5">
-    <h1>Редактировать категорию новостей</h1>
+    <h1>{{ __('category.edit_category_title') }}</h1>
 
     <!-- Вывод ошибок валидации -->
     @if($errors->any())
         <div class="alert">
-            
-                @foreach ($errors->all() as $error)
-                    >{{ $error }}
-                @endforeach
-            
+            @foreach ($errors->all() as $error)
+                >{{ $error }}
+            @endforeach
         </div>
     @endif
 
@@ -101,12 +98,12 @@
         @csrf
         @method('PUT')
         <div class="form-group">
-            <label for="name">Название категории:</label>
+            <label for="name">{{ __('category.category_name_label') }}</label>
             <input type="text" name="name" id="name" class="input_dark" value="{{ old('name', $category->name) }}" required>
         </div>
 
         <button type="submit" class="blue_btn">
-            <i class="fas fa-save"></i> Сохранить изменения
+            {!! __('category.save_changes_button') !!}
         </button>
     </form>
 </div>

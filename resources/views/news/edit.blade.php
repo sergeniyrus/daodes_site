@@ -104,70 +104,69 @@
         
     </style>
 
-    <div class="container">
-        <h2 class="text-center">Редактировать новость</h2>
+<div class="container">
+    <h2 class="text-center">{{ __('admin_news.edit_news_title') }}</h2>
 
-        <!-- Validation Errors -->
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+    <!-- Validation Errors -->
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
-        <form id="news-form" method="POST" action="{{ route('news.update', $news->id) }}" enctype="multipart/form-data">
-            @csrf
-            @method('PUT')
+    <form id="news-form" method="POST" action="{{ route('news.update', $news->id) }}" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
 
-            <div class="form-group">
-                <label for="title">Название новости</label>
-                <input type="text" name="title" class="input_dark" value="{{ old('title', $news->title) }}">
-            </div>
+        <div class="form-group">
+            <label for="title">{{ __('admin_news.news_title') }}</label>
+            <input type="text" name="title" class="input_dark" value="{{ old('title', $news->title) }}" placeholder="{{ __('admin_news.news_title_placeholder') }}">
+        </div>
 
-            <div class="form-group">
-                <label for="category">Тема</label>
-                <select name="category" class="input_dark">
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}" {{ $category->id == $news->category_id ? 'selected' : '' }}>
-                            {{ $category->name }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
+        <div class="form-group">
+            <label for="category">{{ __('admin_news.category') }}</label>
+            <select name="category" class="input_dark">
+                @foreach ($categories as $category)
+                    <option value="{{ $category->id }}" {{ $category->id == $news->category_id ? 'selected' : '' }}>
+                        {{ $category->name }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-            <div class="form-group">
-                <label for="filename">Картинка новости</label>
-                <div class="file-input-wrapper">
-                    <!-- Если изображение существует, показываем его, иначе скрываем -->
-                    <img id="preview" src="{{ $news->img ?? '#' }}" alt="Превью изображения"
-                        style="display: {{ $news->img ? 'block' : 'none' }}; max-width: 100px;">
-            
-                    <div class="file-info">
-                        <!-- Если изображение есть, выводим имя файла, иначе пишем "Файл не выбран" -->
-                        <span id="file-name" class="file-name">{{ $news->img ? basename($news->img) : 'Файл не выбран' }}</span>
-                        <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">
-                            Выберите файл
-                        </button>
-                        <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
-                    </div>
+        <div class="form-group">
+            <label for="filename">{{ __('admin_news.news_image') }}</label>
+            <div class="file-input-wrapper">
+                <!-- Если изображение существует, показываем его, иначе скрываем -->
+                <img id="preview" src="{{ $news->img ?? '#' }}" alt="Превью изображения"
+                    style="display: {{ $news->img ? 'block' : 'none' }}; max-width: 100px;">
+        
+                <div class="file-info">
+                    <!-- Если изображение есть, выводим имя файла, иначе пишем "Файл не выбран" -->
+                    <span id="file-name" class="file-name">{{ $news->img ? basename($news->img) : __('admin_news.no_file_selected') }}</span>
+                    <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">
+                        {{ __('admin_news.choose_file') }}
+                    </button>
+                    <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
                 </div>
-                <p style="color: red; text-align: center; font-size: 0.9rem;">Изображение должно быть 1:1. Имя файла должно быть на английском.</p>
             </div>
-            
+            <p style="color: red; text-align: center; font-size: 0.9rem;">{{ __('admin_news.image_requirements') }}</p>
+        </div>
 
-            <div class="form-group">
-                <label for="content">Содержание новости</label>
-                <textarea id="editor" name="content" rows="10" class="input_dark">{{ old('content', $news->content) }}</textarea>
-            </div>
+        <div class="form-group">
+            <label for="content">{{ __('admin_news.news_content') }}</label>
+            <textarea id="editor" name="content" rows="10" class="input_dark">{{ old('content', $news->content) }}</textarea>
+        </div>
 
-            <div style="text-align: center;">
-                <button type="submit" class="blue_btn">Сохранить изменения</button>
-            </div>
-        </form>
-    </div>
+        <div style="text-align: center;">
+            <button type="submit" class="blue_btn">{{ __('admin_news.save_changes_button') }}</button>
+        </div>
+    </form>
+</div>
 
     
     {{-- // Инициализация cropper --}}

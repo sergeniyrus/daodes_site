@@ -1,5 +1,5 @@
 @extends('template')
-@section('title_page', 'Создать новое задание')
+@section('title_page', __('tasks.create_task'))
 
 @section('main')
 
@@ -62,12 +62,11 @@
         transform: scale(1.05);
         background: #1a1a1a;
     }
-    
 </style>
 
 <div class="container my-5">
     <div class="text-center mb-4">
-        <h1 class="display-4">Создать новое задание</h1>
+        <h1 class="display-4">{{ __('tasks.create_task') }}</h1>
     </div>
 
     @if(session('success'))
@@ -100,14 +99,14 @@
         @endif
     
         <div class="form-group">
-            <label for="title">Заголовок задачи:</label>
+            <label for="title">{{ __('tasks.task_title') }}:</label>
             <input type="text" name="title" id="title" class="input_dark" required>
         </div>
     
         <div class="form-group">
-            <label for="category_id">Категория:</label>
+            <label for="category_id">{{ __('tasks.category') }}:</label>
             <select name="category_id" id="category_id" class="input_dark" required>
-                <option value="">Выберите категорию</option>
+                <option value="">{{ __('tasks.select_category') }}</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
@@ -115,27 +114,27 @@
         </div>
     
         <div class="form-group">
-            <label for="content">Описание задачи:</label>
-            <textarea name="content" id="editor" class="input_dark" rows="5" placeholder="Введите задание... required"></textarea>
+            <label for="content">{{ __('tasks.task_description') }}:</label>
+            <textarea name="content" id="editor" class="input_dark" rows="5" placeholder="{{ __('tasks.task_description') }}" required></textarea>
         </div>
     
         <div class="form-group">
-            <label for="deadline">Дедлайн:</label>
+            <label for="deadline">{{ __('tasks.deadline') }}:</label>
             <input type="date" name="deadline" id="deadline" class="input_dark" required>
         </div>
     
         <div class="form-group">
-            <label for="budget">Бюджет:</label>
+            <label for="budget">{{ __('tasks.budget') }}:</label>
             <input type="number" name="budget" id="budget" class="input_dark" step="0.01" required>
         </div>
     
         <div class="text-center">
-            <button type="submit" class="blue_btn"><i class="fas fa-plus-circle"></i> Создать задачу</button>
+            <button type="submit" class="blue_btn"><i class="fas fa-plus-circle"></i> {{ __('tasks.create_task_button') }}</button>
         </div>
     </form>
 </div>
 
-{{-- // Инициализация CKEditor --}}
+{{-- Инициализация CKEditor --}}
 <link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
 <script src="{{ asset('js/ckeditor.js') }}"></script>
 <script>
@@ -143,9 +142,8 @@ document.querySelector('form').addEventListener('submit', function (e) {
     const categorySelect = document.getElementById('category_id');
     if (!categorySelect.value) {
         e.preventDefault();
-        alert('Пожалуйста, выберите категорию.');
+        alert('{{ __('tasks.please_select_category') }}');
     }
 });
-
 </script>
 @endsection

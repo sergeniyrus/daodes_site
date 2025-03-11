@@ -95,22 +95,21 @@ Create an offer
         }
         
     </style>
-
 <div class="container">
-    <h2 class="text-center">Create Offer</h2>
+    <h2 class="text-center">{{ __('admin_offers.create_offer_title') }}</h2>
 
     <form id="offers-form" method="POST" action="{{ route('offers.create') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group">
-            <label for="title">Offer Title</label>
+            <label for="title">{{ __('admin_offers.offer_title') }}</label>
             <input type="text" name="title" class="input_dark" value="{{ htmlspecialchars(old('title'), ENT_QUOTES, 'UTF-8') }}" />
         </div>
 
         <div class="form-group">
-            <label for="category">Category</label>
+            <label for="category">{{ __('admin_offers.category') }}</label>
             <select name="category" class="input_dark">
-                <option value="0" selected>Select a category</option>
+                <option value="0" selected>{{ __('admin_offers.select_category') }}</option>
                 @foreach (DB::table('category_offers')->get() as $category)
                     <option value="{{ htmlspecialchars($category->id, ENT_QUOTES, 'UTF-8') }}">{{ htmlspecialchars($category->name, ENT_QUOTES, 'UTF-8') }}</option>
                 @endforeach
@@ -118,28 +117,27 @@ Create an offer
         </div>
 
         <div class="form-group">
-            <label for="filename">Image</label>
+            <label for="filename">{{ __('admin_offers.image') }}</label>
             <div class="file-input-wrapper">
                 <img id="preview" src="#" alt="Image preview">
-                <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">Choose file</button>
+                <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">{{ __('admin_offers.choose_file') }}</button>
                 <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
-                <div id="file-name">No file chosen</div>
+                <div id="file-name">{{ __('admin_offers.no_file_chosen') }}</div>
             </div>
-            <p style="color: red; text-align: center; margin-top: 20px; font-size:0.9rem;">The image must be 1:1. The file name must be in English.</p>
+            <p style="color: red; text-align: center; margin-top: 20px; font-size:0.9rem;">{{ __('admin_offers.image_requirements') }}</p>
         </div>
 
         <div class="form-group">
-            <label for="content">Offer Content</label>
-            <textarea id="editor" name="content" rows="10" placeholder="Enter the offer text">{{ htmlspecialchars(old('content'), ENT_QUOTES, 'UTF-8') }}</textarea>
+            <label for="content">{{ __('admin_offers.offer_content') }}</label>
+            <textarea id="editor" name="content" rows="10" placeholder="{{ __('admin_offers.enter_offer_text') }}">{{ htmlspecialchars(old('content'), ENT_QUOTES, 'UTF-8') }}</textarea>
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="blue_btn">Create Offer</button>
+            <button type="submit" class="blue_btn">{{ __('admin_offers.create_offer_button') }}</button>
         </div>
     </form>
 </div>
 
-    
     {{-- // Инициализация cropper --}}
     <script src="{{ asset('js/image-cropper.js') }}"></script>
     {{-- // Инициализация CKEditor --}}

@@ -1,5 +1,5 @@
 @extends('template')
-@section('title_page', 'Уведомления')
+@section('title_page', __('chats.notifications_title'))
 @section('main')
     <style>
         .container {
@@ -95,17 +95,16 @@
     </style>
     <div class="container">
         @if ($uniqueChats->isEmpty())
-            <h1 class="no-notifications">Непрочитанных сообщений нет.</h1>
+            <h1 class="no-notifications">{{ __('chats.no_notifications') }}</h1>
         @else
-            <h1>Ваши уведомления</h1>
+            <h1>{{ __('chats.notifications_title') }}</h1>
             <ul class="list-group">
                 @foreach ($uniqueChats as $uniqueChat)
                     <li class="list-group-item">
-                        <p>Непрочитанные сообщения в чате: 
+                        <p>{{ __('chats.unread_messages_in_chat') }} 
                             <a href="{{ route('chats.show', $uniqueChat['chat']->id) }}" class="chat-link">
                                 {{ $uniqueChat['chat']->getChatNameForUser(auth()->id()) }}
                             </a>
-                            <!-- Выводим количество непрочитанных сообщений -->
                             @if ($uniqueChat['unread_count'] > 0)
                                 <span class="unread-count">
                                     {{ $uniqueChat['unread_count'] }}
@@ -113,7 +112,7 @@
                             @endif
                         </p>
                         <a href="{{ route('chats.show', $uniqueChat['chat']->id) }}" class="btn-blue">
-                            Прочитать
+                            {{ __('chats.read') }}
                         </a>
                     </li>
                 @endforeach

@@ -141,9 +141,7 @@
                     <form action="{{ route('discussion.store') }}" method="post">
                         @csrf
                         <fieldset class="tbr">
-                            
-                            <h1 style="text-align: center; font-size:1.5rem">Ready to vote?</h1>
-                            
+                            <h1 style="text-align: center; font-size:1.5rem">{{ __('offers.ready_to_vote') }}</h1>
                             <div class="vote_ratio">
                                 <label for="choice1" class="img_vote">
                                     <input type="radio" id="choice1" class="choice1" name="vote" value="1"
@@ -163,11 +161,12 @@
                     </form>
                 </div>
             @else
-                <div class="msg">You have not yet expressed your opinion in the comments. Please share your thoughts.</div>
+                <div class="msg">{{ __('offers.no_comment_yet') }}</div>
             @endif
         @else
-            <div class="msg"><h1 style="text-align: center; font-size:1.5rem">Your opinion has been counted</h1></div>
-
+            <div class="msg">
+                <h1 style="text-align: center; font-size:1.5rem">{{ __('offers.your_opinion_counted') }}</h1>
+            </div>
 
             <?php
             // Check if the $offer_id variable is defined
@@ -202,39 +201,42 @@
                 $no_percentage = round($no_percentage, 2);
                 $vozd_percentage = round($vozd_percentage, 2);
             }
-            ?><fieldset class="tbr">
+            ?>
+            <fieldset class="tbr">
                 <legend>
-                    <h4>Results:</h4>
+                    <h4>{{ __('offers.results_title') }}</h4>
                 </legend>
                 <table class="tbrv">
                     <tr>
-                        <td>Rejected:</td>
+                        <td>{{ __('offers.rejected_label') }}</td>
                         <td class="right_td">{{ $yes ?? 0 }}</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="graf">
                                 <div style="width:{{ $za_percentage }}%; background-color: red; height: 14px;">
-                                    <span>&nbsp;</span></div>
+                                    <span>&nbsp;</span>
+                                </div>
                             </div>
                         </td>
                         <td class="right_td"> {{ $za_percentage ?? 2 }}%</td>
                     </tr>
                     <tr>
-                        <td>Voted:</td>
+                        <td>{{ __('offers.voted_label') }}</td>
                         <td class="right_td">{{ $no }}</td>
                     </tr>
                     <tr>
                         <td>
                             <div class="graf">
                                 <div style="width:{{ $no_percentage }}%; background-color: green; height: 14px;">
-                                    <span>&nbsp;</span></div>
+                                    <span>&nbsp;</span>
+                                </div>
                             </div>
                         </td>
                         <td class="right_td"> {{ $no_percentage }}%</td>
                     </tr>
                     <tr>
-                        <td>Not viewed:</td>
+                        <td>{{ __('offers.not_viewed_label') }}</td>
                         <td class="right_td">{{ $vozd ?? 0 }}</td>
                     </tr>
                     <tr>
@@ -251,12 +253,12 @@
             </fieldset>
             {{-- Check passing conditions --}}
             <?php if ($za_percentage >= 25) {
-                // {{-- // Move to rejected --}}
+                // Move to rejected
                 DB::table('offers')
                     ->where('id', $offer_id)
                     ->update(['state' => 5]);
             
-                echo 'The offer has been rejected based on the discussion results';
+                echo __('offers.offer_rejected');
             }
             if ($no_percentage >= 25) {
                 DB::table('offers')
@@ -265,11 +267,11 @@
                         'state' => 2,
                         'start_vote' => now()->setTimezone('UTC'), // Set time in UTC
                     ]);
-                echo 'Starting the vote!';
+                echo __('offers.starting_vote');
             }
             ?>
         @endif
     @else
-        <div class="msg">You need to <a href="/login" class="eror_com">log in</a></div>
+        <div class="msg">{!! __('offers.login_to_vote', ['link' => route('login')]) !!}</div>
     @endauth
 </div>
