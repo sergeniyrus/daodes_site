@@ -1,7 +1,5 @@
 @extends('template')
-
-@section('title_page', 'Wallet')
-
+@section('title_page', __('wallet.my_wallet'))
 @section('main')
     <style>
         .container {
@@ -39,24 +37,6 @@
             margin-bottom: 30px;
         }
 
-        /* .link-buttons a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #0b0c18;
-            color: #a0ff08;
-            border-radius: 10px;
-            text-decoration: none;
-            margin: 10px;
-            font-size: 16px;
-            width: 200px;
-            text-align: center;
-            transition: background-color 0.3s ease;
-        }
-
-        .link-buttons a:hover {
-            background-color: #d7fc09;
-        } */
-
         .blue_btn {
         display: inline-flex;
         align-items: center;
@@ -80,10 +60,9 @@
 
 <div class="container">
     <div class="text-center mb-4">
-        <h1>My Wallet</h1>
+        <h1>{{ __('wallet.my_wallet') }}</h1>
     </div>
 
-    <!-- Display session message if it exists -->
     @if(session('info'))
         <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
     @elseif(session('error'))
@@ -91,17 +70,16 @@
     @endif
 
     <div class="text-center">
-        <!-- Use a condition to check if avatar_url exists, then insert it -->
         <img src="{{ $UserProfile->avatar_url ?? '/img/main/img_avatar.jpg' }}" alt="Avatar" class="avatar">
     </div>
 
     <div class="balance">
-        <p>Balance: {{ rtrim(rtrim(number_format($wallet->balance, 8, '.', ''), '0'), '.') }} descoin</p>
+        <p>{{ __('wallet.balance') }}: {{ rtrim(rtrim(number_format($wallet->balance, 8, '.', ''), '0'), '.') }} descoin</p>
     </div>
 
     <div style="text-align: center">
-        <a href="{{ route('wallet.transfer.form') }}" class="blue_btn">{{ __('Transfer') }}</a>
-        <a href="{{ route('wallet.history') }}" class="blue_btn">{{ __('History') }}</a>
+        <a href="{{ route('wallet.transfer.form') }}" class="blue_btn">{{ __('wallet.transfer') }}</a>
+        <a href="{{ route('wallet.history') }}" class="blue_btn">{{ __('wallet.history') }}</a>
     </div>
 </div>
 @endsection

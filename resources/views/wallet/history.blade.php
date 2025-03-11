@@ -1,7 +1,5 @@
 @extends('template')
-
-@section('title_page', 'Translation history')
-
+@section('title_page', __('wallet.transfer_history'))
 @section('main')
 <style>
     .container {
@@ -140,7 +138,7 @@
 </style>
 
 <div class="container">
-    <h1>Transfer History</h1>
+    <h1>{{ __('wallet.transfer_history') }}</h1>
     
     @if(session('success'))
         <div class="alert">
@@ -152,25 +150,25 @@
         <table class="table-auto center-table custom-table">
             <thead>
                 <tr>
-                    <th class="px-4 py-2">Date</th>
-                    <th class="px-4 py-2">Sender</th>
-                    <th class="px-4 py-2">Recipient</th>
-                    <th class="px-4 py-2">Amount</th>
-                    <th class="px-4 py-2">Fee</th>
+                    <th class="px-4 py-2">{{ __('wallet.date') }}</th>
+                    <th class="px-4 py-2">{{ __('wallet.sender') }}</th>
+                    <th class="px-4 py-2">{{ __('wallet.recipient') }}</th>
+                    <th class="px-4 py-2">{{ __('wallet.amount') }}</th>
+                    <th class="px-4 py-2">{{ __('wallet.fee') }}</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($historyPays as $pay)
                     <tr>
-                        <td class="px-4 py-2" data-label="Date">{{ $pay->created_at }}</td>
-                        <td class="px-4 py-2" data-label="Sender">
-                            {{ optional($pay->fromWallet->user)->name ?? 'Unknown' }}
+                        <td class="px-4 py-2" data-label="{{ __('wallet.date') }}">{{ $pay->created_at }}</td>
+                        <td class="px-4 py-2" data-label="{{ __('wallet.sender') }}">
+                            {{ optional($pay->fromWallet->user)->name ?? __('Unknown') }}
                         </td>
-                        <td class="px-4 py-2" data-label="Recipient">
-                            {{ optional($pay->toWallet->user)->name ?? 'Unknown' }}
+                        <td class="px-4 py-2" data-label="{{ __('wallet.recipient') }}">
+                            {{ optional($pay->toWallet->user)->name ?? __('Unknown') }}
                         </td>
-                        <td class="px-4 py-2" data-label="Amount">{{ rtrim(rtrim(number_format($pay->amount, 8, '.', ''), '0'), '.') }} descoin</td>
-                        <td class="px-4 py-2" data-label="Fee">{{ rtrim(rtrim(number_format($pay->fee, 8, '.', ''), '0'), '.') }} descoin</td>
+                        <td class="px-4 py-2" data-label="{{ __('wallet.amount') }}">{{ rtrim(rtrim(number_format($pay->amount, 8, '.', ''), '0'), '.') }} descoin</td>
+                        <td class="px-4 py-2" data-label="{{ __('wallet.fee') }}">{{ rtrim(rtrim(number_format($pay->fee, 8, '.', ''), '0'), '.') }} descoin</td>
                     </tr>
                 @endforeach
             </tbody>
@@ -180,7 +178,11 @@
     <div class="pagination-center">
         {{ $historyPays->links() }}
         <div class="pagination-info">
-            Showing {{ $historyPays->firstItem() }} to {{ $historyPays->lastItem() }} of {{ $historyPays->total() }} results
+            {{ __('wallet.pagination_info', [
+                'first' => $historyPays->firstItem(),
+                'last' => $historyPays->lastItem(),
+                'total' => $historyPays->total()
+            ]) }}
         </div>
     </div>
 </div>
