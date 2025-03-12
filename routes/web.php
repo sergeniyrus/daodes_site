@@ -22,7 +22,25 @@ use App\Http\Controllers\{
     UploadController,
     ChatController,
     LanguageController,
+    CaptchaController,
 };
+// use App\Services\IpStackService;
+
+// Route::get('/test-ipstack', function () {
+//     $ipstack = app('ipstack');
+//     $location = $ipstack->getLocation(request()->ip());
+
+//     return [
+//         'ip' => request()->ip(),
+//         'country' => $location['country_name'],
+//         'city' => $location['city'],
+//         'latitude' => $location['latitude'],
+//         'longitude' => $location['longitude'],
+//     ];
+// });
+
+Route::get('/captcha', [CaptchaController::class, 'show'])->name('captcha.show')->withoutMiddleware([SetLocale::class]);
+Route::post('/captcha', [CaptchaController::class, 'verify'])->name('captcha.verify')->withoutMiddleware([SetLocale::class]);
 
 // Маршрут для смены языка
 Route::get('/language/{locale}', [LanguageController::class, 'change'])->name('language.change');

@@ -11,9 +11,13 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
-        $middleware->web(\App\Http\Middleware\SetLocale::class);
+        // Добавьте SuspiciousActivityMiddleware и IpFilterMiddleware перед SetLocale
+        $middleware->web([
+            \App\Http\Middleware\SuspiciousActivityMiddleware::class,
+           // \App\Http\Middleware\IpFilterMiddleware::class,
+            \App\Http\Middleware\SetLocale::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        // Настройка обработки исключений
     })->create();

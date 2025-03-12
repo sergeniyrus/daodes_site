@@ -6,6 +6,7 @@
 
 @section('main')
     <style>
+        /* Основные стили для формы */
         .form-container {
             max-width: 400px;
             margin: 0 auto;
@@ -64,74 +65,161 @@
         label {
             display: block;
             margin: 10px 0 5px;
+            color: #ffffff;
         }
 
         .submit-button {
-            width: 100%;
-            height: 100px;
             background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #a0ff08;
+            z-index: 2;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        .toggle-password:focus {
+            outline: none;
+        }
+
+        /* Стили для сообщений об ошибках и статусах */
+        .auth-session-status {
+            margin-bottom: 20px;
+            color: #a0ff08;
+            text-align: center;
+        }
+
+        .regwin {
+            background-color: #0b0c18;
+            border: 1px solid #fff;
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 50%;
+            min-width: 280px;
+            margin: 20px auto 20px auto;
+            text-align: center;
+        }
+
+        .blue_btn {
+            display: inline-block;
+            color: #000000;
+            font-size: xx-large;
+            background: none; /* Убрали жёлтый фон */
+            border: none; /* Убрали границу */
+            border-radius: 10px;
+            box-shadow: none; /* Убрали тень */
+            transition: transform 0.3s ease;
             border: 1px solid gold;
+        }
+
+        .blue_btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
+            
+        }
+
+        .likebtn {
+            background: none;
+        }
+
+        .task-line {
+            color: #00ccff;
+            font-size: xx-large;
+            margin-bottom: 10px;
         }
     </style>
 
-    <x-guest-layout>
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="header">
+        <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
 
-        <form method="POST" action="{{ route('login') }}" class="form-container">
-            @csrf
-
-            <!-- Username -->
-            <div>
-                <x-input-label for="name" :value="__('login.username')" class="task-line" />
-                <x-text-input 
-                    id="name" 
-                    class="input_row" 
-                    type="text" 
-                    name="name" 
-                    :value="old('name')" 
-                    required 
-                    autofocus 
-                    autocomplete="username" 
-                    placeholder="{{ __('login.username_placeholder') }}"
-                />
-                <x-input-error :messages="$errors->get('name')" class="error-message" />
-            </div>
-
-            <!-- Password -->
-            <div class="mt-4">
-                <x-input-label for="password" :value="__('login.password')" class="task-line" />
-                <x-text-input 
-                    id="password" 
-                    class="input_row" 
-                    type="password" 
-                    name="password" 
-                    required 
-                    autocomplete="current-password" 
-                    placeholder="{{ __('login.password_placeholder') }}"
-                />
-                <x-input-error :messages="$errors->get('password')" class="error-message" />
-            </div>
-            <br>
-
-            <!-- Submit Button -->
-            <div class="button-container">
-                <button type="submit" class="submit-button" title="{{ __('login.login_button') }}">
-                    <img src="img/bottom/login.png" alt="{{ __('login.login_button') }}" class="blue_btn">
-                </button>
-            </div>
-            <br>
-
-            <div class="link-buttons">
-                @if (Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" title="{{ __('login.forgot_password') }}" class="likebtn">
-                        <img src="img/bottom/forgot2.png" alt="{{ __('login.forgot_password') }}" class="blue_btn">
-                    </a>
+        <div class="regwin">
+            <div class="form-container">
+                <!-- Сообщение о статусе (например, успешный вход) -->
+                @if (session('status'))
+                    <div class="auth-session-status">
+                        {{ session('status') }}
+                    </div>
                 @endif
-                <a href="{{ route('register') }}" title="{{ __('login.register') }}" class="likebtn">
-                    <img src="img/bottom/registrat.png" alt="{{ __('login.register') }}" class="blue_btn">
-                </a>
+
+                <!-- Форма входа -->
+                <form method="POST" action="{{ route('login') }}">
+                    @csrf
+
+                    <!-- Поле для имени пользователя -->
+                    <div>
+                        <label for="name">{{ __('login.username') }}</label>
+                        <input id="name" class="input_row" type="text" name="name" value="{{ old('name') }}"
+                            required autofocus autocomplete="username"
+                            placeholder="{{ __('login.username_placeholder') }}" />
+                        @if ($errors->has('name'))
+                            <div class="error-message">{{ $errors->first('name') }}</div>
+                        @endif
+                    </div>
+
+                    <!-- Поле для пароля -->
+                    <div class="mt-4">
+                        <label for="password">{{ __('login.password') }}</label>
+                        <div class="password-container">
+                            <input id="password" class="input_row" type="password" name="password" required
+                                autocomplete="current-password" placeholder="{{ __('login.password_placeholder') }}" />
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">👁️</button>
+                        </div>
+                        @if ($errors->has('password'))
+                            <div class="error-message">{{ $errors->first('password') }}</div>
+                        @endif
+                    </div>
+                    <br>
+
+                    <!-- Кнопка отправки формы -->
+                    <div class="button-container">
+                        <button type="submit" class="submit-button" title="{{ __('login.login_button') }}">
+                            <img src="img/bottom/login.png" alt="{{ __('login.login_button') }}" class="blue_btn">
+                        </button>
+                    </div>
+                    <br>
+
+                    <!-- Ссылки на восстановление пароля и регистрацию -->
+                    <div class="link-buttons">
+                        @if (Route::has('password.request'))
+                            <a href="{{ route('password.request') }}" title="{{ __('login.forgot_password') }}"
+                                class="likebtn">
+                                <img src="img/bottom/forgot2.png" alt="{{ __('login.forgot_password') }}" class="blue_btn">
+                            </a>
+                        @endif
+                        <a href="{{ route('register') }}" title="{{ __('login.register') }}" class="likebtn">
+                            <img src="img/bottom/registrat.png" alt="{{ __('login.register') }}" class="blue_btn">
+                        </a>
+                    </div>
+                </form>
             </div>
-        </form>
-    </x-guest-layout>
+        </div>
+    </div>
+
+    <script>
+        // Функция для переключения видимости пароля
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        }
+    </script>
 @endsection

@@ -13,6 +13,6 @@ class CheckAccess
             return $next($request);
         }
 
-        return redirect()->route('home')->with('error', 'У вас недостаточно прав для доступа к этой странице.');
+        return redirect()->route('home')->with('error', __('message.insufficient_permissions'));
     }
 }

@@ -69,7 +69,7 @@
     </div>
 
     <!-- Display success flash messages -->
-    @if(session('success'))
+    {{-- @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
@@ -84,7 +84,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
 
     <!-- Task editing form -->
     <form action="{{ route('tasks.update', $task) }}" method="POST">

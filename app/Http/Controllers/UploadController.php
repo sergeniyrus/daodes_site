@@ -10,9 +10,9 @@ class UploadController extends Controller
 {
     public function uploadImage(Request $request)
     {
-        // Логируем информацию о запросе
-        Log::info('Received file upload request', [
-            'file' => $request->file('upload') ? $request->file('upload')->getClientOriginalName() : 'No file'
+        // Log information about the request
+        Log::info('Получен запрос на загрузку файла', [
+            'file' => $request->file('upload') ? $request->file('upload')->getClientOriginalName() : 'Файл отсутствует'
         ]);
 
         if ($request->hasFile('upload')) {
@@ -20,19 +20,19 @@ class UploadController extends Controller
                 $file = $request->file('upload');
                 $fileContent = file_get_contents($file->getRealPath());
 
-                // Логируем информацию о файле
-              Log::info('Uploading file', [
+                // Log information about the file
+                Log::info('Загрузка файла', [
                     'fileName' => $file->getClientOriginalName(),
                     'fileSize' => $file->getSize(),
                     'mimeType' => $file->getMimeType()
                 ]);
 
-                // Инициализация клиента Guzzle для работы с IPFS
+                // Initialize Guzzle client for IPFS
                 $client = new Client([
                     'base_uri' => 'https://daodes.space'
                 ]);
 
-                // Отправка файла на IPFS
+                // Send file to IPFS
                 $response = $client->request('POST', '/api/v0/add', [
                     'multipart' => [
                         [
@@ -43,46 +43,46 @@ class UploadController extends Controller
                     ]
                 ]);
 
-                // Логируем ответ от IPFS
-               Log::info('IPFS Response', [
+                // Log the IPFS response
+                Log::info('Ответ от IPFS', [
                     'statusCode' => $response->getStatusCode(),
                     'responseBody' => $response->getBody()->getContents()
                 ]);
 
-                // Парсим ответ и извлекаем ссылку на изображение
+                // Parse the response and extract the image link
                 $data = json_decode($response->getBody(), true);
 
                 if (isset($data['Hash'])) {
                     $ipfsUrl = 'https://daodes.space/ipfs/' . $data['Hash'];
 
-                    // Логируем успешное завершение
-                   Log::info('File uploaded successfully', [
+                    // Log successful completion
+                    Log::info('Файл успешно загружен', [
                         'fileUrl' => $ipfsUrl
                     ]);
 
-                    // Возвращаем ответ в формате, ожидаемом CKEditor
+                    // Return response in the format expected by CKEditor
                     return response()->json([
                         'uploaded' => 1,
                         'fileName' => $file->getClientOriginalName(),
                         'url' => $ipfsUrl
                     ]);
                 } else {
-                    // Логируем ошибку, если Hash не найден в ответе
-                    Log::error('IPFS error: No Hash in response', [
+                    // Log error if Hash is not found in the response
+                    Log::error('Ошибка IPFS: Hash отсутствует в ответе', [
                         'response' => $data
                     ]);
-                    return response()->json(['error' => 'No valid response from IPFS'], 500);
+                    return response()->json(['error' => __('message.ipfs_error_no_hash')], 500);
                 }
             } catch (\Exception $e) {
-                // Логируем ошибку при загрузке
-               Log::error('IPFS upload error: ' . $e->getMessage());
-                return response()->json(['error' => 'File not uploaded due to server error'], 500);
+                // Log error during upload
+                Log::error('Ошибка загрузки в IPFS: ' . $e->getMessage());
+                return response()->json(['error' => __('message.ipfs_upload_error')], 500);
             }
         }
 
-        // Логируем, если файл не был отправлен
-        Log::error('File not uploaded', ['request' => $request->all()]);
+        // Log if no file was uploaded
+        Log::error('Файл не загружен', ['request' => $request->all()]);
 
-        return response()->json(['error' => 'File not uploaded'], 400);
+        return response()->json(['error' => __('message.file_not_uploaded')], 400);
     }
 }

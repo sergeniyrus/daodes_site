@@ -535,7 +535,7 @@
                                 </legend>
 
                                 <!-- Вывод ошибок валидации -->
-                                @if ($errors->any())
+                                {{-- @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <ul>
                                             @foreach ($errors->all() as $error)
@@ -543,10 +543,10 @@
                                             @endforeach
                                         </ul>
                                     </div>
-                                @endif
+                                @endif --}}
 
                                 <!-- Вывод сообщений об успехе или ошибке -->
-                                @if (session('success'))
+                                {{-- @if (session('success'))
                                     <div class="alert alert-success">
                                         {{ session('success') }}
                                     </div>
@@ -555,7 +555,7 @@
                                     <div class="alert alert-danger">
                                         {{ session('error') }}
                                     </div>
-                                @endif
+                                @endif --}}
 
                                 <!-- Поле "Your price" -->
                                 <div class="form-group">

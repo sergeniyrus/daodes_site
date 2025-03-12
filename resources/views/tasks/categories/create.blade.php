@@ -72,7 +72,7 @@
     <h1>Добавить новую категорию</h1>
 
     <!-- Вывод ошибок валидации -->
-    @if($errors->any())
+    {{-- @if($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
@@ -80,7 +80,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
 
     <!-- Форма для добавления категории -->
     <form action="{{ route('taskscategories.store') }}" method="POST">

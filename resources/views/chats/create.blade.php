@@ -152,7 +152,7 @@
 </style>
 <div class="container">
     <h1>{{ __('chats.create_chat_title') }}</h1>
-    @if ($errors->any())
+    {{-- @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
@@ -160,7 +160,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
     <form method="POST" action="{{ route('chats.store') }}">
         @csrf
         <div class="form-group">

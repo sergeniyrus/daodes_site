@@ -16,7 +16,8 @@
         "laravel/framework": "^11.31",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
-        "pusher/pusher-php-server": "^7.2"
+        "pusher/pusher-php-server": "^7.2",
+        "torann/geoip": "^3.0"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^3.5",

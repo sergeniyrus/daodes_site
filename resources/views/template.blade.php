@@ -82,17 +82,11 @@
     }
     </style>
     {{-- @include('partials.infotrade') --}}
-
-    {{-- <div class="marquee">
-        <p>Ведётся доработка, не обращайте внимание на некоторые недостатки, кривости, а обо всех найденных неполадках сообщайте в телеграм @sergeniyrus</p>
-    </div> --}}
     @include('menu')
     <!-- вставка всего в шаблон -->
     @yield('main')
     <!-- Подвал-->
     @include('footer')
-
-    {{-- <script src="https://www.google.com/recaptcha/api.js" async defer></script> --}}
 </body>
 
 </html>

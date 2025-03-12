@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use App\Models\Seed;
 
-
 class SeedController extends Controller
 {
     public function index()
@@ -25,7 +24,7 @@ class SeedController extends Controller
             ->exists();
 
         if ($onseedExists) {
-            $message = "The seed phrase has already been received.";
+            $message = __('message.seed_already_received'); // Используем перевод
             return view('seed', [
                 'keyword' => $keyword,
                 'message' => $message,
@@ -71,11 +70,11 @@ class SeedController extends Controller
         $storedSeedExists = Seed::where('user_id', $user_id)->exists();
 
         if ($storedSeedExists) {
-            return redirect()->back()->with('error', 'The seed phrase has been saved.');
+            return redirect()->back()->with('error', __('message.seed_saved')); // Используем перевод
         }
 
         Seed::create($seedWords);
-        $success = 'Congratulations on registering!';
+        $success = __('message.registration_success'); // Используем перевод
 
         return redirect()->back()->with('success', $success);
     }

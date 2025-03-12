@@ -12,7 +12,7 @@ class LanguageController extends Controller
     {
         // Проверяем, поддерживается ли выбранный язык
         if (!in_array($locale, ['en', 'ru'])) {
-            abort(400, 'Unsupported language');
+            abort(400, __('message.unsupported_language'));
         }
 
         // Устанавливаем локаль в сессии

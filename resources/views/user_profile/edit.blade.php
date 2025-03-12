@@ -116,11 +116,11 @@
     <h2 style="text-align: center">{{ __('user_profile.edit_profile') }}</h2><br>
 
     <!-- Display session message if it exists -->
-    @if (session('info'))
+    {{-- @if (session('info'))
         <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div><br>
     @elseif(session('error'))
         <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
-    @endif
+    @endif --}}
 
     <form action="{{ route('user_profile.update', $profile->id) }}" method="POST" enctype="multipart/form-data">
         @csrf

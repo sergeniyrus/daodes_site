@@ -7,20 +7,20 @@ use Illuminate\Http\Request;
 
 class TasksCategoryController extends Controller
 {
-    // Показать список категорий
+    // Display the list of categories
     public function index()
     {
         $categories = TaskCategory::all();
         return view('tasks.categories.index', compact('categories'));
     }
 
-    // Отобразить форму для создания новой категории
+    // Display the form to create a new category
     public function create()
     {
         return view('tasks.categories.addtask');
     }
 
-    // Сохранить новую категорию
+    // Save a new category
     public function store(Request $request)
     {
         $request->validate([
@@ -31,16 +31,16 @@ class TasksCategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('taskscategories.index')->with('success', 'Категория успешно создана!');
+        return redirect()->route('taskscategories.index')->with('success', __('message.category_added_success'));
     }
 
-    // Отобразить форму для редактирования категории
+    // Display the form to edit a category
     public function edit(TaskCategory $taskCategory)
     {
         return view('tasks.categories.edit', compact('taskCategory'));
     }
 
-    // Обновить категорию
+    // Update a category
     public function update(Request $request, TaskCategory $taskCategory)
     {
         $request->validate([
@@ -51,13 +51,13 @@ class TasksCategoryController extends Controller
             'name' => $request->name,
         ]);
 
-        return redirect()->route('taskscategories.index')->with('success', 'Категория успешно обновлена!');
+        return redirect()->route('taskscategories.index')->with('success', __('message.category_updated_success'));
     }
 
-    // Удалить категорию
+    // Delete a category
     public function destroy(TaskCategory $taskCategory)
     {
         $taskCategory->delete();
-        return redirect()->route('taskscategories.index')->with('success', 'Категория успешно удалена!');
+        return redirect()->route('taskscategories.index')->with('success', __('message.category_deleted_success'));
     }
 }

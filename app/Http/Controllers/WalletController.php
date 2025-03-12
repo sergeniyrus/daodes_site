@@ -33,31 +33,28 @@ class WalletController extends Controller
             ['balance' => 100]
         );
 
-        // Получаем профиль пользователя (предположим, что связь с UserProfile настроена)
-        $UserProfile = $user->profile;  // Это сработает, если в модели User есть связь с моделью UserProfile
+        // Получаем профиль пользователя
+        $UserProfile = $user->profile;
 
         if ($wallet->wasRecentlyCreated) {
             // Сообщение о создании кошелька и начислении 100 монет
-            session()->flash('message', 'Ваш кошелек создан и на него начислено 100 descoin.');
+            session()->flash('message', __('message.wallet_created'));
         }
 
         // Передаем кошелек и профиль пользователя в представление
         return view('wallet.wallet', compact('wallet', 'UserProfile'));
     }
 
-
-
     public function showTransferForm()
     {
         $user = Auth::user();
-        $UserProfile = $user->profile;  // Получаем профиль пользователя
+        $UserProfile = $user->profile;
 
         // Проверяем, есть ли аватар в профиле, и передаем правильный URL
-        $avatarUrl = $UserProfile ? $UserProfile->avatar_url : '/img/main/img_avatar.jpg';  // Используем URL аватара или дефолтное изображение
+        $avatarUrl = $UserProfile ? $UserProfile->avatar_url : '/img/main/img_avatar.jpg';
 
         return view('wallet.transfer', compact('avatarUrl', 'UserProfile'));
     }
-
 
     public function transfer(Request $request)
     {
@@ -79,7 +76,7 @@ class WalletController extends Controller
         $recipientUser = User::where('name', $recipientName)->first();
 
         if (!$recipientUser) {
-            return redirect()->back()->withErrors(['recipient' => 'Пользователь с таким именем не найден.']);
+            return redirect()->back()->withErrors(['recipient' => __('message.recipient_not_found')]);
         }
 
         // Получаем кошелек получателя
@@ -90,37 +87,33 @@ class WalletController extends Controller
 
         // Проверяем, есть ли достаточно средств
         if ($fromWallet->balance < $totalAmount) {
-            return redirect()->back()->withErrors(['amount' => 'Недостаточно средств для перевода.']);
+            return redirect()->back()->withErrors(['amount' => __('message.insufficient_funds')]);
         }
 
-
-
         // Проверка сид-фразы
-$storedSeed = Seed::where('user_id', $user->id)->first();
-if (!$storedSeed) {
-    return redirect()->back()->withErrors(['seed_phrase' => 'Сид-фраза не найдена.']);
-}
+        $storedSeed = Seed::where('user_id', $user->id)->first();
+        if (!$storedSeed) {
+            return redirect()->back()->withErrors(['seed_phrase' => __('message.seed_phrase_not_found')]);
+        }
 
-$storedSeedPhrase = implode(' ', array_slice($storedSeed->toArray(), 2));
+        $storedSeedPhrase = implode(' ', array_slice($storedSeed->toArray(), 2));
 
-// Убираем пробелы и приводим к нижнему регистру
-$seedPhrase = strtolower(trim($seedPhrase));
-$storedSeedPhrase = strtolower(trim($storedSeedPhrase));
+        // Убираем пробелы и приводим к нижнему регистру
+        $seedPhrase = strtolower(trim($seedPhrase));
+        $storedSeedPhrase = strtolower(trim($storedSeedPhrase));
 
-// Логируем длину строк
-Log::info('Length of entered seed phrase: ' . strlen($seedPhrase));
-Log::info('Length of stored seed phrase: ' . strlen($storedSeedPhrase));
+        // Логируем длину строк
+        Log::info('Length of entered seed phrase: ' . strlen($seedPhrase));
+        Log::info('Length of stored seed phrase: ' . strlen($storedSeedPhrase));
 
-// Логируем строки
-Log::info('Seed phrase entered by user: ' . $seedPhrase);
-Log::info('Stored seed phrase: ' . $storedSeedPhrase);
+        // Логируем строки
+        Log::info('Seed phrase entered by user: ' . $seedPhrase);
+        Log::info('Stored seed phrase: ' . $storedSeedPhrase);
 
-// Сравнение сид-фраз
-if ($seedPhrase !== $storedSeedPhrase) {
-    return redirect()->back()->withErrors(['seed_phrase' => 'Неверная сид-фраза.']);
-}
-
-
+        // Сравнение сид-фраз
+        if ($seedPhrase !== $storedSeedPhrase) {
+            return redirect()->back()->withErrors(['seed_phrase' => __('message.invalid_seed_phrase')]);
+        }
 
         // Транзакция
         DB::transaction(function () use ($fromWallet, $toWallet, $amount, $totalAmount) {
@@ -142,10 +135,8 @@ if ($seedPhrase !== $storedSeedPhrase) {
             $systemWallet->save();
         });
 
-        return redirect()->route('wallet.index')->with('success', 'Перевод успешно выполнен.');
+        return redirect()->route('wallet.index')->with('success', __('message.transfer_success'));
     }
-
-
 
     public function history()
     {

@@ -63,11 +63,11 @@
         <h1>{{ __('wallet.my_wallet') }}</h1>
     </div>
 
-    @if(session('info'))
+    {{-- @if(session('info'))
         <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div>
     @elseif(session('error'))
         <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
-    @endif
+    @endif --}}
 
     <div class="text-center">
         <img src="{{ $UserProfile->avatar_url ?? '/img/main/img_avatar.jpg' }}" alt="Avatar" class="avatar">

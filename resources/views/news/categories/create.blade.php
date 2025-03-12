@@ -70,7 +70,7 @@
 <div class="container my-5">
     <h1>{{ __('category.add_category_title') }}</h1>
 
-    @if($errors->any())
+    {{-- @if($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
@@ -78,7 +78,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
 
     <form action="{{ route('newscategories.store') }}" method="POST">
         @csrf

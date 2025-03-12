@@ -20,9 +20,9 @@ class UserProfileController extends Controller
 
         if (!$userProfile) {
             if ($userId === $currentUserId) {
-                return redirect()->route('user_profile.create')->with('info', 'Пожалуйста, создайте свой профиль.');
+                return redirect()->route('user_profile.create')->with('info', __('message.create_profile'));
             } else {
-                return redirect()->route('user_profile.index')->with('error', 'Пользователь ещё не заполнил профиль.');
+                return redirect()->route('user_profile.index')->with('error', __('message.profile_not_filled'));
             }
         }
 
@@ -59,7 +59,7 @@ class UserProfileController extends Controller
                 $data['avatar_url'] = $avatarUrl;
             } else {
                 Log::error('Ошибка при загрузке аватара на IPFS.');
-                return redirect()->back()->withErrors('Ошибка при загрузке аватара. Попробуйте еще раз.');
+                return redirect()->back()->withErrors(__('message.avatar_upload_error'));
             }
         } else {
             $data['avatar_url'] = 'https://daodes.space/ipfs/QmPdPDwGSrfWYxomC3u9FLBtB9MGH8iqVGRZ9TLPxZTekj';
@@ -71,7 +71,7 @@ class UserProfileController extends Controller
 
         UserProfile::create($data);
 
-        return redirect()->route('user_profile.index')->with('success', 'Профиль успешно создан');
+        return redirect()->route('user_profile.index')->with('success', __('message.profile_created'));
     }
 
     public function show($id)
@@ -79,7 +79,7 @@ class UserProfileController extends Controller
         $profile = UserProfile::with('user')->find($id);
 
         if (!$profile) {
-            return redirect()->route('user_profile.index')->with('error', 'Профиль не найден.');
+            return redirect()->route('user_profile.index')->with('error', __('message.profile_not_found'));
         }
 
         return view('user_profile.show', compact('profile'));
@@ -127,7 +127,7 @@ class UserProfileController extends Controller
         $profile->save();
 
         return redirect()->route('user_profile.edit', $profile->id)
-            ->with('info', 'The profile has been successfully updated!');
+            ->with('info', __('message.profile_updated'));
     }
 
     private function uploadToIPFS($file)

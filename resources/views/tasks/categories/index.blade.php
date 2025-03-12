@@ -86,11 +86,11 @@
 <div class="container">
     <h1>Категории Биржи заданий</h1>
     <div class="new_post">
-        @if(session('success'))
+        {{-- @if(session('success'))
             <div class="alert alert-success">
                 {{ session('success') }}
             </div>
-        @endif
+        @endif --}}
 
         <table class="table mt-4">
             <thead>

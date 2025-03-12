@@ -34,7 +34,7 @@ class CategoryController extends Controller
             'updated_at' => now(),
         ]);
 
-        return redirect()->route('categories.index', $type)->with('success', 'Категория успешно добавлена.');
+        return redirect()->route('categories.index', $type)->with('success', __('message.category_added'));
     }
 
     // Показ формы для редактирования категории
@@ -58,7 +58,7 @@ class CategoryController extends Controller
                 'updated_at' => now(),
             ]);
 
-        return redirect()->route('categories.index', $type)->with('success', 'Категория успешно обновлена.');
+        return redirect()->route('categories.index', $type)->with('success', __('message.category_updated'));
     }
 
     // Удаление категории
@@ -66,7 +66,7 @@ class CategoryController extends Controller
     {
         DB::table($type == 'news' ? 'category_news' : 'category_offers')->where('id', $id)->delete();
 
-        return redirect()->route('categories.index', $type)->with('success', 'Категория успешно удалена.');
+        return redirect()->route('categories.index', $type)->with('success', __('message.category_deleted'));
     }
 
     // Сортировка и фильтрация по категориям

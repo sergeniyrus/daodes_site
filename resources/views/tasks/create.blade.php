@@ -69,7 +69,7 @@
         <h1 class="display-4">{{ __('tasks.create_task') }}</h1>
     </div>
 
-    @if(session('success'))
+    {{-- @if(session('success'))
         <div class="alert alert-success">
             {{ session('success') }}
         </div>
@@ -83,12 +83,12 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
 
     <form action="{{ route('tasks.create') }}" method="POST">
         @csrf
     
-        @if ($errors->any())
+        {{-- @if ($errors->any())
             <div class="alert alert-danger">
                 <ul>
                     @foreach ($errors->all() as $error)
@@ -96,7 +96,7 @@
                     @endforeach
                 </ul>
             </div>
-        @endif
+        @endif --}}
     
         <div class="form-group">
             <label for="title">{{ __('tasks.task_title') }}:</label>

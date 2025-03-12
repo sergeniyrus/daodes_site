@@ -1,3 +1,4 @@
+
 <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
 <div class="knopkodav">
     <div class="header-menu" id="home-menu">
@@ -15,7 +16,8 @@
     </div>
     <div class="header-menu has-submenu" id="tasks-menu">
         <a href="/tasks" title="{{ __('menu.task_marketplace') }}">
-            <span class="logo_name"><img src="/img/bottom/tasks2.png" alt="{{ __('menu.task_marketplace') }}"></span></a>
+            <span class="logo_name"><img src="/img/bottom/tasks2.png"
+                    alt="{{ __('menu.task_marketplace') }}"></span></a>
     </div>
 
     <div class="header-menu" id="">
@@ -34,27 +36,29 @@
     </div>
 
     @php
-    $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
-        ->where('is_read', false)
-        ->count();
+        $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
+            ->where('is_read', false)
+            ->count();
     @endphp
     @if ($unreadCount > 0)
         <a href="/notifications"><span class="notifications">
-            {{ $unreadCount }}
-        </span></a>
+                {{ $unreadCount }}
+            </span></a>
     @endif
 
     <div class="auth-buttons">
         @if (Auth::check())
-            <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}" style="border-radius:50%">
+            <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}"
+                style="border-radius:50%">
                 <span class="logo_name">
                     <img src="{{ Auth::user()->profile && Auth::user()->profile->avatar_url ? Auth::user()->profile->avatar_url : 'https://daodes.space/ipfs/QmPdPDwGSrfWYxomC3u9FLBtB9MGH8iqVGRZ9TLPxZTekj' }}"
                         alt="{{ __('menu.profile') }}" class="avatar-img">
                 </span>
-            </a> 
+            </a>
 
             <a href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();" title="{{ __('menu.logout') }}">
+                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+                title="{{ __('menu.logout') }}">
                 <span class="logo_name"><img src="/img/bottom/logout.png" alt="{{ __('menu.logout') }}"></span>
             </a>
             <form id="logout-form" class="logo_name" action="{{ route('logout') }}" method="POST"
@@ -66,18 +70,24 @@
                 <span class="logo_name"><img src="/img/bottom/login.png" alt="{{ __('menu.login') }}"></span>
             </a>
             <a href="{{ route('register') }}" title="{{ __('menu.registration') }}">
-                <span class="logo_name"><img src="/img/bottom/registrat.png" alt="{{ __('menu.registration') }}"></span>
+                <span class="logo_name"><img src="/img/bottom/registrat.png"
+                        alt="{{ __('menu.registration') }}"></span>
             </a>
         @endif
     </div>
-    <!-- Кнопка смены языка -->
-    <div class="language-switcher">
-        <a href="{{ route('language.change', 'en') }}" class="{{ app()->getLocale() === 'en' ? 'active' : '' }}">EN</a>
-        <br> <!-- Добавляем разрыв строки -->
-        <a href="{{ route('language.change', 'ru') }}" class="{{ app()->getLocale() === 'ru' ? 'active' : '' }}">RU</a>
-    </div>
 </div>
 
+<!-- Language Switcher -->
+@auth
+    @if (Auth::user()->access_level >= 3)
+        <div class="language-switcher">
+            <a href="{{ route('language.change', 'en') }}"
+                class="{{ app()->getLocale() === 'en' ? 'active' : '' }}">EN</a>
+            <a href="{{ route('language.change', 'ru') }}"
+                class="{{ app()->getLocale() === 'ru' ? 'active' : '' }}">RU</a>
+        </div>
+    @endif
+@endauth
 <!-- Modal for submenu -->
 <div id="submenuModal" class="modal">
     <div class="modal-content">
@@ -98,6 +108,8 @@
     </script>
 @endisset
 
+@include('partials.alert')
+
 <script>
     // Check if newsId variable exists
     var newsId = typeof newsId !== 'undefined' ? newsId : null;
@@ -105,33 +117,54 @@
 
     // Define paths and submenus
     const submenus = {
-        "/news": [
-            { href: "/news", text: "{{ __('menu.back_to_news') }}" },
-            @auth
-            @if (Auth::user()->access_level >= 3)
-                { href: "/news/add", text: "{{ __('menu.add_news') }}" },
-                { href: "/newscategories", text: "{{ __('menu.manage_categories') }}" },
-            @endif
+            "/news": [{
+                    href: "/news",
+                    text: "{{ __('menu.back_to_news') }}"
+                },
+                @auth
+                @if (Auth::user()->access_level >= 3)
+                    {
+                        href: "/news/add",
+                        text: "{{ __('menu.add_news') }}"
+                    }, {
+                        href: "/newscategories",
+                        text: "{{ __('menu.manage_categories') }}"
+                    },
+                @endif
             @endauth
         ],
-        "/offers": [
-            { href: "/offers", text: "{{ __('menu.back_to_offers') }}" },
+        "/offers": [{
+                href: "/offers",
+                text: "{{ __('menu.back_to_offers') }}"
+            },
             @auth
             @if (Auth::user()->access_level >= 3)
-                { href: "/offers/add", text: "{{ __('menu.add_offer') }}" },
-                { href: "/offerscategories", text: "{{ __('menu.edit_categories') }}" },
+                {
+                    href: "/offers/add",
+                    text: "{{ __('menu.add_offer') }}"
+                }, {
+                    href: "/offerscategories",
+                    text: "{{ __('menu.edit_categories') }}"
+                },
             @endif
-            @endauth
-        ],
-        "/tasks": [
-            { href: "/tasks", text: "{{ __('menu.back_to_tasks') }}" },
-            @auth
-            @if (Auth::user()->access_level >= 3)
-                { href: "/addtask", text: "{{ __('menu.create_task') }}" },
-                { href: "/taskscategories", text: "{{ __('menu.edit_categories') }}" },
-            @endif
-            @endauth
-        ],
+        @endauth
+    ],
+    "/tasks": [{
+            href: "/tasks",
+            text: "{{ __('menu.back_to_tasks') }}"
+        },
+        @auth
+        @if (Auth::user()->access_level >= 3)
+            {
+                href: "/addtask",
+                text: "{{ __('menu.create_task') }}"
+            }, {
+                href: "/taskscategories",
+                text: "{{ __('menu.edit_categories') }}"
+            },
+        @endif
+    @endauth
+    ],
     };
 
     // Get submenu and button elements

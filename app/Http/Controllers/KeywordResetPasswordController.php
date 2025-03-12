@@ -44,7 +44,7 @@ class KeywordResetPasswordController extends Controller
         }
 
         // If keyword doesn't match, return with an error
-        return back()->withErrors(['keyword' => 'The provided keyword is incorrect.']);
+        return back()->withErrors(['keyword' => __('message.keyword_incorrect')]);
     }
 
     /**
@@ -61,29 +61,29 @@ class KeywordResetPasswordController extends Controller
      * Update the user's password.
      */
     public function updatePassword(Request $request)
-{
-    // Validate the request
-    $request->validate([
-        'token' => 'required', // Token for verification
-        'password' => 'required|string|min:8|confirmed', // New password
-    ]);
+    {
+        // Validate the request
+        $request->validate([
+            'token' => 'required', // Token for verification
+            'password' => 'required|string|min:8|confirmed', // New password
+        ]);
 
-    // Find the user by the token
-    $user = User::whereNotNull('remember_token')->first();
+        // Find the user by the token
+        $user = User::whereNotNull('remember_token')->first();
 
-    // Check if the token is valid
-    if ($user && Hash::check($request->token, $user->remember_token)) {
-        // Update the password
-        $user->forceFill([
-            'password' => Hash::make($request->password), // Hash the new password
-            'remember_token' => null, // Clear the token after use
-        ])->save();
+        // Check if the token is valid
+        if ($user && Hash::check($request->token, $user->remember_token)) {
+            // Update the password
+            $user->forceFill([
+                'password' => Hash::make($request->password), // Hash the new password
+                'remember_token' => null, // Clear the token after use
+            ])->save();
 
-        // Redirect to login with a success message
-        return redirect()->route('login')->with('status', 'Your password has been reset successfully.');
+            // Redirect to login with a success message
+            return redirect()->route('login')->with('status', __('message.password_reset_success'));
+        }
+
+        // If token is invalid, return with an error
+        return back()->withErrors(['token' => __('message.invalid_token')]);
     }
-
-    // If token is invalid, return with an error
-    return back()->withErrors(['token' => 'Invalid token.']);
-}
 }

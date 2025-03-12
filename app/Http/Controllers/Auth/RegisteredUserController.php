@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 use App\Providers\RouteServiceProvider;
+use Illuminate\Support\Facades\Validator;
 
 class RegisteredUserController extends Controller
 {
@@ -50,4 +51,15 @@ class RegisteredUserController extends Controller
 
         return redirect(RouteServiceProvider::SEED);
     }
+
+    protected function validator(array $data)
+{
+    return Validator::make($data, [
+        'name' => ['required', 'string', 'max:255'],
+        'keyword' => ['required', 'string', 'max:255'],
+        'password' => ['required', 'string', 'min:8', 'confirmed'],
+        'g-recaptcha-response' => ['required', 'recaptcha'],
+    ]);
+}
+
 }

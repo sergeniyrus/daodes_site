@@ -43,6 +43,7 @@ return [
     'times_up' => "⏳ Time's up, task under review.",
     'start_time' => "Start time",
     'end_time' => "End time",
+    'completion_hours_hint' => 'The days and hours add up together.',
     'current_time' => "Current time",
     'create_task' => 'Create a new task',
     'task_title' => 'Task title',
@@ -64,4 +65,5 @@ return [
     'save_changes' => 'Save Changes',
     'task_updated_success' => 'Task updated successfully!',
     'validation_error' => 'Validation error',
+    'message_hint' => 'The message must be at least 20 characters and three words long',
 ];

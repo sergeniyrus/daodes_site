@@ -108,7 +108,7 @@
     <h2 class="text-center">{{ __('admin_news.edit_news_title') }}</h2>
 
     <!-- Validation Errors -->
-    @if ($errors->any())
+    {{-- @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
@@ -116,7 +116,7 @@
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
 
     <form id="news-form" method="POST" action="{{ route('news.update', $news->id) }}" enctype="multipart/form-data">
         @csrf

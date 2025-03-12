@@ -24,4 +24,12 @@ return [
     'no_notifications' => 'No unread messages.',
     'unread_messages_in_chat' => 'Unread messages in chat:',
     'read' => 'Read',
+    'chat_name_exists' => 'A chat with this name already exists.',
+    'chat_name_required' => 'Chat name is required for group chats.',
+    'users_required' => 'Select at least one participant.', 
+    'chat_exists' => 'A chat with this user already exists.', 
+    'chat_created' => 'Chat successfully created!', 
+    'message_sent' => 'Message sent!', 
+    'message_send_error' => 'Error sending message.', 
+    'notification_read' => 'Notification marked as read!', 
 ];

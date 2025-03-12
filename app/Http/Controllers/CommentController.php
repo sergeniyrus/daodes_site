@@ -29,7 +29,7 @@ class CommentController extends Controller
             'created_at' => now(), // Устанавливаем текущее время
         ]);
 
-        return redirect()->back()->with('success', 'Комментарий добавлен.');
+        return redirect()->back()->with('success', __('message.comment_added'));
     }
 
     public function news(Request $request)
@@ -51,6 +51,6 @@ class CommentController extends Controller
             'created_at' => now(), // Устанавливаем текущее время
         ]);
 
-        return redirect()->back()->with('success', 'Комментарий добавлен.');
+        return redirect()->back()->with('success', __('message.comment_added'));
     }
 }

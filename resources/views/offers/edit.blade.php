@@ -107,7 +107,7 @@ Edit the offer
     <h2 class="text-center">{{ __('admin_offers.edit_offer_title') }}</h2>
 
     <!-- Validation Errors -->
-    @if ($errors->any())
+    {{-- @if ($errors->any())
         <div class="alert alert-danger">
             <ul>
                 @foreach ($errors->all() as $error)
@@ -115,7 +115,7 @@ Edit the offer
                 @endforeach
             </ul>
         </div>
-    @endif
+    @endif --}}
 
     <form id="offer-form" method="POST" action="{{ route('offers.update', ['id' => $offer->id]) }}" enctype="multipart/form-data">
         @csrf

@@ -34,7 +34,7 @@ class TaskController extends Controller
         $task->load('category', 'user', 'bids');
 
         if (!$task->user) {
-            return redirect()->route('tasks.list')->withErrors('Task author not found.');
+            return redirect()->route('tasks.list')->withErrors(__('message.task_author_not_found'));
         }
 
         $task->deadline = Carbon::parse($task->deadline);
@@ -75,14 +75,14 @@ class TaskController extends Controller
 
         Log::info('Task successfully created:', $task->toArray());
 
-        return redirect()->route('tasks.index')->with('success', 'Task successfully added!');
+        return redirect()->route('tasks.index')->with('success', __('message.task_added'));
     }
 
     // Edit a task (only for the author)
     public function edit(Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'You do not have permission to edit this task.');
+            abort(403, __('message.permission_denied'));
         }
 
         $categories = TaskCategory::all();
@@ -93,7 +93,7 @@ class TaskController extends Controller
     public function update(Request $request, Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'You do not have permission to edit this task.');
+            abort(403, __('message.permission_denied'));
         }
 
         $request->validate([
@@ -106,22 +106,22 @@ class TaskController extends Controller
 
         $task->update($request->only(['title', 'content', 'deadline', 'budget', 'category_id']));
 
-        return redirect()->route('tasks.show', $task)->with('success', 'Task successfully updated!');
+        return redirect()->route('tasks.show', $task)->with('success', __('message.task_updated'));
     }
 
     // Delete a task (only for the author)
     public function destroy(Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'You do not have permission to delete this task.');
+            abort(403, __('message.permission_denied'));
         }
 
         if (!$task->canBeDeleted()) {
-            return redirect()->back()->with('error', 'Cannot delete this task.');
+            return redirect()->back()->with('error', __('message.cannot_update_status'));
         }
 
         $task->delete();
-        return redirect()->route('tasks.index')->with('success', 'Task successfully deleted!');
+        return redirect()->route('tasks.index')->with('success', __('message.task_deleted'));
     }
 
     // Submit a bid (only one bid per user)
@@ -131,21 +131,24 @@ class TaskController extends Controller
 
         if (!$task->isOpen()) {
             Log::warning('Bid submission is closed for task ID: ' . $task->id);
-            return redirect()->back()->with('error', 'Bid submission is closed.');
+            return redirect()->back()->with('error', __('message.bid_submission_closed'));
         }
 
         if ($task->user_id === Auth::id()) {
             Log::warning('User tried to bid on their own task ID: ' . $task->id);
-            return redirect()->back()->with('error', 'You cannot bid on your own task.');
+            return redirect()->back()->with('error', __('message.cannot_bid_own_task'));
         }
 
         if ($task->bids()->where('user_id', Auth::id())->exists()) {
             Log::warning('User already submitted a bid for task ID: ' . $task->id);
-            return redirect()->back()->with('error', 'You have already submitted a bid for this task.');
+            return redirect()->back()->with('error', __('message.bid_already_submitted'));
         }
 
         Validator::extend('min_words', function ($attribute, $value, $parameters, $validator) {
-            $wordCount = str_word_count($value);
+            // Удаляем HTML-теги и лишние пробелы
+            $text = trim(strip_tags($value));
+            // Подсчитываем слова с помощью регулярного выражения
+            $wordCount = preg_match_all('/\p{L}[\p{L}\p{Mn}\p{Pd}\'\x{2019}]*/u', $text);
             return $wordCount >= $parameters[0];
         });
 
@@ -165,8 +168,8 @@ class TaskController extends Controller
                 'max:500',
             ],
         ], [
-            'comment.min_words' => 'The comment must contain at least 3 words.',
-            'comment.min_chars' => 'The comment must be at least 20 characters long.',
+            'comment.min_words' => __('message.comment_min_words'),
+            'comment.min_chars' => __('message.comment_min_chars'),
         ]);
 
         Log::info('Bid request data:', $validatedData);
@@ -183,10 +186,10 @@ class TaskController extends Controller
 
             Log::info('Bid successfully created for task ID: ' . $task->id, ['bid_id' => $bid->id]);
 
-            return redirect()->route('tasks.show', $task)->with('success', 'Your bid has been successfully submitted.');
+            return redirect()->route('tasks.show', $task)->with('success', __('message.bid_submitted'));
         } catch (\Exception $e) {
             Log::error('Error creating bid for task ID: ' . $task->id, ['error' => $e->getMessage()]);
-            return redirect()->back()->with('error', 'An error occurred while submitting your bid. Please try again.');
+            return redirect()->back()->with('error', __('message.bid_error'));
         }
     }
 
@@ -194,107 +197,107 @@ class TaskController extends Controller
     public function acceptBid(Task $task, Bid $bid)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'You do not have permission to accept bids.');
+            abort(403, __('message.permission_denied'));
         }
 
         if (!$task->canUpdateStatus(Task::STATUS_NEGOTIATION)) {
-            return redirect()->back()->with('error', 'Cannot update task status.');
+            return redirect()->back()->with('error', __('message.cannot_update_status'));
         }
 
         $task->setStatus(Task::STATUS_NEGOTIATION)->save();
         $task->update(['accepted_bid_id' => $bid->id]);
 
-        return redirect()->back()->with('success', 'Bid accepted. Please contact the freelancer.');
+        return redirect()->back()->with('success', __('message.bid_accepted'));
     }
 
     // Start work (only for the freelancer)
     public function startWork(Task $task)
     {
         if ($task->acceptedBid->user_id !== Auth::id()) {
-            abort(403, 'Only the selected freelancer can start work.');
+            abort(403, __('message.permission_denied'));
         }
 
         if (!$task->canUpdateStatus(Task::STATUS_IN_PROGRESS)) {
-            return redirect()->back()->with('error', 'Cannot update task status.');
+            return redirect()->back()->with('error', __('message.cannot_update_status'));
         }
 
         $task->setStatus(Task::STATUS_IN_PROGRESS)->save();
         $task->update(['start_time' => now()]);
 
-        return redirect()->back()->with('success', 'Work started! Timer is running.');
+        return redirect()->back()->with('success', __('message.work_started'));
     }
 
     // Freelancer submits task for review
     public function freelancerComplete(Task $task)
     {
         if ($task->acceptedBid->user_id !== Auth::id()) {
-            abort(403, 'Only the selected freelancer can complete the task.');
+            abort(403, __('message.permission_denied'));
         }
 
         if (!$task->canUpdateStatus(Task::STATUS_ON_REVIEW)) {
-            return redirect()->back()->with('error', 'Cannot update task status.');
+            return redirect()->back()->with('error', __('message.cannot_update_status'));
         }
 
         $task->setStatus(Task::STATUS_ON_REVIEW)->save();
         $task->update(['end_time' => now()]);
 
-        return redirect()->back()->with('success', 'Task submitted for review.');
+        return redirect()->back()->with('success', __('message.task_submitted_for_review'));
     }
 
     // Complete the task (only for the author)
     public function complete(Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'Only the author can complete the task.');
+            abort(403, __('message.permission_denied'));
         }
 
         if (!$task->canUpdateStatus(Task::STATUS_COMPLETED)) {
-            return redirect()->back()->with('error', 'Cannot update task status.');
+            return redirect()->back()->with('error', __('message.cannot_update_status'));
         }
 
         $task->setStatus(Task::STATUS_COMPLETED)->save();
 
-        return redirect()->back()->with('success', 'Task completed!');
+        return redirect()->back()->with('success', __('message.task_completed'));
     }
 
     // Continue the task (only for the author) - "Revise" button
     public function continueTask(Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'You do not have permission to continue this task.');
+            abort(403, __('message.permission_denied'));
         }
 
         if (!$task->isOnReview()) {
-            return redirect()->back()->with('error', 'Cannot continue this task.');
+            return redirect()->back()->with('error', __('message.cannot_update_status'));
         }
 
         $task->setStatus(Task::STATUS_IN_PROGRESS)->save();
         $task->update(['start_time' => now()]);
 
-        return redirect()->back()->with('success', 'Task returned to work.');
+        return redirect()->back()->with('success', __('message.task_returned_to_work'));
     }
 
     // Mark the task as failed (only for the author)
     public function fail(Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'You do not have permission for this task.');
+            abort(403, __('message.permission_denied'));
         }
 
         if (!$task->isOnReview()) {
-            return redirect()->back()->with('error', 'Cannot mark this task as failed.');
+            return redirect()->back()->with('error', __('message.cannot_update_status'));
         }
 
         $task->setStatus(Task::STATUS_FAILED)->save();
 
-        return redirect()->back()->with('success', 'Task marked as failed.');
+        return redirect()->back()->with('success', __('message.task_marked_as_failed'));
     }
 
     // Rate the task (only for the author)
     public function rate(Request $request, Task $task)
     {
         if ($task->user_id !== Auth::id()) {
-            abort(403, 'Only the author can rate the task.');
+            abort(403, __('message.permission_denied'));
         }
 
         $request->validate([
@@ -303,6 +306,6 @@ class TaskController extends Controller
 
         $task->update(['rating' => $request->rating]);
 
-        return redirect()->back()->with('success', 'Rating saved.');
+        return redirect()->back()->with('success', __('message.rating_saved'));
     }
 }

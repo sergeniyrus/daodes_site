@@ -6,50 +6,46 @@
 
 @section('main')
     <style>
+        /* Основные стили для формы */
         .form-container {
-            max-width: 400px; /* Максимальная ширина формы */
-            margin: 0 auto; /* Центрирование формы */
-            padding: 20px; /* Внутренние отступы */
-            background-color: #333333; /* Цвет фона формы */
-            border-radius: 10px; /* Скругление углов */
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5); /* Тень */
-            margin-bottom: 40px; /* Нижний отступ */
-            display: flex; /* Используем Flexbox для выравнивания */
-            flex-direction: column; /* Вертикальное выравнивание */
-            align-items: center; /* Центрируем элементы по горизонтали */
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #333333;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .input_row {
-            background-color: #000000; /* Цвет фона полей ввода */
-            color: #ffffff; /* Цвет текста */
-            border: 1px solid #a0ff08; /* Цвет рамки */
-            border-radius: 5px; /* Скругление углов */
-            width: 100%; /* Ширина полей ввода */
-            padding: 10px; /* Внутренние отступы */
-            margin: 10px 0; /* Отступы между полями */
+            background-color: #000000;
+            color: #ffffff;
+            border: 1px solid #a0ff08;
+            border-radius: 5px;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
         }
 
         .input_row::placeholder {
-            color: #ccc; /* Цвет текста в плейсхолдере */
+            color: #ccc;
         }
 
         .button-container {
             display: flex;
-            justify-content: space-between; /* Размещение кнопок рядом друг с другом */
+            justify-content: center;
             align-items: center;
-            margin-top: 20px; /* Отступ сверху для кнопок */
-            width: 100%;
-        }
-
-        .button-container button, .button-container a {
-            width: 48%; /* Ширина кнопок, чтобы они располагались рядом */
+            
         }
 
         .link-buttons {
             display: flex;
-            justify-content: center; /* Центрирование кнопок */
-            gap: 20px; /* Отступ между кнопками */
-            margin-top: 20px; /* Отступ сверху */
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .link-buttons a {
@@ -61,133 +57,211 @@
         }
 
         .error-message {
-            color: red; /* Цвет сообщений об ошибках */
-            margin-top: 5px; /* Отступ сверху */
-            text-align: center; /* Центрирование сообщений об ошибках */
+            color: red;
+            margin-top: 5px;
+            text-align: center;
         }
 
         label {
-            display: block; /* Сброс стилей для меток */
-            margin: 10px 0 5px; /* Отступы вокруг меток */
+            display: block;
+            margin: 10px 0 5px;
+            color: #ffffff;
         }
 
         .submit-button {
-            width: 100%; /* Ширина кнопки */
-            height: 100px; /* Высота кнопки */
-            background: none; /* Убираем фон */
-            border: 1px solid gold; /* Убираем рамку */
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0 10px;
+            
         }
 
-        /* Стиль для кнопки .blue_btn */
+        .password-container {
+            position: relative;
+            width: 100%;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #a0ff08;
+            z-index: 2;
+            background: none;
+            border: none;
+            padding: 0;
+            font-size: 16px;
+        }
+
+        .toggle-password:focus {
+            outline: none;
+        }
+
+        /* Стили для сообщений об ошибках и статусах */
+        .auth-session-status {
+            margin-bottom: 20px;
+            color: #a0ff08;
+            text-align: center;
+        }
+
+        .regwin {
+            background-color: #0b0c18;
+            border: 1px solid #fff;
+            border-radius: 20px;
+            padding: 20px;
+            max-width: 50%;
+            min-width: 280px;
+            margin: 20px auto 20px auto;
+            text-align: center;
+        }
+
         .blue_btn {
             display: inline-block;
-            color: #ffffff;
-            font-size: large;
-            background: #0b0c18;
-            padding: 15px 30px;
-            border: 1px solid #d7fc09;
+            color: #000000;
+            font-size: xx-large;
+            background: none; /* Убрали фон */
+            border: 1px solid gold; /* Добавили рамку */
             border-radius: 10px;
             box-shadow: 0 0 20px #000;
             transition: box-shadow 0.3s ease, transform 0.3s ease;
             gap: 15px;
-            margin-bottom: 25px;
-            width: 100%; /* Убираем фиксированную ширину кнопки */
         }
 
         .blue_btn:hover {
             box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
             transform: scale(1.05);
-            color: #ffffff;
-            background: #0b0c18;
+            color: #fff;
         }
 
-        .button-container a img,
-        .button-container button img {
-            width: 100%; /* Ширина изображения для кнопок */
-            height: auto; /* Высота изображения автоматически подстраивается */
+        .likebtn {
+            background: none;
+        }
+
+        .task-line {
+            color: #00ccff;
+            font-size: xx-large;
+            margin-bottom: 10px;
+        }
+
+        /* Стили для reCAPTCHA */
+        .recaptcha-wrapper {
+            width: 100%;
+            margin: 20px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .g-recaptcha {
+            display: inline-block;
+            transform: scale(0.9);
         }
     </style>
 
-    <x-guest-layout>
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
+    <div class="header">
+        <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
 
-        <form method="POST" action="{{ route('register') }}" class="form-container">
-            @csrf
+        <div class="regwin">
+            <div class="form-container">
+                <!-- Сообщение о статусе (например, успешная регистрация) -->
+                @if (session('status'))
+                    <div class="auth-session-status">
+                        {{ session('status') }}
+                    </div>
+                @endif
 
-            <!-- Username -->
-            <div>
-                <x-input-label for="name" :value="__('registration.username')" class="task-line"/>
-                <x-text-input 
-                    id="name" 
-                    class="input_row" 
-                    type="text" 
-                    name="name" 
-                    :value="old('name')" 
-                    required 
-                    autofocus 
-                    autocomplete="username" 
-                    placeholder="{{ __('registration.username_placeholder') }}"
-                />
-                <x-input-error :messages="$errors->get('name')" class="error-message" />
+                <!-- Форма регистрации -->
+                <form method="POST" action="{{ route('register') }}">
+                    @csrf
+
+                    <!-- Поле для имени пользователя -->
+                    <div>
+                        <label for="name">{{ __('registration.username') }}</label>
+                        <input id="name" class="input_row" type="text" name="name" value="{{ old('name') }}"
+                            required autofocus autocomplete="username"
+                            placeholder="{{ __('registration.username_placeholder') }}" />
+                        @if ($errors->has('name'))
+                            <div class="error-message">{{ $errors->first('name') }}</div>
+                        @endif
+                    </div>
+
+                    <!-- Поле для ключевого слова -->
+                    <div class="mt-4">
+                        <label for="keyword">{{ __('registration.keyword') }}</label>
+                        <input id="keyword" class="input_row" type="text" name="keyword" value="{{ old('keyword') }}"
+                            required autocomplete="keyword"
+                            placeholder="{{ __('registration.keyword_placeholder') }}" />
+                        @if ($errors->has('keyword'))
+                            <div class="error-message">{{ $errors->first('keyword') }}</div>
+                        @endif
+                    </div>
+
+                    <!-- Поле для пароля -->
+                    <div class="mt-4">
+                        <label for="password">{{ __('registration.password') }}</label>
+                        <div class="password-container">
+                            <input id="password" class="input_row" type="password" name="password" required
+                                autocomplete="new-password" placeholder="{{ __('registration.password_placeholder') }}" />
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password')">👁️</button>
+                        </div>
+                        @if ($errors->has('password'))
+                            <div class="error-message">{{ $errors->first('password') }}</div>
+                        @endif
+                    </div>
+
+                    <!-- Поле для подтверждения пароля -->
+                    <div class="mt-4">
+                        <label for="password_confirmation">{{ __('registration.confirm_password') }}</label>
+                        <div class="password-container">
+                            <input id="password_confirmation" class="input_row" type="password" name="password_confirmation"
+                                required autocomplete="new-password"
+                                placeholder="{{ __('registration.confirm_password_placeholder') }}" />
+                            <button type="button" class="toggle-password" onclick="togglePasswordVisibility('password_confirmation')">👁️</button>
+                        </div>
+                        @if ($errors->has('password_confirmation'))
+                            <div class="error-message">{{ $errors->first('password_confirmation') }}</div>
+                        @endif
+                    </div>
+
+                    <!-- reCAPTCHA -->
+                    <div class="recaptcha-wrapper mt-4">
+                        <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                    </div>
+                    @if ($errors->has('g-recaptcha-response'))
+                        <span class="error-message">
+                            {{ $errors->first('g-recaptcha-response') }}
+                        </span>
+                    @endif
+                    <br>
+
+                    <!-- Кнопки отправки формы и перехода к входу -->
+                    <div class="button-container">
+                        <button type="submit" title="{{ __('registration.register_button') }}" class="submit-button">
+                            <img src="img/bottom/registrat.png" alt="{{ __('registration.register_button') }}" class="blue_btn">
+                        </button>
+                        <a href="{{ route('login') }}" class="submit-button" title="{{ __('registration.login_button') }}">
+                            <img src="img/bottom/login.png" alt="{{ __('registration.login_button') }}" class="blue_btn">
+                        </a>
+                    </div>
+                </form>
             </div>
+        </div>
+    </div>
 
-            <!-- Keyword -->
-            <div class="mt-4">
-                <x-input-label for="keyword" :value="__('registration.keyword')" class="task-line"/>
-                <x-text-input 
-                    id="keyword" 
-                    class="input_row" 
-                    type="text" 
-                    name="keyword" 
-                    :value="old('keyword')" 
-                    required 
-                    autocomplete="keyword" 
-                    placeholder="{{ __('registration.keyword_placeholder') }}"
-                />
-                <x-input-error :messages="$errors->get('keyword')" class="error-message" />
-            </div>
+    <!-- Подключение скрипта reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js?nl=en" async defer></script>
 
-            <!-- Password -->
-            <div class="mt-4">
-                <x-input-label for="password" :value="__('registration.password')" class="task-line" />
-                <x-text-input 
-                    id="password" 
-                    class="input_row" 
-                    type="password" 
-                    name="password" 
-                    required 
-                    autocomplete="new-password" 
-                    placeholder="{{ __('registration.password_placeholder') }}"
-                />
-                <x-input-error :messages="$errors->get('password')" class="error-message" />
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="mt-4">
-                <x-input-label for="password_confirmation" :value="__('registration.confirm_password')" class="task-line" />
-                <x-text-input 
-                    id="password_confirmation" 
-                    class="input_row" 
-                    type="password" 
-                    name="password_confirmation" 
-                    required 
-                    autocomplete="new-password" 
-                    placeholder="{{ __('registration.confirm_password_placeholder') }}"
-                />
-                <x-input-error :messages="$errors->get('password_confirmation')" class="error-message" />
-            </div>
-            <br>
-
-            <!-- Submit and Register Buttons -->
-            <div class="button-container">
-                <button type="submit" title="{{ __('registration.register_button') }}" class="likebtn">
-                    <img src="img/bottom/registrat.png" alt="{{ __('registration.register_button') }}" class="blue_btn">
-                </button>
-                <a href="{{ route('login') }}" class="likebtn" title="{{ __('registration.login_button') }}">
-                    <img src="img/bottom/login.png" alt="{{ __('registration.login_button') }}" class="blue_btn">
-                </a>
-            </div>
-        </form>
-    </x-guest-layout>
+    <script>
+        // Функция для переключения видимости пароля
+        function togglePasswordVisibility(fieldId) {
+            const passwordInput = document.getElementById(fieldId);
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        }
+    </script>
 @endsection

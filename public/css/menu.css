@@ -61,12 +61,14 @@
   cursor: pointer;
   transition: background-color 0.3s ease;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border-radius: 10px;
 }
 
 .submenu-button:hover {
   background-color: #FFD700;
   /* Светлее при наведении */
   color: black;
+  border-radius: 10px;
 }
 
 .active-section-menu {
@@ -115,6 +117,7 @@
   box-shadow: 0 0 10px 5px gold;
   color:gold;
   /* text-decoration: underline; */
+  border-radius: 10px;
 }
 
 .close {
@@ -139,6 +142,7 @@
   justify-content: space-around;
   /* Или justify-content: center, если кнопки нужно расположить по центру */
   align-items: center;
+  border-radius: 10px;
 }
 
 .auth-buttons a {
@@ -149,10 +153,11 @@
   color: #fff;
   transition: transform 0.3s ease;
   border: 1px solid gold;
+  border-radius: 10px;
 }
 
 .auth-buttons a img {
-
+  border-radius: 10px;
   height: 100%;
   object-fit: cover;
 }
@@ -168,32 +173,32 @@
   bottom: 35px;
 }
 
+/* Стили для переключателя языков */
 .language-switcher {
-  display: flex;
-  flex-direction: column; /* Располагаем элементы вертикально */
-  gap: 5px; /* Расстояние между кнопками */
-  align-items: flex-start; /* Выравниваем по левому краю */
+  text-align: right; /* Выравниваем по правому краю */
+  font-size: 12px; /* Размер шрифта */
+  margin-top: 10px; /* Отступ сверху от меню */
+  padding-right: 10px; /* Отступ справа */
 }
 
 .language-switcher a {
-  text-decoration: none; /* Убираем подчеркивание */
-  color: #333; /* Цвет текста */
-  padding: 5px 10px; /* Отступы внутри кнопок */
-  border: 1px solid #ccc; /* Граница */
-  border-radius: 4px; /* Скругление углов */
-  transition: background-color 0.3s, color 0.3s; /* Плавные переходы */
+  color: #9c9c9c; /* Цвет текста */
+  text-decoration: none;
+  margin: 0 5px;
+  font-size: 12px; /* Размер шрифта */
+  padding: 5px;
 }
 
 .language-switcher a.active {
-  background-color: #007bff; /* Цвет фона для активной кнопки */
-  color: #fff; /* Цвет текста для активной кнопки */
-  border-color: #007bff; /* Цвет границы для активной кнопки */
+  font-weight: bold;
+  color: #007bff; /* Цвет активного языка */
 }
 
 .language-switcher a:hover {
-  background-color: #f0f0f0; /* Цвет фона при наведении */
-  color: #007bff; /* Цвет текста при наведении */
+  background-color: #fff; /* Цвет фона при наведении */
+  color: #000; /* Цвет текста при наведении */
 }
+
 
 /* Адаптивность */
 @media (max-width: 768px) {
