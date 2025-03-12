@@ -20,7 +20,7 @@ body {
   margin: 0;
   color: #ffffff;
   background-color: #0B0C18;
-  background-image: url("https://ipfs.sweb.ru/ipfs/QmTpCH5y3AkDhVBgDLUKuTRbkKV69EEvGzzgwLhQMtsWZ3?filename=bg01.jpg");
+  background-image: url("/img/main/bg01.jpg");
   opacity: 1;
   background-position: center center;
   background-repeat: no-repeat;
