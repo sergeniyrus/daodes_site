@@ -1,0 +1,197 @@
+.knopkodav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid rgb(255, 0, 255);
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+
+.header-menu {
+  flex: 1;
+  text-align: center;
+  padding: 10px;
+  position: relative;
+  transition: background-color 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.header-menu a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.3s ease;
+  border: 1px solid gold;
+}
+
+.header-menu a img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+/* Стиль кнопки подменю */
+.submenu-button {
+  width: 100px;
+  /* Сделать кнопку такого же размера, как главная */
+  height: 100%;
+  background-color: #0b0c18;
+  border: 1px solid gold;
+  padding: 25px 0px;
+  color: gold;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.submenu-button:hover {
+  background-color: #FFD700;
+  /* Светлее при наведении */
+  color: black;
+}
+
+.active-section-menu {
+  line-height: 1.2;
+  /* Для отображения текста в две строки */
+}
+
+
+/* Модальное окно */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.modal-content {
+  background-color:  #2b2c2e;
+  margin: 15% auto;
+  padding: 20px 30px;
+  border-radius: 8px;
+  border: rgb(255, 0, 255) 2px solid;
+  max-width: 720px;
+  text-align: center;
+}
+
+.modal-content a {
+  display: block;
+  margin: 10px 0;
+  background-color: #0B0C18;
+  color: #00ffff;
+  text-decoration: none;
+  border: 1px solid gold;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+
+.modal-content a:hover {
+  background-color: #131b7c;
+  border: 1px solid goldenrod;
+  box-shadow: 0 0 10px 5px gold;
+  color:gold;
+  /* text-decoration: underline; */
+}
+
+.close {
+  color: red;
+  float: right;
+  font-size: 36px;
+  font-weight: bold;
+  margin-top: -32px;
+  margin-right: -28px;
+}
+
+.close:hover,
+.close:focus {
+  color: #00ffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.auth-buttons {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  /* Или justify-content: center, если кнопки нужно расположить по центру */
+  align-items: center;
+}
+
+.auth-buttons a {
+  margin: 0 10px;
+  /* Добавляем отступы между кнопками */
+  height: 100px;
+  text-decoration: none;
+  color: #fff;
+  transition: transform 0.3s ease;
+  border: 1px solid gold;
+}
+
+.auth-buttons a img {
+
+  height: 100%;
+  object-fit: cover;
+}
+
+
+/* Адаптивность */
+@media (max-width: 768px) {
+  .modal-content {
+      width: 80%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modal-content {
+      width: 90%;
+  }
+}
+
+@media (max-width: 384px) {
+  .knopkodav {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-around;
+      padding: 5px;
+  }
+
+  .header-menu {
+      width: 30%;
+      /* Каждая кнопка займет примерно треть строки */
+      padding: 5px;
+  }
+
+  .header-menu a {
+      width: 80px;
+      /* Уменьшаем размеры кнопок */
+      height: 80px;
+  }
+
+  .header-menu a img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+  }
+}

@@ -106,62 +106,70 @@ class ChatController extends Controller
 
     // Страница чата
     public function show($chatId)
-    {
-        // Находим чат
-        $chat = Chat::with(['users', 'message.sender'])->findOrFail($chatId);
+{
+    // Находим чат
+    $chat = Chat::with(['users', 'messages.sender'])->findOrFail($chatId);
 
-        // Получаем ID текущего пользователя
-        $userId = auth()->id();
+    // Получаем ID текущего пользователя
+    $userId = auth()->id();
 
-        // Помечаем все уведомления из этого чата как прочитанные
-        Notification::whereHas('message', function ($query) use ($chatId) {
-            $query->where('chat_id', $chatId); // Фильтруем уведомления по ID чата
-        })
-        ->where('user_id', $userId) // Фильтруем уведомления для текущего пользователя
-        ->where('is_read', false) // Фильтруем только непрочитанные уведомления
-        ->update(['is_read' => true]); // Помечаем как прочитанные
+    // Помечаем все уведомления из этого чата как прочитанные
+    Notification::whereHas('message', function ($query) use ($chatId) {
+        $query->where('chat_id', $chatId); // Фильтруем уведомления по ID чата
+    })
+    ->where('user_id', $userId) // Фильтруем уведомления для текущего пользователя
+    ->where('is_read', false) // Фильтруем только непрочитанные уведомления
+    ->update(['is_read' => true]); // Помечаем как прочитанные
 
-        return view('chats.show', compact('chat'));
-    }
+    // Возвращаем представление с сообщением
+    return view('chats.show', compact('chat'))->with('message', __('chats.message_sent'));
+}
+
+
 
     // Отправка сообщения
     public function sendMessage(Request $request, $chatId)
-    {
-        $request->validate([
-            'message' => 'required|string|max:1000|regex:/^[\p{L}\p{N}\s.,!?-]+$/u',
+{
+    // Валидация входящего сообщения
+    $request->validate([
+        'message' => 'required|string|max:1000|regex:/^[\p{L}\p{N}\s.,!?-]+$/u',
+    ]);
+
+    try {
+        // Загружаем сообщение в IPFS
+        $messageModel = new Message();
+        $cid = $messageModel->uploadMessageToIPFS($request->input('message'));
+
+        // Сохраняем сообщение в БД
+        $message = Message::create([
+            'chat_id' => $chatId,
+            'sender_id' => auth()->id(),
+            'message' => null, // Основное сообщение не сохраняем в БД
+            'ipfs_cid' => $cid, // Сохраняем CID из IPFS
         ]);
 
-        try {
-            // Загружаем сообщение в IPFS
-            $messageModel = new Message();
-            $cid = $messageModel->uploadMessageToIPFS($request->input('message'));
-
-            // Сохраняем сообщение в БД
-            $message = Message::create([
-                'chat_id' => $chatId,
-                'sender_id' => auth()->id(),
-                'message' => null, // Основное сообщение не сохраняем в БД
-                'ipfs_cid' => $cid, // Сохраняем CID из IPFS
-            ]);
-
-            // Создаем уведомления для всех участников чата (кроме отправителя)
-            $chat = Chat::findOrFail($chatId);
-            foreach ($chat->users as $user) {
-                if ($user->id !== auth()->id()) {
-                    Notification::create([
-                        'user_id' => $user->id,
-                        'message_id' => $message->id,
-                        'is_read' => false,
-                    ]);
-                }
+        // Создаем уведомления для всех участников чата (кроме отправителя)
+        $chat = Chat::findOrFail($chatId);
+        foreach ($chat->users as $user) {
+            if ($user->id !== auth()->id()) {
+                Notification::create([
+                    'user_id' => $user->id,
+                    'message_id' => $message->id,
+                    'is_read' => false,
+                ]);
             }
-
-            return redirect()->back()->with('success', __('chats.message_sent'));
-        } catch (\Exception $e) {
-            Log::error('Ошибка при отправке сообщения: ' . $e->getMessage());
-            return redirect()->back()->with('error', __('chats.message_send_error'));
         }
+
+        // Возвращаем пользователя обратно с сообщением об успехе
+        return redirect()->back()->with('message', __('chats.message_sent'));
+    } catch (\Exception $e) {
+        // Логируем ошибку
+        Log::error('Ошибка при отправке сообщения: ' . $e->getMessage());
+
+        // Возвращаем пользователя обратно с сообщением об ошибке
+        return redirect()->back()->with('error', __('chats.message_send_error'));
     }
+}
     
         // Вспомогательный метод для загрузки сообщения в IPFS
         private function uploadMessage($message)

@@ -24,6 +24,7 @@ use App\Http\Controllers\{
     LanguageController,
     CaptchaController,
 };
+use App\Http\Middleware\SetLocale;
 // use App\Services\IpStackService;
 
 // Route::get('/test-ipstack', function () {
@@ -59,7 +60,6 @@ Route::post('/chats/create-with-user/{userId}', [ChatController::class, 'createW
 
 Route::post('/chats/create-or-open/{userId}', [ChatController::class, 'createOrOpen'])
     ->name('chats.createOrOpen');
-    
 
 // Главная страница
 Route::view('/', 'home')->name('home');
@@ -75,7 +75,6 @@ Route::get('/white_paper', [WpController::class, 'whitepaper'])->name('white_pap
 
 //Route::get('/category/{post}/{id}', [CategoryController::class, 'categorySort'])->name('category.sort');
 //Route::get('/page/{post}/{id}', [PageController::class, 'page_sort'])->name('page.sort');
-
 
 Route::get('/news/add', [NewsController::class, 'add'])->name('news.add')->middleware('auth');
 // Управление новостями
@@ -94,8 +93,6 @@ Route::prefix('news')->group(function () {
         Route::delete('/{id}', [NewsController::class, 'destroy'])->name('news.destroy');
     });
 });
-
-
 
 // Управление категориями новостей
 Route::prefix('newscategories')->name('newscategories.')->middleware('auth')->group(function () {
@@ -125,6 +122,7 @@ Route::prefix('offers')->group(function () {
         Route::delete('/{id}', [OffersController::class, 'destroy'])->name('offers.destroy');
     });
 });
+
 // Управление категориями предложений
 Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')->group(function () {
     Route::get('/', [OffersController::class, 'categoryIndex'])->name('index');
@@ -145,13 +143,11 @@ Route::post('/spam', [SpamController::class, 'store'])->name('spam.store');
 Route::post('/discussion', [DiscussionController::class, 'store'])->name('discussion.store');
 Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
 
-
 // Seed фраза
 Route::middleware(['auth'])->prefix('seed')->name('seed.')->group(function () {
     Route::get('/', [SeedController::class, 'index'])->name('index');
     Route::post('/save', [SeedController::class, 'saveSeed'])->name('save');
 });
-
 
 // Сброс пароля по ключевому слову
 Route::middleware('guest')->prefix('password')->name('password.')->group(function () {
@@ -168,7 +164,6 @@ Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () 
     Route::post('/transfer', [WalletController::class, 'transfer'])->name('transfer');
     Route::get('/history', [WalletController::class, 'history'])->name('history');
 });
-
 
 // Задачи
 Route::get('/tasks', [TaskController::class, 'list'])->name('tasks.index');
@@ -200,7 +195,6 @@ Route::post('/tasks/{task}/fail', [TaskController::class, 'fail'])
 Route::post('/tasks/store', [TaskController::class, 'store'])
     ->name('tasks.store')
     ->middleware('auth');
-
 
 Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
 
@@ -252,15 +246,14 @@ Route::middleware(['auth'])->prefix('user-profile')->name('user_profile.')->grou
 
     Route::get('/{id?}', [UserProfileController::class, 'index'])->name('show');
 });
+
 // Загрузка изображений для CKEditor
 Route::post('/upload-image', [UploadController::class, 'uploadImage'])->name('upload.image');
-
 
 // Админка
 Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
     return view('dashboard');
 })->name('dashboard');
-
 
 //Route::post('/telegram/webhook', [TelegramController::class, 'webhook']);
 

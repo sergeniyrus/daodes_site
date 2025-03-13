@@ -1,15 +1,29 @@
 <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
 <!-- Кнопка гамбургерного меню (видна только на экранах меньше 768px) -->
 <div class="mobile-hamburger-header">
-    <button id="mobile-hamburger-button" class="mobile-hamburger-button">☰</button>
+    <button id="mobile-hamburger-button" class="mobile-hamburger-button" title="Menu">☰</button>
     @auth
+
         <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}"
             class="mobile-hamburger-button">
-            <span class="logo_name">{{ Auth::user()->name }}</span>
+            <span class="mobile-logo-name">{{ Auth::user()->name }}</span>
         </a>
+
+        @if ($unreadCount > 0)
+            <a href="/notifications" class="mobile-notifications" title="{{ __('chats.notifications_title') }}">
+                {{ $unreadCount }}
+            </a>
+        @endif
+
         <a href="{{ route('logout') }}"
-            onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();" >
-            <span  class="mobile-hamburger-button">{{ __('menu.logout') }}</span>
+            onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
+            title="{{ __('menu.logout') }}">
+            <svg class="logout-icon" xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+            </svg>
         </a>
         <form id="mobile-logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
             @csrf
@@ -81,83 +95,215 @@
             <a href="/team" class="mobile-chapter-title">{{ __('menu.team') }}</a>
         </div>
     </div>
-    @if ($unreadCount > 0)
-        <div class="mobile-chapter-container">
-            <div class="mobile-chapter-header">
-                <a href="/notifications" class="mobile-chapter-title">{{ __('menu.notifications') }}
-                    ({{ $unreadCount }})</a>
-            </div>
-        </div>
-    @endif
+
 </div>
 
 <!-- Основное меню (видно на экранах больше 768px) -->
 <div class="knopkodav">
-    <div class="header-menu">
+    <div class="submenu-button" id="home-menu">
         <a href="/home" title="{{ __('menu.home') }}">
-            <span class="logo_name">{{ __('menu.home') }}</span>
+            <span>{{ __('menu.home') }}</span>
         </a>
     </div>
-    <div class="header-menu">
+    <div class="submenu-button  has-submenu" id="news-menu">
         <a href="/news" title="{{ __('menu.news') }}">
-            <span class="logo_name">{{ __('menu.news') }}</span></a>
+            <span>{{ __('menu.news') }}</span></a>
     </div>
-    <div class="header-menu">
+    <div class="submenu-button has-submenu">
         <a href="/chats" title="{{ __('menu.deschat') }}">
-            <span  class="logo_name">{{ __('menu.deschat') }}</span></a>
+            <span>{{ __('menu.deschat') }}</span></a>
     </div>
-    <div class="header-menu">
+    <div class="submenu-button has-submenu" id="dao-menu">
         <a href="/offers" title="{{ __('menu.decision_making') }}">
-            <span class="logo_name">{{ __('menu.decision_making') }}</span></a>
+            <span>{{ __('menu.decision_making') }}</span></a>
     </div>
-    <div class="header-menu">
+    <div class="submenu-button has-submenu" id="tasks-menu">
         <a href="/tasks" title="{{ __('menu.task_marketplace') }}">
-            <span class="logo_name">{{ __('menu.task_marketplace') }}</span></a>
+            <span>{{ __('menu.task_marketplace') }}</span></a>
     </div>
-    <div class="header-menu">
+    <div class="submenu-button">
         <a href="/white_paper" title="{{ __('menu.white_paper') }}">
-            <span  class="logo_name">{{ __('menu.white_paper') }}</span>
+            <span>{{ __('menu.white_paper') }}</span>
         </a>
     </div>
-    <div class="header-menu">
+    <div class="submenu-button">
         <a href="/team" title="{{ __('menu.team') }}">
-            <span  class="logo_name">{{ __('menu.team') }}</span>
+            <span>{{ __('menu.team') }}</span>
         </a>
     </div>
-    @if ($unreadCount > 0)
-        <a href="/notifications"><span class="notifications">
-                {{ $unreadCount }}
-            </span></a>
-    @endif
-    <div class="auth-buttons">
-        @auth
-            <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}"
-                style="border-radius:50%">
-                <div class="logo_name">{{ Auth::user()->name }}</div>
-            </a>
-            <a href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
-                title="{{ __('menu.logout') }}">
-                <div class="logo_name"><svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+
+    @auth
+        <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}">
+            <div class="submenu-button">{{ Auth::user()->name }}</div>
+        </a>
+
+        @if ($unreadCount > 0)
+            <a href="/notifications"><span class="notifications">
+                    {{ $unreadCount }}
+                </span></a>
+        @endif
+
+        <a href="{{ route('logout') }}"
+            onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
+            title="{{ __('menu.logout') }}">
+            <div class="submenu-button">
+                <svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4"
+                    stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
                     <polyline points="16 17 21 12 16 7"></polyline>
                     <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg></div>
-            </a>
-            <form id="logout-form" class="logo_name" action="{{ route('logout') }}" method="POST"
-                style="display: none;">
-                @csrf
-            </form>
-        @else
-            <a href="https://daodes.space/login" title="{{ __('menu.login') }}">
-                <span class="logo_name">{{ __('menu.login') }}</span>
-            </a>
-            <a href="{{ route('register') }}" title="{{ __('menu.registration') }}">
-                <span class="logo_name">{{ __('menu.registration') }}</span>
-            </a>
-        @endauth
+                </svg>
+            </div>
+        </a>
+        <form id="logout-form" class="submenu-button" action="{{ route('logout') }}" method="POST"
+            style="display: none;">
+            @csrf
+        </form>
+    @else
+        <a href="/login" title="{{ __('menu.login') }}">
+            <span class="submenu-button">{{ __('menu.login') }}</span>
+        </a>
+        <a href="{{ route('register') }}" title="{{ __('menu.registration') }}">
+            <span class="submenu-button">{{ __('menu.registration') }}</span>
+        </a>
+    @endauth
+
+</div>
+
+<!-- Modal for submenu -->
+<div id="submenuModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <div id="submenuLinks"></div>
     </div>
 </div>
+@isset($id)
+    <script>
+        var newsId = {{ $id }};
+    </script>
+@endisset
+
+@isset($task)
+    <script>
+        var taskId = {{ $task }};
+    </script>
+@endisset
+
+<script>
+    // Check if newsId variable exists
+    var newsId = typeof newsId !== 'undefined' ? newsId : null;
+    const currentPath = window.location.pathname;
+
+    // Define paths and submenus
+    const submenus = {
+            "/news": [{
+                    href: "/news",
+                    text: "Back to News"
+                },
+                @auth
+                @if (Auth::user()->access_level >= 3)
+                    {
+                        href: "/news/add",
+                        text: "Add News"
+                    }, {
+                        href: "/newscategories",
+                        text: "Manage Categories"
+                    },
+                @endif
+            @endauth
+        ],
+        "/offers": [{
+                href: "/offers",
+                text: "Back to Offers"
+            },
+            @auth
+            @if (Auth::user()->access_level >= 3)
+                {
+                    href: "/offers/add",
+                    text: "Add Offer"
+                }, {
+                    href: "/offerscategories",
+                    text: "Edit Categories"
+                },
+            @endif
+        @endauth
+    ],
+    "/tasks": [{
+            href: "/tasks",
+            text: "Back to Tasks"
+        },
+        @auth
+        @if (Auth::user()->access_level >= 3)
+            {
+                href: "/addtask",
+                text: "Create Task"
+            }, {
+                href: "/taskscategories",
+                text: "Edit Categories"
+            },
+        @endif
+    @endauth
+    ],
+    };
+
+    // Get submenu and button elements
+    const submenuModal = document.getElementById('submenuModal');
+    const submenuLinksContainer = document.getElementById('submenuLinks');
+    const closeModalButton = document.getElementsByClassName('close')[0];
+    const menuButtons = {
+        "/news": document.getElementById('news-menu'),
+        "/offers": document.getElementById('dao-menu'),
+        "/tasks": document.getElementById('tasks-menu'),
+        "/wallet": document.getElementById('wallet-menu')
+    };
+
+    // Close submenu modal
+    closeModalButton.onclick = function() {
+        submenuModal.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target === submenuModal) {
+            submenuModal.style.display = 'none';
+        }
+    };
+
+    // Function to update menu buttons and submenus
+    function updateMenuButton() {
+        // Determine active menu
+        Object.keys(menuButtons).forEach((path) => {
+            if (currentPath.includes(path) || (currentPath.includes("/news/") && path === "/news/$id") || (
+                    currentPath.includes("/offers/") && path === "/offers/$id")) {
+                menuButtons[path].classList.add("active-section-menu");
+
+                // Create submenu button
+                menuButtons[path].innerHTML = '';
+                const submenuButton = document.createElement('div');
+
+                submenuButton.innerHTML = 'Menu';
+
+                // Open submenu
+                submenuButton.onclick = function() {
+                    submenuModal.style.display = 'block';
+                    submenuLinksContainer.innerHTML = '';
+
+                    // Populate submenu for current path
+                    (submenus[currentPath] || submenus[path] || []).forEach(function(link) {
+                        const anchor = document.createElement('a');
+                        anchor.href = link.href;
+                        anchor.textContent = link.text;
+                        submenuLinksContainer.appendChild(anchor);
+                    });
+                };
+                menuButtons[path].appendChild(submenuButton);
+            }
+        });
+    }
+
+    // Call function on page load
+    window.onload = updateMenuButton;
+</script>
+
 <!-- Language Switcher -->
 @auth
     @if (Auth::user()->access_level >= 3)

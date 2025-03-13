@@ -9,10 +9,8 @@
   flex-wrap: wrap;
 }
 
-.header-menu {
-  flex: 1;
-  text-align: center;
-  
+.header-menu {  
+  text-align: center;  
   position: relative;
   transition: background-color 0.3s ease;
   display: flex;
@@ -33,15 +31,33 @@
   gap: 10px;
 }
 
+.notifications{
+  background-color: red;
+  border-radius: 5px;
+  font-size: clamp(12px, 1.5vw, 36px);
+  cursor: pointer;
+  padding: 0 2px;
+}
+.mobile-notifications{
+  background-color: red;
+  border-radius: 5px;
+  font-size: 20px;
+  cursor: pointer;
+  right: 50px;
+  position: fixed;
+  padding: 0 2px;
+}
+
+
 /* Стили для кнопки подменю */
 .submenu-button {
-  width: 100px;
-  height: 100%;
-  background-color: #0b0c18;
-  border: 1px solid gold;
+  /* width: 100%; */
+  /* height: 100%; */
+  background-color: rgba(11, 12, 24, 0.9);
+  /* border: 1px solid gold; */
   padding: 25px 0px;
   color: gold;
-  font-size: 20px;
+  font-size: clamp(12px, 1.5vw, 36px);
   font-weight: bold;
   text-align: center;
   display: flex;
@@ -51,17 +67,22 @@
   transition: background-color 0.3s ease;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   border-radius: 10px;
+  margin: 0;
+  padding: 5px;
 }
 
 .submenu-button:hover {
-  background-color: #FFD700;
+  background-color: goldenrod;
   color: black;
 }
 
 .active-section-menu {
   line-height: 1.2;
 }
-
+.logout-icon{
+  width: 1em;  /* Ширина SVG будет 1.5 раза больше размера шрифта */
+    height: 1em; /* Высота SVG будет 1.5 раза больше размера шрифта */
+}
 /* Модальное окно */
 .modal {
   display: none;
@@ -132,17 +153,17 @@
   width: 100%;
   z-index: 1002;
   border-bottom: 1px solid gold;
+  font-size: clamp(24px, 1.5vw, 36px);
 }
-.logo_name {
+.mobile-logo-name {
   color: gold;
 }
 
-.logo_name:hover {
-  color: #FF00FF;
+.mobile-logo-name:hover {
+  color: goldenrod;
 }
 
 .mobile-hamburger-button, .mobile-auth-buttons  {
-  font-size: 24px;
   background: none;
   border: none;
   cursor: pointer;
@@ -188,7 +209,7 @@
   position: relative;
 }
 
-.mobile-chapter-header.has-submenu::after {
+.mobile-chapter-header .has-submenu::after {
   content: "▼";
   font-size: 0.8em;
   color: #d7fc09;

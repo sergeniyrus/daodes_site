@@ -20,7 +20,7 @@ body {
   margin: 0;
   color: #ffffff;
   background-color: #0B0C18;
-  background-image: url("/img/main/bg01.png");
+  background-image: url("/img/main/bg01.jpg");
   opacity: 1;
   background-position: center center;
   background-repeat: no-repeat;
@@ -29,7 +29,13 @@ body {
   font-family: Firefly, DejaVu Sans, sans-serif;
   font-size: clamp(14px, 2vw, 20px);
 }
-
+body::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* черный цвет с прозрачностью 50% */
+}
 h1 {
   font-size: clamp(24px, 5vw, 40px); /* Пример для h1 */
 }
