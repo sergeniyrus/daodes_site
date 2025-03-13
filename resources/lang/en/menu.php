@@ -3,8 +3,8 @@
 return [
     'home' => 'Home',
     'news' => 'News',
-    'decision_making' => 'Decision Making',
-    'task_marketplace' => 'Task Marketplace',
+    'decision_making' => 'Offers',
+    'task_marketplace' => 'Tasks',
     'white_paper' => 'White paper',
     'deschat' => 'DESChat',
     'team' => 'Team',

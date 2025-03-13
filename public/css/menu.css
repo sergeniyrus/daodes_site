@@ -1,52 +1,41 @@
+/* Основные стили для меню */
 .knopkodav {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  padding: 10px;
+  padding: 0 10px;
   width: 100%;
   box-sizing: border-box;
-  border: 2px solid rgb(255, 0, 255);
-  border-radius: 8px;
   flex-wrap: wrap;
 }
 
 .header-menu {
   flex: 1;
   text-align: center;
-  padding: 10px;
+  
   position: relative;
   transition: background-color 0.3s ease;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
 }
 
 .header-menu a {
   display: flex;
   align-items: center;
-  justify-content: center;
-  width: 100px;
-  height: 100px;
+  padding: 5px;
   text-decoration: none;
   color: #fff;
   transition: transform 0.3s ease;
-  border: 1px solid gold;
-  border-radius: 10px;
 }
 
-.header-menu a img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-  border-radius: 10px;
+.auth-buttons {
+  display: flex;
+  gap: 10px;
 }
 
-/* Стиль кнопки подменю */
+/* Стили для кнопки подменю */
 .submenu-button {
   width: 100px;
-  /* Сделать кнопку такого же размера, как главная */
   height: 100%;
   background-color: #0b0c18;
   border: 1px solid gold;
@@ -66,16 +55,12 @@
 
 .submenu-button:hover {
   background-color: #FFD700;
-  /* Светлее при наведении */
   color: black;
-  border-radius: 10px;
 }
 
 .active-section-menu {
   line-height: 1.2;
-  /* Для отображения текста в две строки */
 }
-
 
 /* Модальное окно */
 .modal {
@@ -90,7 +75,7 @@
 }
 
 .modal-content {
-  background-color:  #2b2c2e;
+  background-color: #2b2c2e;
   margin: 15% auto;
   padding: 20px 30px;
   border-radius: 8px;
@@ -115,9 +100,7 @@
   background-color: #131b7c;
   border: 1px solid goldenrod;
   box-shadow: 0 0 10px 5px gold;
-  color:gold;
-  /* text-decoration: underline; */
-  border-radius: 10px;
+  color: gold;
 }
 
 .close {
@@ -136,106 +119,156 @@
   cursor: pointer;
 }
 
-.auth-buttons {
+/* Стили для мобильного меню */
+.mobile-hamburger-header {
   display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  /* Или justify-content: center, если кнопки нужно расположить по центру */
+  justify-content: space-between;
   align-items: center;
-  border-radius: 10px;
+  padding: 10px;
+  background-color: #0b0c18;
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1002;
+  border-bottom: 1px solid gold;
+}
+.logo_name {
+  color: gold;
 }
 
-.auth-buttons a {
-  margin: 0 10px;
-  /* Добавляем отступы между кнопками */
-  height: 100px;
-  text-decoration: none;
-  color: #fff;
-  transition: transform 0.3s ease;
+.logo_name:hover {
+  color: #FF00FF;
+}
+
+.mobile-hamburger-button, .mobile-auth-buttons  {
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: white;
+}
+
+.mobile-hamburger-menu {
+  display: none;
+  flex-direction: column;
+  background-color: #000000cf;
+  border-radius: 15px;
   border: 1px solid gold;
-  border-radius: 10px;
+  color: #f8f9fa;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  padding: 15px;
+  position: fixed;
+  top: 75px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
 }
 
-.auth-buttons a img {
-  border-radius: 10px;
-  height: 100%;
-  object-fit: cover;
+.mobile-chapter-container {
+  margin: 5px 0;
+  border: 1px solid #154472;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #0b0c18ce;
+  height: auto;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
 }
 
-.notifications{
-  background-color: red;
-  color: #ffffff;
-  padding: 5px 10px;
-  border-radius: 50%;
-  font-size: 1.2rem;
+.mobile-chapter-header {
+  padding: 15px 20px;
+  background: #1a1a2e;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
   position: relative;
-  left: 35px;
-  bottom: 35px;
+}
+
+.mobile-chapter-header.has-submenu::after {
+  content: "▼";
+  font-size: 0.8em;
+  color: #d7fc09;
+  position: absolute;
+  right: 25px;
+  transition: transform 0.3s ease;
+  display: block;
+}
+
+.mobile-subchapters {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mobile-subchapter-item {
+  padding: 15px 25px;
+  border-top: 1px solid rgba(44, 62, 80, 0.5);
+  background: #0b0c18ce;
+  color: #ffffff;
+  transition: background 0.2s ease;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.mobile-subchapter-item:hover {
+  background: #1a1a2e;
+}
+
+@media (max-width: 768px) {
+  .mobile-hamburger-button {
+      display: block;
+  }
+
+  .knopkodav {
+      display: none;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-hamburger-header, .mobile-auth-buttons {
+      display: none;
+  }
 }
 
 /* Стили для переключателя языков */
 .language-switcher {
-  text-align: right; /* Выравниваем по правому краю */
-  font-size: 12px; /* Размер шрифта */
-  margin-top: 10px; /* Отступ сверху от меню */
-  padding-right: 10px; /* Отступ справа */
+text-align: right;
+font-size: 12px;
+margin-top: 10px;
+padding-right: 10px;
 }
 
 .language-switcher a {
-  color: #9c9c9c; /* Цвет текста */
-  text-decoration: none;
-  margin: 0 5px;
-  font-size: 12px; /* Размер шрифта */
-  padding: 5px;
+color: #9c9c9c;
+margin: 0 5px;
+font-size: 12px;
+padding: 5px;
 }
 
 .language-switcher a.active {
-  font-weight: bold;
-  color: #007bff; /* Цвет активного языка */
+font-weight: bold;
+color: #007bff;
 }
 
 .language-switcher a:hover {
-  background-color: #fff; /* Цвет фона при наведении */
-  color: #000; /* Цвет текста при наведении */
+background-color: #fff;
+color: #000;
 }
 
-
-/* Адаптивность */
-@media (max-width: 768px) {
-  .modal-content {
-      width: 80%;
-  }
+/* Стили для входа и регистрации в строке с кнопкой гамбургер-меню */
+.mobile-username, .mobile-logout, .mobile-login, .mobile-register {
+  margin-left: 10px;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
 }
 
-@media (max-width: 480px) {
-  .modal-content {
-      width: 90%;
-  }
-}
-
-@media (max-width: 384px) {
-  .knopkodav {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-around;
-      padding: 5px;
-  }
-
-  .header-menu {
-      width: 30%;
-      /* Каждая кнопка займет примерно треть строки */
-      padding: 5px;
-  }
-
-  .header-menu a {
-      width: 80px;
-      /* Уменьшаем размеры кнопок */
-      height: 80px;
-  }
-
-  .header-menu a img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-  }
+.mobile-logout, .mobile-login, .mobile-register {
+  cursor: pointer;
 }

@@ -1,65 +1,148 @@
-
 <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
+<!-- Кнопка гамбургерного меню (видна только на экранах меньше 768px) -->
+<div class="mobile-hamburger-header">
+    <button id="mobile-hamburger-button" class="mobile-hamburger-button">☰</button>
+    @auth
+        <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}"
+            class="mobile-hamburger-button">
+            <span class="logo_name">{{ Auth::user()->name }}</span>
+        </a>
+        <a href="{{ route('logout') }}"
+            onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();" >
+            <span  class="mobile-hamburger-button">{{ __('menu.logout') }}</span>
+        </a>
+        <form id="mobile-logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+        </form>
+    @else
+        <a href="/login" class="mobile-login">{{ __('menu.login') }}</a>
+        <a href="{{ route('register') }}" class="mobile-register">{{ __('menu.registration') }}</a>
+    @endauth
+</div>
+
+<!-- Гамбургер-меню (скрыто по умолчанию) -->
+<div class="mobile-hamburger-menu" id="mobile-hamburger-menu">
+    <div class="mobile-chapter-container">
+        <div class="mobile-chapter-header">
+            <a href="/home" class="mobile-chapter-title">{{ __('menu.home') }}</a>
+        </div>
+    </div>
+    <div class="mobile-chapter-container">
+        <div class="mobile-chapter-header">
+            <a href="/news" class="mobile-chapter-title">{{ __('menu.news') }}</a>
+        </div>
+        @auth
+            @if (Auth::user()->access_level >= 3 && Request::is('news*'))
+                <div class="mobile-subchapters">
+                    <a href="/news/add" class="mobile-subchapter-item">{{ __('menu.add_news') }}</a>
+                    <a href="/newscategories" class="mobile-subchapter-item">{{ __('menu.manage_categories') }}</a>
+                </div>
+            @endif
+        @endauth
+    </div>
+    <div class="mobile-chapter-container">
+        <div class="mobile-chapter-header">
+            <a href="/offers" class="mobile-chapter-title">{{ __('menu.decision_making') }}</a>
+        </div>
+        @auth
+            @if (Auth::user()->access_level >= 3 && Request::is('offers*'))
+                <div class="mobile-subchapters">
+                    <a href="/offers/add" class="mobile-subchapter-item">{{ __('menu.add_offer') }}</a>
+                    <a href="/offerscategories" class="mobile-subchapter-item">{{ __('menu.edit_categories') }}</a>
+                </div>
+            @endif
+        @endauth
+    </div>
+    <div class="mobile-chapter-container">
+        <div class="mobile-chapter-header">
+            <a href="/tasks" class="mobile-chapter-title">{{ __('menu.task_marketplace') }}</a>
+        </div>
+        @auth
+            @if (Auth::user()->access_level >= 3 && Request::is('tasks*'))
+                <div class="mobile-subchapters">
+                    <a href="/addtask" class="mobile-subchapter-item">{{ __('menu.create_task') }}</a>
+                    <a href="/taskscategories" class="mobile-subchapter-item">{{ __('menu.edit_categories') }}</a>
+                </div>
+            @endif
+        @endauth
+    </div>
+    <div class="mobile-chapter-container">
+        <div class="mobile-chapter-header">
+            <a href="/white_paper" class="mobile-chapter-title">{{ __('menu.white_paper') }}</a>
+        </div>
+    </div>
+    <div class="mobile-chapter-container">
+        <div class="mobile-chapter-header">
+            <a href="/chats" class="mobile-chapter-title">{{ __('menu.deschat') }}</a>
+        </div>
+    </div>
+    <div class="mobile-chapter-container">
+        <div class="mobile-chapter-header">
+            <a href="/team" class="mobile-chapter-title">{{ __('menu.team') }}</a>
+        </div>
+    </div>
+    @if ($unreadCount > 0)
+        <div class="mobile-chapter-container">
+            <div class="mobile-chapter-header">
+                <a href="/notifications" class="mobile-chapter-title">{{ __('menu.notifications') }}
+                    ({{ $unreadCount }})</a>
+            </div>
+        </div>
+    @endif
+</div>
+
+<!-- Основное меню (видно на экранах больше 768px) -->
 <div class="knopkodav">
-    <div class="header-menu" id="home-menu">
+    <div class="header-menu">
         <a href="/home" title="{{ __('menu.home') }}">
-            <span class="logo_name"><img src="/img/bottom/home.png" alt="{{ __('menu.home') }}"></span>
+            <span class="logo_name">{{ __('menu.home') }}</span>
         </a>
     </div>
-    <div class="header-menu has-submenu" id="news-menu">
+    <div class="header-menu">
         <a href="/news" title="{{ __('menu.news') }}">
-            <span class="logo_name"><img src="/img/bottom/dn.webp" alt="{{ __('menu.news') }}"></span></a>
+            <span class="logo_name">{{ __('menu.news') }}</span></a>
     </div>
-    <div class="header-menu has-submenu" id="dao-menu">
-        <a href="/offers" title="{{ __('menu.decision_making') }}">
-            <span class="logo_name"><img src="/img/bottom/dd.jpg" alt="{{ __('menu.decision_making') }}"></span></a>
-    </div>
-    <div class="header-menu has-submenu" id="tasks-menu">
-        <a href="/tasks" title="{{ __('menu.task_marketplace') }}">
-            <span class="logo_name"><img src="/img/bottom/tasks2.png"
-                    alt="{{ __('menu.task_marketplace') }}"></span></a>
-    </div>
-
-    <div class="header-menu" id="">
-        <a href="/white_paper" title="{{ __('menu.white_paper') }}">
-            <span><img src="/img/bottom/paper.png" alt="{{ __('menu.white_paper') }}"></span>
-        </a>
-    </div>
-    <div class="header-menu has-submenu" id="wallet-menu">
+    <div class="header-menu">
         <a href="/chats" title="{{ __('menu.deschat') }}">
-            <span><img src="/img/bottom/deschat.png" alt="{{ __('menu.deschat') }}"></span></a>
+            <span  class="logo_name">{{ __('menu.deschat') }}</span></a>
     </div>
-    <div class="header-menu" id="">
-        <a href="/team" title="{{ __('menu.team') }}">
-            <span><img src="/img/bottom/team.png" alt="{{ __('menu.team') }}"></span>
+    <div class="header-menu">
+        <a href="/offers" title="{{ __('menu.decision_making') }}">
+            <span class="logo_name">{{ __('menu.decision_making') }}</span></a>
+    </div>
+    <div class="header-menu">
+        <a href="/tasks" title="{{ __('menu.task_marketplace') }}">
+            <span class="logo_name">{{ __('menu.task_marketplace') }}</span></a>
+    </div>
+    <div class="header-menu">
+        <a href="/white_paper" title="{{ __('menu.white_paper') }}">
+            <span  class="logo_name">{{ __('menu.white_paper') }}</span>
         </a>
     </div>
-
-    @php
-        $unreadCount = \App\Models\Notification::where('user_id', auth()->id())
-            ->where('is_read', false)
-            ->count();
-    @endphp
+    <div class="header-menu">
+        <a href="/team" title="{{ __('menu.team') }}">
+            <span  class="logo_name">{{ __('menu.team') }}</span>
+        </a>
+    </div>
     @if ($unreadCount > 0)
         <a href="/notifications"><span class="notifications">
                 {{ $unreadCount }}
             </span></a>
     @endif
-
     <div class="auth-buttons">
-        @if (Auth::check())
+        @auth
             <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}"
                 style="border-radius:50%">
-                <span class="logo_name">
-                    <img src="{{ Auth::user()->profile && Auth::user()->profile->avatar_url ? Auth::user()->profile->avatar_url : 'https://daodes.space/ipfs/QmPdPDwGSrfWYxomC3u9FLBtB9MGH8iqVGRZ9TLPxZTekj' }}"
-                        alt="{{ __('menu.profile') }}" class="avatar-img">
-                </span>
+                <div class="logo_name">{{ Auth::user()->name }}</div>
             </a>
-
             <a href="{{ route('logout') }}"
                 onclick="event.preventDefault(); document.getElementById('logout-form').submit();"
                 title="{{ __('menu.logout') }}">
-                <span class="logo_name"><img src="/img/bottom/logout.png" alt="{{ __('menu.logout') }}"></span>
+                <div class="logo_name"><svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                    <polyline points="16 17 21 12 16 7"></polyline>
+                    <line x1="21" y1="12" x2="9" y2="12"></line>
+                </svg></div>
             </a>
             <form id="logout-form" class="logo_name" action="{{ route('logout') }}" method="POST"
                 style="display: none;">
@@ -67,16 +150,14 @@
             </form>
         @else
             <a href="https://daodes.space/login" title="{{ __('menu.login') }}">
-                <span class="logo_name"><img src="/img/bottom/login.png" alt="{{ __('menu.login') }}"></span>
+                <span class="logo_name">{{ __('menu.login') }}</span>
             </a>
             <a href="{{ route('register') }}" title="{{ __('menu.registration') }}">
-                <span class="logo_name"><img src="/img/bottom/registrat.png"
-                        alt="{{ __('menu.registration') }}"></span>
+                <span class="logo_name">{{ __('menu.registration') }}</span>
             </a>
-        @endif
+        @endauth
     </div>
 </div>
-
 <!-- Language Switcher -->
 @auth
     @if (Auth::user()->access_level >= 3)
@@ -88,139 +169,21 @@
         </div>
     @endif
 @endauth
-<!-- Modal for submenu -->
-<div id="submenuModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <div id="submenuLinks"></div>
-    </div>
-</div>
-
-@isset($id)
-    <script>
-        var newsId = {{ $id }};
-    </script>
-@endisset
-
-@isset($task)
-    <script>
-        var taskId = {{ $task }};
-    </script>
-@endisset
-
-@include('partials.alert')
 
 <script>
-    // Check if newsId variable exists
-    var newsId = typeof newsId !== 'undefined' ? newsId : null;
-    const currentPath = window.location.pathname;
+    document.addEventListener('DOMContentLoaded', function() {
+        const hamburgerButton = document.getElementById('mobile-hamburger-button');
+        const hamburgerMenu = document.getElementById('mobile-hamburger-menu');
 
-    // Define paths and submenus
-    const submenus = {
-            "/news": [{
-                    href: "/news",
-                    text: "{{ __('menu.back_to_news') }}"
-                },
-                @auth
-                @if (Auth::user()->access_level >= 3)
-                    {
-                        href: "/news/add",
-                        text: "{{ __('menu.add_news') }}"
-                    }, {
-                        href: "/newscategories",
-                        text: "{{ __('menu.manage_categories') }}"
-                    },
-                @endif
-            @endauth
-        ],
-        "/offers": [{
-                href: "/offers",
-                text: "{{ __('menu.back_to_offers') }}"
-            },
-            @auth
-            @if (Auth::user()->access_level >= 3)
-                {
-                    href: "/offers/add",
-                    text: "{{ __('menu.add_offer') }}"
-                }, {
-                    href: "/offerscategories",
-                    text: "{{ __('menu.edit_categories') }}"
-                },
-            @endif
-        @endauth
-    ],
-    "/tasks": [{
-            href: "/tasks",
-            text: "{{ __('menu.back_to_tasks') }}"
-        },
-        @auth
-        @if (Auth::user()->access_level >= 3)
-            {
-                href: "/addtask",
-                text: "{{ __('menu.create_task') }}"
-            }, {
-                href: "/taskscategories",
-                text: "{{ __('menu.edit_categories') }}"
-            },
-        @endif
-    @endauth
-    ],
-    };
-
-    // Get submenu and button elements
-    const submenuModal = document.getElementById('submenuModal');
-    const submenuLinksContainer = document.getElementById('submenuLinks');
-    const closeModalButton = document.getElementsByClassName('close')[0];
-    const menuButtons = {
-        "/news": document.getElementById('news-menu'),
-        "/offers": document.getElementById('dao-menu'),
-        "/tasks": document.getElementById('tasks-menu'),
-        "/wallet": document.getElementById('wallet-menu')
-    };
-
-    // Close submenu modal
-    closeModalButton.onclick = function() {
-        submenuModal.style.display = 'none';
-    };
-
-    window.onclick = function(event) {
-        if (event.target === submenuModal) {
-            submenuModal.style.display = 'none';
-        }
-    };
-
-    // Function to update menu buttons and submenus
-    function updateMenuButton() {
-        // Determine active menu
-        Object.keys(menuButtons).forEach((path) => {
-            if (currentPath.includes(path) || (currentPath.includes("/news/") && path === "/news/$id") || (
-                    currentPath.includes("/offers/") && path === "/offers/$id")) {
-                menuButtons[path].classList.add("active-section-menu");
-
-                // Create submenu button
-                menuButtons[path].innerHTML = '';
-                const submenuButton = document.createElement('div');
-                submenuButton.classList.add('submenu-button', 'active-section-menu');
-                submenuButton.innerHTML = '{{ __('menu.section_menu') }}';
-
-                // Open submenu
-                submenuButton.onclick = function() {
-                    submenuModal.style.display = 'block';
-                    submenuLinksContainer.innerHTML = '';
-
-                    // Populate submenu for current path
-                    (submenus[currentPath] || submenus[path] || []).forEach(function(link) {
-                        const anchor = document.createElement('a');
-                        anchor.href = link.href;
-                        anchor.textContent = link.text;
-                        submenuLinksContainer.appendChild(anchor);
-                    });
-                };
-                menuButtons[path].appendChild(submenuButton);
+        // Управление видимостью гамбургер-меню
+        hamburgerButton.addEventListener('click', function() {
+            if (hamburgerMenu.style.display === 'flex') {
+                hamburgerMenu.style.display = 'none'; // Скрыть меню
+            } else {
+                hamburgerMenu.style.display = 'flex'; // Показать меню
             }
         });
-    }
-
-    // Call function on page load
-    window.onload = updateMenuButton;
+    });
 </script>
+
+@include('partials.alert')
