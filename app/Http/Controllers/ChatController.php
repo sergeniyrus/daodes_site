@@ -53,7 +53,7 @@ class ChatController extends Controller
     Log::info('Users array:', $request->users);
 
     // Определяем тип чата: personal (на двоих) или group
-    $type = count($request->users) >= 1 ? 'group' : 'personal';
+    $type = count($request->users) >= 3 ? 'group' : 'personal';
     Log::info('Chat type determined:', ['type' => $type]);
 
     // Правила валидации

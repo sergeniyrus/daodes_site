@@ -63,8 +63,8 @@
             @elseif (session('success') && is_string(session('success')))
                 Swal.fire({
                     icon: 'success',
-                    title: 'Success',
-                    text: '{{ session('success') }}',
+                    title: '{{ session('success') }}',
+                    text: '',
                     confirmButtonText: 'OK',
                     customClass: {
                         popup: 'alert-popup',
