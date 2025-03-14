@@ -50,7 +50,7 @@
             box-shadow: 0 0 5px #d7fc09;
         }
 
-        .blue_btn {
+        .des-btn {
             display: inline-block;
             color: #ffffff;
             font-size: 1.2rem;
@@ -64,7 +64,7 @@
             margin-top: 20px;
         }
 
-        .blue_btn:hover {
+        .des-btn:hover {
             box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
             transform: scale(1.05);
             background: #1a1a1a;
@@ -141,7 +141,7 @@
                 <img id="preview" src="#" alt="Превью изображения">
 
                 <!-- Кнопка для загрузки изображения -->
-                <button type="button" class="blue_btn"
+                <button type="button" class="des-btn"
                     onclick="document.getElementById('file-input').click();">{{ __('admin_news.choose_file') }}</button>
 
                 <!-- Поле загрузки файла (скрыто) -->
@@ -159,7 +159,7 @@
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="blue_btn" style="input_dark">{{ __('admin_news.create_news_button') }}</button>
+            <button type="submit" class="des-btn" style="input_dark">{{ __('admin_news.create_news_button') }}</button>
         </div>
     </form>
 </div>

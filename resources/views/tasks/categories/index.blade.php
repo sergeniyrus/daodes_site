@@ -51,7 +51,7 @@
         background-color: #444; /* Цвет фона заголовка */
     }
 
-    .blue_btn {
+    .des-btn {
         display: inline-block;
         color: #ffffff;
         font-size: large;
@@ -65,7 +65,7 @@
         cursor: pointer; /* Указатель при наведении */
     }
 
-    .blue_btn:hover {
+    .des-btn:hover {
         box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09; /* Эффект свечения при наведении */
         transform: scale(1.05); /* Увеличение кнопки при наведении */
         background: #1a1a1a; /* Смена фона кнопки при наведении */
@@ -104,15 +104,15 @@
                 <tr>
                     <td>{{ $category->name }}</td>
                     <td>
-                        <!-- Кнопка редактирования с классом blue_btn -->
-                        <a href="{{ route('taskscategories.edit', $category) }}" class="blue_btn" title="Редактировать">
+                        <!-- Кнопка редактирования с классом des-btn -->
+                        <a href="{{ route('taskscategories.edit', $category) }}" class="des-btn" title="Редактировать">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <!-- Кнопка удаления с классом blue_btn -->
+                        <!-- Кнопка удаления с классом des-btn -->
                         <form action="{{ route('taskscategories.destroy', $category) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="blue_btn" title="Удалить">
+                            <button type="submit" class="des-btn" title="Удалить">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </form>
@@ -122,9 +122,9 @@
             </tbody>
         </table>
         
-        <!-- Кнопка добавления категории с классом blue_btn -->
+        <!-- Кнопка добавления категории с классом des-btn -->
         <form action="{{ route('taskscategories.create') }}" method="GET" style="display:inline;">
-            <button type="submit" class="blue_btn"> <i class="fas fa-plus-circle"></i> Добавить категорию</button>
+            <button type="submit" class="des-btn"> <i class="fas fa-plus-circle"></i> Добавить категорию</button>
         </form>
     </div>
 </div>

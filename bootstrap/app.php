@@ -13,7 +13,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Добавьте SuspiciousActivityMiddleware и IpFilterMiddleware перед SetLocale
         $middleware->web([
-            \App\Http\Middleware\SuspiciousActivityMiddleware::class,
+           // \App\Http\Middleware\SuspiciousActivityMiddleware::class,
            // \App\Http\Middleware\IpFilterMiddleware::class,
             \App\Http\Middleware\SetLocale::class,
         ]);

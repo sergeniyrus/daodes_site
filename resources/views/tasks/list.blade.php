@@ -3,27 +3,11 @@
 @section('main')
 
 <style>
-    .container {
-        padding: 15px;
-        margin: 0 auto;
-        max-width: 800px;
-        background-color: rgba(30, 32, 30, 0.753);
-        border-radius: 15px;
-        border: 1px solid #d7fc09; /* Золотая граница для контейнера */
-        color: #f8f9fa;
-        font-family: Verdana, Geneva, Tahoma, sans-serif;
-        margin-top: 30px; /* Верхний отступ для контейнера */
-    }
-
-    .text-center {
-        text-align: center; /* Центрирование текста */
-    }
-
     .card {
         border-radius: 10px;
         border: 1px solid #f8f9fa; /* Легкая граница для карточки */
         background-color: #2b2c2e;
-        margin-bottom: 20px; /* Отступ между карточками */
+        margin: 20px 0px; /* Отступ между карточками */
         padding: 15px; /* Внутренние отступы для карточки */
     }
 
@@ -37,29 +21,7 @@
     .card-text {
         font-size: 1rem;
         margin-bottom: 10px; /* Отступ снизу */
-    }
-
-    .btn.blue_btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        color: #ffffff;
-        font-size: 1rem;
-        background: #0b0c18;
-        padding: 10px 20px;
-        border: 1px solid #d7fc09; /* Золотая граница для кнопки */
-        border-radius: 10px;
-        box-shadow: 0 0 20px #000;
-        cursor: pointer;
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
-        text-decoration: none; /* Убираем подчеркивание для кнопки */
-    }
-
-    .btn.blue_btn:hover {
-        box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-        transform: scale(1.05);
-        background: #0b0c18;
-    }
+    }    
 
     a {
         color: aqua; /* Цвет для ссылок */
@@ -67,7 +29,7 @@
     }
 
     a:hover {
-        color: aqua; /* Легкое изменение цвета при наведении */
+        color: rgb(0, 174, 255); /* Легкое изменение цвета при наведении */
     }
 
     .pagination {
@@ -128,7 +90,7 @@
         }
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 380px) {
         .task-info {
             flex-direction: column; /* Вертикальное выравнивание для очень маленьких экранов */
             align-items: center; /* Центрирование элементов */
@@ -146,7 +108,7 @@
         <div class="card-body">
             <div class="task-wrapper">
                 <div class="task-title">
-                    <a href="{{ route('tasks.show', $task) }}" class="btn blue_btn">{{ $task->title }}</a> 
+                    <a href="{{ route('tasks.show', $task) }}" class="des-btn">{{ $task->title }}</a> 
                 </div>    
                 <div class="task-info">    
                     <p class="task-category"><i class="fas fa-folder-open"></i> {{ $task->category ? $task->category->name : __('tasks.no_category') }}</p>
@@ -167,7 +129,7 @@
             <p class="card-text">
                 @if (strlen($task->content) > 260)
                 {!! Str::limit($task->content, 260) !!}
-                    <a href="{{ route('tasks.show', $task->id) }}" class="btn btn-link">{{ __('tasks.read_more') }}</a>
+                    <a href="{{ route('tasks.show', $task->id) }}" class="btn-link">{{ __('tasks.read_more') }}</a>
                 @else
                     {!! $task->content !!}
                 @endif

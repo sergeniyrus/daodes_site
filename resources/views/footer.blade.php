@@ -24,6 +24,7 @@
         .copy {
             margin-top: 30px;
             bottom: 0;
+            color: #ffffff;
         }
 
         .scrollup {
@@ -31,8 +32,8 @@
             height: 60px;
             opacity: 0.7;
             position: fixed;
-            bottom: 30px;
-            left: 30px;
+            bottom: 10px;
+            left: 20px;
             text-indent: -9999px;
             background: url("https://ipfs.sweb.ru/ipfs/QmPHW1dLQUytt9rzxAJbpeJXs67Lu9BzK5m3k8hAZh4qr3/public/main/b_top.png") no-repeat;
         }
@@ -52,7 +53,7 @@
             </div>
         </div>
         <div class="copy">
-            <h4>DAO DES 2024</h4>
+            <h1>DAO DES 2024</h1>
         </div>
     </div>
     <a href="#" class="scrollup">Up</a>

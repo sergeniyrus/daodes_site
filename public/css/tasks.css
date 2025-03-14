@@ -1,0 +1,203 @@
+.bid {
+  background-color: #2b2c2e;
+  padding: 20px;
+  margin: 0px auto 20px auto;
+
+  border: 1px solid gold;
+  border-radius: 10px;
+}
+
+
+
+.rating-stars,
+.rating-circle {
+  gap: 5px;
+  margin-bottom: 20px;
+}
+
+.star {
+  font-size: 2rem;
+  color: transparent;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 2px;
+}
+
+.star_off {
+  border: 1px solid #ffdf00;
+}
+
+.star.filled {
+  color: #ffdf00;
+  border-color: #ffdf00;
+}
+
+.timer {
+  font-size: 1.5rem;
+  color: #f8f9fa;
+  margin-top: 10px;
+  text-align: center;
+}
+
+
+.bid-form {
+  padding: 20px;
+  margin: 0 auto;
+  max-width: 90%;
+  background-color: rgba(20, 20, 20, 0.9);
+  border-radius: 20px;
+  border: 1px solid #d7fc09;
+  color: #f8f9fa;
+  font-family: "Verdana", "Geneva", "Tahoma", sans-serif;
+  margin-top: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+
+
+.form-group {
+  margin: 20px 50px;
+}
+
+.task-line {
+  color: #00ccff;
+}
+
+.task-line2 {
+  color: #ffffff;
+}
+
+.task-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #d7fc09;
+  margin-top: 10px;
+  margin-right: 20px;
+}
+
+.task-title {
+  flex: 1;
+  text-align: center;
+  color: #00ccff;
+}
+
+.task-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.task-budget,
+.task-deadline,
+.task-category {
+  font-size: 0.875rem;
+  margin: 0 10px;
+}
+
+.bid-title {
+  text-align: center;
+  color: #00ccff;
+  margin: 20px;
+}
+
+/* основные для кнопок */
+.button-container {
+  text-align: center;
+  background-color: transparent !important;
+  /* Убираем фон */
+}
+
+input,
+textarea {
+  background-color: #000000;
+  color: #fff;
+  border: 1px solid #a0ff08;
+  border-radius: 5px;
+  width: 100%;
+  padding: 10px;
+  margin: 10px auto 15px auto;
+}
+
+label {
+  color: #f8f9fa;
+}
+
+
+
+.form-group label {
+  color: #d7fc09;
+  font-size: 1.2rem;
+  display: block;
+  margin: 10px 0;
+  text-align: left;
+  font-weight: bold;
+}
+
+.input_dark,
+textarea {
+  background-color: #1a1a1a;
+  color: #a0ff08;
+  border: 1px solid #d7fc09;
+  border-radius: 5px;
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  transition: border 0.3s ease;
+}
+
+.input_dark:focus,
+textarea:focus {
+  border: 1px solid #a0ff08;
+  outline: none;
+  box-shadow: 0 0 5px #d7fc09;
+}
+
+@media (max-width: 768px) {
+  .task-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .task-info {
+    justify-content: space-around;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .task-info p {
+    margin: 5px 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-info {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.circle {
+  font-size: 2rem;
+  color: transparent;
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 2px;
+}
+
+.circle_off {
+  border: 1px solid #ffdf00;
+}
+
+.circle.filled {
+  color: #ff0000;
+  /* Красный цвет для заполненных кружков */
+}
+
+.review-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin: 20px 0;
+}

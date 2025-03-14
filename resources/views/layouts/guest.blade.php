@@ -12,7 +12,7 @@ In DAODES
     
   }
 
-  .blue_btn {
+  .des-btn {
     /* margin: 0 5% 5% 5%; */
     display: inline-block;
     color: #000000;
@@ -31,7 +31,7 @@ In DAODES
     
 }
 
-  .blue_btn:hover {
+  .des-btn:hover {
     box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
     transform: scale(1.05);
     color: #fff;

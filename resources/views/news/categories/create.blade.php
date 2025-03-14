@@ -40,7 +40,7 @@
         font-size: 1rem;
     }
 
-    .blue_btn {
+    .des-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -55,12 +55,12 @@
         transition: box-shadow 0.3s ease, transform 0.3s ease;
     }
 
-    .blue_btn i {
+    .des-btn i {
         margin-right: 8px;
         font-size: 1.2rem;
     }
 
-    .blue_btn:hover {
+    .des-btn:hover {
         box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
         transform: scale(1.05);
         background: #0b0c18;
@@ -87,7 +87,7 @@
             <input type="text" name="name" id="name" class="input_dark" required>
         </div>
 
-        <button type="submit" class="blue_btn">
+        <button type="submit" class="des-btn">
             {!! __('category.add_category_button') !!}
         </button>
     </form>

@@ -7,18 +7,7 @@
 @section('main')
     <style>
         /* Основные стили для формы */
-        .form-container {
-            max-width: 400px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #333333;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-            margin-bottom: 40px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        
 
         .input_row {
             background-color: #000000;
@@ -108,31 +97,13 @@
 
         .regwin {
             background-color: #0b0c18;
-            border: 1px solid #fff;
+            border: 1px solid gold;
             border-radius: 20px;
             padding: 20px;
-            max-width: 50%;
+            max-width: 90%;
             min-width: 280px;
             margin: 20px auto 20px auto;
             text-align: center;
-        }
-
-        .blue_btn {
-            display: inline-block;
-            color: #000000;
-            font-size: xx-large;
-            background: none; /* Убрали фон */
-            border: 1px solid gold; /* Добавили рамку */
-            border-radius: 10px;
-            box-shadow: 0 0 20px #000;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-            gap: 15px;
-        }
-
-        .blue_btn:hover {
-            box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-            transform: scale(1.05);
-            color: #fff;
         }
 
         .likebtn {
@@ -239,10 +210,10 @@
                     <!-- Кнопки отправки формы и перехода к входу -->
                     <div class="button-container">
                         <button type="submit" title="{{ __('registration.register_button') }}" class="submit-button">
-                            <img src="img/bottom/registrat.png" alt="{{ __('registration.register_button') }}" class="blue_btn">
+                            <img src="img/bottom/registrat.png" alt="{{ __('registration.register_button') }}" class="des-btn">
                         </button>
                         <a href="{{ route('login') }}" class="submit-button" title="{{ __('registration.login_button') }}">
-                            <img src="img/bottom/login.png" alt="{{ __('registration.login_button') }}" class="blue_btn">
+                            <img src="img/bottom/login.png" alt="{{ __('registration.login_button') }}" class="des-btn">
                         </a>
                     </div>
                 </form>

@@ -41,7 +41,7 @@
         box-shadow: 0 0 5px #d7fc09;
     }
 
-    .blue_btn {
+    .des-btn {
         display: inline-block;
         color: #ffffff;
         background: #0b0c18;
@@ -55,7 +55,7 @@
         display: block; /* Чтобы margin-auto работал */
     }
 
-    .blue_btn:hover {
+    .des-btn:hover {
         box-shadow: 0 0 20px goldenrod;
         transform: scale(1.05);
         color: #ffffff;
@@ -187,7 +187,7 @@
             <p class="form-text text-muted ml-4 mt-4">{{ __('chats.select_participants_hint') }}</p>
             <p class="form-text text-muted ml-4">{{ __('chats.select_all_hint') }}</p>
         </div>
-        <button type="submit" class="blue_btn">{{ __('chats.create') }}</button>
+        <button type="submit" class="des-btn">{{ __('chats.create') }}</button>
     </form>
 
     <!-- Список пользователей с кнопками для создания чата -->
@@ -199,7 +199,7 @@
                     <span>{{ $user->name }}</span>
                     <form method="POST" action="{{ route('chats.createWithUser', $user->id) }}" style="display: inline;">
                         @csrf
-                        <button type="submit" class="blue_btn">{{ __('chats.create') }}</button>
+                        <button type="submit" class="des-btn">{{ __('chats.create') }}</button>
                     </form>
                 </div>
             @endif

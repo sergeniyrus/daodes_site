@@ -1,9 +1,9 @@
 <?php
 
 return [
-    'title_page' => 'Белая книга',
-    'main_title' => 'Децентрализованные Экосистемы',
-    'big_title' => 'Белая книга',
+    'title_page' => 'White Paper',
+    'main_title' => 'Decentralized EcoSystems',
+    'big_title' => 'White Paper',
     'chapters' => [
         'introduction' => 'Введение',
         'market_description' => 'Описание рынка',

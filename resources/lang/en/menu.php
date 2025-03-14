@@ -5,7 +5,7 @@ return [
     'news' => 'News',
     'decision_making' => 'Offers',
     'task_marketplace' => 'Tasks',
-    'white_paper' => 'White paper',
+    'white_paper' => 'White Paper',
     'deschat' => 'DESChat',
     'team' => 'Team',
     'profile' => 'Profile',
@@ -21,4 +21,5 @@ return [
     'back_to_tasks' => 'Back to Tasks',
     'create_task' => 'Create Task',
     'section_menu' => 'Section Menu',
+    'menu' => ' - Menu'
 ];

@@ -13,7 +13,7 @@
             font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
 
-        .blue_btn {
+        .des-btn {
             display: inline-block;
             color: #ffffff;
             background: #0b0c18;
@@ -25,7 +25,7 @@
             text-decoration: none;
         }
 
-        .blue_btn:hover {
+        .des-btn:hover {
             box-shadow: 0 0 20px goldenrod;
             transform: scale(1.05);
             color: #ffffff;
@@ -159,7 +159,7 @@
 
         <!-- Кнопка "Создать чат" -->
         <div class="text-center" style="margin-top: 20px;">
-            <a href="{{ route('chats.create') }}" class="blue_btn">{{ __('chats.create_chat') }}</a>
+            <a href="{{ route('chats.create') }}" class="des-btn">{{ __('chats.create_chat') }}</a>
         </div>
     </div>
 @endsection

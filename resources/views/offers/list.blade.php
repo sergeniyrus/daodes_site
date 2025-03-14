@@ -63,7 +63,7 @@
                 </div>
                 <div class="filters3">
                     <div class="filter-item">
-                        <button type="submit" class="blue_btn">{{ __('offers.apply_filters') }}</button>
+                        <button type="submit" class="des-btn">{{ __('offers.apply_filters') }}</button>
                     </div>
                 </div>
             </form>
@@ -78,7 +78,7 @@
                 <div class="card shadow-sm">
                     <div class="">
                         <div class="task-title">
-                            <a href="{{ route('offers.show', $offersItem->id) }}" class="btn blue_btn">
+                            <a href="{{ route('offers.show', $offersItem->id) }}" class="des-btn2">
                                 <h5>{{ $offersItem->title }}</h5>
                             </a>
                         </div>

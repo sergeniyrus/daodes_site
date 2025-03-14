@@ -23,6 +23,7 @@ use App\Http\Controllers\{
     ChatController,
     LanguageController,
     CaptchaController,
+    MenuController,
 };
 use App\Http\Middleware\SetLocale;
 // use App\Services\IpStackService;
@@ -39,6 +40,8 @@ use App\Http\Middleware\SetLocale;
 //         'longitude' => $location['longitude'],
 //     ];
 // });
+
+Route::get('/load-menu', [MenuController::class, 'loadMenu']);
 
 Route::get('/captcha', [CaptchaController::class, 'show'])->name('captcha.show')->withoutMiddleware([SetLocale::class]);
 Route::post('/captcha', [CaptchaController::class, 'verify'])->name('captcha.verify')->withoutMiddleware([SetLocale::class]);

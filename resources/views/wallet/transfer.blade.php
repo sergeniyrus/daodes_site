@@ -30,7 +30,7 @@
             text-align: center;
         }
 
-        .blue_btn {
+        .des-btn {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -44,7 +44,7 @@
             margin-top: 10px;
         }
 
-        .blue_btn:hover {
+        .des-btn:hover {
             box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
             transform: scale(1.05);
             background: #0b0c18;
@@ -97,7 +97,7 @@
             </div>
         
             <div class="flex items-center justify-center mt-4">
-                <x-primary-button class="blue_btn">
+                <x-primary-button class="des-btn">
                     {{ __('wallet.transfer_btn') }} <!-- Перевод кнопки -->
                 </x-primary-button>
             </div>

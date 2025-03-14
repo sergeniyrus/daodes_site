@@ -6,14 +6,14 @@
 
 @font-face {
   font-family: 'StandardPoster';
-  src: url('/public/fonts/StandardPoster.eot');
-  src: local('☺'), url('/public/fonts/StandardPoster.woff') format('woff'), url('/public/fonts/StandardPoster.ttf') format('truetype'), url('/public/fonts/StandardPoster.svg') format('svg');
+  src: url('/fonts/StandardPoster.eot');
+  src: local('☺'), url('/fonts/StandardPoster.woff') format('woff'), url('/fonts/StandardPoster.ttf') format('truetype'), url('/fonts/StandardPoster.svg') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 html {
-  scroll-behavior: smooth;
+   scroll-behavior: smooth; /* плавно перемещались по странице при использовании якорных ссылок */
 }
 
 body {
@@ -26,16 +26,9 @@ body {
   background-repeat: no-repeat;
   background-attachment: fixed;
   background-size: cover;
-  font-family: Firefly, DejaVu Sans, sans-serif;
   font-size: clamp(14px, 2vw, 20px);
 }
-body::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5); /* черный цвет с прозрачностью 50% */
-}
+
 h1 {
   font-size: clamp(24px, 5vw, 40px); /* Пример для h1 */
 }
@@ -61,12 +54,82 @@ h6 {
 }
 
 p {
-  font-size: clamp(12px, 2vw, 18px); /* Пример для параграфов */
+  font-size: clamp(12px, 2vw, 18px);
+  text-align: justify;
 }
 
 img {
   max-width: 100%;
 }
+
+.container {
+  padding: 15px;
+  margin: 10px auto ;
+  max-width: 1000px;
+  background-color: #000000cf;
+  border-radius: 15px;
+  border: 1px solid gold;
+  color: #ffffff;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+
+}
+
+.des-btn {
+  display: inline-block;
+  color: #ffffff;
+  background: #0b0c18;
+  padding: 5px 10px;
+  font-size: 1.3rem;
+  border: 1px solid gold;
+  border-radius: 10px;
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  text-decoration: none;
+}
+
+.des-btn:hover {
+  box-shadow: 0 0 20px goldenrod;
+  transform: scale(1.05);
+  color: #ffffff;
+}
+
+.des-btn2{
+  display: inline-block;
+  /* color: #ffffff;
+  background: #0b0c18;
+  padding: 5px 10px; */
+  font-size: 1.3rem;
+  /* border: 1px solid gold;
+  border-radius: 10px; */
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  text-decoration: none;
+}
+.des-btn2:hover {
+  /* box-shadow: 0 0 20px goldenrod; */
+  transform: scale(1.1);
+  color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+  font-family:StandardPoster;
+}
+
+/* оповещения */
+.mobile-notifications {
+  background-color: red;
+  border-radius: 5px;
+  font-size: 24px;
+  cursor: pointer;
+  right: 50px;
+  position: absolute;
+  padding: 0 4px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+
+}
+
 
 /* Header */
 /* блок вход регистрация */

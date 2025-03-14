@@ -50,7 +50,7 @@ Create an offer
             box-shadow: 0 0 5px #d7fc09;
         }
 
-        .blue_btn {
+        .des-btn {
             display: inline-block;
             color: #ffffff;
             font-size: 1.2rem;
@@ -64,7 +64,7 @@ Create an offer
             margin-top: 20px;
         }
 
-        .blue_btn:hover {
+        .des-btn:hover {
             box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
             transform: scale(1.05);
             background: #1a1a1a;
@@ -120,7 +120,7 @@ Create an offer
             <label for="filename">{{ __('admin_offers.image') }}</label>
             <div class="file-input-wrapper">
                 <img id="preview" src="#" alt="Image preview">
-                <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">{{ __('admin_offers.choose_file') }}</button>
+                <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">{{ __('admin_offers.choose_file') }}</button>
                 <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
                 <div id="file-name">{{ __('admin_offers.no_file_chosen') }}</div>
             </div>
@@ -133,7 +133,7 @@ Create an offer
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="blue_btn">{{ __('admin_offers.create_offer_button') }}</button>
+            <button type="submit" class="des-btn">{{ __('admin_offers.create_offer_button') }}</button>
         </div>
     </form>
 </div>

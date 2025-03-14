@@ -1,145 +1,3 @@
-/* Основные стили для меню */
-.knopkodav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 10px;
-  width: 100%;
-  box-sizing: border-box;
-  flex-wrap: wrap;
-}
-
-.header-menu {  
-  text-align: center;  
-  position: relative;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-}
-
-.header-menu a {
-  display: flex;
-  align-items: center;
-  padding: 5px;
-  text-decoration: none;
-  color: #fff;
-  transition: transform 0.3s ease;
-}
-
-.auth-buttons {
-  display: flex;
-  gap: 10px;
-}
-
-.notifications{
-  background-color: red;
-  border-radius: 5px;
-  font-size: clamp(12px, 1.5vw, 36px);
-  cursor: pointer;
-  padding: 0 2px;
-}
-.mobile-notifications{
-  background-color: red;
-  border-radius: 5px;
-  font-size: 20px;
-  cursor: pointer;
-  right: 50px;
-  position: fixed;
-  padding: 0 2px;
-}
-
-
-/* Стили для кнопки подменю */
-.submenu-button {
-  /* width: 100%; */
-  /* height: 100%; */
-  background-color: rgba(11, 12, 24, 0.9);
-  /* border: 1px solid gold; */
-  padding: 25px 0px;
-  color: gold;
-  font-size: clamp(12px, 1.5vw, 36px);
-  font-weight: bold;
-  text-align: center;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border-radius: 10px;
-  margin: 0;
-  padding: 5px;
-}
-
-.submenu-button:hover {
-  background-color: goldenrod;
-  color: black;
-}
-
-.active-section-menu {
-  line-height: 1.2;
-}
-.logout-icon{
-  width: 1em;  /* Ширина SVG будет 1.5 раза больше размера шрифта */
-    height: 1em; /* Высота SVG будет 1.5 раза больше размера шрифта */
-}
-/* Модальное окно */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.8);
-}
-
-.modal-content {
-  background-color: #2b2c2e;
-  margin: 15% auto;
-  padding: 20px 30px;
-  border-radius: 8px;
-  border: rgb(255, 0, 255) 2px solid;
-  max-width: 720px;
-  text-align: center;
-}
-
-.modal-content a {
-  display: block;
-  margin: 10px 0;
-  background-color: #0B0C18;
-  color: #00ffff;
-  text-decoration: none;
-  border: 1px solid gold;
-  padding: 10px;
-  border-radius: 8px;
-  transition: background-color 0.3s ease;
-}
-
-.modal-content a:hover {
-  background-color: #131b7c;
-  border: 1px solid goldenrod;
-  box-shadow: 0 0 10px 5px gold;
-  color: gold;
-}
-
-.close {
-  color: red;
-  float: right;
-  font-size: 36px;
-  font-weight: bold;
-  margin-top: -32px;
-  margin-right: -28px;
-}
-
-.close:hover,
-.close:focus {
-  color: #00ffff;
-  text-decoration: none;
-  cursor: pointer;
-}
-
 /* Стили для мобильного меню */
 .mobile-hamburger-header {
   display: flex;
@@ -153,27 +11,43 @@
   width: 100%;
   z-index: 1002;
   border-bottom: 1px solid gold;
-  font-size: clamp(24px, 1.5vw, 36px);
+  font-family:StandardPoster;
+  
 }
+
 .mobile-logo-name {
   color: gold;
+  
 }
 
 .mobile-logo-name:hover {
   color: goldenrod;
 }
-
-.mobile-hamburger-button, .mobile-auth-buttons  {
+.logout-icon {
+  width: 1em;
+  height: 1em;
+}
+.mobile-hamburger-button,
+.mobile-auth-buttons,
+.logout-icon {
   background: none;
   border: none;
   cursor: pointer;
   color: white;
+  font-size: clamp(18px, 1.5vw, 36px);
+  text-decoration: none;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+}
+
+.mobile-hamburger-button:hover, 
+.logout-icon:hover {
+  color: goldenrod;
 }
 
 .mobile-hamburger-menu {
   display: none;
   flex-direction: column;
-  background-color: #000000cf;
+  background-color: rgba(0, 0, 0, 0.81);
   border-radius: 15px;
   border: 1px solid gold;
   color: #f8f9fa;
@@ -181,21 +55,22 @@
   padding: 15px;
   position: fixed;
   top: 75px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
+  left: 0;
+  transform: translateX(10%);
+  z-index: 12;
+
 }
 
 .mobile-chapter-container {
   margin: 5px 0;
-  border: 1px solid #154472;
+  border: 1px solid #00CCFF;
   border-radius: 8px;
   overflow: hidden;
-  background: #0b0c18ce;
+  background: rgba(11, 12, 24, 0.81);
   height: auto;
   transition: all 0.3s ease;
   text-decoration: none;
-  color: inherit;
+  
 }
 
 .mobile-chapter-header {
@@ -207,17 +82,16 @@
   align-items: center;
   transition: all 0.3s ease;
   position: relative;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+}
+.mobile-chapter-header a {
+color: #00CCFF;
+text-decoration: none;
+}
+.mobile-chapter-header a:hover{
+  color: gold;
 }
 
-.mobile-chapter-header .has-submenu::after {
-  content: "▼";
-  font-size: 0.8em;
-  color: #d7fc09;
-  position: absolute;
-  right: 25px;
-  transition: transform 0.3s ease;
-  display: block;
-}
 
 .mobile-subchapters {
   max-height: 0;
@@ -225,71 +99,44 @@
   transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.mobile-subchapters.open {
+  max-height: 200px;
+}
+
 .mobile-subchapter-item {
+  display: block;
   padding: 15px 25px;
   border-top: 1px solid rgba(44, 62, 80, 0.5);
-  background: #0b0c18ce;
+  background: rgba(44, 47, 94, 0.81);
   color: #ffffff;
   transition: background 0.2s ease;
   cursor: pointer;
-  position: relative;
-  transition: all 0.2s ease;
-  z-index: 2;
+  text-decoration: none;
 }
 
 .mobile-subchapter-item:hover {
-  background: #1a1a2e;
-}
-
-@media (max-width: 768px) {
-  .mobile-hamburger-button {
-      display: block;
-  }
-
-  .knopkodav {
-      display: none;
-  }
-}
-
-@media (min-width: 769px) {
-  .mobile-hamburger-header, .mobile-auth-buttons {
-      display: none;
-  }
+  background: #4c4c6e;
 }
 
 /* Стили для переключателя языков */
 .language-switcher {
-text-align: right;
-font-size: 12px;
-margin-top: 10px;
-padding-right: 10px;
+  position: absolute;
+  font-size: 12px;
+  font-weight: bold;  
+  left:130px; 
 }
 
 .language-switcher a {
-color: #9c9c9c;
-margin: 0 5px;
-font-size: 12px;
-padding: 5px;
+  color: #e4e4e4;  
+  font-size: 12px;  
+  text-decoration: none;
 }
 
-.language-switcher a.active {
-font-weight: bold;
-color: #007bff;
+.language-switcher a.active {  
+  color: #00CCFF;
 }
 
 .language-switcher a:hover {
-background-color: #fff;
-color: #000;
+  color: goldenrod;
 }
 
-/* Стили для входа и регистрации в строке с кнопкой гамбургер-меню */
-.mobile-username, .mobile-logout, .mobile-login, .mobile-register {
-  margin-left: 10px;
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
-}
-
-.mobile-logout, .mobile-login, .mobile-register {
-  cursor: pointer;
-}

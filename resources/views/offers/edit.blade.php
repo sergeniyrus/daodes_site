@@ -49,7 +49,7 @@ Edit the offer
             box-shadow: 0 0 5px #d7fc09;
         }
 
-        .blue_btn {
+        .des-btn {
             display: inline-block;
             color: #ffffff;
             font-size: 1.2rem;
@@ -63,7 +63,7 @@ Edit the offer
             margin-top: 20px;
         }
 
-        .blue_btn:hover {
+        .des-btn:hover {
             box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
             transform: scale(1.05);
             background: #1a1a1a;
@@ -147,7 +147,7 @@ Edit the offer
                 <div class="file-info">
                     <!-- If an image exists, display the file name; otherwise, show "No file chosen" -->
                     <span id="file-name" class="file-name">{{ $offer->img ? basename($offer->img) : __('admin_offers.no_file_chosen') }}</span>
-                    <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">
+                    <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
                         {{ __('admin_offers.choose_file') }}
                     </button>
                     <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
@@ -162,7 +162,7 @@ Edit the offer
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="blue_btn">{{ __('admin_offers.save_changes_button') }}</button>
+            <button type="submit" class="des-btn">{{ __('admin_offers.save_changes_button') }}</button>
         </div>
     </form>
 </div>

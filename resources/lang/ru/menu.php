@@ -5,7 +5,7 @@ return [
     'news' => 'Новости',
     'decision_making' => 'Принятие решений',
     'task_marketplace' => 'Биржа заданий',
-    'white_paper' => 'White paper',
+    'white_paper' => 'White Paper',
     'deschat' => 'DESChat',
     'team' => 'Команда',
     'profile' => 'Профиль',
@@ -21,4 +21,5 @@ return [
     'back_to_tasks' => 'К задачам',
     'create_task' => 'Создать задачу',
     'section_menu' => 'Меню раздела',
+    'menu' => ' - Меню'
 ];

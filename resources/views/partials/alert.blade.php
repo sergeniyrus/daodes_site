@@ -18,7 +18,7 @@
         z-index: 4; /* Значение z-index должно быть меньше, чем у .alert-popup */
     }
 
-    .blue_btn {
+    .des-btn {
         display: inline-block;
         color: #ffffff;
         background: #0b0c18;
@@ -30,7 +30,7 @@
         text-decoration: none;
     }
 
-    .blue_btn:hover {
+    .des-btn:hover {
         box-shadow: 0 0 20px goldenrod;
         transform: scale(1.05);
         color: #ffffff;
@@ -54,7 +54,7 @@
                         popup: 'alert-popup',
                         title: 'alert-title',
                         text: 'alert-text',
-                        confirmButton: 'alert-button blue_btn'
+                        confirmButton: 'alert-button des-btn'
                     },
                     didClose: () => {
                         document.body.removeChild(backdrop);
@@ -70,7 +70,7 @@
                         popup: 'alert-popup',
                         title: 'alert-title',
                         text: 'alert-text',
-                        confirmButton: 'alert-button blue_btn'
+                        confirmButton: 'alert-button des-btn'
                     },
                     didClose: () => {
                         document.body.removeChild(backdrop);
@@ -86,7 +86,7 @@
                         popup: 'alert-popup',
                         title: 'alert-title',
                         text: 'alert-text',
-                        confirmButton: 'alert-button blue_btn'
+                        confirmButton: 'alert-button des-btn'
                     },
                     didClose: () => {
                         document.body.removeChild(backdrop);
@@ -102,7 +102,7 @@
                         popup: 'alert-popup',
                         title: 'alert-title',
                         text: 'alert-text',
-                        confirmButton: 'alert-button blue_btn'
+                        confirmButton: 'alert-button des-btn'
                     },
                     didClose: () => {
                         document.body.removeChild(backdrop);

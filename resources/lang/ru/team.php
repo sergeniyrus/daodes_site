@@ -2,7 +2,7 @@
 
 return [
     'title' => 'Команда',
-    'decentralized_ecosystems' => 'Децентрализованные экосистемы',
+    'decentralized_ecosystems' => 'Децентрализованные ЭкоСистемы',
     'click_for_details' => 'Нажмите на карточку, чтобы просмотреть подробную информацию.',
     'team_members' => [
         'sergey_nikitin' => [

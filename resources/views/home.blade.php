@@ -1,51 +1,9 @@
 {{-- //Главная страница сайта --}}
 @extends('template')
-@section('title_page')
-    Главная
-@endsection
+@section('title_page', __('menu.home'))
 @section('main')
     <main>
         <style>
-            .container {
-                padding: 15px;
-                margin: 20px auto 0 auto;
-                max-width: 800px;
-                background-color: #000000cf;
-                border-radius: 15px;
-                border: 1px solid gold;
-                color: #f8f9fa;
-                font-family: Verdana, Geneva, Tahoma, sans-serif;
-
-            }
-
-            .blue_btn {
-                display: inline-block;
-                color: #ffffff;
-                background: #0b0c18;
-                padding: 5px 10px;
-                font-size: 1.3rem;
-                border: 1px solid gold;
-                border-radius: 10px;
-                transition: box-shadow 0.3s ease, transform 0.3s ease;
-                text-decoration: none;
-            }
-
-            .blue_btn:hover {
-                box-shadow: 0 0 20px goldenrod;
-                transform: scale(1.05);
-                color: #ffffff;
-            }
-
-            h1,
-            h2 {
-                text-align: center;
-            }
-
-            p {
-                text-align: justify;
-                width: 100%;
-            }
-
             .spacer {
                 margin-bottom: 50px;
                 /* Adds space between paragraphs */
@@ -53,6 +11,48 @@
 
             .pubble-app {
                 margin: 0px auto;
+            }
+
+            /* Стили для списка внутри .headlines */
+            .headlines ul {
+                list-style-type: none;
+                /* Убираем маркеры списка */
+                padding: 0;
+                /* Убираем отступы */
+                margin-left: 2rem
+            }
+
+            .headlines li {
+                margin: 5px 0;
+                /* Отступы между элементами списка */
+            }
+
+            /* Стили для всех ссылок внутри .headlines */
+            .headlines a {
+                color: aqua;
+                /* Цвет текста */
+                text-decoration: none;
+                /* Убираем подчеркивание */
+                transition: font-size 0.3s ease;
+                /* Плавное изменение размера шрифта */
+            }
+
+            /* Стили для ссылок при наведении */
+            .headlines a:hover {
+                font-size: 1.1em;
+                /* Увеличение шрифта при наведении */
+            }
+
+            /* Стили для посещенных ссылок */
+            .headlines a:visited {
+                color: aqua;
+                /* Цвет текста для посещенных ссылок */
+            }
+
+            /* Стили для активных ссылок */
+            .headlines a:active {
+                color: aqua;
+                /* Цвет текста для активных ссылок */
             }
         </style>
         <div class="container">
@@ -62,26 +62,28 @@
                     {{ __('home.mission_text') }}
                 </p>
 
-                <div align="center"><strong>{{ __('home.key_advantages') }}</strong></div>
+                <div><h3>{{ __('home.key_advantages') }}</h3></div>
                 <hr>
-
-                <ul style="color:aqua; margin-left:2rem">
-                    <li><a href="#custom-blockchain">{{ __('home.custom_blockchain') }}</a></li>
-                    <li><a href="#decentralized-messenger">{{ __('home.decentralized_messenger') }}</a></li>
-                    <li><a href="#native-coin">{{ __('home.native_coin') }}</a></li>
-                    <li><a href="#web3-platform">{{ __('home.web3_platform') }}</a></li>
-                    <li><a href="#decision-making">{{ __('home.decision_making') }}</a></li>
-                    <li><a href="#task-exchange">{{ __('home.task_exchange') }}</a></li>
-                    <li><a href="#reward-system">{{ __('home.reward_system') }}</a></li>
-                    <li><a href="#proof-of-time">{{ __('home.proof_of_time') }}</a></li>
-                    <li><a href="#activity-tracking">{{ __('home.activity_tracking') }}</a></li>
-                    <li><a href="#market-opportunities">{{ __('home.market_opportunities') }}</a></li>
-                    <li><a href="#financial-model">{{ __('home.financial_model') }}</a></li>
-                    <li><a href="#roadmap">{{ __('home.roadmap') }}</a></li>
-                    <li><a href="#team">{{ __('home.team') }}</a></li>
-                    <li><a href="#conclusion">{{ __('home.conclusion') }}</a></li>
-                </ul>
-                <hr><br>
+                <div class="headlines">
+                    <ul>
+                        <li><a href="#custom-blockchain">{{ __('home.custom_blockchain') }}</a></li>
+                        <li><a href="#decentralized-messenger">{{ __('home.decentralized_messenger') }}</a></li>
+                        <li><a href="#native-coin">{{ __('home.native_coin') }}</a></li>
+                        <li><a href="#web3-platform">{{ __('home.web3_platform') }}</a></li>
+                        <li><a href="#decision-making">{{ __('home.decision_making') }}</a></li>
+                        <li><a href="#task-exchange">{{ __('home.task_exchange') }}</a></li>
+                        <li><a href="#reward-system">{{ __('home.reward_system') }}</a></li>
+                        <li><a href="#proof-of-time">{{ __('home.proof_of_time') }}</a></li>
+                        <li><a href="#activity-tracking">{{ __('home.activity_tracking') }}</a></li>
+                        <li><a href="#market-opportunities">{{ __('home.market_opportunities') }}</a></li>
+                        <li><a href="#financial-model">{{ __('home.financial_model') }}</a></li>
+                        <li><a href="#roadmap">{{ __('home.roadmap') }}</a></li>
+                        <li><a href="#team">{{ __('home.team') }}</a></li>
+                        <li><a href="#conclusion">{{ __('home.conclusion') }}</a></li>
+                    </ul>
+                    <hr>
+                </div>
+                <br>
 
                 <p class="spacer" id="custom-blockchain">
                     <img src="/img/home/2.png" class="spacer">
@@ -146,25 +148,25 @@
                 <div class="spacer" id="team">
                     <img src="/img/home/14.png" class="spacer">
                     <h1>{{ __('home.team') }}</h1><br>
-                    <h2>{!! __('home.team_link') !!}</h2>
+                    <h6>{!! __('home.team_link') !!}</h6>
                     <br>
-                    <h1>{{ __('home.team_aim') }}</h1>
+                    <h6>{{ __('home.team_aim') }}</h6>
                 </div>
 
                 <p class="spacer" id="conclusion">
                     <img src="/img/home/15.png" class="spacer">
                     {{ __('home.conclusion_text') }}
                 </p>
-                <div align="center">
-                    <p class="spacer" style="text-align: center">{{ __('home.thank_you') }}</p>
+                <div  >
+                    <h5>{{ __('home.thank_you') }}</h5>
                 </div>
             </div>
-
-            <div class="" align="center">
-                <a href="/register" class="blue_btn">
+<br>
+            <h6>
+                <a href="/register" class="des-btn">
                     <strong>{{ __('home.become_part') }}</strong>
                 </a>
-            </div>
+            </h6>
         </div>
 
         <div class="pubble-app" data-app-id="128664" data-app-identifier="128664"></div>

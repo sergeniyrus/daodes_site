@@ -65,7 +65,7 @@
             /* Размер шрифта */
         }
 
-        .blue_btn {
+        .des-btn {
             display: inline-flex;
             /* Гибкая компоновка */
             align-items: center;
@@ -94,14 +94,14 @@
             /* Отступ сверху для кнопки */
         }
 
-        .blue_btn i {
+        .des-btn i {
             margin-right: 8px;
             /* Отступ справа для иконки */
             font-size: 1.2rem;
             /* Размер иконки */
         }
 
-        .blue_btn:hover {
+        .des-btn:hover {
             box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
             /* Эффект свечения при наведении */
             transform: scale(1.05);
@@ -154,7 +154,7 @@
                     value="{{ old('name', $category->name) }}" required>
             </div>
 
-            <button type="submit" class="blue_btn">
+            <button type="submit" class="des-btn">
                 {!! __('category.save_changes_button') !!} <!-- Перевод текста кнопки -->
             </button>
         </form>

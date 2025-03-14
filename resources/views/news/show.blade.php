@@ -29,17 +29,17 @@
                     @if (Auth::user()->access_level >= 3)
                         <div class="admin_menu">
                             <div>
-                                <a href="{{ route('news.add') }}" class="blue_btn" title="Create">
+                                <a href="{{ route('news.add') }}" class="des-btn" title="Create">
                                     {!! __('news.create_button') !!}
                                 </a>
                             </div>
                             <div>
-                                <a href="{{ route('news.edit', ['id' => $news->id]) }}" class="blue_btn" title="Edit">
+                                <a href="{{ route('news.edit', ['id' => $news->id]) }}" class="des-btn" title="Edit">
                                     {!! __('news.edit_button') !!}
                                 </a>
                             </div>
                             <div>
-                                <a href="{{ route('news.destroy', ['id' => $news->id]) }}" class="blue_btn"
+                                <a href="{{ route('news.destroy', ['id' => $news->id]) }}" class="des-btn"
                                     onclick="event.preventDefault(); document.getElementById('delete-form-{{ $news->id }}').submit();">
                                     {!! __('news.delete_button') !!}
                                 </a>
@@ -64,7 +64,7 @@
 
         <div class="comment">
             <div class="z_com">
-                <h1>{{ __('news.discussions', ['count' => $commentCount]) }}</h1>
+                <h6>{{ __('news.discussions', ['count' => $commentCount]) }}</h6>
             </div>
         
             @if ($commentCount == 0)
@@ -92,7 +92,7 @@
                         </fieldset>
                         <br>
                         <div style="text-align: center">
-                            <button type="submit" class="blue_btn">
+                            <button type="submit" class="des-btn">
                                 {!! __('news.save_button') !!}
                             </button>
                         </div>

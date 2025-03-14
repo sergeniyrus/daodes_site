@@ -55,7 +55,7 @@
             box-shadow: 0 0 5px #d7fc09;
         }
 
-        .blue_btn {
+        .des-btn {
             display: inline-block;
             color: #ffffff;
             font-size: 1.2rem;
@@ -69,7 +69,7 @@
             margin-top: 20px;
         }
 
-        .blue_btn:hover {
+        .des-btn:hover {
             box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
             transform: scale(1.05);
             background: #1a1a1a;
@@ -132,7 +132,7 @@
 
                     <div class="file-info">
                         <span id="file-name" class="file-name">Файл не выбран</span>
-                        <button type="button" class="blue_btn"
+                        <button type="button" class="des-btn"
                             onclick="document.getElementById('file-input').click();">Выберите файл</button>
                         <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
                     </div>
@@ -251,7 +251,7 @@
                     placeholder="Введите количество SBT-токенов">
             </div> --}}
             <div class="text-center">
-                <button type="submit" class="blue_btn"><i class="fas fa-plus-circle"></i> Создать профиль</button>
+                <button type="submit" class="des-btn"><i class="fas fa-plus-circle"></i> Создать профиль</button>
             </div>
         </form>
     </div>

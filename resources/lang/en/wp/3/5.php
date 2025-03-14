@@ -8,6 +8,6 @@ return [
         '40,000,000 DES (4%): Paid to the participants of the DES Arena direction.',
         '80,000,000 DES (8%): Allocated to the company\'s reserve fund. Coins from this fund are sold by the decision of the DAO participants for the needs of the project through the exchange of coins from this fund for the project\'s stablecoins and, subsequently, their sale on the market.',
         '20,000,000 DES (2%): Payment to the founders of the project at the first stage of the issue immediately after the launch of the blockchain, distributed as 1% per month of the total number of coins from one participant.',
-        '20,000,000 DES (2%): Sent to opinion leaders in the crypto industry (based on community suggestions and solutions) in order to gain support for the project and promote it.',
+        '20,000,000 DES (2%): Sent to opinion leaders in the crypto industry (based on community Offers and Solutions) in order to gain support for the project and promote it.',
     ],
 ];

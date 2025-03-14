@@ -46,7 +46,7 @@
                 </div>
                 <div class="filters3">
                     <div class="filter-item">
-                        <button type="submit" class="blue_btn">{{ __('news.apply_filters') }}</button>
+                        <button type="submit" class="des-btn">{{ __('news.apply_filters') }}</button>
                     </div>
                 </div>
             </form>
@@ -61,7 +61,7 @@
                 <div class="card shadow-sm">
                     <div class="">
                         <div class="task-title">
-                            <a href="{{ route('news.show', $newsItem->id) }}" class="btn blue_btn">
+                            <a href="{{ route('news.show', $newsItem->id) }}" class="des-btn2">
                                 <h5>{{ $newsItem->title }}</h5>
                             </a>
                         </div>

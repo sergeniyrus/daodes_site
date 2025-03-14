@@ -49,7 +49,7 @@
             box-shadow: 0 0 5px #d7fc09;
         }
 
-        .blue_btn {
+        .des-btn {
             display: inline-block;
             color: #ffffff;
             font-size: 1.2rem;
@@ -63,7 +63,7 @@
             margin-top: 20px;
         }
 
-        .blue_btn:hover {
+        .des-btn:hover {
             box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
             transform: scale(1.05);
             background: #1a1a1a;
@@ -148,7 +148,7 @@
                 <div class="file-info">
                     <!-- Если изображение есть, выводим имя файла, иначе пишем "Файл не выбран" -->
                     <span id="file-name" class="file-name">{{ $news->img ? basename($news->img) : __('admin_news.no_file_selected') }}</span>
-                    <button type="button" class="blue_btn" onclick="document.getElementById('file-input').click();">
+                    <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
                         {{ __('admin_news.choose_file') }}
                     </button>
                     <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
@@ -163,7 +163,7 @@
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="blue_btn">{{ __('admin_news.save_changes_button') }}</button>
+            <button type="submit" class="des-btn">{{ __('admin_news.save_changes_button') }}</button>
         </div>
     </form>
 </div>

@@ -42,7 +42,7 @@
         box-shadow: 0 0 5px #d7fc09;
     }
 
-    .blue_btn {
+    .des-btn {
         display: inline-block;
         color: #ffffff;
         font-size: 1.2rem;
@@ -56,7 +56,7 @@
         margin-top: 20px;
     }
 
-    .blue_btn:hover {
+    .des-btn:hover {
         box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
         transform: scale(1.05);
         background: #1a1a1a;
@@ -124,7 +124,7 @@
         </div>
 
         <div class="text-center">
-            <button type="submit" class="blue_btn"><i class="fas fa-save"></i> {{ __('tasks.save_changes') }}</button>
+            <button type="submit" class="des-btn"><i class="fas fa-save"></i> {{ __('tasks.save_changes') }}</button>
         </div>
     </form>
 </div>

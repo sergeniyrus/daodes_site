@@ -5,50 +5,6 @@
 @section('main')
     <main>
         <style>
-            .container {
-                padding: 15px;
-                margin: 20px auto 0 auto;
-                max-width: 800px;
-                background-color: #000000cf;
-                border-radius: 15px;
-                border: 1px solid gold;
-                color: #f8f9fa;
-                font-family: Verdana, Geneva, Tahoma, sans-serif;
-            }
-
-            .blue_btn {
-                display: inline-block;
-                color: #ffffff;
-                background: #0b0c18;
-                padding: 5px 10px;
-                font-size: 1.3rem;
-                border: 1px solid gold;
-                border-radius: 10px;
-                transition: box-shadow 0.3s ease, transform 0.3s ease;
-                text-decoration: none;
-            }
-
-            .blue_btn:hover {
-                box-shadow: 0 0 20px goldenrod;
-                transform: scale(1.05);
-                color: #ffffff;
-            }
-
-            h1,
-            h2 {
-                text-align: center;
-            }
-
-            p {
-                text-align: justify;
-                width: 100%;
-            }
-
-            .big {
-                font-style: bold;
-                font-size: 3rem;
-            }
-
             .chapter-container {
                 margin: 15px 0;
                 border: 1px solid #154472;
@@ -201,35 +157,32 @@
                 margin-bottom: 10px;
             }
 
-            ul {
-                list-style-type: disc;
-                margin-left: 20px;
-                margin-bottom: 20px;
-            }
+ul, ol {
+    margin-left: 20px;
+    margin-bottom: 20px;
+}
 
-            ul li {
-                margin-bottom: 10px;
-            }
+ul {
+    list-style-type: disc;
+}
 
-            ol {
-                list-style-type: upper-alpha;
-                margin-left: 20px;
-                margin-bottom: 20px;
-            }
+ol {
+    list-style-type: upper-alpha;
+}
 
-            ol li {
-                margin-bottom: 10px;
-            }
+ul li, ol li {
+    margin-bottom: 10px;
+}
 
-            ol ul {
-                list-style-type: disc;
-                margin-left: 20px;
-                margin-top: 10px;
-            }
+ol ul {
+    list-style-type: disc;
+    margin-left: 20px;
+    margin-top: 10px;
+}
 
-            ol ul li {
-                margin-bottom: 5px;
-            }
+ol ul li {
+    margin-bottom: 5px;
+}
 
             @keyframes slideDown {
                 from {
@@ -248,7 +201,7 @@
             }
         </style>
         <div class="container">
-            <h1>{{ __('white_paper.main_title') }}</h1>
+            <h6>{{ __('white_paper.main_title') }}</h6>
             <h1 class="big">{{ __('white_paper.big_title') }}</h1>
             <div class="content">
                 <div class="chapter-container">

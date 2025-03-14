@@ -29,17 +29,17 @@
                     @if (Auth::user()->access_level >= 3)
                         <div class="admin_menu">
                             <div>
-                                <a href="{{ route('offers.add') }}" class="blue_btn" title="Create">
+                                <a href="{{ route('offers.add') }}" class="des-btn" title="Create">
                                     {!! __('offers.create_button') !!}
                                 </a>
                             </div>
                             <div>
-                                <a href="{{ route('offers.edit', ['id' => $offers->id]) }}" class="blue_btn" title="Edit">
+                                <a href="{{ route('offers.edit', ['id' => $offers->id]) }}" class="des-btn" title="Edit">
                                     {!! __('offers.edit_button') !!}
                                 </a>
                             </div>
                             <div>
-                                <a href="{{ route('offers.destroy', ['id' => $offers->id]) }}" class="blue_btn"
+                                <a href="{{ route('offers.destroy', ['id' => $offers->id]) }}" class="des-btn"
                                     onclick="event.preventDefault(); document.getElementById('delete-form-{{ $offers->id }}').submit();">
                                     {!! __('offers.delete_button') !!}
                                 </a>
@@ -80,7 +80,7 @@
 
         <div class="comment">
             <div class="z_com">
-                <h4>{{ __('offers.discussions', ['count' => $commentCount]) }}</h4>
+                <h6>{{ __('offers.discussions', ['count' => $commentCount]) }}</h6>
             </div>
 
             @if ($commentCount == 0)
@@ -107,7 +107,7 @@
                             <input type="hidden" name="offer_id" value="{{ $offers->id }}" />
                         </fieldset><br>
                         <div style="text-align: center">
-                            <button type="submit" class="blue_btn">
+                            <button type="submit" class="des-btn">
                                 {!! __('offers.save_button') !!}
                             </button>
                         </div><br>

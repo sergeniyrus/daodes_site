@@ -49,7 +49,7 @@
         background-color: #444;
     }
 
-    .blue_btn {
+    .des-btn {
         display: inline-block;
         color: #ffffff;
         font-size: large;
@@ -63,7 +63,7 @@
         cursor: pointer;
     }
 
-    .blue_btn:hover {
+    .des-btn:hover {
         box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
         transform: scale(1.05);
         background: #1a1a1a;
@@ -103,13 +103,13 @@
                 <tr>
                     <td>{{ $category->name }}</td> <!-- Название категории из базы данных -->
                     <td>
-                        <a href="{{ route('offerscategories.edit', $category->id) }}" class="blue_btn" title="{{ __('category.edit') }}">
+                        <a href="{{ route('offerscategories.edit', $category->id) }}" class="des-btn" title="{{ __('category.edit') }}">
                             <i class="fas fa-edit"></i>
                         </a>
                         <form action="{{ route('offerscategories.destroy', $category->id) }}" method="POST" style="display:inline;">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="blue_btn" title="{{ __('category.delete') }}">
+                            <button type="submit" class="des-btn" title="{{ __('category.delete') }}">
                                 <i class="fas fa-trash-alt"></i>
                             </button>
                         </form>
@@ -120,7 +120,7 @@
         </table>
 
         <form action="{{ route('offerscategories.create') }}" method="GET" style="display:inline;">
-            <button type="submit" class="blue_btn">
+            <button type="submit" class="des-btn">
                  {!! __('category.add_category_button') !!} <!-- Перевод текста кнопки -->
             </button>
         </form>

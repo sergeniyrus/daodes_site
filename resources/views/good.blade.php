@@ -17,7 +17,7 @@
         vertical-align: auto;
     }
 
-    .blue_btn {
+    .des-btn {
         display: inline-block;
         color: #ffffff;
         font-size: large;
@@ -31,7 +31,7 @@
         margin-bottom: 25px;
     }
 
-    .blue_btn:hover {
+    .des-btn:hover {
         box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
         transform: scale(1.05);
         color: #ffffff;
@@ -59,7 +59,7 @@
         <h2>{{ __('good.success_message') }}</h2>
         <br>
         <a href="/{{ $post }}/{{ $id }}">
-            <h2 class="blue_btn">{{ __('good.view_button') }}</h2>
+            <h2 class="des-btn">{{ __('good.view_button') }}</h2>
         </a>
         <br>
     </div>

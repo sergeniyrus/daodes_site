@@ -104,7 +104,7 @@
         }
     }
 
-    .blue_btn {
+    .des-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -118,7 +118,7 @@
         margin-top: 10px;
     }
 
-    .blue_btn:hover {
+    .des-btn:hover {
         box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
         transform: scale(1.05);
         background: #1a1a1a;

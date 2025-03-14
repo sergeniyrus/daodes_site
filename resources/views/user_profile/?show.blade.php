@@ -73,7 +73,7 @@
         border-radius: 8px;
     }
 
-    .btn.blue_btn {
+    .btn.des-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
@@ -87,7 +87,7 @@
         margin-top: 10px;
     }
 
-    .btn.blue_btn:hover {
+    .btn.des-btn:hover {
         box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
         transform: scale(1.05);
         background: #0b0c18;
@@ -142,7 +142,7 @@
             </div>
 
             <!-- Кнопка для перехода к редактированию профиля -->
-            <a href="{{ route('user_profile.edit', $profile->user_id) }}" class="btn blue_btn">Редактировать</a>
+            <a href="{{ route('user_profile.edit', $profile->user_id) }}" class="des-btn">Редактировать</a>
         </div>
     </div>
 </div>

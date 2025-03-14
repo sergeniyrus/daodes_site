@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'title_page' => 'Suggestions and Solutions',
-    'header_title' => 'Suggestions and Solutions',
+    'title_page' => 'Offers and Solutions',
+    'header_title' => 'Offers and Solutions',
     'sort_new' => 'New ☰',
     'sort_old' => 'Old ☰',
     'all_categories' => 'All Categories ☰',

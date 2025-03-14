@@ -13,7 +13,7 @@
             font-family: Verdana, Geneva, Tahoma, sans-serif;
         }
 
-        .blue_btn {
+        .des-btn {
             display: inline-block;
             color: #ffffff;
             background: #0b0c18;
@@ -26,7 +26,7 @@
             text-align: center; /* Выравнивание текста по центру */
         }
 
-        .blue_btn:hover {
+        .des-btn:hover {
             box-shadow: 0 0 20px goldenrod;
             transform: scale(1.05);
             color: #ffffff;
@@ -118,7 +118,7 @@
     overflow-y: auto; /* Добавляем скролл, если текст превышает максимальную высоту */
 }
 
-.input-group .blue_btn {
+.input-group .des-btn {
     height: auto;
     align-self: stretch;
 }
@@ -129,7 +129,7 @@
     margin-top: 20px; /* Отступ от формы ввода */
 }
 
-.additional-buttons .blue_btn {
+.additional-buttons .des-btn {
     flex: 1;
     margin: 0 5px;
     display: flex;
@@ -156,13 +156,13 @@
         @csrf
         <div class="input-group">
             <textarea name="message" class="form-control input_dark" rows="1" required id="messageInput"></textarea>
-            <button type="submit" class="blue_btn">{{ __('chats.send') }}</button>
+            <button type="submit" class="des-btn">{{ __('chats.send') }}</button>
         </div>
     </form>
     <div class="additional-buttons">
-        <a href="/chats" class="blue_btn">{{ __('chats.to_chats') }}</a>
-        <a href="/chats/create" class="blue_btn">{{ __('chats.new_chat') }}</a>
-        <a href="/notifications" class="blue_btn">{{ __('chats.notifications') }}</a>
+        <a href="/chats" class="des-btn">{{ __('chats.to_chats') }}</a>
+        <a href="/chats/create" class="des-btn">{{ __('chats.new_chat') }}</a>
+        <a href="/notifications" class="des-btn">{{ __('chats.notifications') }}</a>
     </div>
 </div>
 <script>

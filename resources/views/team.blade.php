@@ -2,52 +2,6 @@
 @section('title_page', __('team.title'))
 @section('main')
     <style>
-        .container {
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 1200px;
-            background-color: #000000cf;
-            border-radius: 15px;
-            border: 1px solid gold;
-            color: #f8f9fa;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-        }
-
-        .blue_btn {
-            display: inline-block;
-            color: #ffffff;
-            background: #0b0c18;
-            padding: 5px 10px;
-            font-size: 1.3rem;
-            border: 1px solid gold;
-            border-radius: 10px;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-            text-decoration: none;
-        }
-
-        .blue_btn:hover {
-            box-shadow: 0 0 20px goldenrod;
-            transform: scale(1.05);
-            color: #ffffff;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4 {
-            text-align: center;
-        }
-
-        p {
-            text-align: justify;
-            width: 100%;
-        }
-
-        .big {
-            font-style: bold;
-            font-size: 3rem;
-        }
-
         .team-section {
             padding: 20px;
         }
@@ -158,7 +112,7 @@
     </style>
     <main>
         <div class="container">
-            <h1>{{ __('team.decentralized_ecosystems') }}</h1>
+            <h6>{{ __('team.decentralized_ecosystems') }}</h6>
             <h1 class="big">{{ __('team.title') }}</h1>
             <div class="content">
                 <div class="team-section">
@@ -196,7 +150,7 @@
                     @endforeach
                 </div>
             </div>
-            <h2>{{ __('team.click_for_details') }}</h2>
+            <h6>{{ __('team.click_for_details') }}</h6>
         </div>
     </main>
     <!-- Подключение jQuery и Slick Carousel -->

@@ -40,7 +40,7 @@
         font-size: 1rem; /* Размер шрифта */
     }
 
-    .blue_btn {
+    .des-btn {
         display: inline-flex; /* Гибкая компоновка */
         align-items: center; /* Центрирование по вертикали */
         justify-content: center; /* Центрирование по горизонтали */
@@ -56,12 +56,12 @@
         margin-top: 15px; /* Отступ сверху для кнопки */
     }
 
-    .blue_btn i {
+    .des-btn i {
         margin-right: 8px; /* Отступ справа для иконки */
         font-size: 1.2rem; /* Размер иконки */
     }
 
-    .blue_btn:hover {
+    .des-btn:hover {
         box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09; /* Эффект свечения при наведении */
         transform: scale(1.05); /* Увеличение кнопки при наведении */
         background: #1a1a1a; /* Смена фона кнопки при наведении */
@@ -105,7 +105,7 @@
             <input type="text" name="name" id="name" class="input_dark" value="{{ old('name', $taskCategory->name) }}" required>
         </div>
 
-        <button type="submit" class="blue_btn">
+        <button type="submit" class="des-btn">
             <i class="fas fa-save"></i> Сохранить изменения
         </button>
     </form>
