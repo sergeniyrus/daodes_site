@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Chat extends Model
 {
-    protected $fillable = ['name']; // Убедитесь, что 'name' указан здесь
+    protected $fillable = ['name','type',]; // Убедитесь, что 'name' указан здесь
 
     // Отношение "многие ко многим" с пользователями
     public function users()
@@ -27,10 +27,10 @@ class Chat extends Model
     }
 
     // Количество непрочитанных сообщений
-    public function getUnreadMessagesCountAttribute()
-    {
-        return $this->messages()->where('is_read', false)->count();
-    }
+    // public function getUnreadMessagesCountAttribute()
+    // {
+    //     return $this->messages()->where('is_read', false)->count();
+    // }
 
     // В модели Chat
 public function getChatNameForUser($userId)

@@ -91,11 +91,8 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string $type
- * @property int|null $user1_id
- * @property int|null $user2_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read mixed $unread_messages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Message> $messages
  * @property-read int|null $messages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $participants
@@ -110,8 +107,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereUser1Id($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereUser2Id($value)
  */
 	class Chat extends \Eloquent {}
 }
@@ -219,12 +214,11 @@ namespace App\Models{
  * @property int $id
  * @property int $chat_id
  * @property int $sender_id
- * @property string|null $message
- * @property string|null $ipfs_cid
- * @property int $is_read
+ * @property string $ipfs_cid
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Chat $chat
+ * @property-read mixed $message
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Notification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \App\Models\User $sender
@@ -235,8 +229,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereIpfsCid($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereIsRead($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereMessage($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereSenderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUpdatedAt($value)
  */
@@ -279,13 +271,13 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property int $user_id
+ * @property string $user_id
  * @property int $message_id
  * @property int $is_read
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Message $message
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\Message|null $message
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification query()

@@ -2,40 +2,6 @@
 @section('title_page', __('chats.your_chats'))
 @section('main')
     <style>
-        .container {
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 1200px;
-            background-color: #000000cf;
-            border-radius: 15px;
-            border: 1px solid gold;
-            color: #f8f9fa;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-        }
-
-        .des-btn {
-            display: inline-block;
-            color: #ffffff;
-            background: #0b0c18;
-            padding: 5px 10px;
-            font-size: 1.3rem;
-            border: 1px solid gold;
-            border-radius: 10px;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-            text-decoration: none;
-        }
-
-        .des-btn:hover {
-            box-shadow: 0 0 20px goldenrod;
-            transform: scale(1.05);
-            color: #ffffff;
-        }
-
-        .big {
-            font-style: bold;
-            font-size: 3rem;
-        }
-
         .chat-table {
             width: 100%;
             border-collapse: collapse;
@@ -85,9 +51,19 @@
             border-radius: 10px;
             font-size: 0.9rem;
         }
+        .text-center {
+    text-align: center;
+}
+.chat-table td {
+    text-align: center;
+}
+.big {
+            font-style: bold;
+            font-size: 3rem;
+        }
     </style>
     <div class="container">
-        <h1 class="big text-center">{{ __('chats.your_chats') }}</h1>
+        <h1 class="big text-center">DESChat</h1>
 
         <!-- Групповые чаты -->
         <h2 class="text-center" style="margin-top: 20px; color: gold;">{{ __('chats.group_chats') }}</h2>
@@ -95,7 +71,7 @@
             <thead>
                 <tr>
                     <th>{{ __('chats.chat_name') }}</th>
-                    <th>{{ __('chats.messages_count') }}</th>
+                    {{-- <th>{{ __('chats.messages_count') }}</th> --}}
                     <th>{{ __('chats.participants') }}</th>
                 </tr>
             </thead>
@@ -107,9 +83,9 @@
                                 {{ $chat->getChatNameForUser(auth()->id()) }}
                             </a>
                         </td>
-                        <td>
+                        {{-- <td>
                             <span class="badge">{{ $chat->unread_messages_count }}</span>
-                        </td>
+                        </td> --}}
                         <td>
                             @foreach ($chat->participants as $participant)
                                 {{ $participant->name }}@if (!$loop->last)
@@ -128,25 +104,25 @@
         </div>
 
         <!-- Личные сообщения -->
-        <h2 class="text-center" style="margin-top: 40px; color: gold;">{{ __('chats.private_messages') }}</h2>
+        
         <table class="chat-table">
             <thead>
                 <tr>
-                    <th>{{ __('chats.chat_name') }}</th>
-                    <th>{{ __('chats.messages_count') }}</th>
+                    <th><h4 class="text-center" style="color: gold;">{{ __('chats.private_messages') }}</h4></th>
+                    {{-- <th>{{ __('chats.messages_count') }}</th> --}}
                 </tr>
             </thead>
             <tbody>
                 @foreach ($privateChats as $chat)
                     <tr>
-                        <td>
+                        <td class="text-center">
                             <a href="{{ route('chats.show', $chat->id) }}">
                                 {{ $chat->getChatNameForUser(auth()->id()) }}
                             </a>
                         </td>
-                        <td>
+                        {{-- <td class="text-center">
                             <span class="badge">{{ $chat->unread_messages_count }}</span>
-                        </td>
+                        </td> --}}
                     </tr>
                 @endforeach
             </tbody>
