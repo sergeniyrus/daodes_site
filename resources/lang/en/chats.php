@@ -5,7 +5,7 @@ return [
     'group_chats' => 'Group Chats',
     'private_messages' => 'Private Messages',
     'chat_name' => 'Chat Name',
-    'messages_count' => 'Messages Count',
+    'messages_count' => 'New messages',
     'participants' => 'Participants',
     'create_chat' => 'Create Chat',
     'chat' => 'Chat',
@@ -32,4 +32,7 @@ return [
     'message_sent' => 'Message sent!', 
     'message_send_error' => 'Error sending message.', 
     'notification_read' => 'Notification marked as read!', 
+    'footnote' => 'To send a message, press Enter.',
+    'footnote2' => 'To translate a line, press Shift + Enter.',
+
 ];

@@ -22,10 +22,26 @@ class EncryptionService
      */
     public function encrypt($data)
     {
+        Log::info('Данные для шифрования:', ['data' => $data]);
+
+        if (empty($data)) {
+            throw new Exception("Данные для шифрования не могут быть пустыми.");
+        }
+
+        if (!mb_check_encoding($data, 'UTF-8')) {
+            throw new Exception("Данные должны быть в кодировке UTF-8.");
+        }
+
         try {
-            return Crypto::encrypt($data, $this->key);
+            $encryptedData = Crypto::encrypt($data, $this->key);
+
+            if (strlen($encryptedData) < 16) {
+                throw new Exception("Зашифрованные данные слишком короткие.");
+            }
+
+            return $encryptedData;
         } catch (Exception $e) {
-          //  Log::error('Ошибка шифрования: ' . $e->getMessage());
+            Log::error('Ошибка шифрования 1: ' . $e->getMessage());
             throw new Exception("Ошибка шифрования: " . $e->getMessage());
         }
     }
@@ -38,8 +54,8 @@ class EncryptionService
         try {
             return Crypto::decrypt($encryptedData, $this->key);
         } catch (Exception $e) {
-           // Log::error('Ошибка дешифрования: ' . $e->getMessage());
+            Log::error('Ошибка дешифрования 2: ' . $e->getMessage());
             throw new Exception("Ошибка дешифрования: " . $e->getMessage());
         }
     }
-} 
+}

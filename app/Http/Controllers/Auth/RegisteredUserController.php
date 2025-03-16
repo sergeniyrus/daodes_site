@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
         'name' => ['required', 'string', 'max:255'],
         'keyword' => ['required', 'string', 'max:255'],
         'password' => ['required', 'string', 'min:8', 'confirmed'],
-        'g-recaptcha-response' => ['required', 'recaptcha'],
+        //'g-recaptcha-response' => ['required', 'recaptcha'],
     ]);
 }
 

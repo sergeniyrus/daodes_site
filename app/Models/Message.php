@@ -43,6 +43,7 @@ class Message extends Model
             // Шифруем сообщение
             $encryptionService = new EncryptionService();
             $encryptedMessage = $encryptionService->encrypt($message);
+            Log::info('Encrypted message for upload', ['encryptedMessage' => $encryptedMessage]);
 
             // Отправляем файл в IPFS через ipfs.io
             $client = new Client([
@@ -64,10 +65,10 @@ class Message extends Model
 
             if (isset($data['Hash'])) {
                 $cid = $data['Hash'];
-                //Log::info('Message uploaded to IPFS successfully', ['cid' => $cid]);
+                Log::info('Message uploaded to IPFS successfully', ['cid' => $cid]);
                 return $cid;
             } else {
-               // Log::error('IPFS error: No Hash in response', ['response' => $data]);
+                Log::error('IPFS error: No Hash in response', ['response' => $data]);
                 throw new Exception('No valid response from IPFS');
             }
         } catch (Exception $e) {
@@ -83,7 +84,7 @@ class Message extends Model
     {
         try {
             // Логируем начало процесса получения данных из IPFS
-                // Log::info('Начало получения данных из IPFS', ['cid' => $cid,]);
+                Log::info('Начало получения данных из IPFS', ['cid' => $cid,]);
 
             // Получаем файл из IPFS через ipfs.io
             $client = new Client([
@@ -92,13 +93,15 @@ class Message extends Model
 
             $response = $client->request('GET', "/ipfs/{$cid}");
             $fileContent = $response->getBody()->getContents();
+            Log::info('Encrypted message received from IPFS', ['fileContent' => $fileContent]);
+            
 
             // Логируем полученные данные из IPFS
-            // Log::info('Данные получены из IPFS', [
-            //     'cid' => $cid,
-            //     'fileContentLength' => strlen($fileContent),
-            //     'fileContentSample' => substr($fileContent, 0, 50), // Логируем первые 50 символов
-            // ]);
+            Log::info('Данные получены из IPFS', [
+                'cid' => $cid,
+                'fileContentLength' => strlen($fileContent),
+                'fileContentSample' => substr($fileContent, 0, 50), // Логируем первые 50 символов
+            ]);
 
             // Проверяем, что данные не пустые
             if (empty($fileContent)) {
@@ -107,12 +110,14 @@ class Message extends Model
 
             // Дешифруем сообщение
             $encryptionService = new EncryptionService();
+            Log::info('Decrypting message', ['fileContent' => $fileContent]);
+            
             return $encryptionService->decrypt($fileContent);
         } catch (Exception $e) {
-            // Log::error('Ошибка при получении данных из IPFS', [
-            //     'cid' => $cid,
-            //     'error' => $e->getMessage(),
-            // ]);
+            Log::error('Ошибка при получении данных из IPFS', [
+                'cid' => $cid,
+                'error' => $e->getMessage(),
+            ]);
             throw $e;
         }
     }
@@ -124,12 +129,17 @@ class Message extends Model
     {
         if ($this->ipfs_cid) {
             try {
+                Log::info('Decrypting message attribute', ['ipfs_cid' => $this->ipfs_cid]);
                 return $this->getMessageFromIPFS($this->ipfs_cid);
             } catch (Exception $e) {
                 // Log::error('Ошибка при дешифровании сообщения', [
                 //     'cid' => $this->ipfs_cid,
                 //     'error' => $e->getMessage(),
                 // ]);
+                Log::error('Ошибка при дешифровании сообщения', [
+                    'cid' => $this->ipfs_cid,
+                    'error' => $e->getMessage(),
+                ]);
                 return 'Ошибка: не удалось расшифровать сообщение';
             }
         }

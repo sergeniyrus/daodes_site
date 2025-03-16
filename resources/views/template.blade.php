@@ -23,7 +23,7 @@
     <title>@yield('title_page')</title>
 
     <!-- Подключаем скрипты -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- смайлики значки -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <!-- Подключите библиотеки Cropper.js и IPFS HTTP Client -->
@@ -40,24 +40,25 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}">
     <!-- * Вставляем стили -->
     {{-- <link rel="stylesheet" href="css/main.css"> --}}
-    @vite(['resources/css/app.css', 'resources/css/main.css', 'resources/js/app.js', 'resources/js/block.js', 'resources/js/bt_top.js'])
-    
+    @vite(['resources/css/app.css', 'public/css/main.css', 'public/css/ckeditor.css', 'public/css/menu.css', 'public/css/news.css', 'public/css/offers.css', 'public/css/tasks.css', 'resources/js/app.js', 'public/js/ckeditor.js', 'public/js/image-cropper.js', 'resources/js/bt_top.js'])
+
     {{-- <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="DAODES_Robot" data-size="large" data-auth-url="https://daodes.space/" data-request-access="write"></script> --}}
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css"/>
-<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css"/>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick-theme.css" />
 </head>
 
 <body>
     <style>
-        
-/*бегущая строка */
+        /*бегущая строка */
         .marquee {
             width: 100%;
             overflow: hidden;
             white-space: nowrap;
             box-sizing: border-box;
         }
+
         .marquee p {
             display: inline-block;
             font-size: 24px;
@@ -65,21 +66,24 @@
             animation: marquee 20s linear infinite;
             font-family: 'StandardPoster';
         }
+
         @keyframes marquee {
             0% {
                 transform: translateX(100%);
             }
+
             100% {
                 transform: translateX(-100%);
             }
         }
+
         .avatar-img {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 1px solid gold;
-    }
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid gold;
+        }
     </style>
     {{-- @include('partials.infotrade') --}}
     @include('menu')

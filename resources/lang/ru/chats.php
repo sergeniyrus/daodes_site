@@ -5,7 +5,7 @@ return [
     'group_chats' => 'Групповые чаты',
     'private_messages' => 'Личные сообщения',
     'chat_name' => 'Название чата',
-    'messages_count' => 'Кол-во сообщений',
+    'messages_count' => 'Новых сообщений',
     'participants' => 'Участники',
     'create_chat' => 'Создать чат',
     'chat' => 'Чат',
@@ -32,4 +32,6 @@ return [
     'message_sent' => 'Сообщение отправлено!', 
     'message_send_error' => 'Ошибка при отправке сообщения.', 
     'notification_read' => 'Уведомление прочитано!', 
+    'footnote' => 'Для отправки сообщения нажмите Enter.',
+    'footnote2' => 'Для перевода строки Shift + Enter',
 ];

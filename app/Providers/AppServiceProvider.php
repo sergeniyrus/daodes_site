@@ -18,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        
         // Передача переменной $unreadCount во все шаблоны
         View::composer('*', function ($view) {
             if (auth()->check()) {

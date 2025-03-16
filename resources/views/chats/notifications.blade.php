@@ -2,28 +2,7 @@
 @section('title_page', __('chats.notifications_title'))
 @section('main')
     <style>
-        .container {
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 800px;
-            background-color: #000000cf;
-            border-radius: 15px;
-            border: 1px solid gold;
-            color: #f8f9fa;
-            font-family: Verdana, Geneva, Tahoma, sans-serif;
-        }
-
-        h1,
-        h2,
-        h3,
-        h4 {
-            text-align: center;
-        }
-
-        p {
-            text-align: justify;
-            width: 100%;
-        }
+        
 
         .big {
             font-style: bold;
@@ -58,26 +37,7 @@
             text-decoration: underline;
         }
 
-        .btn-blue {
-            display: inline-block;
-            color: #ffffff;
-            background: #0b0c18;
-            padding: 5px 10px;
-            font-size: 1rem;
-            border: 1px solid gold;
-            border-radius: 10px;
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .btn-blue:hover {
-            box-shadow: 0 0 20px goldenrod;
-            transform: scale(1.05);
-            color: #ffffff;
-        }
-
-        .unread-count {
+                .unread-count {
             background-color: goldenrod;
             color: #000;
             padding: 2px 6px;
@@ -88,9 +48,9 @@
 
         .no-notifications {
             text-align: center;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             color: #d7fc09;
-            margin-top: 20px;
+            margin: 20px;
         }
     </style>
     <div class="container">
@@ -111,7 +71,7 @@
                                 </span>
                             @endif
                         </p>
-                        <a href="{{ route('chats.show', $uniqueChat['chat']->id) }}" class="btn-blue">
+                        <a href="{{ route('chats.show', $uniqueChat['chat']->id) }}" class="des-btn">
                             {{ __('chats.read') }}
                         </a>
                     </li>

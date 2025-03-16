@@ -71,7 +71,7 @@
             <thead>
                 <tr>
                     <th>{{ __('chats.chat_name') }}</th>
-                    {{-- <th>{{ __('chats.messages_count') }}</th> --}}
+                    <th>{{ __('chats.messages_count') }}</th>
                     <th>{{ __('chats.participants') }}</th>
                 </tr>
             </thead>
@@ -83,9 +83,11 @@
                                 {{ $chat->getChatNameForUser(auth()->id()) }}
                             </a>
                         </td>
-                        {{-- <td>
-                            <span class="badge">{{ $chat->unread_messages_count }}</span>
-                        </td> --}}
+                        <td>
+                            <span class="badge">
+                                {{ $uniqueChats[$chat->id] ?? 0 }}
+                            </span>
+                        </td>
                         <td>
                             @foreach ($chat->participants as $participant)
                                 {{ $participant->name }}@if (!$loop->last)
@@ -109,7 +111,7 @@
             <thead>
                 <tr>
                     <th><h4 class="text-center" style="color: gold;">{{ __('chats.private_messages') }}</h4></th>
-                    {{-- <th>{{ __('chats.messages_count') }}</th> --}}
+                    <th>{{ __('chats.messages_count') }}</th>
                 </tr>
             </thead>
             <tbody>
@@ -120,9 +122,11 @@
                                 {{ $chat->getChatNameForUser(auth()->id()) }}
                             </a>
                         </td>
-                        {{-- <td class="text-center">
-                            <span class="badge">{{ $chat->unread_messages_count }}</span>
-                        </td> --}}
+                        <td class="text-center">
+                            <span class="badge">
+                                {{ $uniqueChats[$chat->id] ?? 0 }}
+                            </span>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

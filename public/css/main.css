@@ -20,7 +20,8 @@ body {
   margin: 0;
   color: #ffffff;
   background-color: #0B0C18;
-  background-image: url("/img/main/bg01.jpg");
+  background-image: url('https://daodes.space/img/main/bg01.png');
+  /* background-image: url("{{ asset('img/main/bg01.png') }}"); */
   opacity: 1;
   background-position: center center;
   background-repeat: no-repeat;
@@ -51,6 +52,11 @@ h5 {
 
 h6 {
   font-size: clamp(14px, 2vw, 20px); /* Пример для h5 */
+}
+
+h1, h2, h3, h4, h5, h6 {
+  text-align: center;
+  font-family:'Roboto', sans-serif;
 }
 
 p {
@@ -109,10 +115,7 @@ img {
   color: #ffffff;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  text-align: center;
-  font-family:StandardPoster;
-}
+
 
 /* оповещения */
 .mobile-notifications {

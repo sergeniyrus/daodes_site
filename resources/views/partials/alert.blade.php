@@ -36,7 +36,12 @@
         color: #ffffff;
     }
 </style>
-@if ((isset($message) && is_string($message)) || (session('success') && is_string(session('success'))) || (session('error') && is_string(session('error'))) || (session('info') && is_string(session('info'))))
+@if (
+    (session('message') && is_string(session('message'))) ||
+    (session('success') && is_string(session('success'))) ||
+    (session('error') && is_string(session('error'))) ||
+    (session('info') && is_string(session('info')))
+)
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -44,11 +49,11 @@
             backdrop.className = 'alert-backdrop';
             document.body.appendChild(backdrop);
 
-            @if (isset($message) && is_string($message))
+            @if (session('message') && is_string(session('message')))
                 Swal.fire({
-                    icon: 'info',
-                    title: '{{ $message }}',
-                    text: '{{ $message }}',
+                    icon: 'success',
+                    title: '{{ session('message') }}',
+                    text: '',
                     confirmButtonText: 'OK',
                     customClass: {
                         popup: 'alert-popup',
@@ -79,8 +84,8 @@
             @elseif (session('error') && is_string(session('error')))
                 Swal.fire({
                     icon: 'error',
-                    title: 'Error',
-                    text: '{{ session('error') }}',
+                    title: '{{ session('error') }}',
+                    text: '',
                     confirmButtonText: 'OK',
                     customClass: {
                         popup: 'alert-popup',
@@ -95,8 +100,8 @@
             @elseif (session('info') && is_string(session('info')))
                 Swal.fire({
                     icon: 'info',
-                    title: 'Info',
-                    text: '{{ session('info') }}',
+                    title: '{{ session('info') }}',
+                    text: '',
                     confirmButtonText: 'OK',
                     customClass: {
                         popup: 'alert-popup',

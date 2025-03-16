@@ -71,7 +71,15 @@
         <form action="{{ route('captcha.verify') }}" method="POST">
             @csrf
             <div class="recaptcha-wrapper">
-                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                <div id="recaptcha-container"></div>
+        <script type="text/javascript">
+            var onloadCallback = function() {
+                grecaptcha.render('recaptcha-container', {
+                    'sitekey': '{{ env('RECAPTCHA_SITE_KEY') }}'
+                });
+            };
+        </script>
+        <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
             </div>
             @if ($errors->has('g-recaptcha-response'))
                 <span class="error-message">

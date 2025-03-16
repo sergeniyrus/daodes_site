@@ -197,7 +197,7 @@
                     </div>
 
                     <!-- reCAPTCHA -->
-                    <div class="recaptcha-wrapper mt-4">
+                    {{-- <div class="recaptcha-wrapper mt-4">
                         <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
                     </div>
                     @if ($errors->has('g-recaptcha-response'))
@@ -205,7 +205,7 @@
                             {{ $errors->first('g-recaptcha-response') }}
                         </span>
                     @endif
-                    <br>
+                    <br> --}}
 
                     <!-- Кнопки отправки формы и перехода к входу -->
                     <div class="button-container">

@@ -3,46 +3,46 @@
 /**
  * Copyright (c) 2017 - present
  * LaravelGoogleRecaptcha - recaptcha.php
- * author: Roberto Belotti - roby.belotti@gmail.com
- * web : robertobelotti.com, github.com/biscolab
- * Initial version created on: 12/9/2018
- * MIT license: https://github.com/biscolab/laravel-recaptcha/blob/master/LICENSE
+ * автор: Roberto Belotti - roby.belotti@gmail.com
+ * веб: robertobelotti.com, github.com/biscolab
+ * Первая версия создана: 12/9/2018
+ * Лицензия MIT: https://github.com/biscolab/laravel-recaptcha/blob/master/LICENSE
  */
 
 /**
- * To configure correctly please visit https://developers.google.com/recaptcha/docs/start
+ * Для правильной настройки посетите https://developers.google.com/recaptcha/docs/start
  */
 return [
 
     /**
      *
-     * The site key
-     * get site key @ www.google.com/recaptcha/admin
+     * Ключ сайта
+     * Получите ключ сайта @ www.google.com/recaptcha/admin
      *
      */
     'api_site_key'                 => env('RECAPTCHA_SITE_KEY', ''),
 
     /**
      *
-     * The secret key
-     * get secret key @ www.google.com/recaptcha/admin
+     * Секретный ключ
+     * Получите секретный ключ @ www.google.com/recaptcha/admin
      *
      */
     'api_secret_key'               => env('RECAPTCHA_SECRET_KEY', ''),
 
     /**
      *
-     * ReCATCHA version
-     * Supported: "v2", "invisible", "v3",
+     * Версия reCAPTCHA
+     * Поддерживаемые версии: "v2", "invisible", "v3",
      *
-     * get more info @ https://developers.google.com/recaptcha/docs/versions
+     * Подробнее @ https://developers.google.com/recaptcha/docs/versions
      *
      */
     'version'                      => 'v2',
 
     /**
      *
-     * The curl timout in seconds to validate a recaptcha token
+     * Таймаут curl в секундах для проверки токена reCAPTCHA
      * @since v3.5.0
      *
      */
@@ -50,15 +50,24 @@ return [
 
     /**
      *
-     * IP addresses for which validation will be skipped
-     * IP/CIDR netmask eg. 127.0.0.0/24, also 127.0.0.1 is accepted and /32 assumed
+     * IP-адреса, для которых проверка будет пропущена
+     * IP/CIDR маска сети, например, 127.0.0.0/24, также принимается 127.0.0.1 и предполагается /32
      *
      */
-    'skip_ip'                      => env('RECAPTCHA_SKIP_IP', []),
+    'skip_ip' => env('RECAPTCHA_SKIP_IP', [
+    '127.0.0.1',       // Локальный хост (localhost)
+    '95.188.118.100',
+    //'10.0.0.0/8',      // Частная сеть класса A (10.0.0.0 - 10.255.255.255)
+    //'172.16.0.0/12',   // Частная сеть класса B (172.16.0.0 - 172.31.255.255)
+    '192.168.0.0/16',  // Частная сеть класса C (192.168.0.0 - 192.168.255.255)
+    '::1',             // IPv6 localhost
+    //'fc00::/7',        // IPv6 уникальные локальные адреса (ULA)
+    //'fe80::/10',       // IPv6 link-local адреса
+]),
 
     /**
      *
-     * Default route called to check the Google reCAPTCHA token
+     * Маршрут по умолчанию для проверки токена Google reCAPTCHA
      * @since v3.2.0
      *
      */
@@ -66,7 +75,7 @@ return [
 
     /**
      *
-     * The name of the parameter used to send Google reCAPTCHA token to verify route
+     * Имя параметра, используемого для отправки токена Google reCAPTCHA на маршрут проверки
      * @since v3.2.0
      *
      */
@@ -74,17 +83,17 @@ return [
 
     /**
      *
-     * The default Google reCAPTCHA language code
-     * It has no effect with v3
+     * Код языка Google reCAPTCHA по умолчанию
+     * Не влияет на версию v3
      * @see   https://developers.google.com/recaptcha/docs/language
      * @since v3.6.0
      *
      */
-    'default_language'             => null,
+    'default_language'             => 'en',
 
     /**
      *
-     * The default form ID. Only for "invisible" reCAPTCHA
+     * ID формы по умолчанию. Только для "invisible" reCAPTCHA
      * @since v4.0.0
      *
      */
@@ -92,87 +101,87 @@ return [
 
     /**
      *
-     * Deferring the render can be achieved by specifying your onload callback function and adding parameters to the JavaScript resource.
-     * It has no effect with v3 and invisible
+     * Отложенный рендеринг может быть достигнут путем указания вашей функции обратного вызова onload и добавления параметров к ресурсу JavaScript.
+     * Не влияет на версии v3 и invisible
      * @see   https://developers.google.com/recaptcha/docs/display#explicit_render
      * @since v4.0.0
-     * Supported true, false
+     * Поддерживаемые значения: true, false
      *
      */
-    'explicit'                     => false,
+    'explicit'                     => true,
 
     /**
      *
-     * Set API domain. You can use "www.recaptcha.net" in case "www.google.com" is not accessible.
-     * (no check will be made on the entered value)
+     * Установите домен API. Вы можете использовать "www.recaptcha.net", если "www.google.com" недоступен.
+     * (проверка введенного значения не будет выполняться)
      * @see   https://developers.google.com/recaptcha/docs/faq#can-i-use-recaptcha-globally
      * @since v4.3.0
-     * Default 'www.google.com' (ReCaptchaBuilder::DEFAULT_RECAPTCHA_API_DOMAIN)
+     * По умолчанию 'www.google.com' (ReCaptchaBuilder::DEFAULT_RECAPTCHA_API_DOMAIN)
      *
      */
     'api_domain'                   => 'www.google.com',
 
     /**
      *
-     * Set `true` when the error message must be null
+     * Установите `true`, если сообщение об ошибке должно быть пустым
      * @since v5.1.0
-     * Default false
+     * По умолчанию false
      *
      */
     'empty_message' => false,
 
     /**
      *
-     * Set either the error message or the errom message translation key
+     * Установите либо сообщение об ошибке, либо ключ перевода сообщения об ошибке
      * @since v5.1.0
-     * Default 'validation.recaptcha'
+     * По умолчанию 'validation.recaptcha'
      *
      */
     'error_message_key' => 'validation.recaptcha',
 
     /**
      *
-     * g-recaptcha tag attributes and grecaptcha.render parameters (v2 only)
+     * Атрибуты тега g-recaptcha и параметры grecaptcha.render (только для v2)
      * @see   https://developers.google.com/recaptcha/docs/display#render_param
      * @since v4.0.0
      */
     'tag_attributes'               => [
 
         /**
-         * The color theme of the widget.
-         * Supported "light", "dark"
+         * Цветовая тема виджета.
+         * Поддерживаемые значения: "light", "dark"
          */
-        'theme'            => 'light',
+        'theme'            => 'dark',
 
         /**
-         * The size of the widget.
-         * Supported "normal", "compact"
+         * Размер виджета.
+         * Поддерживаемые значения: "normal", "compact"
          */
         'size'             => 'normal',
 
         /**
-         * The tabindex of the widget and challenge.
-         * If other elements in your page use tabindex, it should be set to make user navigation easier.
+         * Индекс табуляции виджета и вызова.
+         * Если другие элементы на вашей странице используют индекс табуляции, он должен быть установлен для облегчения навигации пользователя.
          */
         'tabindex'         => 0,
 
         /**
-         * The name of your callback function, executed when the user submits a successful response.
-         * The g-recaptcha-response token is passed to your callback.
-         * DO NOT SET "biscolabOnloadCallback"
+         * Имя вашей функции обратного вызова, выполняемой при успешной отправке ответа пользователем.
+         * Токен g-recaptcha-response передается в вашу функцию обратного вызова.
+         * НЕ УСТАНАВЛИВАЙТЕ "biscolabOnloadCallback"
          */
         'callback'         => null,
 
         /**
-         * The name of your callback function, executed when the reCAPTCHA response expires and the user needs to re-verify.
-         * DO NOT SET "biscolabOnloadCallback"
+         * Имя вашей функции обратного вызова, выполняемой при истечении срока действия ответа reCAPTCHA и необходимости повторной проверки пользователем.
+         * НЕ УСТАНАВЛИВАЙТЕ "biscolabOnloadCallback"
          */
         'expired-callback' => null,
 
         /**
-         * The name of your callback function, executed when reCAPTCHA encounters an error (usually network connectivity) and cannot continue until connectivity is restored.
-         * If you specify a function here, you are responsible for informing the user that they should retry.
-         * DO NOT SET "biscolabOnloadCallback"
+         * Имя вашей функции обратного вызова, выполняемой при возникновении ошибки reCAPTCHA (обычно из-за проблем с сетевым подключением) и невозможности продолжить до восстановления подключения.
+         * Если вы укажете функцию здесь, вы должны уведомить пользователя о необходимости повторить попытку.
+         * НЕ УСТАНАВЛИВАЙТЕ "biscolabOnloadCallback"
          */
         'error-callback'   => null,
     ]
