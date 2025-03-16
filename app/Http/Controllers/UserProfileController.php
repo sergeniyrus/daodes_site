@@ -50,7 +50,7 @@ class UserProfileController extends Controller
             'specialization' => 'nullable|string',
         ]);
 
-        Log::info('Данные перед записью в БД 1 :', $data);
+        // Log::info('Данные перед записью в БД 1 :', $data);
 
         if ($request->hasFile('filename')) {
             // Загрузка аватара на IPFS
@@ -58,7 +58,7 @@ class UserProfileController extends Controller
             if ($avatarUrl) {
                 $data['avatar_url'] = $avatarUrl;
             } else {
-                Log::error('Ошибка при загрузке аватара на IPFS.');
+                // Log::error('Ошибка при загрузке аватара на IPFS.');
                 return redirect()->back()->withErrors(__('message.avatar_upload_error'));
             }
         } else {
@@ -67,7 +67,7 @@ class UserProfileController extends Controller
 
         $data['user_id'] = Auth::id();
 
-        Log::info('Данные перед записью в БД 2:', $data);
+        // Log::info('Данные перед записью в БД 2:', $data);
 
         UserProfile::create($data);
 
@@ -123,7 +123,7 @@ class UserProfileController extends Controller
         // Обновляем остальные данные профиля
         $profile->fill($request->except(['filename']));
 
-        Log::info('Данные перед обновлением записей в БД:', $profile->toArray());
+        // Log::info('Данные перед обновлением записей в БД:', $profile->toArray());
         $profile->save();
 
         return redirect()->route('user_profile.edit', $profile->id)
@@ -150,11 +150,11 @@ class UserProfileController extends Controller
             if (isset($data['Hash'])) {
                 return 'https://daodes.space/ipfs/' . $data['Hash'];
             } else {
-                Log::error('Ответ от IPFS не содержит хэш: ' . $response->getBody());
+                // Log::error('Ответ от IPFS не содержит хэш: ' . $response->getBody());
                 return null;
             }
         } catch (\Exception $e) {
-            Log::error('Ошибка при загрузке файла на IPFS: ' . $e->getMessage());
+            // Log::error('Ошибка при загрузке файла на IPFS: ' . $e->getMessage());
             return null;
         }
     }

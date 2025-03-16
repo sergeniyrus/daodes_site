@@ -60,7 +60,7 @@ class NewsController extends Controller
             $categoryName = DB::table('category_news')
                 ->where('id', $news->category_id)
                 ->value('name'); // Получаем значение поля 'category_name'
-            
+
             // Получаем комментарии для этой новости
             $comments = DB::table('comments_news')
                 ->where('news_id', $news->id)
@@ -94,8 +94,8 @@ class NewsController extends Controller
         ]);
 
         // Загружаем изображение на IPFS, если оно передано
-        $img = $request->hasFile('filename') 
-            ? $this->uploadToIPFS($request->file('filename')) 
+        $img = $request->hasFile('filename')
+            ? $this->uploadToIPFS($request->file('filename'))
             : 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
 
         // Сохраняем новость в БД
@@ -195,7 +195,7 @@ class NewsController extends Controller
         try {
             CategoryNews::create(['name' => $request->name]);
         } catch (\Exception $e) {
-            \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
+            // Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
             return back()->withErrors(['name' => __('message.category_add_failed')]);
         }
 
@@ -220,7 +220,7 @@ class NewsController extends Controller
             $category->update(['name' => $request->name]);
             return redirect()->route('newscategories.index')->with('success', __('message.category_updated_success'));
         } catch (\Exception $e) {
-            \Log::error('Ошибка при обновлении категории: ' . $e->getMessage());
+            // Log::error('Ошибка при обновлении категории: ' . $e->getMessage());
             return redirect()->back()->withErrors(['name' => __('message.category_update_failed')]);
         }
     }

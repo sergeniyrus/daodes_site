@@ -110,7 +110,7 @@ class OffersController extends Controller
             'filename' => ['nullable', 'image', 'max:2048']
         ]);
 
-        Log::info('$validate');
+        // Log::info('$validate');
         
         $img = $request->hasFile('filename')
             ? $this->uploadToIPFS($request->file('filename'))

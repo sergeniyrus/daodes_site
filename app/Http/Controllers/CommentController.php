@@ -19,7 +19,7 @@ class CommentController extends Controller
         ]);
 
         // Логируем данные запроса для отладки
-        Log::info($request->all());
+        // Log::info($request->all());
 
         // Добавляем новый комментарий в таблицу comments_offers с user_id текущего пользователя
         CommentOffer::create([
@@ -41,7 +41,7 @@ class CommentController extends Controller
         ]);
 
         // Логируем данные запроса для отладки
-        Log::info($request->all());
+        // Log::info($request->all());
 
         // Добавляем новый комментарий в таблицу comments_news с user_id текущего пользователя
         CommentNews::create([

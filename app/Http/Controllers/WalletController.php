@@ -103,12 +103,12 @@ class WalletController extends Controller
         $storedSeedPhrase = strtolower(trim($storedSeedPhrase));
 
         // Логируем длину строк
-        Log::info('Length of entered seed phrase: ' . strlen($seedPhrase));
-        Log::info('Length of stored seed phrase: ' . strlen($storedSeedPhrase));
+        // Log::info('Length of entered seed phrase: ' . strlen($seedPhrase));
+        // Log::info('Length of stored seed phrase: ' . strlen($storedSeedPhrase));
 
         // Логируем строки
-        Log::info('Seed phrase entered by user: ' . $seedPhrase);
-        Log::info('Stored seed phrase: ' . $storedSeedPhrase);
+        // Log::info('Seed phrase entered by user: ' . $seedPhrase);
+        // Log::info('Stored seed phrase: ' . $storedSeedPhrase);
 
         // Сравнение сид-фраз
         if ($seedPhrase !== $storedSeedPhrase) {

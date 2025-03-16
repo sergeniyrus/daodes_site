@@ -51,7 +51,7 @@ class TaskController extends Controller
     // Create a new task
     public function store(Request $request)
     {
-        Log::info('Request received:', $request->all());
+        // Log::info('Request received:', $request->all());
 
         // Validate the data
         $request->validate([
@@ -73,7 +73,7 @@ class TaskController extends Controller
             'category_id' => $request->category_id,
         ]);
 
-        Log::info('Task successfully created:', $task->toArray());
+        // Log::info('Task successfully created:', $task->toArray());
 
         return redirect()->route('tasks.index')->with('success', __('message.task_added'));
     }
@@ -127,7 +127,7 @@ class TaskController extends Controller
     // Submit a bid (only one bid per user)
     public function bid(Request $request, Task $task)
     {
-        Log::info('Attempting to submit a bid for task ID: ' . $task->id, ['user_id' => Auth::id()]);
+        // Log::info('Attempting to submit a bid for task ID: ' . $task->id, ['user_id' => Auth::id()]);
 
         if (!$task->isOpen()) {
             Log::warning('Bid submission is closed for task ID: ' . $task->id);
@@ -172,7 +172,7 @@ class TaskController extends Controller
             'comment.min_chars' => __('message.comment_min_chars'),
         ]);
 
-        Log::info('Bid request data:', $validatedData);
+        // Log::info('Bid request data:', $validatedData);
 
         try {
             $bid = $task->bids()->create([
@@ -184,7 +184,7 @@ class TaskController extends Controller
                 'comment' => $validatedData['comment'],
             ]);
 
-            Log::info('Bid successfully created for task ID: ' . $task->id, ['bid_id' => $bid->id]);
+            // Log::info('Bid successfully created for task ID: ' . $task->id, ['bid_id' => $bid->id]);
 
             return redirect()->route('tasks.show', $task)->with('success', __('message.bid_submitted'));
         } catch (\Exception $e) {

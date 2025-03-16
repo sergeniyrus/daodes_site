@@ -87,12 +87,12 @@ class ChatController extends Controller
     public function store(Request $request)
     {
         // Логируем входные данные
-        Log::info('Request data:', $request->all());
-        Log::info('Users array:', $request->users);
+        // Log::info('Request data:', $request->all());
+        // Log::info('Users array:', $request->users);
 
         // Определяем тип чата: personal (на двоих) или group
         $type = count($request->users) >= 2 ? 'group' : 'personal';
-        Log::info('Chat type determined:', ['type' => $type]);
+        // Log::info('Chat type determined:', ['type' => $type]);
 
         // Правила валидации
         $rules = [
@@ -118,7 +118,7 @@ class ChatController extends Controller
         }
 
         // Логируем правила валидации
-        Log::info('Validation rules:', $rules);
+        // Log::info('Validation rules:', $rules);
 
         // Валидация запроса с кастомными сообщениями
         $request->validate($rules, [
@@ -130,7 +130,7 @@ class ChatController extends Controller
         // Если это чат на двоих, проверяем, существует ли уже такой чат
         if ($type === 'personal') {
             $otherUserId = $request->users[0]; // ID второго пользователя
-            Log::info('Checking for existing personal chat with user:', ['otherUserId' => $otherUserId]);
+            // Log::info('Checking for existing personal chat with user:', ['otherUserId' => $otherUserId]);
 
             // Проверяем, существует ли уже чат между текущим пользователем и выбранным пользователем
             $existingChat = Chat::whereHas('users', function ($query) use ($otherUserId) {
@@ -144,7 +144,7 @@ class ChatController extends Controller
 
             // Если чат уже существует, перенаправляем на него
             if ($existingChat) {
-                Log::info('Existing chat found:', ['chatId' => $existingChat->id]);
+                // Log::info('Existing chat found:', ['chatId' => $existingChat->id]);
                 return redirect()->route('chats.show', $existingChat->id)
                     ->with('info', __('chats.chat_exists'));
             }
@@ -155,7 +155,7 @@ class ChatController extends Controller
             'name' => $type === 'personal' ? 'personal' : $request->name, // Для чатов на двоих название не нужно
             'type' => $type, // Указываем тип чата
         ]);
-        Log::info('New chat created:', ['chatId' => $chat->id, 'name' => $chat->name, 'type' => $chat->type]);
+        // Log::info('New chat created:', ['chatId' => $chat->id, 'name' => $chat->name, 'type' => $chat->type]);
 
         // Добавляем участников
         $usersToAttach = array_merge($request->users, [Auth::user()->id]);
@@ -244,7 +244,7 @@ class ChatController extends Controller
      * Вспомогательный метод для загрузки сообщения в IPFS.
      */
     private function uploadMessage($message) {
-        Log::info('Uploading message to IPFS', ['messageLength' => strlen($message)]);
+        // Log::info('Uploading message to IPFS', ['messageLength' => strlen($message)]);
     
         try {
             // Шифруем сообщение
@@ -337,7 +337,7 @@ class ChatController extends Controller
     $notification = Auth::user()->notifications()->findOrFail($notificationId);
 
     // Удаляем уведомление из базы данных
-    $notification->deleteNotification();
+        $notification->deleteNotification();
 
     // Перенаправляем пользователя обратно
     return redirect()->back();
@@ -373,8 +373,8 @@ class ChatController extends Controller
         ]);
 
         // Добавляем текущего пользователя и выбранного пользователя в чат
-        $chat->users()->attach([Auth::user()->id, $userId]);
-
+        $chat->users()->attach([Auth::id(), $userId]);
+//$chat->users()->attach([Auth::user()->id, $userId]);
         // Перенаправляем на страницу чата
         return redirect()->route('chats.show', $chat->id);
     }
@@ -403,7 +403,8 @@ class ChatController extends Controller
                 'name' => 'personal', // Для чатов на двоих название не нужно
                 'type' => 'personal', // Указываем тип чата
             ]);
-            $chat->users()->attach([auth()->id(), $userId]);
+            //$chat->users()->attach([auth()->id(), $userId]);
+            $chat->users()->attach([Auth::id(), $userId]);
         }
 
         // Перенаправляем на страницу чата
