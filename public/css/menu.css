@@ -17,6 +17,7 @@
 
 .mobile-logo-name {
   color: gold;
+  text-decoration: none;
   
 }
 
@@ -83,13 +84,18 @@
   transition: all 0.3s ease;
   position: relative;
   font-family: Georgia, 'Times New Roman', Times, serif;
+  text-decoration: none;
+  color: #00CCFF;
 }
-.mobile-chapter-header a {
-color: #00CCFF;
-text-decoration: none;
-}
-.mobile-chapter-header a:hover{
+.mobile-chapter-header.active {
+  display: block;
+  background-color: #2C3E50;
   color: gold;
+  text-decoration: none;
+}
+.mobile-chapter-header:hover {
+  background-color: #2C3E50; /* Цвет фона при наведении */
+  color: gold; /* Цвет текста при наведении */
 }
 
 
@@ -100,7 +106,8 @@ text-decoration: none;
 }
 
 .mobile-subchapters.open {
-  max-height: 200px;
+  max-height: 500px; /* Увеличьте значение, если подменю больше */
+  display: block; /* Убедитесь, что это свойство не переопределяется */
 }
 
 .mobile-subchapter-item {
@@ -112,31 +119,14 @@ text-decoration: none;
   transition: background 0.2s ease;
   cursor: pointer;
   text-decoration: none;
+  font-family: Georgia, "Times New Roman", Times, serif;
 }
 
 .mobile-subchapter-item:hover {
-  background: #4c4c6e;
+  background: #34495E;
+  color: #000;
+  
 }
 
-/* Стили для переключателя языков */
-.language-switcher {
-  position: absolute;
-  font-size: 12px;
-  font-weight: bold;  
-  left:130px; 
-}
 
-.language-switcher a {
-  color: #e4e4e4;  
-  font-size: 12px;  
-  text-decoration: none;
-}
-
-.language-switcher a.active {  
-  color: #00CCFF;
-}
-
-.language-switcher a:hover {
-  color: goldenrod;
-}
 

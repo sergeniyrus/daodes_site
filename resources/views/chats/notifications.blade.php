@@ -1,5 +1,5 @@
 @extends('template')
-@section('title_page', __('chats.notifications_title'))
+@section('title_page', __('chats.notifications'))
 @section('main')
     <style>
         
@@ -57,7 +57,7 @@
         @if ($uniqueChats->isEmpty())
             <h1 class="no-notifications">{{ __('chats.no_notifications') }}</h1>
         @else
-            <h1>{{ __('chats.notifications_title') }}</h1>
+            <h1>{{ __('chats.notifications') }}</h1>
             <ul class="list-group">
                 @foreach ($uniqueChats as $uniqueChat)
                     <li class="list-group-item">

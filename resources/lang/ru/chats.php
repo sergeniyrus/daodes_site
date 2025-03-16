@@ -20,7 +20,7 @@ return [
     'select_all_hint' => 'Удерживайте Ctrl + A, чтобы выбрать всех участников.',
     'create' => 'Создать',
     'create_chat_with_user' => 'Создать чат с пользователем',
-    'notifications_title' => 'Ваши уведомления',
+    'notifications' => 'Уведомления',
     'no_notifications' => 'Непрочитанных сообщений нет.',
     'unread_messages_in_chat' => 'Непрочитанные сообщения в чате:',
     'read' => 'Прочитать',

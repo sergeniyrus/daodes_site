@@ -5,23 +5,26 @@
 }
 
 @font-face {
-  font-family: 'StandardPoster';
-  src: url('/fonts/StandardPoster.eot');
-  src: local('☺'), url('/fonts/StandardPoster.woff') format('woff'), url('/fonts/StandardPoster.ttf') format('truetype'), url('/fonts/StandardPoster.svg') format('svg');
+  font-family: "StandardPoster";
+  src: url("/../public/fonts/StandardPoster.eot");
+  src:
+    local("☺"),
+    url("/../public/fonts/StandardPoster.woff") format("woff"),
+    url("/../public/fonts/StandardPoster.ttf") format("truetype"),
+    url("/../public/fonts/StandardPoster.svg") format("svg");
   font-weight: normal;
   font-style: normal;
 }
 
 html {
-   scroll-behavior: smooth; /* плавно перемещались по странице при использовании якорных ссылок */
+  scroll-behavior: smooth; /* плавно перемещались по странице при использовании якорных ссылок */
 }
 
 body {
   margin: 0;
   color: #ffffff;
-  background-color: #0B0C18;
-  background-image: url('https://daodes.space/img/main/bg01.png');
-  /* background-image: url("{{ asset('img/main/bg01.png') }}"); */
+  background-color: #0b0c18;
+  background-image: url("/../public/img/main/bg01.png");
   opacity: 1;
   background-position: center center;
   background-repeat: no-repeat;
@@ -54,9 +57,14 @@ h6 {
   font-size: clamp(14px, 2vw, 20px); /* Пример для h5 */
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   text-align: center;
-  font-family:'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 p {
@@ -70,14 +78,13 @@ img {
 
 .container {
   padding: 15px;
-  margin: 10px auto ;
+  margin: 10px auto;
   max-width: 1000px;
   background-color: #000000cf;
   border-radius: 15px;
   border: 1px solid gold;
   color: #ffffff;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
-
 }
 
 .des-btn {
@@ -88,7 +95,9 @@ img {
   font-size: 1.3rem;
   border: 1px solid gold;
   border-radius: 10px;
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
   text-decoration: none;
 }
 
@@ -98,7 +107,7 @@ img {
   color: #ffffff;
 }
 
-.des-btn2{
+.des-btn2 {
   display: inline-block;
   /* color: #ffffff;
   background: #0b0c18;
@@ -106,7 +115,9 @@ img {
   font-size: 1.3rem;
   /* border: 1px solid gold;
   border-radius: 10px; */
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
+  transition:
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
   text-decoration: none;
 }
 .des-btn2:hover {
@@ -115,24 +126,61 @@ img {
   color: #ffffff;
 }
 
-
-
 /* оповещения */
-.mobile-notifications {
+.mobile-notifications a {
   background-color: red;
   border-radius: 5px;
   font-size: 24px;
   cursor: pointer;
+  top: 8px;
   right: 50px;
   position: absolute;
   padding: 0 4px;
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-family: Georgia, "Times New Roman", Times, serif;
   color: #ffffff;
   text-decoration: none;
   font-weight: 600;
-
+}
+/* Menu */
+.profile-link a,
+ .log-link a
+ {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: #00CCFF;
+  text-decoration: none;
 }
 
+.mobile-notifications a:hover,
+.logout-icon:hover,
+.profile-link a:hover,
+.log-link a:hover {
+  color: goldenrod;
+}
+
+/* Стили для переключателя языков */
+.language-switcher {
+  position: absolute;
+  font-size: 12px;
+  font-weight: bold;
+  left: 130px;
+  display: flex;
+  flex-direction: column; /* Элементы будут отображаться в столбик */
+  /*gap: 5px;  Добавляем отступ между элементами (опционально) */
+}
+
+.language-switcher a {
+  color: #585858;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.language-switcher a.active {
+  color: #00CCFF;
+}
+
+.language-switcher a:hover {
+  color: goldenrod;
+}
 
 /* Header */
 /* блок вход регистрация */
@@ -146,11 +194,6 @@ img {
   text-align: center;
 }
 
-
-
-/* .imgcontainer {  
-  border-radius: 50%;  
-} */
 img.avatar {
   border-radius: 50%;
   border: 2px solid gold;

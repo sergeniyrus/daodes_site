@@ -19,8 +19,11 @@ class Notification extends Model
     }
 
 
-    public function markAsRead()
+    /**
+     * Удаляет уведомление из базы данных.
+     */
+    public function deleteNotification()
     {
-        $this->update(['is_read' => true]);
+        $this->delete();
     }
 }

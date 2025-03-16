@@ -179,12 +179,13 @@ class ChatController extends Controller
         // Получаем ID текущего пользователя
         $userId = Auth::user()->id;
 
-        // Помечаем все уведомления из этого чата как прочитанные
-        Notification::whereHas('message', function ($query) use ($chatId) {
-            $query->where('chat_id', $chatId); // Фильтруем уведомления по ID чата
-        })
-        ->where('user_id', $userId) // Фильтруем уведомления для текущего пользователя
-        ->update(['is_read' => true]); // Помечаем как прочитанные
+       // Удаляем все уведомления из этого чата для текущего пользователя
+    Notification::whereHas('message', function ($query) use ($chatId) {
+        $query->where('chat_id', $chatId); // Фильтруем уведомления по ID чата
+    })
+    ->where('user_id', $userId) // Фильтруем уведомления для текущего пользователя
+    ->delete(); // Удаляем уведомления
+
 
         // Возвращаем представление с сообщением
         return view('chats.show', compact('chat'))->with('message', __('chats.notification_read'));
@@ -331,16 +332,16 @@ class ChatController extends Controller
      * Помечает уведомление как прочитанное.
      */
     public function markAsRead($notificationId)
-    {
-        // Находим уведомление текущего пользователя
-        $notification = Auth::user()->notifications()->findOrFail($notificationId);
+{
+    // Находим уведомление текущего пользователя
+    $notification = Auth::user()->notifications()->findOrFail($notificationId);
 
-        // Помечаем уведомление как прочитанное
-        $notification->update(['is_read' => true]);
+    // Удаляем уведомление из базы данных
+    $notification->deleteNotification();
 
-        // Перенаправляем пользователя обратно
-        return redirect()->back()->with('success', __('chats.notification_read'));
-    }
+    // Перенаправляем пользователя обратно
+    return redirect()->back();
+}
 
     /**
      * Создает или открывает чат с указанным пользователем.

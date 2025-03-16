@@ -7,7 +7,7 @@
               <span class="mobile-logo-name">{{ Auth::user()->name }}</span>
           </a>
           @if ($unreadCount > 0)
-              <a href="/notifications" class="mobile-notifications" title="{{ __('chats.notifications_title') }}">
+              <a href="/notifications" class="mobile-notifications" title="{{ __('chats.notifications') }}">
                   {{ $unreadCount }}
               </a>
           @endif

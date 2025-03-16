@@ -30,32 +30,32 @@ class RegisteredUserController extends Controller
      * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request): RedirectResponse
-    {
-        $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            // 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
-            'keyword' => ['required', 'string', 'min:8', 'max:255'],
-            'password' => ['required',  'min:8', 'max:64', 'confirmed', Rules\Password::defaults()],
-        ]);
+{
+    $request->validate([
+        'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9_-]+$/'],
+        'keyword' => ['required', 'string', 'min:8', 'max:12'],
+        'password' => ['required',  'min:8', 'max:64', 'confirmed', Rules\Password::defaults()],
+    ], [
+        'name.regex' => 'The name field may only contain letters, numbers, underscores (_), and hyphens (-). No spaces are allowed.',
+    ]);
 
-        $user = User::create([
-            'name' => $request->name,
-            // 'email' => $request->email,
-            'keyword'=>$request->keyword,
-            'password' => Hash::make($request->password),
-        ]);
+    $user = User::create([
+        'name' => $request->name,
+        'keyword' => $request->keyword,
+        'password' => Hash::make($request->password),
+    ]);
 
-        event(new Registered($user));
+    event(new Registered($user));
 
-        Auth::login($user);
+    Auth::login($user);
 
-        return redirect(RouteServiceProvider::SEED);
-    }
+    return redirect(RouteServiceProvider::SEED);
+}
 
     protected function validator(array $data)
 {
     return Validator::make($data, [
-        'name' => ['required', 'string', 'max:255'],
+        'name' => ['required', 'string', 'max:12'],
         'keyword' => ['required', 'string', 'max:255'],
         'password' => ['required', 'string', 'min:8', 'confirmed'],
         //'g-recaptcha-response' => ['required', 'recaptcha'],

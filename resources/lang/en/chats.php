@@ -20,7 +20,7 @@ return [
     'select_all_hint' => 'Hold Ctrl + A to select all participants.',
     'create' => 'Create',
     'create_chat_with_user' => 'Create Chat with User',
-    'notifications_title' => 'Your Notifications',
+    'notifications' => 'Your Notifications',
     'no_notifications' => 'No unread messages.',
     'unread_messages_in_chat' => 'Unread messages in chat:',
     'read' => 'Read',
