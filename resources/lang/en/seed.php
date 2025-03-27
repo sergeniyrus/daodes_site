@@ -7,4 +7,6 @@ return [
     'save_button_text' => 'I Have Saved the Seed Phrase',
     'copy_button_text' => 'Copy Seed Phrase',
     'copy_success_message' => 'Seed phrase copied to clipboard.',
+    'saving_text' => 'Saving in the blockchain...',
+
 ];

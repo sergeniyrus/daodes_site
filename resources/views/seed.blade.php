@@ -22,12 +22,16 @@
             color: red;
             font-size: 14px;
             text-align: center;
+            margin-top: 20px;
         }
 
         .seed-phrase {
             color: gray;
             font-size: 14px;
-            text-align: center;
+            text-align:justify;
+            border: 1px solid gold;
+            border-radius: 10px;
+            padding: 10px;
         }
 
         h2 {
@@ -40,10 +44,61 @@
             display: none;
         }
 
-        .btn-disabled {
-            background-color: gray;
-            cursor: not-allowed;
-        }
+        .des-btn {
+        display: inline-block;
+        color: #ffffff;
+        background: #0b0c18;
+        padding: 5px 10px;
+        font-size: 1.3rem;
+        border: 1px solid gold;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        margin: 5px;
+         /* Добавьте эти свойства для button 
+    border: none;
+    outline: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;*/
+    }
+
+    /* Убедитесь, что стили применяются и к button */
+button.des-btn {
+    display: inline-block;
+    color: #ffffff;
+    background: #0b0c18;
+    padding: 5px 10px;
+    font-size: 1.3rem;
+    border: 1px solid gold;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    margin: 5px;
+}
+
+    /* Стили для активной кнопки */
+    .des-btn:not([disabled]) {
+        cursor: pointer;
+    }
+    
+    .des-btn:not([disabled]):hover {
+        box-shadow: 0 0 20px goldenrod;
+        transform: scale(1.05);
+    }
+
+    /* Стили для неактивной кнопки */
+    .des-btn[disabled] {
+        opacity: 0.6;
+        border-color: #666;
+        cursor: not-allowed;
+    }
+
+    /* Стиль кнопки во время сохранения */
+.des-btn[disabled].saving {
+    background-color: #0a5c36 !important;
+    transition: background-color 0.3s ease;
+}
 
         @media (min-width: 768px) {
 
@@ -64,82 +119,94 @@
         }
     </style>
 
-    <div class="modal-content">
-        <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
-        <div class="container">
-            @if (isset($message))
-                <p style="font-size: 18px; color:red;">{{ $message }}</p>
-            @else
-                @if (session('success'))
-                    <p style="font-size: 18px; color: green;">
-                        {{ session('success') }}
-                    </p>
-                @elseif(session('error'))
-                    <p style="font-size: 18px; color: red;">
-                        {{ session('error') }}
-                    </p>
-                @else
-                    <form method="post" action="{{ route('seed.save') }}">
-                        @csrf
-                        <div class="tabseed">
-                            <h2>{{ __('seed.seed_phrase_title') }}</h2><br>
-                            <div id="seedPhrase" class="seed-phrase" style="display: inline-block;">
-                                @foreach ($words as $index => $word)
-                                    <span> {{ $word }} </span> <input type="hidden" name="word{{ $index }}"
-                                        value="{{ $word }}">
-                                @endforeach
-                                <span> {{ $encryptionService->decrypt($keyword) }} </span> <input type="hidden" name="word23"
-                                    value="{{ $encryptionService->decrypt($keyword) }}">
-                            </div>
-                            <br><br>
-                            <p class="save-phrase">{{ __('seed.save_phrase_warning') }}</p>
+<div class="modal-content">
+    <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
+    <div class="container">
+        <form method="post" action="{{ route('seed.save') }}">
+                    @csrf
+                    <div class="tabseed">
+                        <h2>{{ __('seed.seed_phrase_title') }}</h2><br>
+                        <div id="seedPhrase" class="seed-phrase" style="display: inline-block;">
+                            @foreach ($words as $index => $word)
+                                <span>{{ $word }}</span>
+                                <input type="hidden" name="word{{ $index }}" value="{{ $word }}">
+                            @endforeach
+                            <span>{{ $keyword }}</span>
+                            <input type="hidden" name="word23" value="{{ $keyword }}">
+                            
                         </div>
-                        <br>
-                        <div class="flex items-center justify-center mt-4">
-                            <x-primary-button id="saveButton" class="ms-4 btn-disabled" disabled>
-                                {{ __('seed.save_button_text') }}
-                            </x-primary-button>
-                        </div>
-                    </form>
-                    <br>
-                    <div class="flex items-center justify-center mt-4">
-                        <x-primary-button onclick="copytext('#hiddenSeed')" class="ms-4">
-                            {{ __('seed.copy_button_text') }}
-                        </x-primary-button>
+                        <div class="save-phrase">{{ __('seed.save_phrase_warning') }}</div>
                     </div>
                     <br>
-                    <div id="copyMessage" style="display: none; font-size: 18px; color: green;">
-                        {{ __('seed.copy_success_message') }}
-                    </div>
+                    <button class="des-btn" id="saveButton" type="submit" disabled>
+                        {{ __('seed.save_button_text') }}
+                    </button>
+                </form>
+<br>
+                <div class="des-btn" onclick="copytext('#hiddenSeed')">
+                    {{ __('seed.copy_button_text') }}
+                </div>
 
-                    @if(isset($words) && isset($keyword))
-                        <!-- Hidden block with the seed phrase in one line -->
-                        <div id="hiddenSeed" class="hidden-seed">
-@foreach ($words as $word)
-    {{ $word }}
-@endforeach
-{{ $encryptionService->decrypt($keyword) }}
-                        </div>
-                    @endif
-                @endif
-            @endif
+                <div id="hiddenSeed" class="hidden-seed">
+                    @foreach ($words as $word)
+                        {{ $word }}
+                    @endforeach
+                    {{ $keyword }}
+                </div>
         </div>
-    </div>
+</div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        // Обработчик копирования сид-фразы
         function copytext(el) {
-            var $tmp = $("<textarea>");
-            $("body").append($tmp);
-            $tmp.val($(el).text().trim().replace(/\s+/g, ' ')).select();
-            document.execCommand("copy");
-            $tmp.remove();
-            alert("{{ __('seed.copy_success_message') }}");
-
-            // Активируем кнопку "Я Сохранил сид-фразу" после копирования
-            var saveButton = document.getElementById('saveButton');
-            saveButton.disabled = false;
-            saveButton.classList.remove('btn-disabled');
+            const copyBtn = event.currentTarget;
+            copyBtn.style.transform = 'scale(0.95)';
+            
+            const textToCopy = document.querySelector(el).textContent
+                .trim()
+                .replace(/\s+/g, ' ');
+            
+            navigator.clipboard.writeText(textToCopy)
+                .then(() => {
+                    setTimeout(() => {
+                        copyBtn.style.transform = '';
+                    }, 200);
+                    
+                    alert("{{ __('seed.copy_success_message') }}");
+                    
+                    const saveButton = document.getElementById('saveButton');
+                    saveButton.disabled = false;
+                    saveButton.style.opacity = '1';
+                    saveButton.style.borderColor = 'gold';
+                    saveButton.style.cursor = 'pointer';
+                })
+                .catch(err => {
+                    copyBtn.style.transform = '';
+                    console.error('Ошибка копирования:', err);
+                });
         }
+    
+        // Обработчик отправки формы
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const saveButton = document.getElementById('saveButton');
+            const originalText = saveButton.textContent;
+            
+            // Блокируем кнопку и меняем текст
+            saveButton.disabled = true;
+            saveButton.textContent = "{{ __('seed.saving_text') }}";
+            saveButton.classList.add('saving');
+            
+            // Ждем 3 секунды перед отправкой
+            setTimeout(() => {
+                // Удаляем класс сохранения
+                saveButton.classList.remove('saving');
+                
+                // Отправляем форму (теперь будет работать, так как это настоящая submit-кнопка)
+                this.submit();
+            }, 3000);
+        });
     </script>
 @endsection

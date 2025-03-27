@@ -147,10 +147,12 @@ Route::post('/discussion', [DiscussionController::class, 'store'])->name('discus
 Route::post('/vote', [VoteController::class, 'store'])->name('vote.store');
 
 // Seed фраза
-Route::middleware(['auth'])->prefix('seed')->name('seed.')->group(function () {
-    Route::get('/', [SeedController::class, 'index'])->name('index');
+Route::middleware(['guest'])->prefix('seed')->name('seed.')->group(function () {
+    Route::get('/', [SeedController::class, 'index'])->name('index'); // Было 'seed' → стало 'index'
     Route::post('/save', [SeedController::class, 'saveSeed'])->name('save');
 });
+
+
 
 // Сброс пароля по ключевому слову
 Route::middleware('guest')->prefix('password')->name('password.')->group(function () {

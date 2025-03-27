@@ -3,7 +3,7 @@
         {{ __('dashboard.logged_in_message') }}
     </p>
     <br>
-    <p class="task-line2">
+    <h6 class="task-line2">
         {{ __('dashboard.control_panel_message') }}
-    </p>
+    </h6>
 </x-guest-layout>

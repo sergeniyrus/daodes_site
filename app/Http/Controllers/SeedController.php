@@ -2,40 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 use App\Models\Seed;
+use App\Services\EncryptionService;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 
 class SeedController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $user = Auth::user();
-        $userName = $user->name;
-        $user_id = auth()->id(); // Получение ID текущего пользователя
-
-        $keyword = DB::table('users')
-            ->where('name', $userName)
-            ->value('keyword');
-
-        $onseedExists = DB::table('seed')
-            ->where('user_id', $user_id)
-            ->exists();
-
-        if ($onseedExists) {
-            $message = __('message.seed_already_received'); // Используем перевод
-            return view('seed', [
-                'keyword' => $keyword,
-                'message' => $message,
-            ]);
-        } else {
-            $words = $this->generateRandomWordsFromFile(public_path('base.txt'), 23);
-            return view('seed', [
-                'keyword' => $keyword,
-                'words' => $words,
-            ]);
+        if (!$request->session()->has('pending_user')) {
+            return redirect()->route('register');
         }
+
+        $pendingUser = $request->session()->get('pending_user');
+        $words = $this->generateRandomWordsFromFile(public_path('base.txt'), 23);
+        
+        return view('seed', [
+            'keyword' => $pendingUser['keyword'], // Незашифрованный keyword
+            'words' => $words,
+        ]);
+    }
+
+    public function saveSeed(Request $request)
+    {
+        if (!$request->session()->has('pending_user')) {
+            return redirect()->route('register');
+        }
+
+        $pendingUser = $request->session()->get('pending_user');
+        $encryptionService = app(EncryptionService::class);
+
+        // Шифруем все данные перед сохранением
+        $user = User::create([
+            'name' => $pendingUser['name'],
+            'keyword' => $encryptionService->encrypt($pendingUser['keyword']),
+            'password' => $pendingUser['password'],
+        ]);
+
+        $seedWords = [];
+        foreach ($request->only([
+            'word0', 'word1', 'word2', 'word3', 'word4',
+            'word5', 'word6', 'word7', 'word8', 'word9',
+            'word10', 'word11', 'word12', 'word13', 'word14',
+            'word15', 'word16', 'word17', 'word18', 'word19',
+            'word20', 'word21', 'word22'
+        ]) as $key => $word) {
+            $seedWords[$key] = $encryptionService->encrypt($word);
+        }
+
+        $seedWords['word23'] = $encryptionService->encrypt($pendingUser['keyword']);
+        $seedWords['user_id'] = $user->id;
+
+        Seed::create($seedWords);
+        Auth::login($user);
+        $request->session()->forget('pending_user');
+
+        return redirect()->route('seed.index')->with('success', __('message.registration_success'));
     }
 
     protected function generateRandomWordsFromFile($filePath, $count)
@@ -43,39 +67,5 @@ class SeedController extends Controller
         $words = file($filePath, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         shuffle($words);
         return array_slice($words, 0, $count);
-    }
-
-    // Сохранение сид-фразы
-    public function saveSeed(Request $request)
-    {
-        $user_id = auth()->id(); // Получение ID текущего пользователя
-        $user = Auth::user();
-        $userName = $user->name;
-
-        $keyword = DB::table('users')
-            ->where('name', $userName)
-            ->value('keyword');
-
-        $seedWords = $request->only([
-            'word0', 'word1', 'word2', 'word3', 'word4',
-            'word5', 'word6', 'word7', 'word8', 'word9',
-            'word10', 'word11', 'word12', 'word13', 'word14',
-            'word15', 'word16', 'word17', 'word18', 'word19',
-            'word20', 'word21', 'word22'
-        ]);
-        $seedWords['word23'] = $keyword; // Добавили $keyword вместо 'word23'
-
-        $seedWords['user_id'] = $user_id;
-
-        $storedSeedExists = Seed::where('user_id', $user_id)->exists();
-
-        if ($storedSeedExists) {
-            return redirect()->back()->with('error', __('message.seed_saved')); // Используем перевод
-        }
-
-        Seed::create($seedWords);
-        $success = __('message.registration_success'); // Используем перевод
-
-        return redirect()->back()->with('success', $success);
     }
 }
