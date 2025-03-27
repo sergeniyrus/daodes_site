@@ -22,7 +22,7 @@ class EncryptionService
      */
     public function encrypt($data)
     {
-        Log::info('Данные для шифрования:', ['data' => $data]);
+        //Log::info('Данные для шифрования:', ['data' => $data]);
 
         if (empty($data)) {
             throw new Exception("Данные для шифрования не могут быть пустыми.");
