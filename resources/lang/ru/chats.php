@@ -34,4 +34,5 @@ return [
     'notification_read' => 'Уведомление прочитано!', 
     'footnote' => 'Для отправки сообщения нажмите Enter.',
     'footnote2' => 'Для перевода строки Shift + Enter',
+    'online_users' => 'В сети:',
 ];

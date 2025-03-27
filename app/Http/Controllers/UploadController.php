@@ -11,9 +11,9 @@ class UploadController extends Controller
     public function uploadImage(Request $request)
     {
         // Log information about the request
-        Log::info('Получен запрос на загрузку файла', [
-            'file' => $request->file('upload') ? $request->file('upload')->getClientOriginalName() : 'Файл отсутствует'
-        ]);
+        //Log::info('Получен запрос на загрузку файла', [
+        //     'file' => $request->file('upload') ? $request->file('upload')->getClientOriginalName() : 'Файл отсутствует'
+        // ]);
 
         if ($request->hasFile('upload')) {
             try {
@@ -21,11 +21,11 @@ class UploadController extends Controller
                 $fileContent = file_get_contents($file->getRealPath());
 
                 // Log information about the file
-                Log::info('Загрузка файла', [
-                    'fileName' => $file->getClientOriginalName(),
-                    'fileSize' => $file->getSize(),
-                    'mimeType' => $file->getMimeType()
-                ]);
+                //Log::info('Загрузка файла', [
+                //     'fileName' => $file->getClientOriginalName(),
+                //     'fileSize' => $file->getSize(),
+                //     'mimeType' => $file->getMimeType()
+                // ]);
 
                 // Initialize Guzzle client for IPFS
                 $client = new Client([
@@ -44,7 +44,7 @@ class UploadController extends Controller
                 ]);
 
                 // Log the IPFS response
-                Log::info('Ответ от IPFS', [
+                //Log::info('Ответ от IPFS', [
                     'statusCode' => $response->getStatusCode(),
                     'responseBody' => $response->getBody()->getContents()
                 ]);
@@ -56,7 +56,7 @@ class UploadController extends Controller
                     $ipfsUrl = 'https://daodes.space/ipfs/' . $data['Hash'];
 
                     // Log successful completion
-                    Log::info('Файл успешно загружен', [
+                    //Log::info('Файл успешно загружен', [
                         'fileUrl' => $ipfsUrl
                     ]);
 

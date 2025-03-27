@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
 class NewMessageNotification extends Notification
@@ -12,23 +9,27 @@ class NewMessageNotification extends Notification
     use Queueable;
 
     protected $message;
+    protected $chatId;
+    protected $senderId;
 
-    public function __construct($message)
+    public function __construct($message, $chatId, $senderId)
     {
         $this->message = $message;
+        $this->chatId = $chatId;
+        $this->senderId = $senderId;
     }
 
     public function via($notifiable)
     {
-        return ['database']; // Уведомление будет сохранено в базе данных
+        return ['database']; // или другие каналы (mail, broadcast и т.д.)
     }
 
     public function toArray($notifiable)
     {
         return [
-            'message' => 'Новое сообщение в чате: ' . $this->message->chat->name,
-            'chat_id' => $this->message->chat_id,
-            'sender_name' => $this->message->sender->name,
+            'message' => $this->message,
+            'chatId' => $this->chatId,
+            'senderId' => $this->senderId,
         ];
     }
 }

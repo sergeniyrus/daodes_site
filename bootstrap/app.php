@@ -11,8 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Добавьте SuspiciousActivityMiddleware и IpFilterMiddleware перед SetLocale
         $middleware->web([
+            \Illuminate\Http\Middleware\HandleCors::class, // Добавлено CORS middleware
             \App\Http\Middleware\SetLocale::class,
         ]);
     })

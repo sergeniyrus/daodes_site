@@ -13,7 +13,7 @@
   margin-bottom: 20px;
   font-size: 2rem;
   text-transform: uppercase;
-  font-family: 'StandardPoster';
+  /* font-family: 'StandardPoster'; */
 }
 .img_post {
   flex-shrink: 0;
@@ -143,7 +143,7 @@
   color: #00ffff;
   margin-bottom: 20px;
   font-size: 1.3rem;
-  font-family: 'StandardPoster';
+  /* font-family: 'StandardPoster'; */
 }
 
 .eror_com {

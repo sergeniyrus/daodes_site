@@ -79,13 +79,13 @@ class ProcessOffers extends Command
             if ($hoursElapsed > 72 || $za_percentage > 30 || $no_percentage > 30) {
                 if ($za_percentage > 30) {
                     $newState = 4; // Принято "за"
-                    Log::info("Offer ID $offer_id state updated to 4 (Za > 50%).");
+                    //Log::info("Offer ID $offer_id state updated to 4 (Za > 50%).");
                 } elseif ($no_percentage > 30) {
                     $newState = 5; // Принято "против"
-                    Log::info("Offer ID $offer_id state updated to 5 (No > 50%).");
+                    //Log::info("Offer ID $offer_id state updated to 5 (No > 50%).");
                 } elseif ($hoursElapsed > 72) {
                     $newState = $za_percentage >= $no_percentage ? 4 : 5;
-                    Log::info("Offer ID $offer_id state updated due to time limit (72 hours passed).");
+                    //Log::info("Offer ID $offer_id state updated due to time limit (72 hours passed).");
                 }
 
                 if (isset($newState)) {
@@ -98,7 +98,7 @@ class ProcessOffers extends Command
                     if ($pdfFilePath) {
                         $ipfsUrl = $this->uploadToIPFS($pdfFilePath, $offer->id);
                         if ($ipfsUrl) {
-                            Log::info("PDF uploaded to IPFS for offer ID $offer_id: $ipfsUrl");
+                            //Log::info("PDF uploaded to IPFS for offer ID $offer_id: $ipfsUrl");
                         } else {
                             Log::error("PDF upload to IPFS failed for offer ID $offer_id.");
                         }

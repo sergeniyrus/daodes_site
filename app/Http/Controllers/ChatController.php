@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use App\Services\EncryptionService;
 use GuzzleHttp\Client;
+use App\Events\NewMessage;
 
 class ChatController extends Controller
 {
@@ -186,7 +187,6 @@ class ChatController extends Controller
     ->where('user_id', $userId) // Фильтруем уведомления для текущего пользователя
     ->delete(); // Удаляем уведомления
 
-
         // Возвращаем представление с сообщением
         return view('chats.show', compact('chat'))->with('message', __('chats.notification_read'));
     }
@@ -196,71 +196,120 @@ class ChatController extends Controller
      * Сохраняет сообщение в IPFS и создает уведомления для участников чата.
      */
     public function sendMessage(Request $request, $chatId)
-    {
-        // Валидация входящего сообщения
-        $request->validate([
-            'message' => 'required|string|max:1000|regex:/^[\p{L}\p{N}\s.,!?-]+$/u',
+{
+    // Логируем начало отправки сообщения
+    Log::info('Начало отправки сообщения', ['chatId' => $chatId, 'message' => $request->input('message')]);
+
+    // Валидация входящего сообщения
+    $request->validate([
+        'message' => 'required|string|max:1000|regex:/^[\p{L}\p{N}\s.,!?\-\\n]+$/u',
+    ]);
+
+    try {
+        // Сохраняем оригинальный текст сообщения
+        $messageText = $request->input('message');
+        Log::info('Оригинальный текст сообщения', ['message' => $messageText]);
+
+        // Шифруем и загружаем сообщение в IPFS
+        $messageModel = new Message();
+        $cid = $messageModel->uploadMessageToIPFS($messageText);
+
+        // Сохраняем сообщение в БД
+        $message = Message::create([
+            'chat_id' => $chatId,
+            'sender_id' => Auth::id(),
+            'ipfs_cid' => $cid, // Сохраняем CID из IPFS
+        ]);
+// Получаем ID только что созданной записи
+$messageId = $message->id;
+        // Логируем успешное сохранение сообщения в БД
+        Log::info('Сообщение успешно сохранено в БД', ['messageId' => $message->id]);
+
+        // Получаем чат и участников
+        $chat = Chat::with('users')->findOrFail($chatId);
+        $recipients = $chat->users->where('id', '!=', Auth::id());
+
+      // После сохранения сообщения:
+    $messageData = [
+        'message' => $messageText,
+        'sender' => [
+            'id' => Auth::id(),
+            'name' => Auth::user()->name
+        ],
+        'timestamp' => now()->toDateTimeString(),
+        'chatId' => $chatId
+    ];
+
+    broadcast(new NewMessage(
+        $messageText,
+        $chatId,
+        Auth::user(),
+        now()->toDateTimeString()
+    ))->toOthers();
+
+        
+        Log::info('Событие NewMessageNotification отправлено', [
+            'chatId' => $chatId,
+            'senderId' => Auth::id(),
+            'message' => $request->input('message'),
+            'timestamp' => now()->toDateTimeString(),
         ]);
 
-        try {
-            // Загружаем сообщение в IPFS
-            $messageModel = new Message();
-            $cid = $messageModel->uploadMessageToIPFS($request->input('message'));
+        // Создаем уведомления для всех участников чата (кроме отправителя)
+        $senderId = Auth::id();
+        foreach ($recipients as $user) {
+            // Отправляем уведомление
+          //  $user->notify(new \App\Notifications\NewMessageNotification($message, $chatId, $senderId));
 
-            // Сохраняем сообщение в БД
-            $message = Message::create([
-                'chat_id' => $chatId,
-                'sender_id' => Auth::user()->id,
-                // 'message' => null,  Основное сообщение не сохраняем в БД
-                'ipfs_cid' => $cid, // Сохраняем CID из IPFS
+            Log::info('Создание уведомления в БД', [
+                'user_id' => $user->id,
+                'message_id' => $messageId,
+                'is_read' => false,
             ]);
 
-            // Создаем уведомления для всех участников чата (кроме отправителя)
-            $chat = Chat::findOrFail($chatId);
-            foreach ($chat->users as $user) {
-                if ($user->id !== Auth::user()->id) {
-                    Notification::create([
-                        'user_id' => $user->id,
-                        'message_id' => $message->id,
-                        'is_read' => false,
-                    ]);
-                }
-            }
-
-            // Возвращаем пользователя обратно с сообщением об успехе
-            // return redirect()->back()->with('message', __('chats.message_sent'));
-            return redirect()->back();
-
-        } catch (\Exception $e) {
-            // Логируем ошибку
-            Log::error('Ошибка при отправке сообщения: ' . $e->getMessage());
-
-            // Возвращаем пользователя обратно с сообщением об ошибке
-            return redirect()->back()->with('error', __('chats.message_send_error'));
+            // Сохраняем уведомление в БД
+            Notification::create([
+                'user_id' => $user->id,
+                'message_id' => $message->id,
+                'is_read' => false,
+            ]);
         }
-    }
 
+        // Логируем успешную отправку уведомлений
+        Log::info('Уведомления в БД успешно отправлены');
+
+        // Возвращаем пользователя обратно
+        return redirect()->back();
+    } catch (\Exception $e) {
+        // Логируем ошибку
+        Log::error('Ошибка при отправке сообщения Контрл1: ' . $e->getMessage(), ['chatId' => $chatId, 'message' => $request->input('message')]);
+
+        // Возвращаем пользователя обратно с сообщением об ошибке
+        return redirect()->back()->with('error', __('chats.message_send_error'));
+    }
+}
+    
     /**
      * Вспомогательный метод для загрузки сообщения в IPFS.
      */
     private function uploadMessage($message) {
         // Log::info('Uploading message to IPFS', ['messageLength' => strlen($message)]);
-    
+
         try {
             // Шифруем сообщение
             $encryptionService = new EncryptionService();
             $encryptedMessage = $encryptionService->encrypt($message);
-    
+
             // Проверяем длину зашифрованного сообщения
             if (strlen($encryptedMessage) < 16) {
                 throw new \Exception('Зашифрованные данные слишком короткие.');
             }
-    
+
             // Инициализация клиента Guzzle для работы с IPFS
             $client = new Client([
                 'base_uri' => 'https://daodes.space'
             ]);
-    
+
             // Отправка сообщения на IPFS
             $response = $client->request('POST', '/api/v0/add', [
                 'multipart' => [
@@ -271,10 +320,10 @@ class ChatController extends Controller
                     ]
                 ]
             ]);
-    
+
             // Парсим ответ и извлекаем CID
             $data = json_decode($response->getBody(), true);
-    
+
             if (isset($data['Hash'])) {
                 $cid = $data['Hash'];
                 return $cid;
@@ -332,16 +381,16 @@ class ChatController extends Controller
      * Помечает уведомление как прочитанное.
      */
     public function markAsRead($notificationId)
-{
-    // Находим уведомление текущего пользователя
-    $notification = Auth::user()->notifications()->findOrFail($notificationId);
+    {
+        // Находим уведомление текущего пользователя
+        $notification = Auth::user()->notifications()->findOrFail($notificationId);
 
-    // Удаляем уведомление из базы данных
+        // Удаляем уведомление из базы данных
         $notification->deleteNotification();
 
-    // Перенаправляем пользователя обратно
-    return redirect()->back();
-}
+        // Перенаправляем пользователя обратно
+        return redirect()->back();
+    }
 
     /**
      * Создает или открывает чат с указанным пользователем.
@@ -374,7 +423,6 @@ class ChatController extends Controller
 
         // Добавляем текущего пользователя и выбранного пользователя в чат
         $chat->users()->attach([Auth::id(), $userId]);
-//$chat->users()->attach([Auth::user()->id, $userId]);
         // Перенаправляем на страницу чата
         return redirect()->route('chats.show', $chat->id);
     }
@@ -403,7 +451,6 @@ class ChatController extends Controller
                 'name' => 'personal', // Для чатов на двоих название не нужно
                 'type' => 'personal', // Указываем тип чата
             ]);
-            //$chat->users()->attach([auth()->id(), $userId]);
             $chat->users()->attach([Auth::id(), $userId]);
         }
 

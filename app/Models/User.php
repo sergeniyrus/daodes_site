@@ -5,12 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Notifications\Notifiable; // Подключаем трейт для уведомлений
 
 class User extends Authenticatable
 {
-    use HasFactory;
+    use HasFactory, Notifiable; // Добавляем трейт Notifiable
 
-
+    /**
+     * Поля, которые можно массово назначать.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         //'email',  Добавлено поле email
@@ -19,7 +24,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Поля, которые должны быть скрыты при сериализации.
      *
      * @var array<int, string>
      */
@@ -28,7 +33,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Преобразование типов атрибутов.
      *
      * @return array<string, string>
      */
@@ -40,7 +45,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Define the relationship with the tasks created by the user.
+     * Определяем отношение с задачами, созданными пользователем.
      */
     public function tasks()
     {
@@ -48,7 +53,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Define the relationship with the bids made by the user.
+     * Определяем отношение с заявками, сделанными пользователем.
      */
     public function bids()
     {
@@ -56,7 +61,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Define the relationship with seeds.
+     * Определяем отношение с семенами.
      */
     public function seeds()
     {
@@ -64,7 +69,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Define the relationship with the user's profile.
+     * Определяем отношение с профилем пользователя.
      */
     public function profile()
     {
@@ -72,14 +77,16 @@ class User extends Authenticatable
     }
 
     /**
-     * Define the relationship with chats.
+     * Определяем отношение с чатами.
      */
     public function chats(): BelongsToMany
     {
         return $this->belongsToMany(Chat::class, 'chat_user', 'user_id', 'chat_id');
     }
 
-    // В модели User
+    /**
+     * Определяем отношение с уведомлениями пользователя.
+     */
     public function notifications()
     {
         return $this->hasMany(Notification::class);

@@ -49,7 +49,7 @@ class SetLocale
      */
     protected function getLocaleFromIP(string $ip): string
     {
-        Log::info('getLocaleFromIP called for IP: ' . $ip);
+        //Log::info('getLocaleFromIP called for IP: ' . $ip);
 
         // Ключ для кеширования
         $cacheKey = 'ipstack_locale_' . $ip;
@@ -64,10 +64,10 @@ class SetLocale
             $countryCode = $location['country_code'] ?? null;
 
             // Логируем запись в кеш
-            Log::info("Locale cached for IP: {$ip}", [
-                'country_code' => $countryCode,
-                'locale' => $this->getLocaleByCountryCode($countryCode),
-            ]);
+            //Log::info("Locale cached for IP: {$ip}", [
+            //     'country_code' => $countryCode,
+            //     'locale' => $this->getLocaleByCountryCode($countryCode),
+            // ]);
 
             // Возвращаем локаль на основе страны
             return $this->getLocaleByCountryCode($countryCode);

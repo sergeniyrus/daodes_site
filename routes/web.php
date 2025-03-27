@@ -22,7 +22,8 @@ use App\Http\Controllers\{
     UploadController,
     ChatController,
     LanguageController,
-    CaptchaController
+    CaptchaController,
+    NotificationController,
 };
 use App\Http\Middleware\SetLocale;
 // use App\Services\IpStackService;
@@ -40,6 +41,7 @@ use App\Http\Middleware\SetLocale;
 //     ];
 // });
 
+Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
 
 Route::get('/captcha', [CaptchaController::class, 'show'])->name('captcha.show')->withoutMiddleware([SetLocale::class]);
 Route::post('/captcha', [CaptchaController::class, 'verify'])->name('captcha.verify')->withoutMiddleware([SetLocale::class]);

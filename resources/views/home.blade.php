@@ -57,7 +57,7 @@
         </style>
         <div class="container">
             <div class="">
-                <img src="/img/home/1.png" class="spacer">
+                <img src="/img/home/1.webp" class="spacer">
                 <p class="spacer">
                     {{ __('home.mission_text') }}
                 </p>
@@ -86,67 +86,67 @@
                 <br>
 
                 <p class="spacer" id="custom-blockchain">
-                    <img src="/img/home/2.png" class="spacer">
+                    <img src="/img/home/2.webp" class="spacer">
                     {{ __('home.custom_blockchain_text') }}
                 </p>
 
                 <p class="spacer" id="decentralized-messenger">
-                    <img src="/img/home/3.png" class="spacer">
+                    <img src="/img/home/3.webp" class="spacer">
                     {{ __('home.decentralized_messenger_text') }}
                 </p>
 
                 <p class="spacer" id="native-coin">
-                    <img src="/img/home/4.png" class="spacer">
+                    <img src="/img/home/4.webp" class="spacer">
                     {{ __('home.native_coin_text') }}
                 </p>
 
                 <p class="spacer" id="web3-platform">
-                    <img src="/img/home/5.png" class="spacer">
+                    <img src="/img/home/5.webp" class="spacer">
                     {{ __('home.web3_platform_text') }}
                 </p>
 
                 <p class="spacer" id="decision-making">
-                    <img src="/img/home/6.png" class="spacer">
+                    <img src="/img/home/6.webp" class="spacer">
                     {{ __('home.decision_making_text') }}
                 </p>
 
                 <p class="spacer" id="task-exchange">
-                    <img src="/img/home/7.png" class="spacer">
+                    <img src="/img/home/7.webp" class="spacer">
                     {{ __('home.task_exchange_text') }}
                 </p>
 
                 <p class="spacer" id="reward-system">
-                    <img src="/img/home/8.png" class="spacer">
+                    <img src="/img/home/8.webp" class="spacer">
                     {{ __('home.reward_system_text') }}
                 </p>
 
                 <p class="spacer" id="proof-of-time">
-                    <img src="/img/home/9.png" class="spacer">
+                    <img src="/img/home/9.webp" class="spacer">
                     {{ __('home.proof_of_time_text') }}
                 </p>
 
                 <p class="spacer" id="activity-tracking">
-                    <img src="/img/home/10.png" class="spacer">
+                    <img src="/img/home/10.webp" class="spacer">
                     {{ __('home.activity_tracking_text') }}
                 </p>
 
                 <p class="spacer" id="market-opportunities">
-                    <img src="/img/home/11.png" class="spacer">
+                    <img src="/img/home/11.webp" class="spacer">
                     {{ __('home.market_opportunities_text') }}
                 </p>
 
                 <p class="spacer" id="financial-model">
-                    <img src="/img/home/12.png" class="spacer">
+                    <img src="/img/home/12.webp" class="spacer">
                     {{ __('home.financial_model_text') }}
                 </p>
 
                 <p class="spacer" id="roadmap">
-                    <img src="/img/home/13.png" class="spacer">
+                    <img src="/img/home/13.webp" class="spacer">
                     {!! __('home.roadmap_text') !!}
                 </p>
 
                 <div class="spacer" id="team">
-                    <img src="/img/home/14.png" class="spacer">
+                    <img src="/img/home/14.webp" class="spacer">
                     <h1>{{ __('home.team') }}</h1><br>
                     <h6>{!! __('home.team_link') !!}</h6>
                     <br>
@@ -154,7 +154,7 @@
                 </div>
 
                 <p class="spacer" id="conclusion">
-                    <img src="/img/home/15.png" class="spacer">
+                    <img src="/img/home/15.webp" class="spacer">
                     {{ __('home.conclusion_text') }}
                 </p>
                 <div  >

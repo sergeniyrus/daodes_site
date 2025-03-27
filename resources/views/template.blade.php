@@ -39,7 +39,7 @@
     <link rel="stylesheet" href="{{ asset('css/main.css') }}"> <!-- Подключает основной CSS-файл приложения -->
     <!-- * Вставляем стили -->
     {{-- <link rel="stylesheet" href="css/main.css"> --}}
-    @vite(['resources/css/app.css', 'public/css/main.css', 'public/css/ckeditor.css', 'public/css/menu.css', 'public/css/news.css', 'public/css/offers.css', 'public/css/tasks.css', 'resources/js/app.js', 'public/js/ckeditor.js', 'public/js/image-cropper.js', 'resources/js/bt_top.js']) <!-- Подключает различные CSS и JS файлы через Vite для оптимизации загрузки -->
+    @vite(['resources/css/app.css', 'public/css/main.css', 'resources/js/app.js', 'resources/js/bt_top.js']) <!-- Подключает различные CSS и JS файлы через Vite для оптимизации загрузки -->
 
     {{-- <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="DAODES_Robot" data-size="large" data-auth-url="https://daodes.space/" data-request-access="write"></script> --}}
 
@@ -63,7 +63,7 @@
             font-size: 24px;
             color: gold;
             animation: marquee 20s linear infinite;
-            font-family: 'StandardPoster';
+            /* font-family: 'StandardPoster'; */
         }
 
         @keyframes marquee {

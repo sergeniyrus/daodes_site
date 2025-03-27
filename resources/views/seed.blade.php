@@ -3,6 +3,7 @@
 @section('title_page', __('seed.title_page'))
 
 @section('main')
+    @inject('encryptionService', 'App\Services\EncryptionService')
     <style>
         .modal-content {
             display: flex;
@@ -87,8 +88,8 @@
                                     <span> {{ $word }} </span> <input type="hidden" name="word{{ $index }}"
                                         value="{{ $word }}">
                                 @endforeach
-                                <span> {{ $keyword }} </span> <input type="hidden" name="word23"
-                                    value="{{ $keyword }}">
+                                <span> {{ $encryptionService->decrypt($keyword) }} </span> <input type="hidden" name="word23"
+                                    value="{{ $encryptionService->decrypt($keyword) }}">
                             </div>
                             <br><br>
                             <p class="save-phrase">{{ __('seed.save_phrase_warning') }}</p>
@@ -114,10 +115,10 @@
                     @if(isset($words) && isset($keyword))
                         <!-- Hidden block with the seed phrase in one line -->
                         <div id="hiddenSeed" class="hidden-seed">
-                            @foreach ($words as $word)
-                                {{ $word }}
-                            @endforeach
-                            {{ $keyword }}
+@foreach ($words as $word)
+    {{ $word }}
+@endforeach
+{{ $encryptionService->decrypt($keyword) }}
                         </div>
                     @endif
                 @endif
