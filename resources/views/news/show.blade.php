@@ -29,7 +29,7 @@
                     @if (Auth::user()->access_level >= 3)
                         <div class="admin_menu">
                             <div>
-                                <a href="{{ route('news.add') }}" class="des-btn" title="Create">
+                                <a href="{{ route('news.create') }}" class="des-btn" title="Create">
                                     {!! __('news.create_button') !!}
                                 </a>
                             </div>

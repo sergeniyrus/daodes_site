@@ -79,7 +79,7 @@ Route::get('/white_paper', [WpController::class, 'whitepaper'])->name('white_pap
 //Route::get('/category/{post}/{id}', [CategoryController::class, 'categorySort'])->name('category.sort');
 //Route::get('/page/{post}/{id}', [PageController::class, 'page_sort'])->name('page.sort');
 
-Route::get('/news/add', [NewsController::class, 'add'])->name('news.add')->middleware('auth');
+Route::get('/news/create', [NewsController::class, 'create'])->name('news.create')->middleware('auth');
 // Управление новостями
 Route::prefix('news')->group(function () {
     // Маршруты для всех пользователей
@@ -89,7 +89,7 @@ Route::prefix('news')->group(function () {
     // Только авторизованные пользователи могут добавлять, редактировать и удалять новости
     Route::middleware('auth')->group(function () {
         //Route::get('/add', [NewsController::class, 'add'])->name('news.add');
-        Route::post('/create', [NewsController::class, 'create'])->name('news.create');
+        Route::post('/', [NewsController::class, 'store'])->name('news.store');
 
         Route::get('/{id}/edit', [NewsController::class, 'edit'])->name('news.edit');
         Route::put('/{id}', [NewsController::class, 'update'])->name('news.update');

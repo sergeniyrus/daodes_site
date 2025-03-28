@@ -10,6 +10,7 @@ use GuzzleHttp\Client;
 use App\Models\News;
 use App\Models\CategoryNews;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class NewsController extends Controller
 {
@@ -78,39 +79,52 @@ class NewsController extends Controller
         }
     }
 
-    public function add()
+    public function create()
     {
-        $categories = CategoryNews::all();
-        return view('news.add')->with('category_news', $categories);
+        $category = DB::table('category_news')->get();
+        return view('news.create')->with('category_news', $category);
     }
 
-    public function create(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
-            'category' => ['required', 'integer'],
-            'filename' => ['nullable', 'image', 'max:2048']
-        ]);
+    public function store(Request $request): RedirectResponse
+{
+    // Валидация данных
+    $validated = $request->validate([
+        'title' => ['required', 'string', 'max:255'],
+        'content' => ['required', 'string'],
+        'category_id' => ['required', 'integer', 'exists:category_news,id'],
+        'filename' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048']
+    ]);
 
-        // Загружаем изображение на IPFS, если оно передано
-        $img = $request->hasFile('filename')
+    try {
+        // Загрузка изображения на IPFS или использование дефолтного
+        $imageUrl = $request->hasFile('filename') 
             ? $this->uploadToIPFS($request->file('filename'))
             : 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
 
-        // Сохраняем новость в БД
+        // Создание новости
         $news = News::create([
             'title' => $validated['title'],
             'content' => $validated['content'],
-            'category_id' => $validated['category'],
+            'category_id' => $validated['category_id'],
             'user_id' => Auth::id(),
-            'img' => $img,
-            'views' => 0
+            'img' => $imageUrl,
+            'views' => 0,
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
 
-        $id = $news->id;
-        return redirect()->route('good', ['post' => 'news', 'id' => $id, 'action' => 'create']);
+        // Перенаправление с сообщением об успехе
+        return redirect()->route('good', [
+            'post' => 'news', 
+            'id' => $news->id, 
+            'action' => 'create'
+        ])->with('success', __('message.news_created_success'));
+
+    } catch (\Exception $e) {
+        Log::error('News creation error: ' . $e->getMessage());
+        return back()->withErrors(['error' => __('message.news_creation_failed')]);
     }
+}
 
     private function uploadToIPFS($file)
     {
@@ -118,7 +132,6 @@ class NewsController extends Controller
             'base_uri' => 'https://daodes.space'
         ]);
 
-        // Загружаем файл на IPFS
         $response = $client->request('POST', '/api/v0/add', [
             'multipart' => [
                 [
@@ -187,20 +200,53 @@ class NewsController extends Controller
     }
 
     public function categoryStore(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:category_news,name',
+{
+    $validator = Validator::make($request->all(), [
+        'name' => [
+            'required',
+            'string',
+            'max:255',
+            'unique:category_news,name',
+            'regex:/^[\p{L}\p{N}\s\-.,;!?€£\$₽]+$/u'
+        ],
+    ], [
+        'name.required' => __('admin_news.validation.name_required'),
+        'name.string' => __('admin_news.validation.name_string'),
+        'name.max' => __('admin_news.validation.name_max'),
+        'name.unique' => __('admin_news.validation.name_taken'),
+        'name.regex' => __('admin_news.validation.name_regex'),
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'errors' => $validator->errors(),
+            'message' => __('message.validation_error')
+        ], 422);
+    }
+
+    try {
+        $category = CategoryNews::create(['name' => $request->name]);
+        
+        return response()->json([
+            'success' => true,
+            'category' => [
+                'id' => $category->id,
+                'name' => $category->name
+            ],
+            'message' => __('message.category_added_success')
         ]);
 
-        try {
-            CategoryNews::create(['name' => $request->name]);
-        } catch (\Exception $e) {
-            // Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
-            return back()->withErrors(['name' => __('message.category_add_failed')]);
-        }
-
-        return redirect()->route('newscategories.index')->with('success', __('message.category_added_success'));
+    } catch (\Exception $e) {
+        \Log::error('Ошибка при добавлении категории новостей: ' . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => __('message.category_add_failed'),
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
     public function categoryEdit($id)
     {

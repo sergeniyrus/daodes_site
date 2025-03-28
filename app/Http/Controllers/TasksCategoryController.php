@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\TaskCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TasksCategoryController extends Controller
 {
@@ -17,22 +18,62 @@ class TasksCategoryController extends Controller
     // Display the form to create a new category
     public function create()
     {
-        return view('tasks.categories.addtask');
+        return view('tasks.categories.create');
     }
+
+
 
     // Save a new category
     public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'name' => [
+            'required',
+            'string',
+            'max:255',
+            'unique:category_tasks,name',
+            'regex:/^[\p{L}\p{N}\s\-.,;!?€£\$₽]+$/u'
+        ],
+    ], [
+        'name.required' => __('tasks.validation.name_required'),
+        'name.string' => __('tasks.validation.name_string'),
+        'name.max' => __('tasks.validation.name_max'),
+        'name.unique' => __('tasks.validation.name_taken'),
+        'name.regex' => __('tasks.validation.name_regex'),
+    ]);
 
-        TaskCategory::create([
-            'name' => $request->name,
-        ]);
-
-        return redirect()->route('taskscategories.index')->with('success', __('message.category_added_success'));
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'errors' => $validator->errors(),
+            'message' => __('message.validation_error')
+        ], 422);
     }
+
+    try {
+        $category = TaskCategory::create(['name' => $request->name]);
+        
+        return response()->json([
+            'success' => true,
+            'category' => [
+                'id' => $category->id,
+                'name' => $category->name
+            ],
+            'message' => __('tasks.messages.category_added_success')
+        ]);
+
+    } catch (\Exception $e) {
+        \Log::error('Category creation error: ' . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => __('tasks.messages.category_add_failed'),
+            'error' => $e->getMessage()
+        ], 500);
+    }
+}
+
+
 
     // Display the form to edit a category
     public function edit(TaskCategory $taskCategory)

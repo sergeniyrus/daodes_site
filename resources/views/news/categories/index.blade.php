@@ -67,29 +67,11 @@
         transform: scale(1.05);
         background: #1a1a1a;
     }
-    .alert {
-        background-color: rgba(255, 0, 0, 0.8); /* Полупрозрачный красный фон */
-        color: #f8f9fa; /* Цвет текста */
-        border: 1px solid #d7fc09; /* Золотая граница */
-        border-radius: 10px; /* Скругленные углы */
-        padding: 15px; /* Отступы внутри */
-        margin-top: 20px; /* Отступы сверху и снизу */
-        font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif; /* Шрифт */
-        text-align: left; /* Выровнять текст влево */
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Тень для выделения */
-    }
-
-    
+        
 </style>
 <div class="container">
     <h2>{{ __('category.categories_title') }}</h2>
     <div class="new_post">
-        @if(session('success'))
-            <br><div class="alert">
-                {{ session('success') }}
-            </div>
-        @endif
-
         <table class="table mt-4">
             <thead>
                 <tr>

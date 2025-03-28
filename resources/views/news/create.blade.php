@@ -1,6 +1,6 @@
 @extends('template')
 
-@section('title_page', __('tasks.create_task'))
+@section('title_page', __('admin_news.create_news_title'))
 
 @section('main')
     <style>
@@ -68,6 +68,30 @@
             background: #1a1a1a;
         }
 
+        .file-input-wrapper {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        #preview {
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #d7fc09;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        #file-name {
+            font-size: 0.9rem;
+            color: #a0ff08;
+            text-align: center;
+            margin-top: 5px;
+        }
+
         .category-container {
             display: flex;
             align-items: center;
@@ -125,6 +149,7 @@
             text-align: center;
             font-size: 0.9rem;
         }
+        
         .loading-spinner {
             animation: spin 1s linear infinite;
             display: inline-block;
@@ -137,23 +162,23 @@
     </style>
 
 <div class="container">
-    <h2 class="text-center">{{ __('tasks.create_task') }}</h2>
+    <h2 class="text-center">{{ __('admin_news.create_news_title') }}</h2>
 
-    <form id="task-form" method="POST" action="{{ route('tasks.store') }}">
+    <form id="news-form" method="POST" action="{{ route('news.store') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group">
-            <label for="title">{{ __('tasks.task_title') }}</label>
+            <label for="title">{{ __('admin_news.news_title') }}</label>
             <input type="text" name="title" class="input_dark" value="{{ old('title') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="category_id">{{ __('tasks.category') }}</label>
+            <label for="category">{{ __('admin_news.category') }}</label>
             <div class="category-container">
                 <div class="category-select-wrapper">
                     <select name="category_id" class="input_dark" id="category-select" required>
-                        <option value="" selected disabled>{{ __('tasks.select_category') }}</option>
-                        @foreach ($categories as $category)
+                        <option value="" selected disabled>{{ __('admin_news.select_category') }}</option>
+                        @foreach ($category_news as $category)
                             <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
@@ -161,29 +186,34 @@
                     </select>
                 </div>
                 <button type="button" class="des-btn add-category-btn" id="open-category-modal">
-                    <i class="fas fa-plus-circle"></i> {{ __('tasks.add_category') }}
+                    <i class="fas fa-plus-circle"></i> {{ __('admin_news.add_category') }}
                 </button>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="content">{{ __('tasks.task_description') }}</label>
+            <label for="filename">{{ __('admin_news.news_image') }}</label>
+            <div class="file-input-wrapper">
+                <img id="preview" src="#" alt="Image preview">
+                <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
+                    {{ __('admin_news.choose_file') }}
+                </button>
+                <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+                <div id="file-name">{{ __('admin_news.no_file_selected') }}</div>
+            </div>
+            <p style="color: red; text-align: center; margin-top: 20px; font-size:0.9rem;">
+                {{ __('admin_news.image_requirements') }}
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="content">{{ __('admin_news.news_content') }}</label>
             <textarea id="editor" name="content" rows="10" class="input_dark" required
-                placeholder="{{ __('tasks.task_description') }}">{{ old('content') }}</textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="deadline">{{ __('tasks.deadline') }}</label>
-            <input type="date" name="deadline" class="input_dark" required>
-        </div>
-
-        <div class="form-group">
-            <label for="budget">{{ __('tasks.budget') }}</label>
-            <input type="number" name="budget" class="input_dark" step="0.01" required>
+                placeholder="{{ __('admin_news.news_content_placeholder') }}">{{ old('content') }}</textarea>
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="des-btn">{{ __('tasks.create_task_button') }}</button>
+            <button type="submit" class="des-btn">{{ __('admin_news.create_news_button') }}</button>
         </div>
     </form>
 </div>
@@ -192,17 +222,17 @@
 <div id="category-modal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>{{ __('tasks.add_category') }}</h2>
+        <h2>{{ __('admin_news.add_category') }}</h2>
         <form id="category-form" method="POST">
             @csrf
             <div class="form-group">
-                <label for="category-name">{{ __('tasks.category_name') }}</label>
+                <label for="category-name">{{ __('admin_news.category_name') }}</label>
                 <input type="text" name="name" id="category-name" class="input_dark" required>
             </div>
             <div id="category-error" class="error-message"></div>
             <div style="text-align: center;">
                 <button type="submit" class="des-btn" id="submit-category-btn">
-                    <i class="fas fa-plus-circle"></i> {{ __('tasks.add_category') }}
+                    <i class="fas fa-plus-circle"></i> {{ __('admin_news.add_category') }}
                 </button>
             </div>
         </form>
@@ -222,20 +252,23 @@
         const submitCategoryBtn = document.getElementById('submit-category-btn');
         const categorySelect = document.getElementById('category-select');
         const categoryNameInput = document.getElementById('category-name');
-    
+
+        // Set placeholder from translations
+        categoryNameInput.placeholder = '{{ __("admin_news.name_regex") }}';
+
         // Open modal
         openBtn.addEventListener('click', () => {
             modal.style.display = 'block';
             errorDisplay.textContent = '';
             categoryNameInput.focus();
         });
-    
+
         // Close modal
         closeBtn.addEventListener('click', () => {
             modal.style.display = 'none';
             categoryForm.reset();
         });
-    
+
         // Close when clicking outside
         window.addEventListener('click', (e) => {
             if (e.target === modal) {
@@ -243,19 +276,26 @@
                 categoryForm.reset();
             }
         });
-    
+
         // Handle category form submission
         categoryForm.addEventListener('submit', async function(e) {
             e.preventDefault();
             errorDisplay.textContent = '';
             
+            // Client-side validation
+            const nameRegex = /^[\p{L}\p{N}\s\-\.,;!?€£\$₽]+$/u;
+            if (!nameRegex.test(categoryNameInput.value)) {
+                errorDisplay.textContent = '{{ __("admin_news.validation.name_regex") }}';
+                return;
+            }
+
             const originalBtnContent = submitCategoryBtn.innerHTML;
             submitCategoryBtn.innerHTML = '<i class="fas fa-spinner loading-spinner"></i> {{ __("message.processing") }}';
             submitCategoryBtn.disabled = true;
-    
+
             try {
                 const formData = new FormData(this);
-                const response = await fetch('{{ route("taskscategories.store") }}', {
+                const response = await fetch('{{ route("newscategories.store") }}', {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -264,15 +304,15 @@
                         'X-Requested-With': 'XMLHttpRequest'
                     }
                 });
-    
+
                 const data = await response.json();
-    
+
                 if (!response.ok) {
                     if (data.errors) {
                         let errorMessages = [];
                         for (const [key, messages] of Object.entries(data.errors)) {
                             if (key === 'name' && messages.some(m => m.includes('The name has already been taken'))) {
-                                errorMessages.push('{{ __("tasks.category_name_taken") }}');
+                                errorMessages.push('{{ __("admin_news.validation.name_taken") }}');
                             } else {
                                 errorMessages.push(...messages);
                             }
@@ -283,7 +323,7 @@
                     }
                     return;
                 }
-    
+
                 if (data.success) {
                     const newOption = document.createElement('option');
                     newOption.value = data.category.id;
@@ -303,15 +343,33 @@
                 submitCategoryBtn.disabled = false;
             }
         });
-    
+
         // Validate main form
-        document.getElementById('task-form').addEventListener('submit', function(e) {
+        document.getElementById('news-form').addEventListener('submit', function(e) {
             if (!categorySelect.value) {
                 e.preventDefault();
-                alert('{{ __("tasks.please_select_category") }}');
+                alert('{{ __("admin_news.please_select_category") }}');
                 categorySelect.focus();
             }
         });
+
+        // Image preview
+        const fileInput = document.getElementById('file-input');
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const preview = document.getElementById('preview');
+                        preview.src = event.target.result;
+                        preview.style.display = 'block';
+                        document.getElementById('file-name').textContent = file.name;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
     });
 </script>
 

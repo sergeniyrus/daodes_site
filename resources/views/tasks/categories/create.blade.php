@@ -71,16 +71,7 @@
 <div class="container my-5">
     <h1>Добавить новую категорию</h1>
 
-    <!-- Вывод ошибок валидации -->
-    {{-- @if($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
+  
 
     <!-- Форма для добавления категории -->
     <form action="{{ route('taskscategories.store') }}" method="POST">

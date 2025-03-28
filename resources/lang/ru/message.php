@@ -69,4 +69,12 @@ return [
     'seed_phrase_not_found' => 'Сид-фраза не найдена.',
     'invalid_seed_phrase' => 'Неверная сид-фраза.',
     'transfer_success' => 'Перевод успешно выполнен.',
+    'processing' => 'Обновляние данных',
+    'category_added_success' => 'Категория успешно добавлена',
+    'category_add_failed' => 'Не удалось добавить категорию',
+    'validation_error' => 'Ошибка валидации',
+    'unknown_error' => 'Неизвестная ошибка',
+    'processing' => 'Обработка...',
+    'news_created_success' => 'Новость успешно создана',
+    'news_creation_failed' => 'Не удалось создать новость',
 ];

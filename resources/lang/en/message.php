@@ -69,5 +69,11 @@ return [
     'seed_phrase_not_found' => 'Seed phrase not found.',
     'invalid_seed_phrase' => 'Invalid seed phrase.',
     'transfer_success' => 'Transfer completed successfully.',
+    'processing' => 'Updating the data',
+    'category_added_success' => 'Category added successfully',
+    'category_add_failed' => 'Failed to add category',
+    'validation_error' => 'Validation error',
+    'unknown_error' => 'Unknown error',
+    'processing' => 'Processing...',
 
 ];

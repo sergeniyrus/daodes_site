@@ -1,6 +1,8 @@
 @extends('template')
 
-@section('title_page', __('tasks.create_task'))
+@section('title_page')
+Create an offer
+@endsection
 
 @section('main')
     <style>
@@ -66,6 +68,30 @@
             box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
             transform: scale(1.05);
             background: #1a1a1a;
+        }
+
+        .file-input-wrapper {
+            text-align: center;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        #preview {
+            max-width: 100%;
+            margin-top: 10px;
+            border: 1px solid #d7fc09;
+            border-radius: 10px;
+            display: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        #file-name {
+            font-size: 0.9rem;
+            color: #a0ff08;
+            text-align: center;
+            margin-top: 5px;
         }
 
         .category-container {
@@ -137,53 +163,58 @@
     </style>
 
 <div class="container">
-    <h2 class="text-center">{{ __('tasks.create_task') }}</h2>
+    <h2 class="text-center">{{ __('admin_offers.create_offer_title') }}</h2>
 
-    <form id="task-form" method="POST" action="{{ route('tasks.store') }}">
+    <form id="offers-form" method="POST" action="{{ route('offers.store') }}" enctype="multipart/form-data">
         @csrf
 
         <div class="form-group">
-            <label for="title">{{ __('tasks.task_title') }}</label>
+            <label for="title">{{ __('admin_offers.offer_title') }}</label>
             <input type="text" name="title" class="input_dark" value="{{ old('title') }}" required>
         </div>
 
         <div class="form-group">
-            <label for="category_id">{{ __('tasks.category') }}</label>
+            <label for="category">{{ __('admin_offers.category') }}</label>
             <div class="category-container">
                 <div class="category-select-wrapper">
-                    <select name="category_id" class="input_dark" id="category-select" required>
-                        <option value="" selected disabled>{{ __('tasks.select_category') }}</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('category_id') == $category->id ? 'selected' : '' }}>
+                    <select name="category" class="input_dark" id="category-select" required>
+                        <option value="" selected disabled>{{ __('admin_offers.select_category') }}</option>
+                        @foreach ($category_offers as $category)
+                            <option value="{{ $category->id }}" {{ old('category') == $category->id ? 'selected' : '' }}>
                                 {{ $category->name }}
                             </option>
                         @endforeach
                     </select>
                 </div>
                 <button type="button" class="des-btn add-category-btn" id="open-category-modal">
-                    <i class="fas fa-plus-circle"></i> {{ __('tasks.add_category') }}
+                    <i class="fas fa-plus-circle"></i> {{ __('admin_offers.add_category') }}
                 </button>
             </div>
         </div>
 
         <div class="form-group">
-            <label for="content">{{ __('tasks.task_description') }}</label>
+            <label for="filename">{{ __('admin_offers.image') }}</label>
+            <div class="file-input-wrapper">
+                <img id="preview" src="#" alt="Image preview">
+                <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
+                    {{ __('admin_offers.choose_file') }}
+                </button>
+                <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+                <div id="file-name">{{ __('admin_offers.no_file_chosen') }}</div>
+            </div>
+            <p style="color: red; text-align: center; margin-top: 20px; font-size:0.9rem;">
+                {{ __('admin_offers.image_requirements') }}
+            </p>
+        </div>
+
+        <div class="form-group">
+            <label for="content">{{ __('admin_offers.offer_content') }}</label>
             <textarea id="editor" name="content" rows="10" class="input_dark" required
-                placeholder="{{ __('tasks.task_description') }}">{{ old('content') }}</textarea>
-        </div>
-
-        <div class="form-group">
-            <label for="deadline">{{ __('tasks.deadline') }}</label>
-            <input type="date" name="deadline" class="input_dark" required>
-        </div>
-
-        <div class="form-group">
-            <label for="budget">{{ __('tasks.budget') }}</label>
-            <input type="number" name="budget" class="input_dark" step="0.01" required>
+                placeholder="{{ __('admin_offers.enter_offer_text') }}">{{ old('content') }}</textarea>
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="des-btn">{{ __('tasks.create_task_button') }}</button>
+            <button type="submit" class="des-btn">{{ __('admin_offers.create_offer_button') }}</button>
         </div>
     </form>
 </div>
@@ -192,17 +223,17 @@
 <div id="category-modal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <h2>{{ __('tasks.add_category') }}</h2>
+        <h2>{{ __('category.categories_title') }}</h2>
         <form id="category-form" method="POST">
             @csrf
             <div class="form-group">
-                <label for="category-name">{{ __('tasks.category_name') }}</label>
+                <label for="category-name">{{ __('category.category_name_label') }}</label>
                 <input type="text" name="name" id="category-name" class="input_dark" required>
             </div>
             <div id="category-error" class="error-message"></div>
             <div style="text-align: center;">
                 <button type="submit" class="des-btn" id="submit-category-btn">
-                    <i class="fas fa-plus-circle"></i> {{ __('tasks.add_category') }}
+                    <i class="fas fa-plus-circle"></i> {{ __('admin_offers.add_category') }}
                 </button>
             </div>
         </form>
@@ -222,6 +253,9 @@
         const submitCategoryBtn = document.getElementById('submit-category-btn');
         const categorySelect = document.getElementById('category-select');
         const categoryNameInput = document.getElementById('category-name');
+    
+        // Set placeholder from translations
+        categoryNameInput.placeholder = '{{ __("admin_offers.name_regex") }}';
     
         // Open modal
         openBtn.addEventListener('click', () => {
@@ -249,13 +283,20 @@
             e.preventDefault();
             errorDisplay.textContent = '';
             
+            // Client-side validation
+            const nameRegex = /^[\p{L}\p{N}\s\-\.,;!?€£\$₽]+$/u;
+            if (!nameRegex.test(categoryNameInput.value)) {
+                errorDisplay.textContent = '{{ __("admin_offers.validation.name_regex") }}';
+                return;
+            }
+    
             const originalBtnContent = submitCategoryBtn.innerHTML;
             submitCategoryBtn.innerHTML = '<i class="fas fa-spinner loading-spinner"></i> {{ __("message.processing") }}';
             submitCategoryBtn.disabled = true;
     
             try {
                 const formData = new FormData(this);
-                const response = await fetch('{{ route("taskscategories.store") }}', {
+                const response = await fetch('{{ route("offerscategories.store") }}', {
                     method: 'POST',
                     body: formData,
                     headers: {
@@ -272,7 +313,7 @@
                         let errorMessages = [];
                         for (const [key, messages] of Object.entries(data.errors)) {
                             if (key === 'name' && messages.some(m => m.includes('The name has already been taken'))) {
-                                errorMessages.push('{{ __("tasks.category_name_taken") }}');
+                                errorMessages.push('{{ __("admin_offers.validation.name_taken") }}');
                             } else {
                                 errorMessages.push(...messages);
                             }
@@ -293,11 +334,11 @@
                     
                     modal.style.display = "none";
                     this.reset();
-                    alert(data.message || '{{ __("message.category_added_success") }}');
+                    alert(data.message || '{{ __("message.offer_category_added") }}');
                 }
             } catch (error) {
                 console.error('Error:', error);
-                errorDisplay.textContent = error.message || '{{ __("message.category_add_failed") }}';
+                errorDisplay.textContent = error.message || '{{ __("message.offer_category_add_failed") }}';
             } finally {
                 submitCategoryBtn.innerHTML = originalBtnContent;
                 submitCategoryBtn.disabled = false;
@@ -305,27 +346,45 @@
         });
     
         // Validate main form
-        document.getElementById('task-form').addEventListener('submit', function(e) {
+        document.getElementById('offers-form').addEventListener('submit', function(e) {
             if (!categorySelect.value) {
                 e.preventDefault();
-                alert('{{ __("tasks.please_select_category") }}');
+                alert('{{ __("admin_offers.please_select_category") }}');
                 categorySelect.focus();
             }
         });
+    
+        // Image preview
+        const fileInput = document.getElementById('file-input');
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        const preview = document.getElementById('preview');
+                        preview.src = event.target.result;
+                        preview.style.display = 'block';
+                        document.getElementById('file-name').textContent = file.name;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+        }
     });
-</script>
-
-@if(config('app.use_ckeditor'))
-<script src="{{ asset('js/ckeditor.js') }}"></script>
-<script>
-    ClassicEditor
-        .create(document.querySelector('#editor'), {
-            // CKEditor config options
-        })
-        .catch(error => {
-            console.error(error);
-        });
-</script>
-@endif
-
-@endsection
+    </script>
+    
+    @if(config('app.use_ckeditor'))
+    <script src="{{ asset('js/ckeditor.js') }}"></script>
+    <script>
+        ClassicEditor
+            .create(document.querySelector('#editor'), {
+                // CKEditor config options
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+    @endif
+    
+    @endsection

@@ -124,14 +124,14 @@ document.addEventListener('DOMContentLoaded', function() {
             { href: "/news", text: "{{ __('menu.back_to_news') }}" },            
             @auth
             @if (Auth::user()->access_level >= 3)   
-            { href: "/news/add", text: "{{ __('menu.add_news') }}" },         
+            { href: "/news/create", text: "{{ __('menu.add_news') }}" },         
             { href: "/newscategories", text: "{{ __('menu.manage_categories') }}" },
             @endif
             @endauth
         ],
         "/offers": [
             { href: "/offers", text: "{{ __('menu.back_to_offers') }}" },
-            { href: "/offers/add", text: "{{ __('menu.add_offer') }}" },
+            { href: "/offers/create", text: "{{ __('menu.add_offer') }}" },
             @auth
             @if (Auth::user()->access_level >= 3)            
             { href: "/offerscategories", text: "{{ __('menu.manage_categories') }}" },

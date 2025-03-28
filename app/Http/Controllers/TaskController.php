@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 class TaskController extends Controller
 {
@@ -21,12 +22,46 @@ class TaskController extends Controller
     }
 
     // Display the list of tasks
-    public function list()
-    {
-        $tasks = Task::with('category')->paginate(10);
-        $categories = TaskCategory::all();
-        return view('tasks.list', compact('tasks', 'categories'));
+    public function list(Request $request)
+{
+    // Получаем параметры фильтрации и сортировки
+    $sort = $request->input('sort', 'new'); // new (по умолчанию) или old
+    $category = $request->input('category', null); // ID категории или null
+    $perPage = $request->input('perPage', 10); // Количество записей на страницу
+    $status = $request->input('status', null); // Фильтр по статусу
+
+    // Запрос к базе данных с учетом фильтров
+    $query = Task::with(['category', 'user']);
+
+    if ($category) {
+        $query->where('category_id', $category);
     }
+
+    if ($status !== null) {
+        $query->where('status', $status);
+    }
+
+    // Обработка сортировки
+    if ($sort === 'new') {
+        $query->orderBy('created_at', 'desc');
+    } elseif ($sort === 'old') {
+        $query->orderBy('created_at', 'asc');
+    }
+
+    // Получаем пагинированный результат
+    $tasks = $query->paginate($perPage);
+
+    // Получаем категории для фильтра
+    $categories = TaskCategory::all();
+
+    // Получаем список статусов, по которым есть задачи
+    $statusesWithTasks = Task::select('status', DB::raw('COUNT(*) as count'))
+        ->groupBy('status')
+        ->pluck('count', 'status');
+
+    // Передаем данные в представление
+    return view('tasks.list', compact('tasks', 'categories', 'sort', 'category', 'perPage', 'status', 'statusesWithTasks'));
+}
 
     // Display a specific task
     public function show(Task $task)
@@ -75,7 +110,7 @@ class TaskController extends Controller
 
         // Log::info('Task successfully created:', $task->toArray());
 
-        return redirect()->route('tasks.index')->with('success', __('message.task_added'));
+        return redirect()->route('tasks.list')->with('success', __('message.task_added'));
     }
 
     // Edit a task (only for the author)
