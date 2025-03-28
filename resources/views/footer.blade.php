@@ -53,7 +53,7 @@
             </div>
         </div>
         <div class="copy">
-            <h1>DAO DES 2024</h1>
+            <h1>DAO DES 2025</h1>
         </div>
     </div>
     <a href="#" class="scrollup">Up</a>

@@ -15,4 +15,15 @@ return [
     'create_offer_button' => 'Create Offer',
     'save_changes_button' => 'Save Changes',
     'validation_errors' => 'Validation Errors',
+    'add_category' => 'Add a category',
+    'please_select_category' => 'Select or add a category.',
+    'name_regex' => 'Only letters, numbers and symbols -.,;!?$€£₽',
+
+    'validation' => [
+        'name_required' => 'Category name is required.',
+        'name_string' => 'Category name must be a string.',
+        'name_max' => 'Category name must not exceed 255 characters.',
+        'name_taken' => 'This name is already taken.',
+        'name_regex' => 'Category name can only contain letters, numbers, spaces and these symbols: -.,;!?$€£₽',
+    ],
 ];

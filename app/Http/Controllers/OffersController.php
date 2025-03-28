@@ -11,10 +11,11 @@ use App\Models\Offers;
 use App\Models\CategoryOffers; 
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class OffersController extends Controller
 {
-    public function list(Request $request)
+    public function index(Request $request)
     {
         // Получаем параметры фильтрации и сортировки
         $sort = $request->input('sort', 'new'); // new (по умолчанию) или old
@@ -52,7 +53,7 @@ class OffersController extends Controller
             ->groupBy('state')
             ->pluck('count', 'state');
 
-        // Количество комментариев для каждой новости
+        // Количество комментариев для предложения
         $commentCount = [];
         foreach ($offers as $item) {
             $commentCount[$item->id] = DB::table('comments_offers')
@@ -61,12 +62,12 @@ class OffersController extends Controller
         }
 
         // Передаем данные в представление
-        return view('offers.list', compact('offers', 'commentCount', 'categories', 'sort', 'category', 'perPage', 'state', 'statesWithOffers'));
+        return view('offers.index', compact('offers', 'commentCount', 'categories', 'sort', 'category', 'perPage', 'state', 'statesWithOffers'));
     }
 
     public function show($id)
     {
-        // Получаем новость по ID
+        // Получаем предложение по ID
         $offers = DB::table('offers')->where('id', $id)->first();
 
         if ($offers) {
@@ -78,7 +79,7 @@ class OffersController extends Controller
                 ->where('id', $offers->category_id)
                 ->value('name'); // Получаем значение поля 'category_name'
             
-            // Получаем комментарии для этой новости
+            // Получаем комментарии для этой предложение
             $comments = DB::table('comments_offers')
                 ->where('offer_id', $offers->id)
                 ->orderBy('created_at', 'desc') // Сортировка по дате (от новых к старым)
@@ -90,18 +91,18 @@ class OffersController extends Controller
             // Возвращаем представление с данными
             return view('offers.show', compact('offers', 'categoryName', 'comments', 'commentCount'));
         } else {
-            // Если новость не найдена, возвращаем ошибку или пустой результат
+            // Если предложение не найдена, возвращаем ошибку или пустой результат
             return abort(404);
         }
     }
 
-    public function add()
+    public function create()
     {
         $category = DB::table('category_offers')->get();
-        return view('offers.add')->with('category_offers', $category);
+        return view('offers.create')->with('category_offers', $category);
     }
 
-    public function create(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
         $validate = $request->validate([
             'title' => ['required', 'string', 'max:255'],
@@ -163,32 +164,85 @@ class OffersController extends Controller
         return redirect()->route('good', ['post' => 'offers', 'id' => $id, 'action' => 'edit']);
     }
 
-    public function categoryIndex()
-    {
-        $categories = CategoryOffers::all(); // Используем модель CategoryOffers
-        return view('offers.categories.index', compact('categories'));
+    public function destroy($id): RedirectResponse
+{
+    // Находим запись
+    $offer = DB::table('offers')->where('id', $id)->first();
+    
+    // Проверяем, существует ли запись
+    if (!$offer) {
+        return redirect()->back()->with('error', 'Предложение не найдено');
     }
+    
+    // Проверяем права пользователя
+    $user = Auth::user();
+    $isAuthor = $user->id == $offer->user_id;
+    $isAdminOrModerator = $user->access_level >= 3;
+    
+    if (!$isAuthor && !$isAdminOrModerator) {
+        return redirect()->back()->with('error', 'У вас нет прав на удаление');
+    }
+    
+    // Удаляем запись
+    DB::table('offers')->where('id', $id)->delete();
+    
+    return redirect()->route('offers.index')->with('success', 'Предложение успешно удалено');
+}
 
-    public function categoryCreate()
+
+public function categoryCreate()
     {
         return view('offers.categories.create');
     }
 
-    public function categoryStore(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255|unique:category_offers,name',
+   public function categoryStore(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'name' => [
+            'required',
+            'string',
+            'max:255',
+            'unique:category_offers,name',
+            'regex:/^[\p{L}\p{N}\s\-.,;!?€£\$₽]+$/u'
+        ],
+    ], [
+        'name.required' => __('admin_offers.validation.name_required'),
+        'name.string' => __('admin_offers.validation.name_string'),
+        'name.max' => __('admin_offers.validation.name_max'),
+        'name.unique' => __('admin_offers.validation.name_taken'),
+        'name.regex' => __('admin_offers.validation.name_regex'),
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'errors' => $validator->errors(),
+            'message' => __('message.validation_error')
+        ], 422);
+    }
+
+    try {
+        $category = CategoryOffers::create(['name' => $request->name]);
+        
+        return response()->json([
+            'success' => true,
+            'category' => [
+                'id' => $category->id,
+                'name' => $category->name
+            ],
+            'message' => __('message.offer_category_added')
         ]);
 
-        try {
-            CategoryOffers::create(['name' => $request->name]); // Используем модель CategoryOffers
-        } catch (\Exception $e) {
-            \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
-            return back()->withErrors(['name' => __('message.offer_category_add_failed')]);
-        }
-
-        return redirect()->route('offerscategories.index')->with('success', __('message.offer_category_added'));
+    } catch (\Exception $e) {
+        \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
+        
+        return response()->json([
+            'success' => false,
+            'message' => __('message.offer_category_add_failed'),
+            'error' => $e->getMessage()
+        ], 500);
     }
+}
 
     public function categoryEdit($id)
     {

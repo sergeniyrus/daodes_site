@@ -107,19 +107,24 @@ Route::prefix('newscategories')->name('newscategories.')->middleware('auth')->gr
     Route::delete('/{id}', [NewsController::class, 'categoryDestroy'])->name('destroy');
 });
 
+
+
+
+
 // Управление предложениями
-Route::get('/offers/add', [OffersController::class, 'add'])->name('offers.add')->middleware('auth');
-// Управление новостями
+Route::get('offers/create', [OffersController::class, 'create'])->name('offers.create')->middleware('auth');
+Route::post('offers/store', [OffersController::class, 'store'])->name('offers.store')->middleware('auth');
+
 Route::prefix('offers')->group(function () {
     // Маршруты для всех пользователей
-    Route::get('/', [OffersController::class, 'list'])->name('offers.index');
-    Route::get('/{id}', [OffersController::class, 'show'])->name('offers.show'); // Просмотр полной новости
+    Route::get('/', [OffersController::class, 'index'])->name('offers.index');
+    Route::get('/{id}', [OffersController::class, 'show'])->name('offers.show'); // Просмотр 
 
     // Только авторизованные пользователи могут добавлять, редактировать и удалять новости
     Route::middleware('auth')->group(function () {
-        //Route::get('/add', [OffersController::class, 'add'])->name('offers.add');
-        Route::post('/create', [OffersController::class, 'create'])->name('offers.create');
-
+        
+       // Route::get('/create', [OffersController::class, 'create'])->name('offers.create');
+       // Route::post('/store', [OffersController::class, 'store'])->name('offers.store');
         Route::get('/{id}/edit', [OffersController::class, 'edit'])->name('offers.edit');
         Route::put('/{id}', [OffersController::class, 'update'])->name('offers.update');
         Route::delete('/{id}', [OffersController::class, 'destroy'])->name('offers.destroy');
@@ -135,6 +140,12 @@ Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')
     Route::put('/{id}', [OffersController::class, 'categoryUpdate'])->name('update');
     Route::delete('/{id}', [OffersController::class, 'categoryDestroy'])->name('destroy');
 });
+
+
+
+
+
+
 
 // Комментарии
 Route::post('/commentsoffers', [CommentController::class, 'offers'])->name('comments.offers');
@@ -170,56 +181,45 @@ Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () 
     Route::get('/history', [WalletController::class, 'history'])->name('history');
 });
 
-// Задачи
-Route::get('/tasks', [TaskController::class, 'list'])->name('tasks.index');
-Route::get('/tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
-
-Route::get('/addtask', [TaskController::class, 'create'])
-    ->name('addtask')
-    ->middleware('auth');
-Route::post('/tasks/create', [TaskController::class, 'store'])
-    ->name('tasks.create')
-    ->middleware('auth');
-
-Route::post('/tasks/{task}/accept-bid/{bid}', [TaskController::class, 'acceptBid'])
-    ->name('tasks.accept-bid')
-    ->middleware('auth');
-
-Route::post('/tasks/{task}/continue', [TaskController::class, 'continueTask'])
-    ->name('tasks.continue')
-    ->middleware('auth');
-
-Route::post('/tasks/{task}/freelancerComplete', [TaskController::class, 'freelancerComplete'])
-    ->name('tasks.freelancerComplete')
-    ->middleware('auth');
-
-Route::post('/tasks/{task}/fail', [TaskController::class, 'fail'])
-    ->name('tasks.fail')
-    ->middleware('auth');
-
-Route::post('/tasks/store', [TaskController::class, 'store'])
-    ->name('tasks.store')
-    ->middleware('auth');
-
+/// Маршруты задач
 Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
-
-    //ds-    Route::get('/create', [TaskController::class, 'create'])->name('create');
-
-    Route::post('/{task}/bid', [TaskController::class, 'bid'])->name('bid');
-    Route::post('/{task}/like', [TaskController::class, 'like'])->name('like');
-    Route::post('/{task}/dislike', [TaskController::class, 'dislike'])->name('dislike');
+    
+    // Просмотр задач
+    Route::get('/', [TaskController::class, 'list'])->name('list');
+    Route::get('/{task}', [TaskController::class, 'show'])->name('show');
+    
+    // Создание задачи
+    Route::get('/create', [TaskController::class, 'create'])->name('create');
+    Route::post('/store', [TaskController::class, 'store'])->name('store');
+    
+    // Редактирование задачи
     Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('edit');
     Route::put('/{task}', [TaskController::class, 'update'])->name('update');
     Route::delete('/{task}', [TaskController::class, 'destroy'])->name('destroy');
-    Route::post('/tasks/{task}/continue', [TaskController::class, 'continueTask'])->name('tasks.continue'); //ds+
-    Route::post('/{task}/complete', [TaskController::class, 'complete'])->name('complete');
-    Route::post('/{task}/rate', [TaskController::class, 'rate'])->name('rate');
+    
+    // Взаимодействие с задачей
+    Route::post('/{task}/bid', [TaskController::class, 'bid'])->name('bid');
+    Route::post('/{task}/like', [TaskController::class, 'like'])->name('like');
+    Route::post('/{task}/dislike', [TaskController::class, 'dislike'])->name('dislike');
+    
+    // Работа с задачей
     Route::post('/{task}/start-work', [TaskController::class, 'startWork'])->name('start_work');
+    Route::post('/{task}/complete', [TaskController::class, 'complete'])->name('complete');
+    Route::post('/{task}/freelancer-complete', [TaskController::class, 'freelancerComplete'])->name('freelancerComplete');
+    Route::post('/{task}/accept', [TaskController::class, 'acceptTask'])->name('accept');
+    Route::post('/{task}/revision', [TaskController::class, 'requestRevision'])->name('revision');
+    Route::post('/{task}/continue', [TaskController::class, 'continueTask'])->name('continue');
     Route::post('/{task}/fail', [TaskController::class, 'fail'])->name('fail');
-
-    Route::post('/tasks/{task}/accept', [TaskController::class, 'acceptTask'])->name('tasks.accept');
-    Route::post('/tasks/{task}/revision', [TaskController::class, 'requestRevision'])->name('tasks.revision');
+    
+    // Оценки и оплата
+    Route::post('/{task}/rate', [TaskController::class, 'rate'])->name('rate');
+    Route::post('/{task}/accept-bid/{bid}', [TaskController::class, 'acceptBid'])->name('accept-bid');
 });
+
+// Альтернативный маршрут для создания задачи (если нужен отдельный URL)
+Route::get('/addtask', [TaskController::class, 'create'])
+    ->name('addtask')
+    ->middleware('auth');
 
 // Принятие предложений
 Route::post('/bids/{bid}/accept', [BidController::class, 'accept'])->name('bids.accept');

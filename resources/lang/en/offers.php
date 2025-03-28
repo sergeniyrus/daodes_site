@@ -8,9 +8,10 @@ return [
     'all_categories' => 'All Categories ☰',
     'all_statuses' => 'All Statuses ☰',
     'per_page' => [
-        5 => '5 per page ☰',
-        10 => '10 per page ☰',
-        20 => '20 per page ☰',
+        5 => 'of 5 ☰',
+        10 => 'of 10 ☰',
+        20 => 'of 20 ☰',
+        50 => 'of 50 ☰',
     ],
     'apply_filters' => 'Apply Filters',
     'no_offers' => 'No suggestions to display.',
