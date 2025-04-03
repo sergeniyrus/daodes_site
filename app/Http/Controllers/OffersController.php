@@ -221,6 +221,14 @@ class OffersController extends Controller
 }
 
 
+
+
+public function categoryIndex()
+    {
+        $categories = CategoryOffers::all();
+        return view('offers.categories.index', compact('categories'));
+    }
+
 public function categoryCreate()
     {
         return view('offers.categories.create');

@@ -69,18 +69,7 @@
 </style>
 <div class="container my-5">
     <h1>{{ __('category.add_category_title') }}</h1>
-
-    {{-- @if($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
-
-    <form action="{{ route('newscategories.store') }}" method="POST">
+    <form action="{{ route('newscategories.categoryStore') }}" method="POST">
         @csrf
         <div class="form-group">
             <label for="name">{{ __('category.category_name_label') }}</label>

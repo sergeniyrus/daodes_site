@@ -72,7 +72,7 @@
 <div class="container my-5">
     <h1>{{ __('category.categories_title') }}</h1> <!-- Перевод заголовка -->
 
-    <form action="{{ route('offerscategories.store') }}" method="POST">
+    <form action="{{ route('offerscategories.categoryStore') }}" method="POST">
         @csrf
         <div class="form-group">
             <label for="name">{{ __('category.category_name_label') }}</label> <!-- Перевод метки -->
