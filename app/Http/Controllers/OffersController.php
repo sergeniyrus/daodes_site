@@ -103,33 +103,64 @@ class OffersController extends Controller
     }
 
     public function store(Request $request): RedirectResponse
-    {
-        $validate = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
-            'category' => ['required', 'integer'],
-            'filename' => ['nullable', 'image', 'max:2048']
-        ]);
+{
+    // Логирование начала выполнения функции store
+  //  Log::info('Функция store инициирована');
 
-        // Log::info('$validate');
-        
-        $img = $request->hasFile('filename')
+    // Логирование входящих данных запроса
+   // Log::info('Получены данные запроса', $request->all());
+
+    $validated = $request->validate([
+        'title' => ['required', 'string', 'max:255'],
+        'content' => ['required', 'string'],
+        'category_id' => ['required', 'integer', 'exists:category_offers,id'],
+        'filename' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048']
+    ]);
+
+    // Логирование проверенных данных
+   // Log::info('Данные проверены', $validated);
+
+    try {
+        // Логирование начала обработки изображения
+      //  Log::info('Начата обработка загрузки изображения');
+
+        // Загрузка изображения на IPFS или использование изображения по умолчанию
+        $imageUrl = $request->hasFile('filename')
             ? $this->uploadToIPFS($request->file('filename'))
             : 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
 
-        DB::table('offers')->insert([
-            'created_at' => now(),
-            'title' => $validate['title'],
-            'content' => $validate['content'],
-            'category_id' => $validate['category'],
+        // Логирование URL изображения
+     //   Log::info('Установлен URL изображения', ['imageUrl' => $imageUrl]);
+
+        // Создание новости
+        $offers = Offers::create([
+            'title' => $validated['title'],
+            'content' => $validated['content'],
+            'category_id' => (int)$validated['category_id'],
             'user_id' => Auth::id(),
-            'img' => $img,
-            'views' => 0
+            'img' => $imageUrl,
+            'views' => 0,
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
 
-        $id = DB::table('offers')->latest()->value('id');
-        return redirect()->route('good', ['post' => 'offers', 'id' => $id, 'action' => 'create']);
+        // Логирование создания новости
+     //   Log::info('Новость создана', ['offersId' => $offers->id]);
+
+        // Перенаправление с сообщением об успехе
+        return redirect()->route('good', [
+            'post' => 'offers',
+            'id' => $offers->id,
+            'action' => 'create'
+        ])->with('success', __('message.offers_created_success'));
+
+    } catch (\Exception $e) {
+        // Логирование сообщения об ошибке
+      //  Log::error('Ошибка при создании новости: ' . $e->getMessage());
+        return back()->withErrors(['error' => __('message.offers_creation_failed')]);
     }
+}
+
 
     public function edit($id)
     {
@@ -195,7 +226,7 @@ public function categoryCreate()
         return view('offers.categories.create');
     }
 
-   public function categoryStore(Request $request)
+    public function categoryStore(Request $request)
 {
     $validator = Validator::make($request->all(), [
         'name' => [
@@ -216,8 +247,7 @@ public function categoryCreate()
     if ($validator->fails()) {
         return response()->json([
             'success' => false,
-            'errors' => $validator->errors(),
-            'message' => __('message.validation_error')
+            'errors' => $validator->errors()->all()
         ], 422);
     }
 
@@ -226,53 +256,53 @@ public function categoryCreate()
         
         return response()->json([
             'success' => true,
+            'message' => __('message.category_added_success'),
             'category' => [
                 'id' => $category->id,
                 'name' => $category->name
-            ],
-            'message' => __('message.offer_category_added')
+            ]
         ]);
-
-    } catch (\Exception $e) {
-        \Log::error('Ошибка при добавлении категории: ' . $e->getMessage());
         
+    } catch (\Exception $e) {
         return response()->json([
             'success' => false,
-            'message' => __('message.offer_category_add_failed'),
-            'error' => $e->getMessage()
+            'message' => __('message.category_add_failed')
         ], 500);
     }
 }
 
+
+    
+
     public function categoryEdit($id)
     {
-        $category = CategoryOffers::findOrFail($id); // Используем модель CategoryOffers
+        $category = Categoryoffers::findOrFail($id);
         return view('offers.categories.edit', compact('category'));
     }
 
     public function categoryUpdate(Request $request, $id)
     {
-        $category = CategoryOffers::findOrFail($id);
+        $category = Categoryoffers::findOrFail($id);
 
         $request->validate([
-            'name' => 'required|string|max:255|unique:category_offers,name,' . $id,
+            'name' => 'required|string|max:255|unique:category_offers,name,' . $id
         ]);
 
         try {
             $category->update(['name' => $request->name]);
-            return redirect()->route('offerscategories.index')->with('success', __('message.offer_category_updated'));
+            return redirect()->route('offerscategories.index')->with('success', __('message.category_updated_success'));
         } catch (\Exception $e) {
-            \Log::error('Ошибка при обновлении категории: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['name' => __('message.offer_category_update_failed')]);
+            // Log::error('Ошибка при обновлении категории: ' . $e->getMessage());
+            return redirect()->back()->withErrors(['name' => __('message.category_update_failed')]);
         }
     }
 
     public function categoryDestroy($id)
     {
-        $category = CategoryOffers::findOrFail($id);
+        $category = Categoryoffers::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('offerscategories.index')->with('success', __('message.offer_category_deleted'));
+        return redirect()->route('offerscategories.index')->with('success', __('message.category_deleted_success'));
     }
 
     private function uploadToIPFS($file)

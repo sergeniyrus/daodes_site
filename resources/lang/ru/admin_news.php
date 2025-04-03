@@ -1,5 +1,5 @@
 <?php
-
+// admin_new
 return [
     'create_news_title' => 'Создать новость',
     'news_title' => 'Заголовок новости',
@@ -10,13 +10,18 @@ return [
     'news_image' => 'Изображение новости',
     'choose_file' => 'Выбрать файл',
     'no_file_selected' => 'Файл не выбран',
-    'image_requirements' => 'Рекомендуемый размер: 1 x 1. Форматы: JPG, PNG, WEBP',
+    'image_requirements' => 'Рекомендуемый форматы: JPG, PNG, WEBP',
     'news_content' => 'Содержание новости',
     'news_content_placeholder' => 'Введите текст новости...',
     'create_news_button' => 'Создать новость',
     'please_select_category' => 'Пожалуйста, выберите категорию',
     'category_name' => 'Название категории',
     'name_regex' => 'Только буквы, цифры и основные знаки препинания',
+    'no_image_selected' => 'предпросмотр изображения',
+    'crop_image' => 'Вырезать',
+    'cancel' => 'Отменить',
+    'save_changes_button' => 'Сохранить изменения',
+    'edit_news_title' => 'Редактирование новости',
     
     'validation' => [
         'name_required' => 'Название категории обязательно',

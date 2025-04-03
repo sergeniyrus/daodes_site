@@ -58,8 +58,10 @@
 
         <hr class="hr_title">
 
-        <div class="news-content card">
-            <p>{!! $news->content !!}</p>
+        <div class="news-content ">
+            <div class="card">
+                <div class="news-text">{!! $news->content !!}</div>
+            </div>
         </div>
 
         <div class="comment">

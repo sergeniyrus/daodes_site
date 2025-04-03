@@ -1,5 +1,5 @@
 <?php
-
+// message
 return [
     'ip_blocked' => 'Ваш IP-адрес временно заблокирован.',
     'too_many_requests' => 'Слишком много запросов.',
@@ -30,6 +30,7 @@ return [
     'offer_category_updated' => 'Категория предложений обновлена.',  
     'offer_category_deleted' => 'Категория предложений удалена.',  
     'offer_category_update_failed' => 'Не удалось обновить категорию предложений. Пожалуйста, попробуйте еще раз.', 
+    'offers_created_success' => 'Предложение создано',
     'profile_updated' => 'Профиль обновлён.',
     'seed_already_received' => 'Сид-фраза уже была получена.',  
     'seed_saved' => 'Сид-фраза сохранена.',  

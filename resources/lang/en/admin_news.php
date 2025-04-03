@@ -10,14 +10,19 @@ return [
     'news_image' => 'News Image',
     'choose_file' => 'Choose File',
     'no_file_selected' => 'No file selected',
-    'image_requirements' => 'Recommended size: 1 x 1. Formats: JPG, PNG, WEBP',
+    'image_requirements' => 'Recommended formats: JPG, PNG, WEBP',
     'news_content' => 'News Content',
     'news_content_placeholder' => 'Enter news text...',
     'create_news_button' => 'Create News',
     'please_select_category' => 'Please select a category',
     'category_name' => 'Category Name',
     'name_regex' => 'Only letters, numbers and basic punctuation',
-    
+    'no_image_selected' => 'image preview',
+    'crop_image' => 'Cut it out',
+    'cancel' => 'Cancel',
+    'save_changes_button' => 'Save changes',
+    'edit_news_title' => 'News Editing',
+
     'validation' => [
         'name_required' => 'Category name is required',
         'name_string' => 'Name must be a string',

@@ -1,5 +1,5 @@
 <?php
-
+// admin_offers
 return [
     'create_offer_title' => 'Создать предложение',
     'edit_offer_title' => 'Редактировать предложение',
@@ -7,17 +7,23 @@ return [
     'category' => 'Категория',
     'select_category' => 'Выберите категорию',
     'image' => 'Изображение',
+    'offer_image' => 'Изображение предложения',
+    'no_file_selected' => 'Файл не выбран',
     'choose_file' => 'Выберите файл',
     'no_file_chosen' => 'Файл не выбран',
-    'image_requirements' => 'Изображение должно быть 1:1. Имя файла должно быть на английском.',
+    'image_requirements' => 'Рекомендуемый форматы: JPG, PNG, WEBP',
     'offer_content' => 'Содержание предложения',
+    'category_name' => 'Название категории',
     'enter_offer_text' => 'Введите текст предложения',
     'create_offer_button' => 'Создать предложение',
     'save_changes_button' => 'Сохранить изменения',
     'validation_errors' => 'Ошибки валидации',
     'add_category' => 'Добавить категорию',
     'please_select_category' => 'Выберите  или добавьте категорию.',
-    'name_regex' => 'Только буквы, цифры и символы -.,;!?$€£₽',
+    'name_regex' => 'Только буквы, цифры и символы - . , ; ! ? $ € £ ₽',
+    'create_offer_title' => 'Создать предложение',
+    'crop_image' => 'Вырезать',
+    'cancel' => 'Отменить',
 
     'validation' => [
         'name_required' => 'Название категории обязательно для заполнения.',

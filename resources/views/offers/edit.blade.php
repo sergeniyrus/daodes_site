@@ -168,7 +168,7 @@ Edit the offer
 </div>
 
     {{-- // Инициализация cropper --}}
-    <script src="{{ asset('js/image-cropper.js') }}"></script>
+    <script src="{{ asset('js/image-upload.js') }}"></script>
     {{-- // Инициализация CKEditor --}}
     <link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
     <script src="{{ asset('js/ckeditor.js') }}"></script>

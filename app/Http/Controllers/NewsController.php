@@ -200,53 +200,50 @@ class NewsController extends Controller
     }
 
     public function categoryStore(Request $request)
-{
-    $validator = Validator::make($request->all(), [
-        'name' => [
-            'required',
-            'string',
-            'max:255',
-            'unique:category_news,name',
-            'regex:/^[\p{L}\p{N}\s\-.,;!?€£\$₽]+$/u'
-        ],
-    ], [
-        'name.required' => __('admin_news.validation.name_required'),
-        'name.string' => __('admin_news.validation.name_string'),
-        'name.max' => __('admin_news.validation.name_max'),
-        'name.unique' => __('admin_news.validation.name_taken'),
-        'name.regex' => __('admin_news.validation.name_regex'),
-    ]);
-
-    if ($validator->fails()) {
-        return response()->json([
-            'success' => false,
-            'errors' => $validator->errors(),
-            'message' => __('message.validation_error')
-        ], 422);
-    }
-
-    try {
-        $category = CategoryNews::create(['name' => $request->name]);
-        
-        return response()->json([
-            'success' => true,
-            'category' => [
-                'id' => $category->id,
-                'name' => $category->name
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:category_news,name',
+                'regex:/^[\p{L}\p{N}\s\-.,;!?€£\$₽]+$/u'
             ],
-            'message' => __('message.category_added_success')
+        ], [
+            'name.required' => __('admin_news.validation.name_required'),
+            'name.string' => __('admin_news.validation.name_string'),
+            'name.max' => __('admin_news.validation.name_max'),
+            'name.unique' => __('admin_news.validation.name_taken'),
+            'name.regex' => __('admin_news.validation.name_regex'),
         ]);
-
-    } catch (\Exception $e) {
-        \Log::error('Ошибка при добавлении категории новостей: ' . $e->getMessage());
-        
-        return response()->json([
-            'success' => false,
-            'message' => __('message.category_add_failed'),
-            'error' => $e->getMessage()
-        ], 500);
+    
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'errors' => $validator->errors()->all()
+            ], 422);
+        }
+    
+        try {
+            $category = Categorynews::create(['name' => $request->name]);
+            
+            return response()->json([
+                'success' => true,
+                'message' => __('message.category_added_success'),
+                'category' => [
+                    'id' => $category->id,
+                    'name' => $category->name
+                ]
+            ]);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => __('message.category_add_failed')
+            ], 500);
+        }
     }
-}
+    
 
     public function categoryEdit($id)
     {

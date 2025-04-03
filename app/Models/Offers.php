@@ -12,8 +12,16 @@ class Offers extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title', 'content', 'user_id', // обновите этот список согласно вашему таблицу
+        'title',
+        'content',
+        'category_id',
+        'user_id',
+        'img',
+        'views',
+        'created_at',
+        'updated_at'
     ];
+
 
     public function user()
     {

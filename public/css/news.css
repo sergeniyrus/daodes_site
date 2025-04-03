@@ -95,6 +95,17 @@
   font-size: 0.9rem;
 }
 
+.news-text p a {
+  color: #00ffff;       /* Наследует цвет текста родителя */
+  text-decoration: none;  /* Убираем подчеркивание */
+  cursor: pointer;     /* Изменяем курсор при наведении */
+}
+
+.news-text p a:hover {
+  color: gold;         /* Цвет текста при наведении */
+  text-decoration: underline;  /* Добавляем подчеркивание */
+}
+
 .news-content li {
   margin: 10px 15px;
   /* Отступы между элементами списка */

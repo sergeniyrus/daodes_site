@@ -101,7 +101,7 @@ Route::prefix('news')->group(function () {
 Route::prefix('newscategories')->name('newscategories.')->middleware('auth')->group(function () {
     Route::get('/', [NewsController::class, 'categoryIndex'])->name('index');
     Route::get('/create', [NewsController::class, 'categoryCreate'])->name('create');
-    Route::post('/', [NewsController::class, 'categoryStore'])->name('store');
+    Route::post('/', [NewsController::class, 'categoryStore'])->name('categoryStore');
     Route::get('/{id}/edit', [NewsController::class, 'categoryEdit'])->name('edit');
     Route::put('/{id}', [NewsController::class, 'categoryUpdate'])->name('update');
     Route::delete('/{id}', [NewsController::class, 'categoryDestroy'])->name('destroy');
@@ -135,7 +135,7 @@ Route::prefix('offers')->group(function () {
 Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')->group(function () {
     Route::get('/', [OffersController::class, 'categoryIndex'])->name('index');
     Route::get('/create', [OffersController::class, 'categoryCreate'])->name('create');
-    Route::post('/', [OffersController::class, 'categoryStore'])->name('store');
+    Route::post('/', [OffersController::class, 'categoryStore'])->name('categoryStore');
     Route::get('/{id}/edit', [OffersController::class, 'categoryEdit'])->name('edit');
     Route::put('/{id}', [OffersController::class, 'categoryUpdate'])->name('update');
     Route::delete('/{id}', [OffersController::class, 'categoryDestroy'])->name('destroy');
