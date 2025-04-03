@@ -40,7 +40,7 @@
         .card-body,
         .my-card-body {
             margin: 0;
-            padding: 12px 18px;
+            padding: 8px 8px;
             border-radius: 18px;
             display: inline-block;
             max-width: 100%;
@@ -54,7 +54,7 @@
         }
 
         .my-card-body {
-            background: #1a3a6e;
+            background: #313335;
             border: 1px solid gold;
             border-radius: 18px 18px 0 18px;
         }
