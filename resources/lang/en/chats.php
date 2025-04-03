@@ -35,4 +35,5 @@ return [
     'footnote' => 'To send a message, press Enter.',
     'footnote2' => 'To translate a line, press Shift + Enter.',
     'online_users' => 'Online:',
+    'type_message' => 'The message',
 ];

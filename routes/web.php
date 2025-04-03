@@ -108,9 +108,6 @@ Route::prefix('newscategories')->name('newscategories.')->middleware('auth')->gr
 });
 
 
-
-
-
 // Управление предложениями
 Route::get('offers/create', [OffersController::class, 'create'])->name('offers.create')->middleware('auth');
 Route::post('offers/store', [OffersController::class, 'store'])->name('offers.store')->middleware('auth');
@@ -140,8 +137,6 @@ Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')
     Route::put('/{id}', [OffersController::class, 'categoryUpdate'])->name('update');
     Route::delete('/{id}', [OffersController::class, 'categoryDestroy'])->name('destroy');
 });
-
-
 
 
 

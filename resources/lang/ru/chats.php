@@ -35,4 +35,5 @@ return [
     'footnote' => 'Для отправки сообщения нажмите Enter.',
     'footnote2' => 'Для перевода строки Shift + Enter',
     'online_users' => 'В сети:',
+    'type_message' => 'Сообщение',
 ];
