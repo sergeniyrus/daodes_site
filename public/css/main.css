@@ -162,7 +162,7 @@ img {
   position: absolute;
   font-size: 12px;
   font-weight: bold;
-  left: 130px;
+  left: 120px;
   display: flex;
   flex-direction: column; /* Элементы будут отображаться в столбик */
   /*gap: 5px;  Добавляем отступ между элементами (опционально) */

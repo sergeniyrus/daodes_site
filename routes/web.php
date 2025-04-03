@@ -54,7 +54,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/chats/create', [ChatController::class, 'create'])->name('chats.create');
     Route::post('/chats', [ChatController::class, 'store'])->name('chats.store');
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
+    
+    Route::get('/chats/{chat}/messages', [ChatController::class, 'getMessages'])->name('messages.get');
     Route::post('/chats/{chat}/messages', [ChatController::class, 'sendMessage'])->name('messages.send');
+
     Route::get('/notifications', [ChatController::class, 'notifications'])->name('chats.notifications');
     Route::post('/notifications/{notification}/mark-as-read', [ChatController::class, 'markAsRead'])->name('notifications.markAsRead');
 });

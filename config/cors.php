@@ -1,15 +1,17 @@
 <?php
 
 return [
-  'paths' => ['*'],
+  'paths' => ['api/*', 'sanctum/csrf-cookie', 'broadcasting/*', 'reverb/*'],
   'allowed_methods' => ['*'],
   'allowed_origins' => [
       'https://daodes.space',
-      'http://localhost:5173', // Явно разрешите Vite-сервер
-      'http://[::1]:5173'      // Разрешите IPv6-адрес
+      'http://daodes.space',
+      'http://localhost:5173',
+      'http://127.0.0.1:5173',
+      'http://[::1]:5173'
   ],
   'allowed_headers' => ['*'],
   'exposed_headers' => [],
   'max_age' => 0,
-  'supports_credentials' => false,
+  'supports_credentials' => true, // Для работы с куками и Sanctum
 ];

@@ -1,37 +1,37 @@
 import './bootstrap';
-import './echo';
+// import './echo';
 
-import Alpine from 'alpinejs';
-import Echo from 'laravel-echo';
+// import Alpine from 'alpinejs';
+// import Echo from 'laravel-echo';
 
-// Инициализация Alpine.js
-window.Alpine = Alpine;
-Alpine.start();
+// // Инициализация Alpine.js
+// window.Alpine = Alpine;
+// Alpine.start();
 
-// Логирование переменных окружения
-console.log('Инициализация Echo...');
-console.log('Reverb Key:', import.meta.env.VITE_REVERB_APP_KEY);
-console.log('Reverb Host:', import.meta.env.VITE_REVERB_HOST);
-console.log('Reverb Port:', import.meta.env.VITE_REVERB_PORT);
-console.log('Reverb Scheme:', import.meta.env.VITE_REVERB_SCHEME);
+// // Логирование переменных окружения
+// console.log('Инициализация Echo...');
+// console.log('Reverb Key:', import.meta.env.VITE_REVERB_APP_KEY);
+// console.log('Reverb Host:', import.meta.env.VITE_REVERB_HOST);
+// console.log('Reverb Port:', import.meta.env.VITE_REVERB_PORT);
+// console.log('Reverb Scheme:', import.meta.env.VITE_REVERB_SCHEME);
 
-// Инициализация Laravel Echo для Reverb
-window.Echo = new Echo({
-    broadcaster: 'reverb', // Используем Reverb
-    key: import.meta.env.VITE_REVERB_APP_KEY,
-    wsHost: import.meta.env.VITE_REVERB_HOST,
-    wsPort: import.meta.env.VITE_REVERB_PORT,
-    forceTLS: (import.meta.env.VITE_REVERB_SCHEME === 'https'),
-    enabledTransports: ['ws', 'wss'],
-});
+// // Инициализация Laravel Echo для Reverb
+// window.Echo = new Echo({
+//     broadcaster: 'reverb', // Используем Reverb
+//     key: import.meta.env.VITE_REVERB_APP_KEY,
+//     wsHost: import.meta.env.VITE_REVERB_HOST,
+//     wsPort: import.meta.env.VITE_REVERB_PORT,
+//     forceTLS: (import.meta.env.VITE_REVERB_SCHEME === 'https'),
+//     enabledTransports: ['ws', 'wss'],
+// });
 
-console.log('Echo initialized'); // Логирование для отладки
+// console.log('Echo initialized'); // Логирование для отладки
 
 
-window.Echo.channel('chat')
-    .listen('NewMessage', (data) => {
-        console.log('New message:', data.message);
-    });
+// window.Echo.channel('chat')
+//     .listen('NewMessage', (data) => {
+//         console.log('New message:', data.message);
+//     });
     
 
 // // Звук для уведомлений

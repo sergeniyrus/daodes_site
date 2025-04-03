@@ -191,101 +191,57 @@ class ChatController extends Controller
         return view('chats.show', compact('chat'))->with('message', __('chats.notification_read'));
     }
 
+
+
+    public function getMessages(Chat $chat)
+{
+    $lastId = request('last_id', 0);
+    
+    return $chat->messages()
+        ->where('id', '>', $lastId)
+        ->with('sender')
+        ->orderBy('id', 'asc')
+        ->get();
+}
     /**
      * Отправляет сообщение в чат.
      * Сохраняет сообщение в IPFS и создает уведомления для участников чата.
      */
-    public function sendMessage(Request $request, $chatId)
+   public function sendMessage(Request $request, $chatId)
 {
-    // Логируем начало отправки сообщения
-    Log::info('Начало отправки сообщения', ['chatId' => $chatId, 'message' => $request->input('message')]);
-
-    // Валидация входящего сообщения
     $request->validate([
-        'message' => 'required|string|max:1000|regex:/^[\p{L}\p{N}\s.,!?\-\\n]+$/u',
+        'message' => 'required|string|max:1000',
     ]);
 
     try {
-        // Сохраняем оригинальный текст сообщения
         $messageText = $request->input('message');
-        Log::info('Оригинальный текст сообщения', ['message' => $messageText]);
-
-        // Шифруем и загружаем сообщение в IPFS
+        
+        // Шифруем и загружаем в IPFS
         $messageModel = new Message();
         $cid = $messageModel->uploadMessageToIPFS($messageText);
 
-        // Сохраняем сообщение в БД
+        // Сохраняем сообщение
         $message = Message::create([
             'chat_id' => $chatId,
             'sender_id' => Auth::id(),
-            'ipfs_cid' => $cid, // Сохраняем CID из IPFS
-        ]);
-// Получаем ID только что созданной записи
-$messageId = $message->id;
-        // Логируем успешное сохранение сообщения в БД
-        Log::info('Сообщение успешно сохранено в БД', ['messageId' => $message->id]);
-
-        // Получаем чат и участников
-        $chat = Chat::with('users')->findOrFail($chatId);
-        $recipients = $chat->users->where('id', '!=', Auth::id());
-
-      // После сохранения сообщения:
-    $messageData = [
-        'message' => $messageText,
-        'sender' => [
-            'id' => Auth::id(),
-            'name' => Auth::user()->name
-        ],
-        'timestamp' => now()->toDateTimeString(),
-        'chatId' => $chatId
-    ];
-
-    broadcast(new NewMessage(
-        $messageText,
-        $chatId,
-        Auth::user(),
-        now()->toDateTimeString()
-    ))->toOthers();
-
-        
-        Log::info('Событие NewMessageNotification отправлено', [
-            'chatId' => $chatId,
-            'senderId' => Auth::id(),
-            'message' => $request->input('message'),
-            'timestamp' => now()->toDateTimeString(),
+            'ipfs_cid' => $cid,
         ]);
 
-        // Создаем уведомления для всех участников чата (кроме отправителя)
-        $senderId = Auth::id();
-        foreach ($recipients as $user) {
-            // Отправляем уведомление
-          //  $user->notify(new \App\Notifications\NewMessageNotification($message, $chatId, $senderId));
+        return response()->json([
+            'status' => 'success',
+            'message' => [
+                'id' => $message->id,
+                'text' => $messageText,
+                'sender' => Auth::user()->name,
+                'created_at' => now()->toDateTimeString()
+            ]
+        ]);
 
-            Log::info('Создание уведомления в БД', [
-                'user_id' => $user->id,
-                'message_id' => $messageId,
-                'is_read' => false,
-            ]);
-
-            // Сохраняем уведомление в БД
-            Notification::create([
-                'user_id' => $user->id,
-                'message_id' => $message->id,
-                'is_read' => false,
-            ]);
-        }
-
-        // Логируем успешную отправку уведомлений
-        Log::info('Уведомления в БД успешно отправлены');
-
-        // Возвращаем пользователя обратно
-        return redirect()->back();
     } catch (\Exception $e) {
-        // Логируем ошибку
-        Log::error('Ошибка при отправке сообщения Контрл1: ' . $e->getMessage(), ['chatId' => $chatId, 'message' => $request->input('message')]);
-
-        // Возвращаем пользователя обратно с сообщением об ошибке
-        return redirect()->back()->with('error', __('chats.message_send_error'));
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Ошибка отправки'
+        ], 500);
     }
 }
     
