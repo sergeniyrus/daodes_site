@@ -1,8 +1,9 @@
 @extends('template')
 @section('title_page', __('chats.chat'))
 @section('main')
+    <!-- Стили остаются без изменений -->
     <style>
-        /* Обновленные стили чата */
+        /* Все стили из предыдущей версии */
         .container {
             max-width: 800px;
             margin: 0 auto;
@@ -73,13 +74,11 @@
 
         .card-text {
             color: #fff;
-            /* white-space: pre-wrap; */
             word-break: break-word;
             font-size: 1.05rem;
             line-height: 1.4;
         }
 
-        /* Стили формы ввода */
         .input-group {
             display: flex;
             gap: 12px;
@@ -130,7 +129,6 @@
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
-        /* Дополнительные кнопки */
         .additional-buttons {
             display: flex;
             justify-content: space-between;
@@ -154,7 +152,6 @@
             color: #0b0c18;
         }
 
-        /* Скроллбар */
         .chat-messages::-webkit-scrollbar {
             width: 8px;
         }
@@ -172,7 +169,6 @@
             background: #555;
         }
 
-        /* Анимации */
         @keyframes fadeIn {
             from {
                 opacity: 0;
@@ -228,12 +224,18 @@
         </div>
     </div>
 
+    <!-- Аудио элемент для уведомлений (скрытый) -->
+    <audio id="notificationSound" preload="auto">
+        <source src="/sounds/notification.mp3" type="audio/mpeg">
+    </audio>
+
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const chatForm = document.getElementById('messageForm');
             const messageInput = document.getElementById('messageInput');
             const chatMessages = document.getElementById('chat-messages');
             const sendBtn = document.querySelector('.send-btn');
+            const notificationSound = document.getElementById('notificationSound');
             const chatId = {{ $chat->id }};
             const userId = {{ auth()->id() }};
             let lastMessageId = {{ $chat->messages->last()?->id ?? 0 }};
@@ -276,9 +278,18 @@
                     })
                     .then(messages => {
                         if (messages && messages.length > 0) {
-                            lastMessageId = messages[messages.length - 1].id;
+                            const wasScrolledToBottom = 
+                                chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 50;
+                            
+                            let hasNewMessages = false;
+                            
                             messages.forEach(message => {
                                 if (message && message.sender && message.message) {
+                                    if (message.id > lastMessageId) {
+                                        hasNewMessages = true;
+                                    }
+                                    lastMessageId = Math.max(lastMessageId, message.id);
+                                    
                                     const isSent = message.sender.id === userId;
                                     const messageHTML = `
                                     <div class="message ${isSent ? 'sent' : 'received'}">
@@ -293,7 +304,17 @@
                                     chatMessages.insertAdjacentHTML('beforeend', messageHTML);
                                 }
                             });
-                            scrollToBottom();
+                            
+                            if (hasNewMessages && !wasScrolledToBottom) {
+                                // Воспроизводим звук уведомления только для новых входящих сообщений
+                                if (messages.some(m => m.sender.id !== userId)) {
+                                    notificationSound.play().catch(e => console.log('Не удалось воспроизвести звук:', e));
+                                }
+                            }
+                            
+                            if (wasScrolledToBottom) {
+                                scrollToBottom();
+                            }
                         }
                     })
                     .catch(error => console.log('Ошибка загрузки сообщений:', error));
@@ -323,14 +344,17 @@
                             if (!response.ok) {
                                 throw new Error('Network response was not ok');
                             }
-                            // Вместо обработки ответа просто обновляем страницу
+                            // Очищаем поле ввода после успешной отправки
+                            messageInput.value = '';
+                            messageInput.style.height = 'auto';
+                            // Обновляем страницу для получения актуальных данных
                             window.location.reload();
                         })
                         .catch(error => {
                             console.error('Ошибка:', error);
                             alert('Ошибка при отправке сообщения');
                             sendBtn.disabled = false;
-                            sendBtn.textContent = 'Отправить';
+                            sendBtn.textContent = '{{ __('chats.send') }}';
                         });
                 }
             });

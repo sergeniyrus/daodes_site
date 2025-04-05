@@ -170,80 +170,85 @@ class ChatController extends Controller
 
     /**
      * Отображает страницу чата.
-     * Помечает все уведомления из этого чата как прочитанные.
+     * Удаляет все уведомления из этого чата для текущего пользователя.
      */
     public function show($chatId)
     {
-        // Находим чат
-        $chat = Chat::with(['users', 'messages.sender'])->findOrFail($chatId);
+        try {
+            // Находим чат
+            $chat = Chat::with(['users', 'messages.sender'])->findOrFail($chatId);
 
-        // Получаем ID текущего пользователя
-        $userId = Auth::user()->id;
+            // Получаем ID текущего пользователя
+            $userId = Auth::user()->id;
 
-       // Удаляем все уведомления из этого чата для текущего пользователя
-    Notification::whereHas('message', function ($query) use ($chatId) {
-        $query->where('chat_id', $chatId); // Фильтруем уведомления по ID чата
-    })
-    ->where('user_id', $userId) // Фильтруем уведомления для текущего пользователя
-    ->delete(); // Удаляем уведомления
+            // Удаляем все уведомления из этого чата для текущего пользователя
+            Notification::whereHas('message', function ($query) use ($chatId) {
+                $query->where('chat_id', $chatId);
+            })
+            ->where('user_id', $userId)
+            ->delete();
 
-        // Возвращаем представление с сообщением
-        return view('chats.show', compact('chat'))->with('message', __('chats.notification_read'));
+            // Возвращаем представление с сообщением
+            return view('chats.show', compact('chat'))->with('message', __('chats.notification_read'));
+
+        } catch (\Exception $e) {
+            Log::error("Error in ChatController@show: " . $e->getMessage());
+            return redirect()->back()->with('error', __('chats.error_loading_chat'));
+        }
     }
 
-
-
     public function getMessages(Chat $chat)
-{
-    $lastId = request('last_id', 0);
-    
-    return $chat->messages()
-        ->where('id', '>', $lastId)
-        ->with('sender')
-        ->orderBy('id', 'asc')
-        ->get();
-}
+    {
+        $lastId = request('last_id', 0);
+        
+        return $chat->messages()
+            ->where('id', '>', $lastId)
+            ->with('sender')
+            ->orderBy('id', 'asc')
+            ->get();
+    }
+
     /**
      * Отправляет сообщение в чат.
      * Сохраняет сообщение в IPFS и создает уведомления для участников чата.
      */
-   public function sendMessage(Request $request, $chatId)
-{
-    $request->validate([
-        'message' => 'required|string|max:1000',
-    ]);
-
-    try {
-        $messageText = $request->input('message');
-        
-        // Шифруем и загружаем в IPFS
-        $messageModel = new Message();
-        $cid = $messageModel->uploadMessageToIPFS($messageText);
-
-        // Сохраняем сообщение
-        $message = Message::create([
-            'chat_id' => $chatId,
-            'sender_id' => Auth::id(),
-            'ipfs_cid' => $cid,
+    public function sendMessage(Request $request, $chatId)
+    {
+        $request->validate([
+            'message' => 'required|string|max:1000',
         ]);
 
-        return response()->json([
-            'status' => 'success',
-            'message' => [
-                'id' => $message->id,
-                'text' => $messageText,
-                'sender' => Auth::user()->name,
-                'created_at' => now()->toDateTimeString()
-            ]
-        ]);
+        try {
+            $messageText = $request->input('message');
+            
+            // Шифруем и загружаем в IPFS
+            $messageModel = new Message();
+            $cid = $messageModel->uploadMessageToIPFS($messageText);
 
-    } catch (\Exception $e) {
-        return response()->json([
-            'status' => 'error',
-            'message' => 'Ошибка отправки'
-        ], 500);
+            // Сохраняем сообщение
+            $message = Message::create([
+                'chat_id' => $chatId,
+                'sender_id' => Auth::id(),
+                'ipfs_cid' => $cid,
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => [
+                    'id' => $message->id,
+                    'text' => $messageText,
+                    'sender' => Auth::user()->name,
+                    'created_at' => now()->toDateTimeString()
+                ]
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Ошибка отправки'
+            ], 500);
+        }
     }
-}
     
     /**
      * Вспомогательный метод для загрузки сообщения в IPFS.
