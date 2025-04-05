@@ -3,12 +3,12 @@
 @section('main')
     <!-- Стили остаются без изменений -->
     <style>
-        /* Все стили из предыдущей версии */
+        /* Все стили из предыдущей версии 
         .container {
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-        }
+        }*/
 
         .chat-messages {
             height: 500px;
@@ -96,7 +96,7 @@
             max-height: 150px;
             padding: 12px 18px;
             background-color: #1a1a1a;
-            color: #a0ff08;
+            color: #ffffff;
             border: 1px solid gold;
             border-radius: 25px;
             resize: none;
@@ -104,11 +104,6 @@
             font-size: 1.1rem;
             line-height: 1.5;
             transition: border 0.3s ease;
-        }
-
-        #messageInput:focus {
-            border-color: #d7fc09;
-            box-shadow: 0 0 5px rgba(215, 252, 9, 0.5);
         }
 
         .send-btn {
@@ -124,8 +119,8 @@
         }
 
         .send-btn:hover {
-            background: #ffd700;
-            transform: scale(1.03);
+            background: gold;
+            transform: scale(1.05);
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         }
 
@@ -263,101 +258,123 @@
 
             // Функция загрузки новых сообщений
             function loadNewMessages() {
-                fetch(`/chats/${chatId}/messages?last_id=${lastMessageId}`)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.text().then(text => {
-                            try {
-                                return text ? JSON.parse(text) : [];
-                            } catch {
-                                return [];
-                            }
-                        });
-                    })
-                    .then(messages => {
-                        if (messages && messages.length > 0) {
-                            const wasScrolledToBottom = 
-                                chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 50;
-                            
-                            let hasNewMessages = false;
-                            
-                            messages.forEach(message => {
-                                if (message && message.sender && message.message) {
-                                    if (message.id > lastMessageId) {
-                                        hasNewMessages = true;
-                                    }
-                                    lastMessageId = Math.max(lastMessageId, message.id);
-                                    
-                                    const isSent = message.sender.id === userId;
-                                    const messageHTML = `
-                                    <div class="message ${isSent ? 'sent' : 'received'}">
-                                        <div class="${isSent ? 'my-card-body' : 'card-body'}">
-                                            <p class="card-title">${message.sender.name}
-                                                <small>${message.created_at}</small>
-                                            </p>
-                                            <p class="card-text">${message.message.replace(/\n/g, '<br>')}</p>
-                                        </div>
-                                    </div>
-                                `;
-                                    chatMessages.insertAdjacentHTML('beforeend', messageHTML);
-                                }
-                            });
-                            
-                            if (hasNewMessages && !wasScrolledToBottom) {
-                                // Воспроизводим звук уведомления только для новых входящих сообщений
-                                if (messages.some(m => m.sender.id !== userId)) {
-                                    notificationSound.play().catch(e => console.log('Не удалось воспроизвести звук:', e));
-                                }
-                            }
-                            
-                            if (wasScrolledToBottom) {
-                                scrollToBottom();
-                            }
-                        }
-                    })
-                    .catch(error => console.log('Ошибка загрузки сообщений:', error));
+    fetch(`/chats/${chatId}/messages?last_id=${lastMessageId}`, {
+        headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        credentials: 'include' // Важно для передачи куки
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Ошибка HTTP! Статус: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(messages => {
+        if (messages && messages.length > 0) {
+            const wasScrolledToBottom = 
+                chatMessages.scrollTop + chatMessages.clientHeight >= chatMessages.scrollHeight - 50;
+            
+            let hasNewMessages = false;
+            
+            messages.forEach(message => {
+                if (message && message.sender && message.message) {
+                    if (message.id > lastMessageId) {
+                        hasNewMessages = true;
+                        lastMessageId = message.id;
+                    }
+                    
+                    const isSent = message.sender.id === userId;
+                    const messageHTML = `
+                        <div class="message ${isSent ? 'sent' : 'received'}">
+                            <div class="${isSent ? 'my-card-body' : 'card-body'}">
+                                <p class="card-title">${message.sender.name}
+                                    <small>${new Date(message.created_at).toLocaleTimeString()}</small>
+                                </p>
+                                <p class="card-text">${message.message.replace(/\n/g, '<br>')}</p>
+                            </div>
+                        </div>
+                    `;
+                    chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+                }
+            });
+            
+            if (hasNewMessages) {
+                if (!wasScrolledToBottom && messages.some(m => m.sender.id !== userId)) {
+                    notificationSound.play().catch(e => console.log('Ошибка воспроизведения звука:', e));
+                }
+                if (wasScrolledToBottom) {
+                    scrollToBottom();
+                }
             }
+        }
+    })
+    .catch(error => {
+        console.error('Ошибка загрузки сообщений:', error);
+        // Можно добавить повторный запрос через некоторое время
+        setTimeout(loadNewMessages, 5000);
+    });
+}
 
             // Отправка формы с автообновлением
             chatForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const message = messageInput.value.trim();
+    e.preventDefault();
+    const message = messageInput.value.trim();
 
-                if (message) {
-                    sendBtn.disabled = true;
-                    sendBtn.textContent = 'Отправка...';
+    if (message) {
+        sendBtn.disabled = true;
+        sendBtn.textContent = 'Отправка...';
 
-                    fetch(this.action, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                    .content,
-                            },
-                            body: JSON.stringify({
-                                message: message.replace(/\n/g, '\\n')
-                            }),
-                        })
-                        .then(response => {
-                            if (!response.ok) {
-                                throw new Error('Network response was not ok');
-                            }
-                            // Очищаем поле ввода после успешной отправки
-                            messageInput.value = '';
-                            messageInput.style.height = 'auto';
-                            // Обновляем страницу для получения актуальных данных
-                            window.location.reload();
-                        })
-                        .catch(error => {
-                            console.error('Ошибка:', error);
-                            alert('Ошибка при отправке сообщения');
-                            sendBtn.disabled = false;
-                            sendBtn.textContent = '{{ __('chats.send') }}';
-                        });
-                }
-            });
+        fetch(this.action, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({
+                message: message.replace(/\n/g, '\\n')
+            }),
+            credentials: 'include'
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Ошибка сети');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.status === 'success') {
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+                // Добавляем новое сообщение в чат без перезагрузки
+                const newMessage = data.message;
+                const messageHTML = `
+                    <div class="message sent">
+                        <div class="my-card-body">
+                            <p class="card-title">${newMessage.sender}
+                                <small>${new Date().toLocaleTimeString()}</small>
+                            </p>
+                            <p class="card-text">${newMessage.text.replace(/\n/g, '<br>')}</p>
+                        </div>
+                    </div>
+                `;
+                chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+                scrollToBottom();
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка:', error);
+            alert('Ошибка при отправке сообщения');
+        })
+        .finally(() => {
+            sendBtn.disabled = false;
+            sendBtn.textContent = '{{ __('chats.send') }}';
+        });
+    }
+});
 
             // Автоматическое обновление каждые 3 секунды
             setInterval(loadNewMessages, 3000);
