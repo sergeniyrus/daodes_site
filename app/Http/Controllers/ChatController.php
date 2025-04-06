@@ -212,43 +212,71 @@ class ChatController extends Controller
      * Отправляет сообщение в чат.
      * Сохраняет сообщение в IPFS и создает уведомления для участников чата.
      */
-    public function sendMessage(Request $request, $chatId)
-    {
-        $request->validate([
-            'message' => 'required|string|max:1000',
+    /**
+ * Отправляет сообщение в чат.
+ * Сохраняет сообщение в IPFS и создает уведомления для участников чата.
+ */
+public function sendMessage(Request $request, $chatId)
+{
+    $request->validate([
+        'message' => 'required|string|max:1000',
+    ]);
+
+    try {
+        $messageText = $request->input('message');
+        
+        // Шифруем и загружаем в IPFS
+        $messageModel = new Message();
+        $cid = $messageModel->uploadMessageToIPFS($messageText);
+
+        // Сохраняем сообщение
+        $message = Message::create([
+            'chat_id' => $chatId,
+            'sender_id' => Auth::id(),
+            'ipfs_cid' => $cid,
         ]);
 
-        try {
-            $messageText = $request->input('message');
-            
-            // Шифруем и загружаем в IPFS
-            $messageModel = new Message();
-            $cid = $messageModel->uploadMessageToIPFS($messageText);
+        // Получаем ID всех участников чата, кроме отправителя
+        $recipientIds = Chat::findOrFail($chatId)
+            ->users()
+            ->where('user_id', '!=', Auth::id())
+            ->pluck('user_id');
 
-            // Сохраняем сообщение
-            $message = Message::create([
-                'chat_id' => $chatId,
-                'sender_id' => Auth::id(),
-                'ipfs_cid' => $cid,
-            ]);
-
-            return response()->json([
-                'status' => 'success',
-                'message' => [
-                    'id' => $message->id,
-                    'text' => $messageText,
-                    'sender' => Auth::user()->name,
-                    'created_at' => now()->toDateTimeString()
-                ]
-            ]);
-
-        } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Ошибка отправки'
-            ], 500);
+        // Создаем уведомления для каждого получателя
+        $notifications = [];
+        foreach ($recipientIds as $recipientId) {
+            $notifications[] = [
+                'user_id' => $recipientId,
+                'message_id' => $message->id,
+                'is_read' => false,
+                'created_at' => now(),
+                'updated_at' => now()
+            ];
         }
+
+        // Массовое создание уведомлений
+        if (!empty($notifications)) {
+            Notification::insert($notifications);
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => [
+                'id' => $message->id,
+                'text' => $messageText,
+                'sender' => Auth::user()->name,
+                'created_at' => now()->toDateTimeString()
+            ]
+        ]);
+
+    } catch (\Exception $e) {
+        Log::error('Ошибка отправки сообщения: ' . $e->getMessage());
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Ошибка отправки сообщения'
+        ], 500);
     }
+}
     
     /**
      * Вспомогательный метод для загрузки сообщения в IPFS.
