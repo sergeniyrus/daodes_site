@@ -14,6 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web([
             \Illuminate\Http\Middleware\HandleCors::class, // Добавлено CORS middleware
             \App\Http\Middleware\SetLocale::class,
+            \App\Http\Middleware\CheckCookieConsent::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

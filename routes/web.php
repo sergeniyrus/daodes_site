@@ -24,6 +24,7 @@ use App\Http\Controllers\{
     LanguageController,
     CaptchaController,
     NotificationController,
+    CookieConsentController,
 };
 use App\Http\Middleware\SetLocale;
 // use App\Services\IpStackService;
@@ -40,6 +41,18 @@ use App\Http\Middleware\SetLocale;
 //         'longitude' => $location['longitude'],
 //     ];
 // });
+
+// Cookie consent routes
+Route::post('/cookies/accept', [CookieConsentController::class, 'accept'])->name('cookies.accept');
+Route::post('/cookies/reject', [CookieConsentController::class, 'reject'])->name('cookies.reject');
+
+// Localized cookie policy routes
+Route::get('/cookie-policy', [CookieConsentController::class, 'policy'])
+    ->name('cookie.policy');
+
+
+
+
 
 Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
 
