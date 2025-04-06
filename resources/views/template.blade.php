@@ -37,18 +37,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@43.3.1/build/ckeditor.js"></script> <!-- Подключает редактор CKEditor -->
     <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script> <!-- Подключает клиент IPFS для работы с децентрализованным хранилищем -->
 
-    {{-- <!-- Скрипт раскрытия блоков -->
-    <script src="js/block.js" type="text/javascript"></script>
-    <!-- кнопка вверх -->
-    <script src="js/bt_top.js" type="text/javascript"></script> --}}
+    {{--     <script src="js/bt_top.js" type="text/javascript"></script> --}}
 
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}"> <!-- Подключает основной CSS-файл приложения -->
-    <!-- * Вставляем стили -->
-    {{-- <link rel="stylesheet" href="css/main.css"> --}}
-    @vite(['resources/css/app.css', 'public/css/main.css', 'resources/js/app.js', 'resources/js/bt_top.js']) <!-- Подключает различные CSS и JS файлы через Vite для оптимизации загрузки -->
-
-    {{-- <script async src="https://telegram.org/js/telegram-widget.js?22" data-telegram-login="DAODES_Robot" data-size="large" data-auth-url="https://daodes.space/" data-request-access="write"></script> --}}
-
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}"  type="text/css"> <!-- Подключает основной CSS-файл приложения -->
+    <script src="{{ asset('js/bt_top.js') }} " type="text/javascript"></script>
+    
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
     <!-- Подключает стили для карусели Slick -->
     <link rel="stylesheet" type="text/css"
