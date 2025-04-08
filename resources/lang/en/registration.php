@@ -20,4 +20,7 @@ return [
     'password_min' => 'The password must be at least :min characters.',
     'password_max' => 'The password must not exceed :max characters.',
     'password_confirmed' => 'The passwords do not match!',
+    'agree_text' => 'I agree with',
+    'agree_link' => 'user agreement',
+    'agree_required' => 'To continue, you must accept the terms of the agreement',
 ];

@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Validator;
 
 class RegisteredUserController extends Controller
 {
@@ -31,5 +32,16 @@ class RegisteredUserController extends Controller
         ]);
 
         return redirect()->route('seed.index');
+    }
+
+    protected function validator(array $data)
+    {
+        return Validator::make($data, [
+            // другие правила
+            'agreeToTerms' => ['required', 'accepted'],
+        ], [
+            'agreeToTerms.required' => __('registration.agree_required'),
+            'agreeToTerms.accepted' => __('registration.agree_required'),
+        ]);
     }
 }

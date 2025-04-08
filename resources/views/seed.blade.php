@@ -5,7 +5,7 @@
 @section('main')
     @inject('encryptionService', 'App\Services\EncryptionService')
     <style>
-        .modal-content {
+        .content {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -119,7 +119,7 @@ button.des-btn {
         }
     </style>
 
-<div class="modal-content">
+<div class="container content">
     <img src="/img/main/img_avatar.jpg" alt="Avatar" class="avatar">
     <div class="container">
         <form method="post" action="{{ route('seed.save') }}">

@@ -6,84 +6,113 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\User;
+use App\Services\EncryptionService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 
 class KeywordResetPasswordController extends Controller
 {
-    /**
-     * Show the form to request a password reset using a keyword.
-     */
+    protected $encryptionService;
+
+    public function __construct(EncryptionService $encryptionService)
+    {
+        $this->encryptionService = $encryptionService;
+    }
+
+    // Показать форму для сброса пароля по ключевому слову
     public function showKeywordForm()
     {
         return view('auth.forgot-password');
     }
 
-    /**
-     * Handle the submission of the keyword reset form.
-     */
+    // Обработка отправки ключевого слова
     public function submitKeyword(Request $request)
     {
-        // Validate the request
         $request->validate([
-            'username' => 'required|string|exists:users,name',
+            'username' => 'required|string',
             'keyword' => 'required|string',
         ]);
 
-        // Find the user by username
         $user = User::where('name', $request->username)->first();
 
-        // Check if the keyword matches
-        if ($user && $user->keyword === $request->keyword) {
-            // Generate a token for password reset
+        if (!$user) {
+            Log::warning('Password reset attempt for non-existent user', ['username' => $request->username]);
+            return back()->withErrors(['general' => __('message.incorrect_credentials')]);
+        }
+
+        try {
+            $decryptedKeyword = $this->encryptionService->decrypt($user->keyword);
+            
+            if (!hash_equals($decryptedKeyword, $request->keyword)) {
+                Log::warning('Incorrect keyword for user', ['user_id' => $user->id]);
+                return back()->withErrors(['general' => __('message.incorrect_credentials')]);
+            }
+
+            // Генерируем и сохраняем токен
             $token = Str::random(60);
+            Session::put('password_reset_token', $token);
+            Session::put('password_reset_user_id', $user->id);
+
             $user->forceFill([
                 'remember_token' => Hash::make($token),
             ])->save();
 
-            // Redirect to the password reset form with the token
-            return redirect()->route('password.reset', ['token' => $token]);
+            Log::info('Keyword verified for password reset', ['user_id' => $user->id]);
+
+            return redirect()->route('password.reset')
+                ->with('status', __('message.keyword_verified'));
+
+        } catch (\Exception $e) {
+            Log::error('Keyword decryption failed', [
+                'user_id' => $user->id ?? null,
+                'error' => $e->getMessage()
+            ]);
+            return back()->withErrors(['general' => __('message.decryption_error')]);
+        }
+    }
+
+    // Показать форму для нового пароля
+    public function showResetForm()
+    {
+        if (!Session::has('password_reset_token')) {
+            return redirect()->route('password.keyword')
+                ->withErrors(['general' => __('message.invalid_token')]);
         }
 
-        // If keyword doesn't match, return with an error
-        return back()->withErrors(['keyword' => __('message.keyword_incorrect')]);
+        return view('auth.reset-password');
     }
 
-    /**
-     * Show the form to reset the password.
-     */
-    public function showResetForm(Request $request)
-    {
-        return view('auth.reset-password', [
-            'token' => $request->token,
-        ]);
-    }
-
-    /**
-     * Update the user's password.
-     */
+    // Обновление пароля
     public function updatePassword(Request $request)
     {
-        // Validate the request
         $request->validate([
-            'token' => 'required', // Token for verification
-            'password' => 'required|string|min:8|confirmed', // New password
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Find the user by the token
-        $user = User::whereNotNull('remember_token')->first();
+        $token = Session::get('password_reset_token');
+        $userId = Session::get('password_reset_user_id');
 
-        // Check if the token is valid
-        if ($user && Hash::check($request->token, $user->remember_token)) {
-            // Update the password
-            $user->forceFill([
-                'password' => Hash::make($request->password), // Hash the new password
-                'remember_token' => null, // Clear the token after use
-            ])->save();
-
-            // Redirect to login with a success message
-            return redirect()->route('login')->with('status', __('message.password_reset_success'));
+        if (!$token || !$userId) {
+            return back()->withErrors(['general' => __('message.invalid_token')]);
         }
 
-        // If token is invalid, return with an error
-        return back()->withErrors(['token' => __('message.invalid_token')]);
+        $user = User::find($userId);
+
+        if (!$user || !Hash::check($token, $user->remember_token)) {
+            Log::warning('Invalid password reset token attempted');
+            return back()->withErrors(['general' => __('message.invalid_token')]);
+        }
+
+        $user->forceFill([
+            'password' => Hash::make($request->password),
+            'remember_token' => null,
+        ])->save();
+
+        Session::forget(['password_reset_token', 'password_reset_user_id']);
+
+        Log::info('Password reset successful', ['user_id' => $user->id]);
+
+        return redirect()->route('login')
+            ->with('status', __('message.password_reset_success'));
     }
 }

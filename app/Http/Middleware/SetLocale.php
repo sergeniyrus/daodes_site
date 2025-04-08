@@ -11,83 +11,85 @@ use Illuminate\Support\Facades\Redirect;
 
 class SetLocale
 {
+    // Страны, для которых устанавливается русский язык (все страны бывшего СССР)
+    const RUSSIAN_SPEAKING_COUNTRIES = [
+        'RU', // Россия
+        'BY', // Беларусь
+        'UA', // Украина
+        'KZ', // Казахстан
+        'AZ', // Азербайджан
+        'AM', // Армения
+        'GE', // Грузия
+        'MD', // Молдова
+        'UZ', // Узбекистан
+        'TM', // Туркменистан
+        'TJ', // Таджикистан
+        'KG', // Кыргызстан
+        'LV', // Латвия
+        'LT', // Литва
+        'EE', // Эстония
+    ];
+
+    const DEFAULT_LOCALE = 'en';
+    const TRUSTED_IPS = ['127.0.0.1', '::1', '95.188.118.100'];
+
     public function handle($request, Closure $next)
-{
-    // Если это маршрут страницы с CAPTCHA, пропускаем проверку
-    if ($request->routeIs('captcha.show') || $request->routeIs('captcha.verify')) {
-        return $next($request);
-    }
+    {
+        try {
+            $ip = $request->ip();
+            $isTrustedIp = in_array($ip, self::TRUSTED_IPS);
 
-    // Проверка, прошел ли пользователь reCAPTCHA
-    if (!Session::has('captcha_passed')) {
-        // Если reCAPTCHA не пройдена, перенаправляем на страницу с CAPTCHA
-        return Redirect::route('captcha.show');
-    }
+            // Проверка CAPTCHA (пропускаем для доверенных IP и страниц CAPTCHA)
+            if (!$request->routeIs('captcha.show', 'captcha.verify') && 
+                !$isTrustedIp && 
+                !Session::has('captcha_passed')) {
+                return Redirect::route('captcha.show');
+            }
 
-    // Остальная логика middleware
-    if ($request->ip() === '127.0.0.1' || $request->ip() === '::1') {
-        $locale = 'en';
-    } else {
-        if (Session::has('locale')) {
-            $locale = Session::get('locale');
-        } else {
-            $locale = $this->getLocaleFromIP($request->ip());
-            Session::put('locale', $locale);
+            // Установка локали
+            if (Session::has('locale')) {
+                $locale = Session::get('locale');
+            } else {
+                // Для доверенных IP по умолчанию русский, если не выбран другой
+                $locale = $isTrustedIp ? 'ru' : $this->getLocaleFromIP($ip);
+                Session::put('locale', $locale);
+            }
+
+            App::setLocale($locale);
+            return $next($request);
+
+        } catch (\Exception $e) {
+            // Логируем ошибку и используем локаль по умолчанию
+            Log::error('Locale middleware error: ' . $e->getMessage());
+            App::setLocale(self::DEFAULT_LOCALE);
+            return $next($request);
         }
     }
 
-    App::setLocale($locale);
-
-    return $next($request);
-}
-
-    /**
-     * Определяет локаль на основе IP-адреса пользователя.
-     *
-     * @param string $ip
-     * @return string
-     */
     protected function getLocaleFromIP(string $ip): string
     {
-        //Log::info('getLocaleFromIP called for IP: ' . $ip);
-
-        // Ключ для кеширования
         $cacheKey = 'ipstack_locale_' . $ip;
-
-        // Пытаемся получить локаль из кеша
+        
         return Cache::remember($cacheKey, now()->addMonth(), function () use ($ip) {
-            // Используем сервис ipstack для определения страны
-            $ipstack = app('ipstack');
-            $location = $ipstack->getLocation($ip);
-
-            // Если страну определить не удалось, используем локаль по умолчанию
-            $countryCode = $location['country_code'] ?? null;
-
-            // Логируем запись в кеш
-            //Log::info("Locale cached for IP: {$ip}", [
-            //     'country_code' => $countryCode,
-            //     'locale' => $this->getLocaleByCountryCode($countryCode),
-            // ]);
-
-            // Возвращаем локаль на основе страны
-            return $this->getLocaleByCountryCode($countryCode);
+            try {
+                $location = app('ipstack')->getLocation($ip);
+                $countryCode = $location['country_code'] ?? null;
+                
+                // Для стран бывшего СССР - русский, для остальных - английский
+                return $this->getLocaleByCountryCode($countryCode);
+            } catch (\Exception $e) {
+                Log::error("IPStack failed for IP {$ip}: " . $e->getMessage());
+                return self::DEFAULT_LOCALE;
+            }
         });
     }
 
-    /**
-     * Возвращает локаль на основе кода страны.
-     *
-     * @param string|null $countryCode
-     * @return string
-     */
     protected function getLocaleByCountryCode(?string $countryCode): string
     {
-        // Если код страны не передан, используем локаль по умолчанию
         if ($countryCode === null) {
-            return 'en'; // или 'ru', в зависимости от ваших предпочтений
+            return self::DEFAULT_LOCALE;
         }
 
-        // Пример: для России устанавливаем русский язык, для остальных — английский
-        return $countryCode === 'RU' ? 'ru' : 'en';
+        return in_array($countryCode, self::RUSSIAN_SPEAKING_COUNTRIES) ? 'ru' : 'en';
     }
 }
