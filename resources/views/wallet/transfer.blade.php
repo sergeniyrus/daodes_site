@@ -21,7 +21,7 @@
             </div>
         @endif
 
-        <form action="{{ route('wallet.transfer') }}" method="post" id="transferForm">
+        <form action="{{ route('wallet.transfer.submit') }}" method="post" id="transferForm">
             @csrf
 
             <!-- Получатель -->

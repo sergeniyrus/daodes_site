@@ -8,11 +8,10 @@ use App\Models\Seed;
 use App\Models\HistoryPay;
 use App\Models\UserProfile;
 use App\Services\WalletService;
+use App\Services\EncryptionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Exception;
-use Illuminate\Support\Facades\Log;
 
 class WalletController extends Controller
 {
@@ -27,21 +26,17 @@ class WalletController extends Controller
     {
         $user = Auth::user();
 
-        // Получаем или создаем кошелек для пользователя
         $wallet = Wallet::firstOrCreate(
             ['user_id' => $user->id],
             ['balance' => 100]
         );
 
-        // Получаем профиль пользователя
         $UserProfile = $user->profile;
 
         if ($wallet->wasRecentlyCreated) {
-            // Сообщение о создании кошелька и начислении 100 монет
             session()->flash('message', __('message.wallet_created'));
         }
 
-        // Передаем кошелек и профиль пользователя в представление
         return view('wallet.wallet', compact('wallet', 'UserProfile'));
     }
 
@@ -50,7 +45,10 @@ class WalletController extends Controller
         $user = Auth::user();
         $UserProfile = $user->profile;
 
-        // Проверяем, есть ли аватар в профиле, и передаем правильный URL
+        if (!$UserProfile) {
+            session()->flash('error', __('wallet.profile_not_found'));
+        }
+
         $avatarUrl = $UserProfile ? $UserProfile->avatar_url : '/img/main/img_avatar.jpg';
 
         return view('wallet.transfer', compact('avatarUrl', 'UserProfile'));
@@ -67,55 +65,57 @@ class WalletController extends Controller
         $user = Auth::user();
         $amount = $validatedData['amount'];
         $recipientName = $validatedData['recipient'];
-        $seedPhrase = $validatedData['seed_phrase'];
+        $seedPhraseInput = strtolower(trim($validatedData['seed_phrase']));
 
-        // Получаем кошелек отправителя
         $fromWallet = Wallet::where('user_id', $user->id)->firstOrFail();
 
-        // Находим получателя
         $recipientUser = User::where('name', $recipientName)->first();
-
         if (!$recipientUser) {
-            return redirect()->back()->withErrors(['recipient' => __('message.recipient_not_found')]);
+            session()->flash('error', __('wallet.invalid_recipient'));
+            return redirect()->back()->withErrors(['recipient' => __('wallet.invalid_recipient')]);
         }
 
-        // Получаем кошелек получателя
         $toWallet = Wallet::where('user_id', $recipientUser->id)->firstOrFail();
-
-        // Добавляем комиссию
         $totalAmount = $amount * 1.01;
 
-        // Проверяем, есть ли достаточно средств
         if ($fromWallet->balance < $totalAmount) {
-            return redirect()->back()->withErrors(['amount' => __('message.insufficient_funds')]);
+            return redirect()->back()
+                ->withInput()
+                ->with('error', __('wallet.insufficient_funds'));
+        }
+        
+
+        $seed = Seed::where('user_id', $user->id)->first();
+        if (!$seed) {
+            session()->flash('error', __('wallet.seed_phrase_not_found'));
+            return redirect()->back()->withErrors(['seed_phrase' => __('wallet.seed_phrase_not_found')]);
         }
 
-        // Проверка сид-фразы
-        $storedSeed = Seed::where('user_id', $user->id)->first();
-        if (!$storedSeed) {
-            return redirect()->back()->withErrors(['seed_phrase' => __('message.seed_phrase_not_found')]);
+        $encryptionService = app(EncryptionService::class);
+        $decryptedWords = [];
+
+        for ($i = 0; $i <= 23; $i++) {
+            $wordField = "word{$i}";
+            if (!isset($seed->$wordField)) {
+                session()->flash('error', __('wallet.seed_phrase_corrupted'));
+                return redirect()->back()->withErrors(['seed_phrase' => __('wallet.seed_phrase_corrupted')]);
+            }
+
+            try {
+                $decryptedWords[] = strtolower(trim($encryptionService->decrypt($seed->$wordField)));
+            } catch (\Exception $e) {
+                session()->flash('error', __('wallet.seed_phrase_decryption_failed'));
+                return redirect()->back()->withErrors(['seed_phrase' => __('wallet.seed_phrase_decryption_failed')]);
+            }
         }
 
-        $storedSeedPhrase = implode(' ', array_slice($storedSeed->toArray(), 2));
+        $decryptedSeedPhrase = implode(' ', $decryptedWords);
 
-        // Убираем пробелы и приводим к нижнему регистру
-        $seedPhrase = strtolower(trim($seedPhrase));
-        $storedSeedPhrase = strtolower(trim($storedSeedPhrase));
-
-        // Логируем длину строк
-        // Log::info('Length of entered seed phrase: ' . strlen($seedPhrase));
-        // Log::info('Length of stored seed phrase: ' . strlen($storedSeedPhrase));
-
-        // Логируем строки
-        // Log::info('Seed phrase entered by user: ' . $seedPhrase);
-        // Log::info('Stored seed phrase: ' . $storedSeedPhrase);
-
-        // Сравнение сид-фраз
-        if ($seedPhrase !== $storedSeedPhrase) {
-            return redirect()->back()->withErrors(['seed_phrase' => __('message.invalid_seed_phrase')]);
+        if ($seedPhraseInput !== $decryptedSeedPhrase) {
+            session()->flash('error', __('wallet.invalid_seed_phrase'));
+            return redirect()->back()->withErrors(['seed_phrase' => __('wallet.invalid_seed_phrase')]);
         }
 
-        // Транзакция
         DB::transaction(function () use ($fromWallet, $toWallet, $amount, $totalAmount) {
             $fromWallet->balance -= $totalAmount;
             $fromWallet->save();
@@ -135,7 +135,8 @@ class WalletController extends Controller
             $systemWallet->save();
         });
 
-        return redirect()->route('wallet.index')->with('success', __('message.transfer_success'));
+        session()->flash('message', __('wallet.transfer_success'));
+        return redirect()->route('wallet.index');
     }
 
     public function history()

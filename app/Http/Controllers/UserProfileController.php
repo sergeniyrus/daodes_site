@@ -3,19 +3,62 @@
 namespace App\Http\Controllers;
 
 use App\Models\UserProfile;
+use App\Models\Wallet;
+use App\Http\Requests\ProfileUpdateRequest;
 use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 
 class UserProfileController extends Controller
 {
+    // Показ формы редактирования
+    public function edit(): View
+    {
+        $profile = UserProfile::firstOrCreate(['user_id' => Auth::id()]);
+        return view('user_profile.edit', compact('profile'));
+    }
+
+    // Обновление данных из основной таблицы users
+    public function updateProfileData(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $request->user()->fill($request->validated());
+
+        if ($request->user()->isDirty('name')) {
+            $request->user()->email_verified_at = null;
+        }
+
+        $request->user()->save();
+
+        return Redirect::route('user_profile.edit')->with('status', __('message.profile_updated'));
+    }
+
+    // Удаление аккаунта
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->validateWithBag('userDeletion', [
+            'password' => ['required', 'current_password'],
+        ]);
+
+        $user = $request->user();
+        Auth::logout();
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
+    }
+
+    // Просмотр профиля
     public function index($id = null)
     {
         $userId = $id ?? Auth::id();
         $currentUserId = Auth::id();
 
-        // Ищем профиль пользователя
         $userProfile = UserProfile::with('user')->where('user_id', $userId)->first();
 
         if (!$userProfile) {
@@ -35,106 +78,100 @@ class UserProfileController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $data = $request->validate([
-            'role' => 'nullable|in:executor,customer,both',
-            'avatar_url' => 'nullable|string',
-            'nickname' => 'nullable|string',
-            'gender' => 'nullable|in:male,female',
-            'birth_date' => 'nullable|date',
-            'languages' => 'nullable|string',
-            'timezone' => 'nullable|string',
-            'education' => 'nullable|string',
-            'resume' => 'nullable|string',
-            'portfolio' => 'nullable|string',
-            'specialization' => 'nullable|string',
-        ]);
+{
+    $data = $request->validate([
+        'role' => 'nullable|in:executor,customer,both',
+        'nickname' => 'nullable|string',
+        'gender' => 'nullable|in:male,female',
+        'birth_date' => 'nullable|date',
+        'languages' => 'nullable|string',
+        'timezone' => 'nullable|string',
+        'education' => 'nullable|string',
+        'resume' => 'nullable|string',
+        'portfolio' => 'nullable|string',
+        'specialization' => 'nullable|string',
+        'filename' => 'nullable|image|max:2048',
+    ]);
 
-        // Log::info('Данные перед записью в БД 1 :', $data);
+    // Обработка аватара через общую функцию
+    $data['avatar_url'] = $this->handleAvatarUpload($request);
 
-        if ($request->hasFile('filename')) {
-            // Загрузка аватара на IPFS
-            $avatarUrl = $this->uploadToIPFS($request->file('filename'));
-            if ($avatarUrl) {
-                $data['avatar_url'] = $avatarUrl;
-            } else {
-                // Log::error('Ошибка при загрузке аватара на IPFS.');
-                return redirect()->back()->withErrors(__('message.avatar_upload_error'));
-            }
-        } else {
-            $data['avatar_url'] = 'https://daodes.space/ipfs/QmPdPDwGSrfWYxomC3u9FLBtB9MGH8iqVGRZ9TLPxZTekj';
-        }
+    $data['user_id'] = Auth::id();
+    UserProfile::create($data);
 
-        $data['user_id'] = Auth::id();
+    return redirect()->route('user_profile.index')->with('success', __('message.profile_created'));
+}
 
-        // Log::info('Данные перед записью в БД 2:', $data);
-
-        UserProfile::create($data);
-
-        return redirect()->route('user_profile.index')->with('success', __('message.profile_created'));
-    }
 
     public function show($id)
     {
         $profile = UserProfile::with('user')->find($id);
-
         if (!$profile) {
             return redirect()->route('user_profile.index')->with('error', __('message.profile_not_found'));
         }
 
-        return view('user_profile.show', compact('profile'));
+        return view('user_profile.index', compact('profile'));
     }
 
-    public function edit()
-    {
-        // Создание профиля, если его нет
-        $profile = UserProfile::firstOrCreate(['user_id' => Auth::id()]);
-        return view('user_profile.edit', compact('profile'));
-    }
+    public function updateFullProfile(Request $request)
+{
+    Log::info('Запущен updateFullProfile()');
 
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'filename' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'role' => 'required|in:executor,customer,both',
-            'nickname' => 'nullable|string',
-            'gender' => 'nullable|string',
-            'birth_date' => 'nullable|date',
-            'languages' => 'nullable|string',
-            'timezone' => 'nullable|string',
-            'education' => 'nullable|string',
-            'specialization' => 'nullable|string',
-            'resume' => 'nullable|string',
-            'portfolio' => 'nullable|string',
-        ]);
+    $user = auth()->user();
 
-        // Находим или создаем профиль
-        $profile = UserProfile::firstOrCreate(['user_id' => Auth::id()]);
+    $validated = $request->validate([
+        'nickname' => 'nullable|string|max:255',
+        'filename' => 'nullable|image|max:5120',
+        'role' => 'nullable|string|in:executor,client,both',
+        'gender' => 'nullable|string|in:male,female',
+        'birth_date' => 'nullable|date',
+        'languages' => 'nullable|string',
+        'timezone' => 'nullable|string',
+        'education' => 'nullable|string',
+        'specialization' => 'nullable|string',
+        'resume' => 'nullable|string',
+        'portfolio' => 'nullable|string',
+    ]);
 
-        if ($request->hasFile('filename')) {
-            // Загружаем аватар на IPFS
-            $file = $request->file('filename');
-            $avatarUrl = $this->uploadToIPFS($file);
+    // Получаем или создаём профиль
+    $profile = $user->profile ?? new UserProfile(['user_id' => $user->id]);
+    $profile->fill($validated);
+
+    // Обработка аватара с защитой от ошибок
+    if ($request->hasFile('filename')) {
+        try {
+            $avatarUrl = $this->uploadToIPFS($request->file('filename'));
             if ($avatarUrl) {
                 $profile->avatar_url = $avatarUrl;
+            } else {
+                Log::warning('Не удалось загрузить аватар на IPFS.');
+                return redirect()->back()
+                    ->withErrors(['filename' => __('message.avatar_upload_failed')])
+                    ->withInput();
             }
+        } catch (\Throwable $e) {
+            Log::error('Ошибка при загрузке файла на IPFS: ' . $e->getMessage());
+            return redirect()->back()
+                ->withErrors(['filename' => __('message.avatar_upload_exception')])
+                ->withInput();
         }
-
-        // Обновляем остальные данные профиля
-        $profile->fill($request->except(['filename']));
-
-        // Log::info('Данные перед обновлением записей в БД:', $profile->toArray());
-        $profile->save();
-
-        return redirect()->route('user_profile.edit', $profile->id)
-            ->with('info', __('message.profile_updated'));
     }
+
+    $profile->save();
+
+    return redirect()->route('user_profile.show', $profile->id)
+                     ->with('info', __('message.profile_updated'));
+}
+
+
+
+
+
 
     private function uploadToIPFS($file)
     {
         try {
             $client = new Client(['base_uri' => 'https://daodes.space']);
-
             $response = $client->request('POST', '/api/v0/add', [
                 'multipart' => [
                     [
@@ -146,16 +183,37 @@ class UserProfileController extends Controller
             ]);
 
             $data = json_decode($response->getBody()->getContents(), true);
-
-            if (isset($data['Hash'])) {
-                return 'https://daodes.space/ipfs/' . $data['Hash'];
-            } else {
-                // Log::error('Ответ от IPFS не содержит хэш: ' . $response->getBody());
-                return null;
-            }
+            return isset($data['Hash']) ? 'https://daodes.space/ipfs/' . $data['Hash'] : null;
         } catch (\Exception $e) {
-            // Log::error('Ошибка при загрузке файла на IPFS: ' . $e->getMessage());
             return null;
         }
     }
+
+    private function handleAvatarUpload(Request $request, string $existingAvatar = null): string
+    {
+        if ($request->hasFile('filename')) {
+            $file = $request->file('filename');
+    
+            Log::info('handleAvatarUpload(): файл передан в uploadToIPFS', [
+                'original_name' => $file->getClientOriginalName(),
+                'size' => $file->getSize()
+            ]);
+    
+            $avatarUrl = $this->uploadToIPFS($file);
+    
+            if ($avatarUrl) {
+                Log::info('Аватар успешно загружен в IPFS', ['url' => $avatarUrl]);
+                return $avatarUrl;
+            } else {
+                Log::warning('Не удалось загрузить аватар на IPFS.');
+            }
+        } else {
+            Log::info('handleAvatarUpload(): файл не передан');
+        }
+    
+        return $existingAvatar ?: 'https://daodes.space/ipfs/QmPdPDwGSrfWYxomC3u9FLBtB9MGH8iqVGRZ9TLPxZTekj';
+    }
+    
+    
+
 }

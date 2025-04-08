@@ -7,6 +7,7 @@ use App\Models\Seed;
 use App\Services\EncryptionService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use App\Models\Wallet;
 
 class SeedController extends Controller
 {
@@ -30,17 +31,18 @@ class SeedController extends Controller
         if (!$request->session()->has('pending_user')) {
             return redirect()->route('register');
         }
-
+    
         $pendingUser = $request->session()->get('pending_user');
         $encryptionService = app(EncryptionService::class);
-
-        // Шифруем все данные перед сохранением
+    
+        // Шифруем и создаём пользователя
         $user = User::create([
             'name' => $pendingUser['name'],
             'keyword' => $encryptionService->encrypt($pendingUser['keyword']),
             'password' => $pendingUser['password'],
         ]);
-
+    
+        // Шифруем сид-фразу
         $seedWords = [];
         foreach ($request->only([
             'word0', 'word1', 'word2', 'word3', 'word4',
@@ -51,16 +53,30 @@ class SeedController extends Controller
         ]) as $key => $word) {
             $seedWords[$key] = $encryptionService->encrypt($word);
         }
-
+    
+        // Последнее слово — keyword
         $seedWords['word23'] = $encryptionService->encrypt($pendingUser['keyword']);
         $seedWords['user_id'] = $user->id;
-
+    
+        // Сохраняем сид
         Seed::create($seedWords);
+    
+        // Создаём кошелёк без начисления
+        Wallet::firstOrCreate(
+            ['user_id' => $user->id],
+            ['balance' => 0] // баланс = 0, если без начисления
+        );
+    
+        // Авторизуем
         Auth::login($user);
+    
+        // Удаляем временные данные
         $request->session()->forget('pending_user');
-
-        return redirect()->route('seed.index')->with('success', __('message.registration_success'));
+    
+        // Перенаправляем на создание профиля
+        return redirect()->route('user_profile.create')->with('info', __('message.please_complete_profile'));
     }
+    
 
     protected function generateRandomWordsFromFile($filePath, $count)
     {

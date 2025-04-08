@@ -174,7 +174,9 @@ Route::middleware(['guest'])->prefix('seed')->name('seed.')->group(function () {
     Route::post('/save', [SeedController::class, 'saveSeed'])->name('save');
 });
 
-
+Route::get('/phpinfo', function () {
+    phpinfo();
+});
 
 // Сброс пароля по ключевому слову
 Route::middleware('guest')->prefix('password')->name('password.')->group(function () {
@@ -187,8 +189,8 @@ Route::middleware('guest')->prefix('password')->name('password.')->group(functio
 // Кошелёк и переводы
 Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () {
     Route::get('/', [WalletController::class, 'wallet'])->name('index');
-    Route::get('/transfer', [WalletController::class, 'showTransferForm'])->name('transfer.form');
-    Route::post('/transfer', [WalletController::class, 'transfer'])->name('transfer');
+    Route::get('/transfer', [WalletController::class, 'showTransferForm'])->name('transfer.form'); // GET форма
+    Route::post('/transfer', [WalletController::class, 'transfer'])->name('transfer.submit'); // POST обработка
     Route::get('/history', [WalletController::class, 'history'])->name('history');
 });
 
@@ -245,23 +247,25 @@ Route::middleware('auth')->prefix('taskscategories')->name('taskscategories.')->
     Route::delete('/{taskCategory}', [TasksCategoryController::class, 'destroy'])->name('destroy');
 });
 
-// Профиль пользователя
-Route::middleware('auth')->prefix('profile')->name('profile.')->group(function () {
-    Route::get('/', [ProfileController::class, 'edit'])->name('edit');
-    Route::patch('/', [ProfileController::class, 'update'])->name('update');
-    Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
-});
+/// Защищённые маршруты профиля
+Route::middleware(['auth'])->prefix('profile')->name('user_profile.')->group(function () {
 
-//Для подробной анкеты
-Route::middleware(['auth'])->prefix('user-profile')->name('user_profile.')->group(function () {
-    Route::get('/', [UserProfileController::class, 'index'])->name('index');
+    // Просмотр и редактирование расширенного профиля
+    Route::get('/', [UserProfileController::class, 'index'])->name('index'); // если есть профиль
+    Route::get('/{id}', [UserProfileController::class, 'index'])->whereNumber('id')->name('show'); // чужой профиль
+
     Route::get('/create', [UserProfileController::class, 'create'])->name('create');
     Route::post('/store', [UserProfileController::class, 'store'])->name('store');
-    Route::get('/edit/{id}', [UserProfileController::class, 'edit'])->name('edit');
-    Route::put('/update/{id}', [UserProfileController::class, 'update'])->name('update');
 
-    Route::get('/{id?}', [UserProfileController::class, 'index'])->name('show');
+    Route::get('/edit', [UserProfileController::class, 'edit'])->name('edit');    
+    Route::put('/update', [UserProfileController::class, 'updateFullProfile'])->name('update');
+
+
+    // Удаление аккаунта
+    Route::delete('/', [UserProfileController::class, 'destroy'])->name('destroy');
 });
+
+
 
 // Загрузка изображений для CKEditor
 Route::post('/upload-image', [UploadController::class, 'uploadImage'])->name('upload.image');

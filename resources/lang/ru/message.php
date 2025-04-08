@@ -78,4 +78,6 @@ return [
     'processing' => 'Обработка...',
     'news_created_success' => 'Новость успешно создана',
     'news_creation_failed' => 'Не удалось создать новость',
+    'please_complete_profile' => 'Пожалуйста, заполните ваш профиль!',
+    
 ];

@@ -110,17 +110,22 @@
             color: #a0ff08;
             margin-bottom: 8px;
         }
+        
+        .file-error {
+            color: #ff4c4c;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .file-size-note {
+            color: #aaa;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
     </style>
 
 <div class="container">
     <h2 style="text-align: center">{{ __('user_profile.edit_profile') }}</h2><br>
-
-    <!-- Display session message if it exists -->
-    {{-- @if (session('info'))
-        <div class="alert alert-info" style="text-align: center">{{ session('info') }}</div><br>
-    @elseif(session('error'))
-        <div class="alert alert-danger" style="text-align: center">{{ session('error') }}</div>
-    @endif --}}
 
     <form action="{{ route('user_profile.update', $profile->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
@@ -131,14 +136,19 @@
             <label for="filename">{{ __('user_profile.avatar') }}</label>
             <div class="file-input-wrapper">
                 <img id="preview" src="{{ $profile->avatar_url ?? '#' }}" alt="Image Preview"
-                    style="display: {{ $profile->avatar_url ? 'block' : 'none' }};  max-width: 100px;">
+                     style="display: {{ $profile->avatar_url ? 'block' : 'none' }}; max-width: 100px;">
 
                 <div class="file-info">
-                    <span id="file-name"
-                        class="file-name">{{ $profile->avatar_url ? basename($profile->avatar_url) : __('user_profile.no_file_chosen') }}</span>
+                    <span id="file-name" class="file-name">
+                        {{ $profile->avatar_url ? basename($profile->avatar_url) : __('user_profile.no_file_chosen') }}
+                    </span>
                     <button type="button" class="des-btn"
-                        onclick="document.getElementById('file-input').click();">{{ __('user_profile.choose_file') }}</button>
+                            onclick="document.getElementById('file-input').click();">
+                        {{ __('user_profile.choose_file') }}
+                    </button>
                     <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+                    <span class="file-size-note">Максимальный размер: 2 МБ</span>
+                    <span id="file-error" class="file-error" style="display: none;"></span>
                 </div>
             </div>
         </div>
@@ -253,8 +263,20 @@
         const file = event.target.files[0];
         const fileNameElement = document.getElementById("file-name");
         const previewElement = document.getElementById("preview");
+        const errorElement = document.getElementById("file-error");
+        const maxSize = 2 * 1024 * 1024; // 2MB
 
         if (file) {
+            if (file.size > maxSize) {
+                errorElement.style.display = 'block';
+                errorElement.textContent = "Файл превышает допустимый размер (2 МБ)";
+                fileNameElement.textContent = "{{ __('user_profile.no_file_chosen') }}";
+                previewElement.style.display = 'none';
+                event.target.value = ''; // Сброс выбранного файла
+                return;
+            }
+
+            errorElement.style.display = 'none';
             const reader = new FileReader();
             reader.onload = function(e) {
                 previewElement.src = e.target.result;
@@ -265,6 +287,7 @@
         } else {
             previewElement.style.display = 'none';
             fileNameElement.textContent = "{{ __('user_profile.no_file_chosen') }}";
+            errorElement.style.display = 'none';
         }
     };
 </script>
