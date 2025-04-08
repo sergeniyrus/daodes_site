@@ -8,11 +8,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-//  3 Таблицы категорий
+        //  3 Таблицы категорий
         if (!Schema::hasTable('category_news')) {
             Schema::create('category_news', function (Blueprint $table) {
                 $table->id();
-                $table->string('name', 255)->unique();
+                $table->string('name', 255)->unique();       // название по-русски
+                $table->string('name_en', 255)->nullable();  // перевод
                 $table->timestamps();
             });
         }
@@ -32,7 +33,7 @@ return new class extends Migration
                 $table->timestamps();
             });
         }
-// Таблица кошельки
+        // Таблица кошельки
         if (!Schema::hasTable('wallets')) {
             Schema::create('wallets', function (Blueprint $table) {
                 $table->id();
@@ -41,35 +42,35 @@ return new class extends Migration
                 $table->timestamps();
             });
         }
-// Таблица предложений
+        // Таблица предложений
         if (!Schema::hasTable('offers')) {
-    Schema::create('offers', function (Blueprint $table) {
-        $table->id();
-        $table->string('title', 255);
-        $table->text('content');
-        $table->string('img')->nullable();
-        $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->index()
-            ->name('fk_offers_user_id');
-        $table->foreignId('category_id')->constrained('category_offers')->onDelete('cascade')->index()->name('fk_offers_category_id');
-        $table->unsignedInteger('views')->default(0);
-        $table->string('state', 50)->default('0')->nullable();
-        $table->string('method', 50)->default('0')->nullable();
-        $table->string('budget', 100)->default('0')->nullable();
-        $table->string('coin', 10)->default('0')->nullable();
+            Schema::create('offers', function (Blueprint $table) {
+                $table->id();
+                $table->string('title', 255);
+                $table->text('content');
+                $table->string('img')->nullable();
+                $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->index()
+                    ->name('fk_offers_user_id');
+                $table->foreignId('category_id')->constrained('category_offers')->onDelete('cascade')->index()->name('fk_offers_category_id');
+                $table->unsignedInteger('views')->default(0);
+                $table->string('state', 50)->default('0')->nullable();
+                $table->string('method', 50)->default('0')->nullable();
+                $table->string('budget', 100)->default('0')->nullable();
+                $table->string('coin', 10)->default('0')->nullable();
 
-        // Удалены значения по умолчанию '0' для полей date
-        $table->date('control')->nullable();
-        $table->date('finish')->nullable();
+                // Удалены значения по умолчанию '0' для полей date
+                $table->date('control')->nullable();
+                $table->date('finish')->nullable();
 
-        $table->dateTime('start_vote')->nullable();
-        $table->string('pdf_ipfs_cid', 255)->nullable();
-        $table->timestamps();
-    });
+                $table->dateTime('start_vote')->nullable();
+                $table->string('pdf_ipfs_cid', 255)->nullable();
+                $table->timestamps();
+            });
         }
-// Одобрение голосования
+        // Одобрение голосования
         if (!Schema::hasTable('discussions')) {
             Schema::create('discussions', function (Blueprint $table) {
-                $table->id();                
+                $table->id();
                 // Внешний ключ для связи с таблицей offers
                 $table->foreignId('offer_id')
                     ->constrained('offers')  // Связь с таблицей offers
@@ -80,15 +81,15 @@ return new class extends Migration
                     ->onDelete('cascade');   // При удалении пользователя удаляются все его обсуждения    
                 // Поле для голосования (true - готов к голосованию, false - нет)
                 $table->boolean('vote')->default(false) // По умолчанию false (не готов к голосованию)
-                    ->comment('true (1) for ready to vote, false (0) otherwise');    
+                    ->comment('true (1) for ready to vote, false (0) otherwise');
                 // Временные метки
-                $table->timestamps();    
+                $table->timestamps();
                 // Уникальный индекс на сочетание offer_id и user_id
                 $table->unique(['offer_id', 'user_id']);  // Чтобы один пользователь мог создать только одно обсуждение на одно предложение
-    
+
             });
         }
-//  Таблицы голосования за предложение
+        //  Таблицы голосования за предложение
         if (!Schema::hasTable('offer_votes')) {
             Schema::create('offer_votes', function (Blueprint $table) {
                 $table->id();
@@ -99,7 +100,7 @@ return new class extends Migration
                 $table->timestamps();
             });
         }
-// comments_offers
+        // comments_offers
         if (!Schema::hasTable('comments_offers')) {
             Schema::create('comments_offers', function (Blueprint $table) {
                 $table->id();
@@ -109,20 +110,26 @@ return new class extends Migration
                 $table->timestamps();
             });
         }
-// Таблица новостей
+        // Таблица новостей
         if (!Schema::hasTable('news')) {
             Schema::create('news', function (Blueprint $table) {
                 $table->id();
-                $table->string('title', 255);
-                $table->text('content');
+                $table->string('title', 255);               // по-русски
+                $table->string('title_en', 255)->nullable(); // перевод
+                $table->text('content');                    // по-русски
+                $table->text('content_en')->nullable();     // перевод
                 $table->string('img')->nullable();
                 $table->foreignId('category_id')->constrained('category_news')->onDelete('cascade');
-                $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+                $table->foreignId('user_id')
+                    ->nullable()
+                    ->constrained('users')
+                    ->onDelete('set null');
                 $table->unsignedInteger('views')->default(0);
                 $table->timestamps();
             });
         }
-// комментарии к ним
+
+        // комментарии к ним
         if (!Schema::hasTable('comments_news')) {
             Schema::create('comments_news', function (Blueprint $table) {
                 $table->id();
@@ -133,7 +140,7 @@ return new class extends Migration
             });
         }
 
-// таблица tasks 
+        // таблица tasks 
         if (!Schema::hasTable('tasks')) {
             // Создание таблицы tasks со всеми необходимыми полями
             Schema::create('tasks', function (Blueprint $table) {
@@ -165,7 +172,7 @@ return new class extends Migration
                 $table->timestamps();
             });
         }
-// предложения фрилансеров
+        // предложения фрилансеров
         if (!Schema::hasTable('bids')) {
             Schema::create('bids', function (Blueprint $table) {
                 $table->id();
@@ -180,7 +187,7 @@ return new class extends Migration
             });
         }
 
-// таблица task_votes - лайк дизлайк
+        // таблица task_votes - лайк дизлайк
         if (!Schema::hasTable('task_votes')) {
             Schema::create('task_votes', function (Blueprint $table) {
                 $table->id();
@@ -203,7 +210,7 @@ return new class extends Migration
             });
         }
 
-// Таблица seed
+        // Таблица seed
         if (!Schema::hasTable('seed')) {
             Schema::create('seed', function (Blueprint $table) {
                 $table->id();
@@ -215,7 +222,7 @@ return new class extends Migration
             });
         }
 
-// Таблица history_pays
+        // Таблица history_pays
         if (!Schema::hasTable('history_pays')) {
             Schema::create('history_pays', function (Blueprint $table) {
                 $table->id();
@@ -226,7 +233,7 @@ return new class extends Migration
                 $table->timestamps();
             });
         }
-// проверка офера на спам
+        // проверка офера на спам
         if (!Schema::hasTable('spam')) {
             Schema::create('spam', function (Blueprint $table) {
                 $table->id();
@@ -246,7 +253,7 @@ return new class extends Migration
                 $table->unique(['offer_id', 'user_id']);
             });
         }
-// запись о спамерах
+        // запись о спамерах
         if (!Schema::hasTable('spammers')) {
             Schema::create('spammers', function (Blueprint $table) {
                 $table->id();
@@ -263,7 +270,7 @@ return new class extends Migration
                 $table->timestamps();
             });
         }
-// Профиль пользователя
+        // Профиль пользователя
         if (!Schema::hasTable('user_profiles')) {
             Schema::create('user_profiles', function (Blueprint $table) {
                 $table->id();
@@ -298,7 +305,6 @@ return new class extends Migration
                 $table->timestamps();
             });
         }
-    
     }
 
     public function down(): void
