@@ -77,4 +77,7 @@ return [
     'unknown_error' => 'Unknown error',
     'processing' => 'Processing...',
     'please_complete_profile' => 'Please fill in your profile!',
+    'max_file_size_note' => 'Maximum file size: 2 MB',
+    'file_too_large' => 'The file exceeds the allowed size (2 MB).',
+
 ];
