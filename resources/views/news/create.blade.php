@@ -264,11 +264,17 @@
     <form id="news-form" method="POST" action="{{ route('news.store') }}" enctype="multipart/form-data">
         @csrf
 
+        <!-- Title fields (RU and EN) -->
         <div class="form-group">
-            <label for="title">{{ __('admin_news.news_title') }}</label>
-            <input type="text" name="title" class="input_dark" value="{{ old('title') }}" required>
+            <label for="title_ru">{{ __('admin_news.news_title_ru') }}</label>
+            <input type="text" name="title_ru" class="input_dark" value="{{ old('title_ru') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="title_en">{{ __('admin_news.news_title_en') }}</label>
+            <input type="text" name="title_en" class="input_dark" value="{{ old('title_en') }}">
         </div>
 
+        <!-- Category fields (RU and EN names) -->
         <div class="form-group">
             <label for="category">{{ __('admin_news.category') }}</label>
             <div class="category-container">
@@ -278,7 +284,7 @@
                         @foreach ($category_news as $category)
                             <option value="{{ $category->id }}"
                                 {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
+                                {{ $category->name_ru }} / {{ $category->name_en }}
                             </option>
                         @endforeach
                     </select>
@@ -289,6 +295,7 @@
             </div>
         </div>
 
+        <!-- Image upload -->
         <div class="form-group">
             <label for="filename">{{ __('admin_news.news_image') }}</label>
             <div class="file-input-wrapper">
@@ -304,11 +311,17 @@
             </p>
         </div>
 
+        <!-- Content fields (RU and EN) with CKEditor -->
         <div class="form-group">
-            <label for="content">{{ __('admin_news.news_content') }}</label>
-            <textarea id="editor" name="content" style="display:none;">{{ old('content') }}</textarea>
-            <div id="editor-container"></div>
+            <label for="content_ru">{{ __('admin_news.news_content_ru') }}</label>
+            <textarea id="editor-ru" name="content_ru">{{ old('content_ru') }}</textarea>
         </div>
+        
+        <div class="form-group">
+            <label for="content_en">{{ __('admin_news.news_content_en') }}</label>
+            <textarea id="editor-en" name="content_en">{{ old('content_en') }}</textarea>
+        </div>
+        
 
         <div style="text-align: center;">
             <button type="submit" class="des-btn">{{ __('admin_news.create_news_button') }}</button>
@@ -324,8 +337,12 @@
         <form id="category-form" method="POST" action="{{ route('newscategories.categoryStore') }}">
             @csrf
             <div class="form-group">
-                <label for="category-name">{{ __('admin_offers.category_name') }}</label>
-                <input type="text" name="name" id="category-name" class="input_dark" placeholder=" {{ __('admin_offers.name_regex') }}" required>
+                <label for="category-name_ru">{{ __('admin_news.category_name_ru') }}</label>
+                <input type="text" name="name_ru" id="category-name_ru" class="input_dark" placeholder=" {{ __('admin_offers.name_regex') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="category-name_en">{{ __('admin_news.category_name_en') }}</label>
+                <input type="text" name="name_en" id="category-name_en" class="input_dark" placeholder=" {{ __('admin_offers.name_regex') }}">
             </div>
 
             <div style="text-align: center;">
@@ -361,17 +378,71 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Инициализация CKEditor для русского контента
+    let editor_ru, editor_en;
+    
+    ClassicEditor
+        .create(document.querySelector('#editor-ru'))
+        .then(editor => {
+            editor_ru = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
-// Открытие модального окна для добавления категории
-document.getElementById('open-category-modal').addEventListener('click', function() {
-        document.getElementById('category-modal').style.display = 'block';
+    ClassicEditor
+        .create(document.querySelector('#editor-en'))
+        .then(editor => {
+            editor_en = editor;
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    // Обработка отправки формы
+    document.getElementById('news-form').addEventListener('submit', function(e) {
+        // Синхронизация содержимого CKEditor
+        if (editor_ru) {
+            document.getElementById('content_ru').value = editor_ru.getData();
+        }
+        if (editor_en) {
+            document.getElementById('content_en').value = editor_en.getData();
+        }
+
+        const contentRu = document.getElementById('content_ru').value;
+        const contentEn = document.getElementById('content_en').value;
+
+        // Проверка, что оба поля содержат данные
+        if (!contentRu || contentRu.trim() === '' || !contentEn || contentEn.trim() === '') {
+            e.preventDefault();
+            alert('Content is required in both languages');
+            return false;
+        }
+
+        // Проверка заголовков
+        const titleRu = document.getElementById('title_ru').value;
+        const titleEn = document.getElementById('title_en').value;
+
+        if (!titleRu || titleRu.trim() === '' || !titleEn || titleEn.trim() === '') {
+            e.preventDefault();
+            alert('Title is required in both languages');
+            return false;
+        }
+
+        return true;
     });
 
+    // Обработчик для модального окна категории
+    document.getElementById('open-category-modal').addEventListener('click', function() {
+        document.getElementById('category-modal').style.display = 'block';
+    });
+    
     // Закрытие модального окна
     document.querySelector('.close').addEventListener('click', function() {
         document.getElementById('category-modal').style.display = 'none';
     });
 
+    // Закрытие окна при клике вне модального
     window.addEventListener('click', function(event) {
         const modal = document.getElementById('category-modal');
         if (event.target === modal) {
@@ -379,19 +450,19 @@ document.getElementById('open-category-modal').addEventListener('click', functio
         }
     });
 
-    // Обработка отправки формы добавления категории
-    document.getElementById('category-form').addEventListener('submit', function(e) {
+   // Обработка отправки формы добавления категории
+document.getElementById('category-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    
+
     const form = this;
     const formData = new FormData(form);
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn.innerHTML;
-    
+
     // Показываем индикатор загрузки
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     submitBtn.disabled = true;
-    
+
     fetch(form.action, {
         method: 'POST',
         body: formData,
@@ -402,7 +473,9 @@ document.getElementById('open-category-modal').addEventListener('click', functio
     })
     .then(response => {
         if (!response.ok) {
-            return response.json().then(err => { throw err; });
+            return response.json().then(err => { 
+                throw err;
+            });
         }
         return response.json();
     })
@@ -412,25 +485,25 @@ document.getElementById('open-category-modal').addEventListener('click', functio
             const select = document.getElementById('category-select');
             const option = document.createElement('option');
             option.value = data.category.id;
-            option.textContent = data.category.name;
+            option.textContent = data.category.name_ru + ' / ' + data.category.name_en;
             select.appendChild(option);
-            
+
             // Выбираем новую категорию
             select.value = data.category.id;
-            
+
             // Закрываем модальное окно
             document.getElementById('category-modal').style.display = 'none';
-            
+
             // Очищаем форму
             form.reset();
-            
+
             // Показываем успешное сообщение
             alert(data.message);
         }
     })
     .catch(error => {
         // Показываем ошибки в alert
-        const errors = error.errors || [error.message];
+        const errors = error.errors || [error.message || 'Unknown error'];
         alert(errors.join('\n'));
     })
     .finally(() => {
@@ -438,6 +511,7 @@ document.getElementById('open-category-modal').addEventListener('click', functio
         submitBtn.disabled = false;
     });
 });
+
 
 
 document.getElementById('news-form').addEventListener('submit', function(e) {
@@ -618,5 +692,6 @@ window.addEventListener('click', function(event) {
 });
 
 </script>
+
 
 @endsection

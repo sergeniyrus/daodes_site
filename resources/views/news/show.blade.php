@@ -77,7 +77,7 @@
                         <div class="name_com">
                             {{ e(DB::table('users')->where('id', $comment->user_id)->value('name')) }}
                             <div class="date_com">{{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.y at H:i') }}</div>
-                            <div class="text_com">{{ e(strip_tags($comment->text)) }}</div>
+                            <div class="text_com">{!! $comment->text !!}</div>
                         </div>
                     </div>
                 @endforeach

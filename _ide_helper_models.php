@@ -49,10 +49,11 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $name
- * @property string|null $name_en
+ * @property string $name_ru
+ * @property string $name_en
  * @property string|null $created_at
  * @property string|null $updated_at
+ * @property-read mixed $name
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\News> $news
  * @property-read int|null $news_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews newModelQuery()
@@ -60,8 +61,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereNameEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereNameRu($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereUpdatedAt($value)
  */
 	class CategoryNews extends \Eloquent {}
@@ -242,14 +243,14 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $title
- * @property string|null $title_en
- * @property string $content
- * @property string|null $content_en
+ * @property string $title_ru
+ * @property string $title_en
+ * @property string $content_ru
+ * @property string $content_en
  * @property string|null $img
  * @property int $category_id
  * @property int|null $user_id
- * @property int $views
+ * @property int|null $views
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\CategoryNews $category
@@ -258,13 +259,13 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereCategoryId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereContentEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereContentRu($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereImg($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereTitle($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereTitleEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereTitleRu($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereViews($value)

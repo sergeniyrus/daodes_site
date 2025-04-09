@@ -69,7 +69,7 @@
     }
         
 </style>
-<div class="container">
+<<div class="container">
     <h2>{{ __('category.categories_title') }}</h2>
     <div class="new_post">
         <table class="table mt-4">
@@ -82,7 +82,7 @@
             <tbody>
                 @foreach($categories as $category)
                 <tr>
-                    <td>{{ $category->name }}</td>
+                    <td>{{ $category->name_ru }} / {{ $category->name_en }}</td>
                     <td>
                         <a href="{{ route('newscategories.edit', $category->id) }}" class="des-btn" title="{{ __('category.edit') }}">
                             <i class="fas fa-edit"></i>
@@ -99,7 +99,7 @@
                 @endforeach
             </tbody>
         </table>
-        
+
         <form action="{{ route('newscategories.create') }}" method="GET" style="display:inline;">
             <button type="submit" class="des-btn">
                 {!! __('category.add_category_button') !!}
@@ -107,4 +107,5 @@
         </form>
     </div>
 </div>
+
 @endsection

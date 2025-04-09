@@ -65,15 +65,40 @@
         transform: scale(1.05);
         background: #0b0c18;
     }
+    .custom-alert {
+        padding: 10px;
+        border-radius: 4px;
+        margin-top: 15px;
+        font-size: 0.95rem;
+    }
 
+    .custom-alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .custom-alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
 </style>
 <div class="container my-5">
     <h1>{{ __('category.add_category_title') }}</h1>
-    <form action="{{ route('newscategories.categoryStore') }}" method="POST">
+
+    <div id="message" class="alert" style="display: none;"></div>
+
+    <form id="category-form">
         @csrf
         <div class="form-group">
-            <label for="name">{{ __('category.category_name_label') }}</label>
-            <input type="text" name="name" id="name" class="input_dark" required>
+            <label for="name_ru">{{ __('admin_news.category_name_ru') }}</label>
+            <input type="text" name="name_ru" id="name_ru" class="input_dark" required>
+        </div>
+
+        <div class="form-group">
+            <label for="name_en">{{ __('admin_news.category_name_en') }}</label>
+            <input type="text" name="name_en" id="name_en" class="input_dark" required>
         </div>
 
         <button type="submit" class="des-btn">
@@ -81,4 +106,47 @@
         </button>
     </form>
 </div>
+
+<script>
+document.getElementById('category-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = e.target;
+    const data = new FormData(form);
+    const messageBox = document.getElementById('message');
+
+    fetch("{{ route('newscategories.categoryStore') }}", {
+        method: 'POST',
+        headers: {
+            'X-CSRF-TOKEN': data.get('_token')
+        },
+        body: data
+    })
+    .then(async response => {
+        const result = await response.json();
+        messageBox.style.display = 'block';
+
+        if (result.success) {
+            messageBox.className = 'custom-alert custom-alert-success';
+            messageBox.innerText = result.message;
+
+            // Очистка формы
+            form.reset();
+        } else {
+            messageBox.className = 'custom-alert custom-alert-error';
+
+            messageBox.innerHTML = result.errors ? result.errors.join('<br>') : result.message;
+        }
+    })
+    .catch(error => {
+        messageBox.className = 'custom-alert custom-alert-error';
+
+        messageBox.style.display = 'block';
+        messageBox.innerText = '{{ __("message.unknown_error") }}';
+        console.error(error);
+    });
+});
+</script>
+
+
 @endsection

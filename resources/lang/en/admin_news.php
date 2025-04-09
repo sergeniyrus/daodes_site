@@ -22,6 +22,13 @@ return [
     'cancel' => 'Cancel',
     'save_changes_button' => 'Save changes',
     'edit_news_title' => 'News Editing',
+    'news_content_ru' => 'Content of news (Russian)',
+    'news_content_en' => 'Content of news (English)',
+    'news_title_ru' => 'News title (Russian)',
+    'news_title_en' => 'News title (English)',
+    'category_name_ru' => 'Category name (Russian)',
+    'category_name_en' => 'Category name (English)',
+    'news_update_success' => 'The news was successfully updated',
 
     'validation' => [
         'name_required' => 'Category name is required',

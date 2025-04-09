@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Validator;
 
 class NewsController extends Controller
 {
+
     public function list(Request $request)
     {
         // Получаем параметры фильтрации и сортировки
@@ -21,20 +22,27 @@ class NewsController extends Controller
         $category = $request->input('category', null); // ID категории или null
         $perPage = $request->input('perPage', 5); // Количество записей на страницу
 
+        // Определяем текущую локаль
+        $locale = app()->getLocale(); // 'ru' или 'en'
+
+        // Определяем поля заголовка и контента в зависимости от локали
+        $titleField = $locale === 'ru' ? 'title_ru' : 'title_en';
+        $contentField = $locale === 'ru' ? 'content_ru' : 'content_en';
+
         // Запрос к базе данных с учетом фильтров
-        $query = DB::table('news');
-
-        if ($category) {
-            $query->where('category_id', $category);
-        }
-
-        $query->orderBy('created_at', $sort === 'new' ? 'desc' : 'asc');
+        $query = DB::table('news')
+            ->select('id', 'category_id', 'created_at', 'img', $titleField . ' as title', $contentField . ' as content', 'views')
+            ->when($category, function ($query) use ($category) {
+                return $query->where('category_id', $category);
+            })
+            ->orderBy('created_at', $sort === 'new' ? 'desc' : 'asc');
 
         // Получаем пагинированный результат
         $news = $query->paginate($perPage);
 
-        // Получаем категории для фильтра
-        $categories = DB::table('category_news')->pluck('name', 'id');
+        // Получаем категории с переводом по локали
+        $categoryNameField = $locale === 'ru' ? 'name_ru' : 'name_en';
+        $categories = DB::table('category_news')->pluck($categoryNameField, 'id');
 
         // Количество комментариев для каждой новости
         $commentCount = [];
@@ -44,14 +52,26 @@ class NewsController extends Controller
                 ->count();
         }
 
-        // Передаем данные в представление
+        // Передаём данные в представление
         return view('news.list', compact('news', 'commentCount', 'categories', 'sort', 'category', 'perPage'));
     }
 
+
+
     public function show($id)
     {
-        // Получаем новость по ID
-        $news = DB::table('news')->where('id', $id)->first();
+        // Определяем текущую локаль
+        $locale = app()->getLocale(); // 'ru' или 'en'
+
+        // Определяем поля заголовка и контента в зависимости от локали
+        $titleField = $locale === 'ru' ? 'title_ru' : 'title_en';
+        $contentField = $locale === 'ru' ? 'content_ru' : 'content_en';
+
+        // Получаем новость по ID, включая нужные поля
+        $news = DB::table('news')
+            ->select('id', 'category_id', 'created_at', 'img', $titleField . ' as title', $contentField . ' as content', 'views')
+            ->where('id', $id)
+            ->first();
 
         if ($news) {
             // Увеличиваем количество просмотров на 1
@@ -60,7 +80,7 @@ class NewsController extends Controller
             // Получаем название категории по category_id
             $categoryName = DB::table('category_news')
                 ->where('id', $news->category_id)
-                ->value('name'); // Получаем значение поля 'category_name'
+                ->value($locale === 'ru' ? 'name_ru' : 'name_en'); // Получаем значение категории на основе локали
 
             // Получаем комментарии для этой новости
             $comments = DB::table('comments_news')
@@ -79,6 +99,7 @@ class NewsController extends Controller
         }
     }
 
+
     public function create()
     {
         $category = DB::table('category_news')->get();
@@ -86,45 +107,115 @@ class NewsController extends Controller
     }
 
     public function store(Request $request): RedirectResponse
-{
-    // Валидация данных
-    $validated = $request->validate([
-        'title' => ['required', 'string', 'max:255'],
-        'content' => ['required', 'string'],
-        'category_id' => ['required', 'integer', 'exists:category_news,id'],
-        'filename' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048']
-    ]);
-
-    try {
-        // Загрузка изображения на IPFS или использование дефолтного
-        $imageUrl = $request->hasFile('filename') 
-            ? $this->uploadToIPFS($request->file('filename'))
-            : 'https://ipfs.sweb.ru/ipfs/QmcBt4UUNPUSUxmH1h2GALvFPZ9FebnKuvirUSsJdHcPjP?filename=daodes.ico';
-
-        // Создание новости
-        $news = News::create([
-            'title' => $validated['title'],
-            'content' => $validated['content'],
-            'category_id' => $validated['category_id'],
-            'user_id' => Auth::id(),
-            'img' => $imageUrl,
-            'views' => 0,
-            'created_at' => now(),
-            'updated_at' => now()
+    {
+        // Валидация данных
+        $validated = $request->validate([
+            'title_ru'    => ['required', 'string', 'max:255'],
+            'content_ru'  => ['required', 'string'],
+            'title_en'    => ['required', 'string', 'max:255'],
+            'content_en'  => ['required', 'string'],
+            'category_id' => ['required', 'integer', 'exists:category_news,id'],
+            'filename'    => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048']
         ]);
 
-        // Перенаправление с сообщением об успехе
-        return redirect()->route('good', [
-            'post' => 'news', 
-            'id' => $news->id, 
-            'action' => 'create'
-        ])->with('success', __('message.news_created_success'));
+        try {
+            // Загрузка изображения на IPFS или использование дефолтного
+            $imageUrl = $request->hasFile('filename')
+                ? $this->uploadToIPFS($request->file('filename'))
+                : 'https://daodes.space/ipfs/QmdAFB8mUSW5zBCKAuJpSBMwYkFSo4apApN9Y6V8iRW2o6';
 
-    } catch (\Exception $e) {
-        Log::error('News creation error: ' . $e->getMessage());
-        return back()->withErrors(['error' => __('message.news_creation_failed')]);
+            // Создание новости с использованием новых полей
+            $news = News::create([
+                'title_ru'   => $validated['title_ru'],
+                'content_ru' => $validated['content_ru'],
+                'title_en'   => $validated['title_en'],
+                'content_en' => $validated['content_en'],
+                'category_id' => $validated['category_id'],
+                'user_id'    => Auth::id(),
+                'img'        => $imageUrl,
+                'views'      => 0,
+                'created_at' => now(),
+                'updated_at' => now()
+            ]);
+
+            // Перенаправление с сообщением об успехе
+            return redirect()->route('good', [
+                'post'   => 'news',
+                'id'     => $news->id,
+                'action' => 'create'
+            ])->with('success', __('message.news_created_success'));
+        } catch (\Exception $e) {
+            Log::error('News creation error: ' . $e->getMessage());
+            return back()->withErrors(['error' => __('message.news_creation_failed')]);
+        }
     }
-}
+
+
+
+    public function edit($id)
+    {
+        // Поиск новости по ID
+        $news = News::findOrFail($id);
+
+        // Загрузка всех категорий новостей
+        $category_news = CategoryNews::all();
+
+        // Передаем в представление URL изображения
+        return view('news.edit', compact('news', 'category_news'))->with('existingImageUrl', $news->img);
+    }
+
+
+
+
+    public function update(Request $request, $id): RedirectResponse
+    {
+        // Валидация данных
+        $validated = $request->validate([
+            'title_ru'    => ['required', 'string', 'max:255'],
+            'content_ru'  => ['required', 'string'],
+            'title_en'    => ['required', 'string', 'max:255'],
+            'content_en'  => ['required', 'string'],
+            'category_id' => ['required', 'integer', 'exists:category_news,id'],
+            'filename'    => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,webp', 'max:2048']
+        ]);
+
+        try {
+            // Поиск новости по ID
+            $news = News::findOrFail($id);
+
+            // Загрузка изображения на IPFS, если оно было загружено
+            $imageUrl = $request->hasFile('filename')
+                ? $this->uploadToIPFS($request->file('filename'))
+                : $news->img; // Используем старое изображение, если новое не загружено
+
+            // Обновление данных новости
+            $news->update([
+                'title_ru'   => $validated['title_ru'],
+                'content_ru' => $validated['content_ru'],
+                'title_en'   => $validated['title_en'],
+                'content_en' => $validated['content_en'],
+                'category_id' => $validated['category_id'],
+                'img'        => $imageUrl,
+                'updated_at' => now() // Обновляем дату изменения
+            ]);
+
+            // Перенаправление с сообщением об успехе
+            return redirect()->route('news.show', ['id' => $news->id])
+                ->with('success', __('admin_news.news_updated_success'));
+        } catch (\Exception $e) {
+            Log::error('News update error: ' . $e->getMessage());
+            return back()->withErrors(['error' => __('message.news_update_failed')]);
+        }
+    }
+
+    public function destroy($id)
+    {
+        $news = News::findOrFail($id);
+        $news->delete();
+
+        return redirect()->route('news.index')->with('success', __('message.news_deleted'));
+    }
+
 
     private function uploadToIPFS($file)
     {
@@ -147,46 +238,9 @@ class NewsController extends Controller
         return 'https://daodes.space/ipfs/' . $data['Hash'];
     }
 
-    public function edit($id)
-    {
-        $news = News::findOrFail($id);
-        $categories = CategoryNews::all();
-        return view('news.edit', compact('news', 'categories'));
-    }
 
-    public function update(Request $request, $id): RedirectResponse
-    {
-        $validated = $request->validate([
-            'title' => ['required', 'string', 'max:255'],
-            'content' => ['required', 'string'],
-            'category' => ['required', 'integer', 'exists:category_news,id'],
-            'filename' => ['nullable', 'image', 'max:2048']
-        ]);
 
-        $news = News::findOrFail($id);
-        $img = $request->hasFile('filename')
-            ? $this->uploadToIPFS($request->file('filename'))
-            : $news->img;
 
-        $news->update([
-            'title' => $validated['title'],
-            'content' => $validated['content'],
-            'category_id' => $validated['category'],
-            'img' => $img,
-            'user_id' => Auth::id(),
-            'updated_at' => now()
-        ]);
-
-        return redirect()->route('good', ['post' => 'news', 'id' => $id, 'action' => 'edit']);
-    }
-
-    public function destroy($id)
-    {
-        $news = News::findOrFail($id);
-        $news->delete();
-
-        return redirect()->route('news.index')->with('success', __('message.news_deleted'));
-    }
 
     public function categoryIndex()
     {
@@ -202,48 +256,65 @@ class NewsController extends Controller
     public function categoryStore(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => [
+            'name_ru' => [
                 'required',
                 'string',
                 'max:255',
-                'unique:category_news,name',
+                'unique:category_news,name_ru',
                 'regex:/^[\p{L}\p{N}\s\-.,;!?€£\$₽]+$/u'
             ],
+            'name_en' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:category_news,name_en',
+                'regex:/^[\p{L}\p{N}\s\-.,;!?€£\$₽]+$/u'
+            ]
         ], [
-            'name.required' => __('admin_news.validation.name_required'),
-            'name.string' => __('admin_news.validation.name_string'),
-            'name.max' => __('admin_news.validation.name_max'),
-            'name.unique' => __('admin_news.validation.name_taken'),
-            'name.regex' => __('admin_news.validation.name_regex'),
+            'name_ru.required' => __('admin_news.validation.name_required'),
+            'name_en.required' => __('admin_news.validation.name_required'),
+            'name_ru.string' => __('admin_news.validation.name_string'),
+            'name_en.string' => __('admin_news.validation.name_string'),
+            'name_ru.max' => __('admin_news.validation.name_max'),
+            'name_en.max' => __('admin_news.validation.name_max'),
+            'name_ru.unique' => __('admin_news.validation.name_taken'),
+            'name_en.unique' => __('admin_news.validation.name_taken'),
+            'name_ru.regex' => __('admin_news.validation.name_regex'),
+            'name_en.regex' => __('admin_news.validation.name_regex'),
         ]);
-    
+
         if ($validator->fails()) {
+            // Возвращаем ошибки в формате JSON
             return response()->json([
                 'success' => false,
                 'errors' => $validator->errors()->all()
-            ], 422);
+            ], 422); // 422 Unprocessable Entity
         }
-    
+
         try {
-            $category = Categorynews::create(['name' => $request->name]);
-            
+            // Сохраняем категорию с новыми полями
+            $category = CategoryNews::create([
+                'name_ru' => $request->name_ru,
+                'name_en' => $request->name_en
+            ]);
+
+            // Возвращаем успешный ответ с сообщением
             return response()->json([
                 'success' => true,
                 'message' => __('message.category_added_success'),
-                'category' => [
-                    'id' => $category->id,
-                    'name' => $category->name
-                ]
+                'category' => $category
             ]);
-            
         } catch (\Exception $e) {
+            // В случае ошибки, возвращаем ответ с ошибкой
             return response()->json([
                 'success' => false,
                 'message' => __('message.category_add_failed')
-            ], 500);
+            ], 500); // 500 Internal Server Error
         }
     }
-    
+
+
+
 
     public function categoryEdit($id)
     {
@@ -252,21 +323,27 @@ class NewsController extends Controller
     }
 
     public function categoryUpdate(Request $request, $id)
-    {
-        $category = CategoryNews::findOrFail($id);
+{
+    $category = CategoryNews::findOrFail($id);
 
-        $request->validate([
-            'name' => 'required|string|max:255|unique:category_news,name,' . $id
+    $request->validate([
+        'name_ru' => 'required|string|max:255|unique:category_news,name_ru,' . $id,
+        'name_en' => 'required|string|max:255|unique:category_news,name_en,' . $id,
+    ]);
+
+    try {
+        $category->update([
+            'name_ru' => $request->name_ru,
+            'name_en' => $request->name_en,
         ]);
 
-        try {
-            $category->update(['name' => $request->name]);
-            return redirect()->route('newscategories.index')->with('success', __('message.category_updated_success'));
-        } catch (\Exception $e) {
-            // Log::error('Ошибка при обновлении категории: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['name' => __('message.category_update_failed')]);
-        }
+        return redirect()->route('newscategories.index')->with('success', __('message.category_updated_success'));
+
+    } catch (\Exception $e) {
+        return redirect()->back()->withErrors(['error' => __('message.category_update_failed')]);
     }
+}
+
 
     public function categoryDestroy($id)
     {

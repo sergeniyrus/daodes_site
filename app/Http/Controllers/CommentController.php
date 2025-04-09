@@ -33,24 +33,25 @@ class CommentController extends Controller
     }
 
     public function news(Request $request)
-    {
-        // Валидация входящих данных
-        $request->validate([
-            'text' => 'required|string',
-            'news_id' => 'required|exists:news,id',
-        ]);
+{
+    // Валидация входящих данных
+    $request->validate([
+        'text' => 'required|string',
+        'news_id' => 'required|exists:news,id',
+    ]);
 
-        // Логируем данные запроса для отладки
-        // Log::info($request->all());
+    // Декодируем HTML-сущности из текста комментария
+    $text = html_entity_decode($request->text);
 
-        // Добавляем новый комментарий в таблицу comments_news с user_id текущего пользователя
-        CommentNews::create([
-            'news_id' => $request->news_id,
-            'user_id' => Auth::id(),
-            'text' => $request->text,
-            'created_at' => now(), // Устанавливаем текущее время
-        ]);
+    // Добавляем новый комментарий в таблицу comments_news с user_id текущего пользователя
+    CommentNews::create([
+        'news_id' => $request->news_id,
+        'user_id' => Auth::id(),
+        'text' => $text,
+        'created_at' => now(), // Устанавливаем текущее время
+    ]);
 
-        return redirect()->back()->with('success', __('message.comment_added'));
-    }
+    return redirect()->back()->with('success', __('message.comment_added'));
+}
+
 }

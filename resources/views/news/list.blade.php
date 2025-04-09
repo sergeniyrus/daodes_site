@@ -11,16 +11,14 @@
         </div>
 
         <div class="filters">
-            <form action="{{ route('news.index') }}" method="GET" class="">
+            <form action="{{ route('news.index') }}" method="GET">
                 <div class="filters2">
                     <!-- Sorting -->
                     <div class="filter-item">
                         <label for="sort" class="m-0"></label>
                         <select name="sort" id="sort" class="form-select form-select-sm">
-                            <option value="new" {{ $sort === 'new' ? 'selected' : '' }}>{{ __('news.sort_new') }}
-                            </option>
-                            <option value="old" {{ $sort === 'old' ? 'selected' : '' }}>{{ __('news.sort_old') }}
-                            </option>
+                            <option value="new" {{ $sort === 'new' ? 'selected' : '' }}>{{ __('news.sort_new') }}</option>
+                            <option value="old" {{ $sort === 'old' ? 'selected' : '' }}>{{ __('news.sort_old') }}</option>
                         </select>
                     </div>
 
@@ -75,12 +73,7 @@
                             <div class="rows-title">
                                 <div class="task-info">
                                     <p class="task-category">{!! __('news.category_label') !!}
-                                        @php
-                                            $categoryName = DB::table('category_news')
-                                                ->where('id', $newsItem->category_id)
-                                                ->value('name');
-                                        @endphp
-                                        {{ $categoryName ?? __('news.uncategorized') }}
+                                        {{ $categories[$newsItem->category_id] ?? __('news.uncategorized') }}
                                     </p>
                                 </div>
                                 <div class="task-info2">
@@ -93,7 +86,7 @@
                             </div>
                         </div>
                         <div class="card-text">
-                            <div  class="news-text">
+                            <div class="news-text">
                                 {!! Str::limit($newsItem->content, 260) !!}
                             </div>
                             <a href="{{ route('news.show', $newsItem->id) }}"
@@ -111,3 +104,4 @@
         </div>
     </div>
 @endsection
+
