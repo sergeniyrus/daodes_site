@@ -14,7 +14,7 @@
             </div>
         @endif
 
-        <div class="profile-link">
+        <div class="mobile-hamburger-button profile-link">
             <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}">
                 {{ Auth::user()->name }}
             </a>
@@ -42,10 +42,10 @@
             </form>
         </div>
     @else
-        <div class="log-link">
+        <div class="mobile-hamburger-button log-link">
             <a href="/login">{{ __('menu.login') }}</a>
         </div>
-        <div class="log-link">
+        <div class="mobile-hamburger-button log-link">
             <a href="{{ route('register') }}">{{ __('menu.registration') }}</a>
         </div>
     @endauth

@@ -4,7 +4,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 10px;
-  background-color: #0b0c18c9;
+  background-color: #0b0c18d8;
   position: sticky;
   top: 0;
   left: 0;
@@ -30,7 +30,8 @@
 }
 .mobile-hamburger-button,
 .mobile-auth-buttons,
-.logout-icon {
+.logout-icon,
+.profile-link {
   background: none;
   border: none;
   cursor: pointer;

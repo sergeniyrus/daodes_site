@@ -182,6 +182,27 @@ img {
   color: goldenrod;
 }
 
+/* Для экранов до 1024px — уменьшаем отступ */
+@media (max-width: 1280px) {
+  .language-switcher {
+    left: 100px;
+  }
+}
+
+/* Для экранов до 768px — ещё меньше */
+@media (max-width: 768px) {
+  .language-switcher {
+    left: 90px;
+  }
+}
+
+/* Для экранов до 480px — минимальное значение */
+@media (max-width: 480px) {
+  .language-switcher {
+    left: 80px;
+  }
+}
+
 /* Header */
 /* блок вход регистрация */
 .header {
