@@ -50,6 +50,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
+ * @property string|null $name_en
  * @property string|null $created_at
  * @property string|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\News> $news
@@ -60,6 +61,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereNameEn($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryNews whereUpdatedAt($value)
  */
 	class CategoryNews extends \Eloquent {}
@@ -241,24 +243,28 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $title
+ * @property string|null $title_en
  * @property string $content
+ * @property string|null $content_en
  * @property string|null $img
  * @property int $category_id
- * @property int $user_id
+ * @property int|null $user_id
  * @property int $views
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\CategoryNews $category
- * @property-read \App\Models\User $user
+ * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereContentEn($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereImg($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereTitleEn($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|News whereViews($value)
@@ -271,13 +277,13 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $user_id
+ * @property int $user_id
  * @property int $message_id
  * @property int $is_read
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\Message|null $message
- * @property-read \App\Models\User|null $user
+ * @property-read \App\Models\Message $message
+ * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Notification query()
@@ -413,16 +419,18 @@ namespace App\Models{
  * @property string $title
  * @property string $content
  * @property string $budget
- * @property string $deadline
+ * @property string|null $deadline
  * @property string $status
  * @property int $user_id
  * @property int|null $category_id
+ * @property int $likes
+ * @property int $dislikes
  * @property int|null $accepted_bid_id
  * @property string|null $start_time
- * @property int|null $completed
- * @property string|null $completion_time
- * @property int|null $rating
  * @property string|null $end_time
+ * @property string|null $completion_time
+ * @property int $completed
+ * @property int|null $rating
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Bid|null $acceptedBid
@@ -443,8 +451,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereContent($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereDeadline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereDislikes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereEndTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereLikes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereStartTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereStatus($value)
@@ -513,10 +523,6 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property int $active_status
- * @property string $avatar
- * @property int $dark_mode
- * @property string|null $messenger_color
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Bid> $bids
  * @property-read int|null $bids_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Chat> $chats
@@ -533,13 +539,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAccessLevel($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereActiveStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAvatar($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereDarkMode($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereKeyword($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereMessengerColor($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)

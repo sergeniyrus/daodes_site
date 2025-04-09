@@ -45,9 +45,9 @@ class UploadController extends Controller
 
                 // Log the IPFS response
                 //Log::info('Ответ от IPFS', [
-                    'statusCode' => $response->getStatusCode(),
-                    'responseBody' => $response->getBody()->getContents()
-                ]);
+                //    'statusCode' => $response->getStatusCode(),
+                //    'responseBody' => $response->getBody()->getContents()
+                //]);
 
                 // Parse the response and extract the image link
                 $data = json_decode($response->getBody(), true);
@@ -57,8 +57,8 @@ class UploadController extends Controller
 
                     // Log successful completion
                     //Log::info('Файл успешно загружен', [
-                        'fileUrl' => $ipfsUrl
-                    ]);
+                    //    'fileUrl' => $ipfsUrl
+                    //]);
 
                     // Return response in the format expected by CKEditor
                     return response()->json([

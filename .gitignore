@@ -3,6 +3,8 @@
 /public/build
 /public/hot
 /public/storage
+/public/myenv
+/public/argos-translate
 /storage/*.key
 /storage/pail
 /vendor
