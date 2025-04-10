@@ -68,7 +68,7 @@
             <div class="z_com">
                 <h6>{{ __('news.discussions', ['count' => $commentCount]) }}</h6>
             </div>
-        
+
             @if ($commentCount == 0)
                 <div class="eror_com">{{ __('news.be_first') }}</div>
             @else
@@ -76,13 +76,14 @@
                     <div class="post_com">
                         <div class="name_com">
                             {{ e(DB::table('users')->where('id', $comment->user_id)->value('name')) }}
-                            <div class="date_com">{{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.y at H:i') }}</div>
+                            <div class="date_com">{{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.y at H:i') }}
+                            </div>
                             <div class="text_com">{!! $comment->text !!}</div>
                         </div>
                     </div>
                 @endforeach
             @endif
-        
+
             @auth
                 <div class="form_com">
                     <form name="comment" action="{{ route('comments.news') }}" method="post">

@@ -17,8 +17,10 @@
                     <div class="filter-item">
                         <label for="sort" class="m-0"></label>
                         <select name="sort" id="sort" class="form-select form-select-sm">
-                            <option value="new" {{ $sort === 'new' ? 'selected' : '' }}>{{ __('news.sort_new') }}</option>
-                            <option value="old" {{ $sort === 'old' ? 'selected' : '' }}>{{ __('news.sort_old') }}</option>
+                            <option value="new" {{ $sort === 'new' ? 'selected' : '' }}>{{ __('news.sort_new') }}
+                            </option>
+                            <option value="old" {{ $sort === 'old' ? 'selected' : '' }}>{{ __('news.sort_old') }}
+                            </option>
                         </select>
                     </div>
 
@@ -89,8 +91,10 @@
                             <div class="news-text">
                                 {!! Str::limit($newsItem->content, 260) !!}
                             </div>
-                            <a href="{{ route('news.show', $newsItem->id) }}"
-                                class="btn btn-link">{!! __('news.read_more') !!}</a>
+                            <div class="btn-link">
+                                <a href="{{ route('news.show', $newsItem->id) }}"
+                                    class="btn-link">{!! __('news.read_more') !!}</a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -104,4 +108,3 @@
         </div>
     </div>
 @endsection
-

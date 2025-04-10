@@ -1,0 +1,133 @@
+/* Контейнер */
+.container {
+    padding: 20px;
+    margin: 0 auto;
+    max-width: 600px;
+    background-color: rgba(20, 20, 20, 0.9);
+    border: 1px solid gold;
+    border-radius: 20px;
+    color: #f8f9fa;
+    font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-top: 30px;
+}
+
+/* Группы формы */
+.form-group {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+label {
+    font-size: 1.2rem;
+    color: gold;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* Поля ввода */
+.input_dark {
+    background-color: #000;
+    color: gold;
+    border: 1px solid gold;
+    border-radius: 5px;
+    width: 100%;
+    padding: 10px;
+    margin: 10px auto 15px auto;
+    font-size: 1rem;
+}
+
+/* Кнопка */
+.des-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1rem;
+    background: #0b0c18;
+    padding: 10px 20px;
+    border: 1px solid gold;
+    border-radius: 10px;
+    box-shadow: 0 0 20px #000;
+    cursor: pointer;
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+    margin-top: 15px;
+}
+
+.des-btn i {
+    margin-right: 8px;
+    font-size: 1.2rem;
+}
+
+.des-btn:hover {
+    box-shadow: 0 0 20px gold, 0 0 40px gold, 0 0 60px gold;
+    transform: scale(1.05);
+    background: #1a1a1a;
+}
+
+/* Таблица */
+.table {
+    width: 90%;
+    margin: 30px auto;
+    border-collapse: collapse;
+}
+
+.table th, .table td {
+    border: 1px solid gold;
+    padding: 10px;
+    text-align: center;
+    color: #fff;
+}
+
+.table th {
+    background-color: #444;
+    color: gold;
+}
+
+/* Уведомления */
+.alert {
+    background-color: rgba(255, 0, 0, 0.8);
+    color: #f8f9fa;
+    border: 1px solid gold;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 20px 0;
+    font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
+    text-align: left;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.custom-alert {
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 15px;
+    font-size: 0.95rem;
+}
+
+.custom-alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.custom-alert-error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Блок нового поста */
+.new_post {
+    width: 90%;
+    margin: 20px auto;
+    padding-bottom: 20px;
+    color: #fff;
+    background-color: rgba(30, 30, 30, 0.9);
+    border: 1px solid gold;
+    font-size: 20px;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
