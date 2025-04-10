@@ -3,8 +3,7 @@
 /public/build
 /public/hot
 /public/storage
-/public/myenv
-/public/argos-translate
+
 /storage/*.key
 /storage/pail
 /vendor
@@ -27,3 +26,4 @@ secret.key
 нужные.txt
 
 test.php
+extensions.txt
