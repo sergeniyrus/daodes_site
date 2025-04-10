@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="{{ asset('css/offers.css') }}">
     <div class="container my-5">
         <div class="task-title">
-            <h5>{{ $offers->title }}</h5>
+            <h5>{{ app()->getLocale() === 'ru' ? $offers->title_ru : $offers->title_en }}</h5>
+
         </div>
         <div class="offers-header">
             <div class="img_post">
-                <img src="{{ $offers->img }}" alt="Image for {{ $offers->title }}" />
+                <img src="{{ $offers->img }}" alt="Image Offers" />
             </div>
 
             <div class="rows-title">
@@ -59,7 +60,8 @@
         <hr class="hr_title">
 
         <div class="offers-content card">
-            <p>{!! $offers->content !!}</p>
+            <p>{!! app()->getLocale() === 'ru' ? $offers->content_ru : $offers->content_en !!}</p>
+
         </div>
 
         <div class="offers-content card">

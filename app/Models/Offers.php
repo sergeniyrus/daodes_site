@@ -12,14 +12,14 @@ class Offers extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title',
-        'content',
+        'title_ru',
+        'content_ru',
+        'title_en',
+        'content_en',
         'category_id',
         'user_id',
         'img',
         'views',
-        'created_at',
-        'updated_at'
     ];
 
 

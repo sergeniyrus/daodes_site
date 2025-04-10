@@ -24,6 +24,7 @@ return [
     'create_offer_title' => 'Создать предложение',
     'crop_image' => 'Вырезать',
     'cancel' => 'Отменить',
+    'offers_image'=> 'Изображение',
 
     'validation' => [
         'name_required' => 'Название категории обязательно для заполнения.',

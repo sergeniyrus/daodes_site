@@ -203,11 +203,17 @@
     <form id="offers-form" method="POST" action="{{ route('offers.store') }}" enctype="multipart/form-data">
         @csrf
 
+        <!-- Title fields (RU and EN) -->
         <div class="form-group">
-            <label for="title">{{ __('admin_offers.offer_title') }}</label>
-            <input type="text" name="title" class="input_dark" value="{{ old('title') }}" required>
+            <label for="title_ru">{{ __('admin_offers.offer_title_ru') }}</label>
+            <input type="text" name="title_ru" class="input_dark" value="{{ old('title_ru') }}" required>
+        </div>
+        <div class="form-group">
+            <label for="title_en">{{ __('admin_offers.offer_title_en') }}</label>
+            <input type="text" name="title_en" class="input_dark" value="{{ old('title_en') }}">
         </div>
 
+        <!-- Category fields (RU and EN names) -->
         <div class="form-group">
             <label for="category">{{ __('admin_offers.category') }}</label>
             <div class="category-container">
@@ -217,7 +223,7 @@
                         @foreach ($category_offers as $category)
                             <option value="{{ $category->id }}"
                                 {{ old('category_id') == $category->id ? 'selected' : '' }}>
-                                {{ $category->name }}
+                                {{ $category->name_ru }} / {{ $category->name_en }}
                             </option>
                         @endforeach
                     </select>
@@ -228,6 +234,7 @@
             </div>
         </div>
 
+        <!-- Image upload -->
         <div class="form-group">
             <label for="filename">{{ __('admin_offers.offer_image') }}</label>
             <div class="file-input-wrapper">
@@ -243,10 +250,15 @@
             </p>
         </div>
 
+        <!-- Content fields (RU and EN) with CKEditor -->
         <div class="form-group">
-            <label for="content">{{ __('admin_offers.offer_content') }}</label>
-            <textarea id="editor" name="content" style="display:none;" placeholder=" {{ __('admin_offers.enter_offer_text') }}">{{ old('content') }}</textarea>
-            <div id="editor-container"></div>
+            <label for="content_ru">{{ __('admin_offers.offer_content_ru') }}</label>
+            <textarea id="editor-ru" name="content_ru">{{ old('content_ru') }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="content_en">{{ __('admin_offers.offer_content_en') }}</label>
+            <textarea id="editor-en" name="content_en">{{ old('content_en') }}</textarea>
         </div>
 
         <div style="text-align: center;">
@@ -263,8 +275,12 @@
         <form id="category-form" method="POST" action="{{ route('offerscategories.categoryStore') }}">
             @csrf
             <div class="form-group">
-                <label for="category-name">{{ __('admin_offers.category_name') }}</label>
-                <input type="text" name="name" id="category-name" class="input_dark" placeholder=" {{ __('admin_offers.name_regex') }}" required>
+                <label for="category-name_ru">{{ __('admin_offers.category_name_ru') }}</label>
+                <input type="text" name="name_ru" id="category-name_ru" class="input_dark" placeholder=" {{ __('admin_offers.name_regex') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="category-name_en">{{ __('admin_offers.category_name_en') }}</label>
+                <input type="text" name="name_en" id="category-name_en" class="input_dark" placeholder=" {{ __('admin_offers.name_regex') }}">
             </div>
 
             <div style="text-align: center;">
@@ -291,268 +307,16 @@
     </div>
 </div>
 
+
 <!-- Hidden input for cropped image data -->
 <input type="hidden" id="cropped-image" name="cropped_image">
 
 <!-- CKEditor CSS and JS -->
 <link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
 <script src="{{ asset('js/ckeditor.js') }}"></script>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Открытие модального окна для добавления категории
-    document.getElementById('open-category-modal').addEventListener('click', function() {
-        document.getElementById('category-modal').style.display = 'block';
-    });
-
-    // Закрытие модального окна
-    document.querySelector('.close').addEventListener('click', function() {
-        document.getElementById('category-modal').style.display = 'none';
-    });
-
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('category-modal');
-        if (event.target === modal) {
-            modal.style.display = 'none';
-        }
-    });
-
-    // Обработка отправки формы добавления категории
-    document.getElementById('category-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const form = this;
-    const formData = new FormData(form);
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn.innerHTML;
-    
-    // Показываем индикатор загрузки
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    submitBtn.disabled = true;
-    
-    fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: {
-            'X-Requested-With': 'XMLHttpRequest',
-            'Accept': 'application/json'
-        }
-    })
-    .then(response => {
-        if (!response.ok) {
-            return response.json().then(err => { throw err; });
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            // Добавляем новую категорию в select
-            const select = document.getElementById('category-select');
-            const option = document.createElement('option');
-            option.value = data.category.id;
-            option.textContent = data.category.name;
-            select.appendChild(option);
-            
-            // Выбираем новую категорию
-            select.value = data.category.id;
-            
-            // Закрываем модальное окно
-            document.getElementById('category-modal').style.display = 'none';
-            
-            // Очищаем форму
-            form.reset();
-            
-            // Показываем успешное сообщение
-            alert(data.message);
-        }
-    })
-    .catch(error => {
-        // Показываем ошибки в alert
-        const errors = error.errors || [error.message];
-        alert(errors.join('\n'));
-    })
-    .finally(() => {
-        submitBtn.innerHTML = originalBtnText;
-        submitBtn.disabled = false;
-    });
-});
-
-
-    document.getElementById('offers-form').addEventListener('submit', function(e) {
-        if (editor) {
-            document.getElementById('editor').value = editor.getData();
-        }
-
-        const content = document.getElementById('editor').value;
-        if (!content || content.trim() === '') {
-            e.preventDefault();
-            alert('Content is required');
-            if (editor) {
-                editor.editing.view.focus();
-            }
-            return false;
-        }
-
-        const formData = new FormData(this);
-        console.log('Form data:', formData.get('cropped_image'));
-
-        return true;
-    });
-
-    const fileInput = document.getElementById('file-input');
-    const preview = document.getElementById('preview');
-    const fileName = document.getElementById('file-name');
-    const croppedImageInput = document.getElementById('cropped-image');
-    const cropModal = document.getElementById('crop-modal');
-    const cropContainer = document.getElementById('crop-container');
-
-    let cropper = null;
-    let currentImageUrl = null;
-    let originalFileName = '';
-
-    fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-
-        if (!file.type.match('image.*')) {
-            alert('Please select an image file');
-            return;
-        }
-
-        // Сохраняем оригинальное имя файла
-        originalFileName = file.name;
-
-        cleanupCropper();
-
-        currentImageUrl = URL.createObjectURL(file);
-
-        cropModal.style.display = 'block';
-
-        cropContainer.innerHTML = `<img id="image-to-crop" src="${currentImageUrl}" style="max-width: 100%;">`;
-        const image = document.getElementById('image-to-crop');
-
-        image.onload = function() {
-            initCropper(image);
-        };
-    });
-
-    function initCropper(image) {
-        cropper = new Cropper(image, {
-            aspectRatio: 1,
-            viewMode: 1,
-            autoCropArea: 0.8,
-            responsive: true,
-            restore: false,
-            modal: true,
-            guides: true,
-            center: true,
-            highlight: true,
-            background: false,
-            movable: true,
-            rotatable: false,
-            scalable: false,
-            zoomable: true,
-            cropBoxMovable: true,
-            cropBoxResizable: true,
-            minCropBoxWidth: 256,
-            minCropBoxHeight: 256,
-            ready: function() {
-                console.log('Cropper initialized');
-                const container = this.cropper.getContainerData();
-                const imageData = this.cropper.getImageData();
-
-                const size = Math.min(
-                    container.width * 0.8,
-                    container.height * 0.8,
-                    imageData.naturalWidth,
-                    imageData.naturalHeight
-                );
-
-                this.cropper.setCropBoxData({
-                    width: size,
-                    height: size
-                });
-
-                console.log('Crop box size set to:', size);
-            }
-        });
-    }
-
-    function cleanupCropper() {
-        if (cropper) {
-            cropper.destroy();
-            cropper = null;
-        }
-        if (currentImageUrl) {
-            URL.revokeObjectURL(currentImageUrl);
-            currentImageUrl = null;
-        }
-    }
-
-    document.getElementById('crop-button').addEventListener('click', function() {
-        if (!cropper) return;
-
-        try {
-            const canvas = cropper.getCroppedCanvas({
-                width: 800,
-                height: 800,
-                minWidth: 256,
-                minHeight: 256,
-                maxWidth: 4096,
-                maxHeight: 4096,
-                fillColor: '#1a1a1a',
-                imageSmoothingEnabled: true,
-                imageSmoothingQuality: 'high'
-            });
-
-            if (!canvas) {
-                throw new Error('Canvas creation failed');
-            }
-
-            // Convert canvas to Blob
-            canvas.toBlob(function(blob) {
-                // Используем оригинальное расширение файла
-                const fileExtension = originalFileName.split('.').pop();
-                const croppedFileName = `cropped_${originalFileName}`;
-                const file = new File([blob], croppedFileName, { type: `image/${fileExtension}` });
-
-                // Create a DataTransfer to set the file input value
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                fileInput.files = dataTransfer.files;
-
-                preview.src = URL.createObjectURL(file);
-                preview.style.display = 'block';
-                fileName.textContent = croppedFileName;
-
-                console.log('Cropped image file:', file);
-
-                cropModal.style.display = 'none';
-                cleanupCropper();
-            }, `image/${originalFileName.split('.').pop()}`, 0.9);
-
-        } catch (error) {
-            console.error('Cropping error:', error);
-            alert('Cropping error');
-        }
-    });
-
-    document.getElementById('cancel-crop').addEventListener('click', resetFileInput);
-    document.getElementById('close-crop-modal').addEventListener('click', resetFileInput);
-
-    function resetFileInput() {
-        cleanupCropper();
-        fileInput.value = '';
-        preview.style.display = 'none';
-        fileName.textContent = 'No file selected';
-        cropModal.style.display = 'none';
-    }
-
-    window.addEventListener('click', function(event) {
-        if (event.target === cropModal) {
-            resetFileInput();
-        }
-    });
-});
-</script>
+<script src="{{ asset('js/ckeditor-init.js') }}"></script>
+<script src="{{ asset('js/form-validation.js') }}"></script>
+<script src="{{ asset('js/category-modal.js') }}"></script>
+<script src="{{ asset('js/category-submit.js') }}"></script>
+<script src="{{ asset('js/cropper-init.js') }}"></script>
 @endsection

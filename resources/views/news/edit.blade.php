@@ -50,18 +50,19 @@
             <div class="form-group">
                 <label for="filename">{{ __('admin_news.news_image') }}</label>
                 <div class="file-input-wrapper">
-                    @if ($news->img)
-                        <img id="preview" src="{{ $news->img }}" alt="Image preview"
-                            style="max-width: 200px; margin-bottom: 10px;">
-                    @else
-                        <p>{{ __('admin_news.no_image') }}</p>
-                    @endif
-                    <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
-                        {{ __('admin_news.choose_file') }}
-                    </button>
-                    <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
-                    <div id="file-name">{{ __('admin_news.no_file_selected') }}</div>
-                </div>
+                    <!-- If an image exists, show it; otherwise, hide it -->
+                <img id="preview" src="{{ $news->img ?? '#' }}" alt="Image Preview"
+                style="display: {{ $news->img ? 'block' : 'none' }}; max-width: 100px;">
+    
+            <div class="file-info">
+                <!-- If an image exists, display the file name; otherwise, show "No file chosen" -->
+                <span id="file-name" class="file-name">{{ $news->img ? basename($news->img) : __('admin_offers.no_file_chosen') }}</span>
+                <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
+                    {{ __('admin_offers.choose_file') }}
+                </button>
+                <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+            </div>
+        </div>
                 <p style="color: red; text-align: left; margin: 10px 0 0 10px; font-size:0.9rem;">
                     {{ __('admin_news.image_requirements') }}
                 </p>

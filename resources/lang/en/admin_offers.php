@@ -24,6 +24,7 @@ return [
     'create_offer_title' => 'Create an offer',
     'crop_image' => 'Cut it out',
     'cancel' => 'Cancel',
+    'offers_image'=> 'Image',
 
     'validation' => [
         'name_required' => 'Category name is required.',

@@ -90,10 +90,11 @@
                                 <div class="task-info">
                                     <p class="task-category">{!! __('offers.category_label') !!}
                                         @php
-                                            $categoryName = DB::table('category_offers')
-                                                ->where('id', $offersItem->category_id)
-                                                ->value('name');
-                                        @endphp
+    $locale = app()->getLocale();
+    $categoryName = DB::table('category_offers')
+        ->where('id', $offersItem->category_id)
+        ->value($locale === 'ru' ? 'name_ru' : 'name_en');
+@endphp
                                         {{ $categoryName ?? __('offers.no_category') }}
                                     </p>
                                 </div>

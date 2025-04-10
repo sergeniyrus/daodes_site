@@ -73,15 +73,20 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $name
+ * @property string $name_ru
+ * @property string|null $name_en
  * @property string|null $created_at
  * @property string|null $updated_at
+ * @property-read mixed $name
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Offers> $offers
+ * @property-read int|null $offers_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryOffers newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryOffers newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryOffers query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryOffers whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryOffers whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryOffers whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryOffers whereNameEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryOffers whereNameRu($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryOffers whereUpdatedAt($value)
  */
 	class CategoryOffers extends \Eloquent {}
@@ -303,8 +308,10 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $title
- * @property string $content
+ * @property string $title_ru
+ * @property string|null $title_en
+ * @property string $content_ru
+ * @property string|null $content_en
  * @property string|null $img
  * @property int $user_id
  * @property int $category_id
@@ -326,7 +333,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereBudget($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereCoin($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereContentEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereContentRu($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereControl($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereFinish($value)
@@ -336,7 +344,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers wherePdfIpfsCid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereStartVote($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereState($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereTitleEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereTitleRu($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereUserId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereViews($value)

@@ -5,140 +5,48 @@ Edit the offer
 @endsection
 
 @section('main')
-    <style>
-        .container {
-            padding: 20px;
-            margin: 30px auto;
-            max-width: 800px;
-            background-color: rgba(20, 20, 20, 0.9);
-            border-radius: 20px;
-            border: 1px solid #d7fc09;
-            color: #f8f9fa;
-            font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            color: #d7fc09;
-            font-size: 1.2rem;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .input_dark,
-        textarea {
-            background-color: #1a1a1a;
-            color: #a0ff08;
-            border: 1px solid #d7fc09;
-            border-radius: 5px;
-            padding: 12px;
-            font-size: 16px;
-            transition: border 0.3s ease;
-        }
-
-        .input_dark:focus,
-        textarea:focus {
-            border: 1px solid #a0ff08;
-            outline: none;
-            box-shadow: 0 0 5px #d7fc09;
-        }
-
-        .des-btn {
-            display: inline-block;
-            color: #ffffff;
-            font-size: 1.2rem;
-            background: #0b0c18;
-            padding: 12px 25px;
-            border: 1px solid #d7fc09;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-            transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
-            margin-top: 20px;
-        }
-
-        .des-btn:hover {
-            box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-            transform: scale(1.05);
-            background: #1a1a1a;
-        }
-
-        .file-input-wrapper {
-            text-align: center;
-            padding: 20px;
-            border-radius: 10px;
-            width: 300px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-            margin-bottom: 20px;
-        }
-
-        #preview {
-            max-width: 100%;
-            margin-top: 10px;
-            border: 1px solid #d7fc09;
-            border-radius: 10px;
-            display: none;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        #file-name {
-            font-size: 0.9rem;
-            color: #a0ff08;
-            text-align: center;
-            margin-top: 5px;
-        }
-
-        .alert-danger {
-            background-color: rgba(255, 0, 0, 0.8);
-            color: #fff;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        
-    </style>
+<link rel="stylesheet" href="{{ asset('css/news.css') }}">
 <div class="container">
     <h2 class="text-center">{{ __('admin_offers.edit_offer_title') }}</h2>
-
-    <!-- Validation Errors -->
-    {{-- @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
 
     <form id="offer-form" method="POST" action="{{ route('offers.update', ['id' => $offer->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
+        <!-- Title fields (RU and EN) -->
         <div class="form-group">
-            <label for="title">{{ __('admin_offers.offer_title') }}</label>
-            <input type="text" name="title" class="input_dark" value="{{ old('title', $offer->title) }}">
+            <label for="title_ru">{{ __('admin_news.news_title_ru') }}</label>
+            <input type="text" name="title_ru" class="input_dark" value="{{ old('title_ru', $offer->title_ru) }}" required>
+        </div>
+        <div class="form-group">
+            <label for="title_en">{{ __('admin_news.news_title_en') }}</label>
+            <input type="text" name="title_en" class="input_dark" value="{{ old('title_en', $offer->title_en) }}">
         </div>
 
+        <!-- Category fields (RU and EN names) -->
         <div class="form-group">
-            <label for="category">{{ __('admin_offers.category') }}</label>
-            <select name="category" class="input_dark">
-                @foreach ($categories as $category)
-                    <option value="{{ $category->id }}" {{ $category->id == $offer->category_id ? 'selected' : '' }}>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
+            <label for="category">{{ __('admin_news.category') }}</label>
+            <div class="category-container">
+                <div class="category-select-wrapper">
+                    <select name="category_id" class="input_dark" id="category-select" required>
+                        <option value="" selected disabled>{{ __('admin_news.select_category') }}</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ old('category_id', $offer->category_id) == $category->id ? 'selected' : '' }}>
+                                {{ $category->name_ru }} / {{ $category->name_en }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="button" class="des-btn add-category-btn" id="open-category-modal">
+                    <i class="fas fa-plus-circle"></i> {{ __('admin_news.add_category') }}
+                </button>
+            </div>
         </div>
 
+        <!-- Image upload -->
         <div class="form-group">
-            <label for="filename">{{ __('admin_offers.image') }}</label>
+            <label for="filename">{{ __('admin_offers.offers_image') }}</label>
             <div class="file-input-wrapper">
                 <!-- If an image exists, show it; otherwise, hide it -->
                 <img id="preview" src="{{ $offer->img ?? '#' }}" alt="Image Preview"
@@ -146,30 +54,82 @@ Edit the offer
         
                 <div class="file-info">
                     <!-- If an image exists, display the file name; otherwise, show "No file chosen" -->
-                    <span id="file-name" class="file-name">{{ $offer->img ? basename($offer->img) : __('admin_offers.no_file_chosen') }}</span>
+                    <span id="file-name" class="file-name">{{ $offer->img ? basename($offer->img) : __('admin_news.no_file_chosen') }}</span>
                     <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
-                        {{ __('admin_offers.choose_file') }}
+                        {{ __('admin_news.choose_file') }}
                     </button>
                     <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
                 </div>
             </div>
-            <p style="color: red; text-align: center; font-size: 0.9rem;">{{ __('admin_offers.image_requirements') }}</p>
+            <p style="color: red; text-align: left; margin: 10px 0 0 10px; font-size:0.9rem;">
+                {{ __('admin_news.image_requirements') }}
+            </p>
+        </div>
+
+        <!-- Content fields (RU and EN) with CKEditor -->
+        <div class="form-group">
+            <label for="content_ru">{{ __('admin_news.news_content_ru') }}</label>
+            <textarea id="editor-ru" name="content_ru">{{ old('content_ru', $offer->content_ru) }}</textarea>
         </div>
 
         <div class="form-group">
-            <label for="content">{{ __('admin_offers.offer_content') }}</label>
-            <textarea id="editor" name="content" rows="10" class="input_dark">{{ old('content', $offer->content) }}</textarea>
+            <label for="content_en">{{ __('admin_news.news_content_en') }}</label>
+            <textarea id="editor-en" name="content_en">{{ old('content_en', $offer->content_en) }}</textarea>
         </div>
 
         <div style="text-align: center;">
-            <button type="submit" class="des-btn">{{ __('admin_offers.save_changes_button') }}</button>
+            <button type="submit" class="des-btn">{{ __('admin_news.save_changes_button') }}</button>
         </div>
     </form>
 </div>
 
-    {{-- // Инициализация cropper --}}
-    <script src="{{ asset('js/image-upload.js') }}"></script>
-    {{-- // Инициализация CKEditor --}}
-    <link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
+<!-- Modal for adding new category -->
+<div id="category-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>{{ __('admin_news.add_category') }}</h2>
+        <form id="category-form" method="POST" action="{{ route('offerscategories.categoryStore') }}">
+            @csrf
+            <div class="form-group">
+                <label for="category-name_ru">{{ __('admin_news.category_name_ru') }}</label>
+                <input type="text" name="name_ru" id="category-name_ru" class="input_dark" placeholder=" {{ __('admin_news.name_regex') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="category-name_en">{{ __('admin_news.category_name_en') }}</label>
+                <input type="text" name="name_en" id="category-name_en" class="input_dark" placeholder=" {{ __('admin_news.name_regex') }}">
+            </div>
+
+            <div style="text-align: center;">
+                <button type="submit" class="des-btn" id="submit-category-btn">
+                    <i class="fas fa-plus-circle"></i> {{ __('admin_news.add_category') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Modal for image cropping -->
+<div id="crop-modal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <span class="close" id="close-crop-modal">&times;</span>
+        <h2>{{ __('admin_news.crop_image') }}</h2>
+        <div id="crop-container-wrapper">
+            <div id="crop-container"></div>
+        </div>
+        <div class="cropper-actions">
+            <button id="cancel-crop" class="des-btn">{{ __('admin_news.cancel') }}</button>
+            <button id="crop-button" class="des-btn">{{ __('admin_news.crop_image') }}</button>
+        </div>
+    </div>
+</div>
+<!-- Hidden input for cropped image data -->
+<input type="hidden" id="cropped-image" name="cropped_image">
+
+<!-- CKEditor CSS and JS -->
+<link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
+<script src="{{ asset('js/ckeditor.js') }}"></script>
+<script src="{{ asset('js/ckeditor-init.js') }}"></script>
+<script src="{{ asset('js/form-validation.js') }}"></script>
+<script src="{{ asset('js/category-modal.js') }}"></script>
+<script src="{{ asset('js/category-submit.js') }}"></script>
+<script src="{{ asset('js/cropper-init.js') }}"></script>
 @endsection

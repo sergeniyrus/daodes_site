@@ -4,7 +4,7 @@
 @section('main')
 
 <link href="{{ asset('css/category.css') }}" rel="stylesheet">
-<<div class="container">
+<div class="container">
     <h2>{{ __('category.categories_title') }}</h2>
     <div class="new_post">
         <table class="table mt-4">
