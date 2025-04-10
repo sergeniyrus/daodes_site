@@ -126,38 +126,6 @@ img {
   color: #ffffff;
 }
 
-/* оповещения */
-.mobile-notifications a {
-  background-color: red;
-  border-radius: 5px;
-  font-size: 24px;
-  cursor: pointer;
-  top: 8px;
-  right: 50px;
-  position: absolute;
-  padding: 0 4px;
-  font-family: Georgia, "Times New Roman", Times, serif;
-  color: #ffffff;
-  text-decoration: none;
-  font-weight: 600;
-}
-/* Menu */
-.profile-link a,
- .log-link a
- {
-  font-family: Georgia, "Times New Roman", Times, serif;
-  color: #00CCFF;
-  text-decoration: none;
-}
-
-.mobile-notifications a:hover,
-.logout-icon:hover,
-.profile-link a:hover,
-.log-link a:hover {
-  color: goldenrod;
-}
-
-
 
 /* Header */
 /* блок вход регистрация */

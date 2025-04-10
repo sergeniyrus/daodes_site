@@ -12,36 +12,39 @@
   z-index: 1002;
   border-bottom: 1px solid gold;
   /* font-family:StandardPoster; */
-  
+
 }
 
 .mobile-logo-name {
   color: gold;
   text-decoration: none;
-  
+
 }
 
 .mobile-logo-name:hover {
   color: goldenrod;
 }
+
 .logout-icon {
   width: 1em;
   height: 1em;
   color: #ffffff;
 }
+
 .mobile-hamburger-button,
 .mobile-auth-buttons,
-.profile-link, .log-link {
+.profile-link,
+.log-link {
   background: none;
   border: none;
   cursor: pointer;
   color: white;
   font-size: clamp(18px, 1.5vw, 36px);
   text-decoration: none;
-  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
-.mobile-hamburger-button:hover, 
+.mobile-hamburger-button:hover,
 .logout-icon:hover {
   color: goldenrod;
 }
@@ -72,7 +75,7 @@
   height: auto;
   transition: all 0.3s ease;
   text-decoration: none;
-  
+
 }
 
 .mobile-chapter-header {
@@ -88,15 +91,19 @@
   text-decoration: none;
   color: #00CCFF;
 }
+
 .mobile-chapter-header.active {
   display: block;
   background-color: #2C3E50;
   color: gold;
   text-decoration: none;
 }
+
 .mobile-chapter-header:hover {
-  background-color: #2C3E50; /* Цвет фона при наведении */
-  color: gold; /* Цвет текста при наведении */
+  background-color: #2C3E50;
+  /* Цвет фона при наведении */
+  color: gold;
+  /* Цвет текста при наведении */
 }
 
 
@@ -107,8 +114,10 @@
 }
 
 .mobile-subchapters.open {
-  max-height: 500px; /* Увеличьте значение, если подменю больше */
-  display: block; /* Убедитесь, что это свойство не переопределяется */
+  max-height: 500px;
+  /* Увеличьте значение, если подменю больше */
+  display: block;
+  /* Убедитесь, что это свойство не переопределяется */
 }
 
 .mobile-subchapter-item {
@@ -126,7 +135,7 @@
 .mobile-subchapter-item:hover {
   background: #34495E;
   color: gold;
-  
+
 }
 
 
@@ -135,7 +144,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  position: relative; /* Устанавливаем relative для родительского блока */
+  position: relative;
+  /* Устанавливаем relative для родительского блока */
 }
 
 .mobile-header-left {
@@ -158,6 +168,7 @@
 .mobile-notifications a:hover {
   color: goldenrod;
 }
+
 .auth-buttons-inline {
   display: flex;
   align-items: center;
@@ -171,9 +182,10 @@
   font-size: 12px;
   font-weight: bold;
   display: flex;
-  flex-direction: column; /* Выравнивание языков по горизонтали */  
-  
-  
+  flex-direction: column;
+  /* Выравнивание языков по горизонтали */
+
+
 }
 
 .language-switcher a {
@@ -187,5 +199,36 @@
 }
 
 .language-switcher a:hover {
+  color: goldenrod;
+}
+
+/* оповещения */
+.mobile-notifications a {
+  background-color: red;
+  border-radius: 5px;
+  font-size: 24px;
+  cursor: pointer;
+  top: 8px;
+  right: 50px;
+  position: absolute;
+  padding: 0 4px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: #ffffff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+/* Menu */
+.profile-link a,
+.log-link a {
+  font-family: Georgia, "Times New Roman", Times, serif;
+  color: #00CCFF;
+  text-decoration: none;
+}
+
+.mobile-notifications a:hover,
+.logout-icon:hover,
+.profile-link a:hover,
+.log-link a:hover {
   color: goldenrod;
 }
