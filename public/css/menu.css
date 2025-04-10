@@ -27,11 +27,11 @@
 .logout-icon {
   width: 1em;
   height: 1em;
+  color: #ffffff;
 }
 .mobile-hamburger-button,
 .mobile-auth-buttons,
-.logout-icon,
-.profile-link {
+.profile-link, .log-link {
   background: none;
   border: none;
   cursor: pointer;
@@ -125,9 +125,67 @@
 
 .mobile-subchapter-item:hover {
   background: #34495E;
-  color: #000;
+  color: gold;
   
 }
 
 
+.mobile-header-left,
+.mobile-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative; /* Устанавливаем relative для родительского блока */
+}
 
+.mobile-header-left {
+  justify-content: flex-start;
+}
+
+.mobile-header-right {
+  justify-content: flex-end;
+}
+
+
+
+.mobile-notifications a {
+  color: white;
+  font-size: clamp(18px, 1.5vw, 36px);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.mobile-notifications a:hover {
+  color: goldenrod;
+}
+.auth-buttons-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+
+/* Стили для переключателя языков */
+.language-switcher {
+  font-size: 12px;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column; /* Выравнивание языков по горизонтали */  
+  
+  
+}
+
+.language-switcher a {
+  color: #585858;
+  font-size: 12px;
+  text-decoration: none;
+}
+
+.language-switcher a.active {
+  color: #00CCFF;
+}
+
+.language-switcher a:hover {
+  color: goldenrod;
+}

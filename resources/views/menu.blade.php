@@ -1,55 +1,65 @@
 <link rel="stylesheet" href="{{ asset('css/menu.css') }}">
 <!-- Кнопка гамбургерного меню  -->
 <div class="mobile-hamburger-header">
-    <button id="mobile-hamburger-button" class="mobile-hamburger-button" title="Menu">☰ Menu</button>
+    <!-- Левая часть -->
+    <div class="mobile-header-left">
+        <button id="mobile-hamburger-button" class="mobile-hamburger-button" title="Menu">☰ Menu</button>
 
-    <!-- Language Switcher -->
-    @auth
-        @if (Auth::user()->access_level >= 3)
-            <div class="language-switcher">
-                <a href="{{ route('language.change', 'en') }}"
-                    class="{{ app()->getLocale() === 'en' ? 'active' : '' }}">EN</a>
-                <a href="{{ route('language.change', 'ru') }}"
-                    class="{{ app()->getLocale() === 'ru' ? 'active' : '' }}">RU</a>
-            </div>
-        @endif
+        @auth
+            @if (Auth::user()->access_level >= 3)
+                <div class="language-switcher">
+                    <a href="{{ route('language.change', 'en') }}"
+                        class="{{ app()->getLocale() === 'en' ? 'active' : '' }}">EN</a>
+                    <a href="{{ route('language.change', 'ru') }}"
+                        class="{{ app()->getLocale() === 'ru' ? 'active' : '' }}">RU</a>
+                </div>
+            @endif
+        @endauth
+    </div>
 
-        <div class="mobile-hamburger-button profile-link">
-            <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}">
-                {{ Auth::user()->name }}
-            </a>
-        </div>
-        @if ($unreadCount > 0)
-            <div class="mobile-notifications">
-                <a href="/notifications" title="{{ __('chats.notifications') }}">
-                    {{ $unreadCount }}
+    <!-- Правая часть -->
+    <div class="mobile-header-right">
+        @auth
+            <div class="profile-link">
+                <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}">
+                    {{ Auth::user()->name }}
                 </a>
             </div>
-        @endif
-        <div class="mobile-hamburger-button log-link">
-            <a href="{{ route('logout') }}"
-                onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
-                title="{{ __('menu.logout') }}">
-                <svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
-                    <polyline points="16 17 21 12 16 7"></polyline>
-                    <line x1="21" y1="12" x2="9" y2="12"></line>
-                </svg>
-            </a>
-            <form id="mobile-logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
-            </form>
+            @if ($unreadCount > 0)
+                <div class="mobile-notifications">
+                    <a href="/notifications" title="{{ __('chats.notifications') }}">
+                        {{ $unreadCount }}
+                    </a>
+                </div>
+            @endif
+            <div class="log-link">
+                <a href="{{ route('logout') }}"
+                    onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
+                    title="{{ __('menu.logout') }}">
+                    <svg class="logout-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16 17 21 12 16 7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                </a>
+                <form id="mobile-logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                    @csrf
+                </form>
+            </div>
+        @else
+        <div class="auth-buttons-inline">
+            <div class="log-link">
+                <a href="/login">{{ __('menu.login') }}</a>
+            </div>
+            <div class="log-link">
+                <a href="{{ route('register') }}">{{ __('menu.registration') }}</a>
+            </div>
         </div>
-    @else
-        <div class="mobile-hamburger-button log-link">
-            <a href="/login">{{ __('menu.login') }}</a>
-        </div>
-        <div class="mobile-hamburger-button log-link">
-            <a href="{{ route('register') }}">{{ __('menu.registration') }}</a>
-        </div>
-    @endauth
+        @endauth
+    </div>
 </div>
+
 
 <!-- Гамбургер-меню (скрыто по умолчанию) -->
 <div class="mobile-hamburger-menu" id="mobile-hamburger-menu">

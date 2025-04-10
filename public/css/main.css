@@ -157,51 +157,7 @@ img {
   color: goldenrod;
 }
 
-/* Стили для переключателя языков */
-.language-switcher {
-  position: absolute;
-  font-size: 12px;
-  font-weight: bold;
-  left: 120px;
-  display: flex;
-  flex-direction: column; /* Элементы будут отображаться в столбик */
-  /*gap: 5px;  Добавляем отступ между элементами (опционально) */
-}
 
-.language-switcher a {
-  color: #585858;
-  font-size: 12px;
-  text-decoration: none;
-}
-
-.language-switcher a.active {
-  color: #00CCFF;
-}
-
-.language-switcher a:hover {
-  color: goldenrod;
-}
-
-/* Для экранов до 1024px — уменьшаем отступ */
-@media (max-width: 1280px) {
-  .language-switcher {
-    left: 100px;
-  }
-}
-
-/* Для экранов до 768px — ещё меньше */
-@media (max-width: 768px) {
-  .language-switcher {
-    left: 90px;
-  }
-}
-
-/* Для экранов до 480px — минимальное значение */
-@media (max-width: 480px) {
-  .language-switcher {
-    left: 80px;
-  }
-}
 
 /* Header */
 /* блок вход регистрация */
