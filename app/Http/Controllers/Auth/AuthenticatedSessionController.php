@@ -23,6 +23,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * Handle an incoming authentication request.
      */
+
     public function store(LoginRequest $request): RedirectResponse
     {
         $request->authenticate();
@@ -30,17 +31,15 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerate();
 
         // Получаем предыдущий URL из сессии
-        $intendedUrl = $request->session()->pull('url.intended', route('dashboard'));
+        $intendedUrl = $request->session()->pull('url.intended', route('home'));
 
-        // Проверяем, является ли предыдущий URL главной страницей
-        if ($intendedUrl === route('home')) {
-            // Если это главная страница, перенаправляем на роут dashboard
-            return redirect()->route('dashboard');
-        }
+        // Добавляем сообщение о успешном входе с использованием перевода
+        $request->session()->flash('message', __('login.login'));
 
-        // В противном случае перенаправляем на страницу, с которой пришли
-        return redirect()->intended($intendedUrl);
+        // Перенаправляем пользователя на главную страницу
+        return redirect()->route('home');
     }
+
 
 
     /**
@@ -53,6 +52,9 @@ class AuthenticatedSessionController extends Controller
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
+
+        // Добавляем сообщение о выходе из системы
+        $request->session()->flash('message', __('login.logout'));
 
         return redirect('/');
     }

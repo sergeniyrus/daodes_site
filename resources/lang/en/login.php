@@ -9,4 +9,6 @@ return [
     'register' => 'Register',
     'username_placeholder' => 'Enter username',
     'password_placeholder' => 'Enter password',
+    'login' => 'You are logged in!',
+    'logout' => 'You are logged out!',
 ];
