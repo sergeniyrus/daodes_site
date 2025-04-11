@@ -327,7 +327,63 @@ class OffersController extends Controller
     }
 
 
+    public function categoryStoreState(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name_ru' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:category_offers,name_ru',
+                'regex:/^[\p{L}\p{N}\s\-.,;!?€£\$₽]+$/u'
+            ],
+            'name_en' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:category_offers,name_en',
+                'regex:/^[\p{L}\p{N}\s\-.,;!?€£\$₽]+$/u'
+            ]
+        ], [
+            'name_ru.required' => __('admin_offers.validation.name_required'),
+            'name_en.required' => __('admin_offers.validation.name_required'),
+            'name_ru.string' => __('admin_offers.validation.name_string'),
+            'name_en.string' => __('admin_offers.validation.name_string'),
+            'name_ru.max' => __('admin_offers.validation.name_max'),
+            'name_en.max' => __('admin_offers.validation.name_max'),
+            'name_ru.unique' => __('admin_offers.validation.name_taken'),
+            'name_en.unique' => __('admin_offers.validation.name_taken'),
+            'name_ru.regex' => __('admin_offers.validation.name_regex'),
+            'name_en.regex' => __('admin_offers.validation.name_regex'),
+        ]);
+    
+        if ($validator->fails()) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', __('admin_offers.validation.validation_error'))
+                ->withErrors($validator);
+        }
+    
+        try {
+            CategoryOffers::create([
+                'name_ru' => $request->name_ru,
+                'name_en' => $request->name_en
+            ]);
+            
+            Log::info('Создание категории оффера статично');
 
+            return redirect()
+                ->route('offerscategories.index')
+                ->with('success', __('admin_offers.category.created'));
+                
+        } catch (\Exception $e) {
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', __('admin_offers.category.create_error'));
+        }
+    }
 
 
     public function categoryEdit($id)

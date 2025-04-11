@@ -149,8 +149,12 @@ Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')
     Route::get('/', [OffersController::class, 'categoryIndex'])->name('index');
     Route::get('/create', [OffersController::class, 'categoryCreate'])->name('create');
     Route::post('/', [OffersController::class, 'categoryStore'])->name('categoryStore');
+
+    // Route::post('/', [OffersController::class, 'categoryStoreState'])->name('categoryStoreState');
+    
     Route::get('/{id}/edit', [OffersController::class, 'categoryEdit'])->name('edit');
     Route::put('/{id}', [OffersController::class, 'categoryUpdate'])->name('update');
+    
     Route::delete('/{id}', [OffersController::class, 'categoryDestroy'])->name('destroy');
 });
 

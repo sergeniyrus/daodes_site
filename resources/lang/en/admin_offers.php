@@ -4,7 +4,7 @@ return [
     'create_offer_title' => 'Create Offer',
     'edit_offer_title' => 'Edit Offer',
     'offer_title' => 'Offer Title',
-    'category' => 'Category',
+    'category' => 'Category Offers',
     'select_category' => 'Select a category',
     'category_name' => 'Category name',
     'image' => 'Image',
@@ -24,7 +24,16 @@ return [
     'create_offer_title' => 'Create an offer',
     'crop_image' => 'Cut it out',
     'cancel' => 'Cancel',
-    'offers_image'=> 'Image',
+    'offers_image' => 'Image',
+
+    'offer_title_ru' => 'Offers title (Russian)',
+    'offer_title_en' => 'Offers title (English)',
+
+    'offer_content_ru' => 'Offers content (Russian)',
+    'offer_content_en' => 'Offers content (English)',
+
+    'category_name_ru' => 'Category name (Russian)',
+    'category_name_en' => 'Category name (English)',
 
     'validation' => [
         'name_required' => 'Category name is required.',
@@ -32,5 +41,10 @@ return [
         'name_max' => 'Category name must not exceed 255 characters.',
         'name_taken' => 'This name is already taken.',
         'name_regex' => 'Category name can only contain letters, numbers, spaces and these symbols: -.,;!?$€£₽',
+        'validation_error' => 'Validation error. Please check your input',
+    ],
+    'category' => [
+        'created' => 'Category successfully created',
+        'create_error' => 'Error creating category',
     ],
 ];
