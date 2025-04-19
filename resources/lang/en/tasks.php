@@ -62,6 +62,7 @@ return [
     'deadline' => 'Deadline',
     'budget' => 'Budget',
     'category' => 'Category',
+    'attachments' => 'Task image',
     'add_category' => 'Add a category',
     'category_name' => 'Category name',
     'save_changes' => 'Save Changes',

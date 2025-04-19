@@ -1,261 +1,9 @@
-/* Основные стили контейнера и формы */
-.container {
-    padding: 20px;
-    margin: 0 auto;
-    max-width: 800px;
-    background-color: rgba(20, 20, 20, 0.9);
-    border-radius: 20px;
-    border: 1px solid gold;
-    color: #f8f9fa;
-    font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
-    margin-top: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
-.form-group {
-    display: flex;
-    flex-direction: column;
-    margin-bottom: 15px;
-}
-
-.form-group label {
-    color: gold;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.input_dark,
-textarea {
-    background-color: #1a1a1a;
-    color: gold;
-    border: 1px solid gold;
-    border-radius: 5px;
-    padding: 12px;
-    font-size: 16px;
-    transition: border 0.3s ease;
-}
-
-.input_dark:focus,
-textarea:focus {
-    border: 1px solid gold;
-    outline: none;
-    box-shadow: 0 0 5px gold;
-}
-
-.des-btn {
-    display: inline-block;
-    color: #ffffff;
-    font-size: 1.2rem;
-    background: #0b0c18;
-    padding: 10px 15px;
-    border: 1px solid gold;
-    border-radius: 10px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
-    transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
-}
-
-.des-btn:hover {
-    box-shadow: 0 0 10px gold, 0 0 30px gold, 0 0 30px gold;
-    transform: scale(1.05);
-    background: #1a1a1a;
-}
-
-.file-input-wrapper {
-    text-align: left;
-    border-radius: 10px;
-    width: 300px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-#preview {
-    max-width: 100%;
-    max-height: 300px;
-    margin-top: 10px;
-    border: 1px solid gold;
-    border-radius: 10px;
-    display: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-}
-
-#file-name {
-    font-size: 0.9rem;
-    color: gold;
-    text-align: left;
-    margin: 10px 0 0 10px;
-}
-
-.category-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
-
-.category-select-wrapper {
-    flex-grow: 1;
-}
-
-.add-category-btn {
-    white-space: nowrap;
-    padding: 8px 12px;
-    font-size: 0.8rem;
-}
-
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-}
-
-.modal-content {
-    background-color: rgba(20, 20, 20, 0.95);
-    margin: 5% auto;
-    padding: 20px;
-    border: 1px solid gold;
-    border-radius: 10px;
-    width: 80%;
-    max-width: 800px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-}
-
-.close {
-    color: gold;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover {
-    color: goldenrod;
-}
-
-.error-message {
-    color: #ff6b6b;
-    margin: 10px 0;
-    text-align: center;
-    font-size: 0.9rem;
-}
-
-/* Cropper specific styles */
-#crop-container-wrapper {
-    width: 100%;
-    height: 60vh;
-    margin: 20px auto;
-    position: relative;
-    background-color: #1a1a1a;
-    overflow: hidden;
-}
-
-#crop-container {
-    width: 100%;
-    height: 100%;
-}
-
-.cropper-actions {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 20px;
-}
-
-.cropper-view-box {
-    outline: 2px solid gold !important;
-    box-shadow: 0 0 0 9999px rgba(26, 26, 26, 0.5);
-}
-
-.cropper-line {
-    background-color: gold !important;
-}
-
-.cropper-point {
-    background-color: gold !important;
-    width: 12px !important;
-    height: 12px !important;
-    opacity: 1 !important;
-}
-
-.cropper-point.point-se {
-    right: -6px !important;
-    bottom: -6px !important;
-    cursor: se-resize !important;
-}
-
-/* Responsive adaptations */
-@media (max-width: 320px) {
-    .ck-toolbar button {
-        font-size: 11px;
-        padding: 5px 8px;
-    }
-
-    .ck-editor__editable {
-        font-size: 12px !important;
-        min-height: 120px;
-    }
-}
-
-@media (min-width: 321px) and (max-width: 450px) {
-    .ck-toolbar button {
-        font-size: 12px;
-        padding: 6px 10px;
-    }
-
-    .ck-editor__editable {
-        font-size: 14px !important;
-        min-height: 150px;
-    }
-}
-
-@media (min-width: 451px) and (max-width: 600px) {
-    .ck-toolbar button {
-        font-size: 13px;
-        padding: 7px 12px;
-    }
-
-    .ck-editor__editable {
-        font-size: 15px !important;
-        min-height: 180px;
-    }
-}
-
-@media (min-width: 601px) and (max-width: 900px) {
-    .ck-toolbar button {
-        font-size: 13px;
-        padding: 7px 12px;
-    }
-
-    .ck-editor__editable {
-        font-size: 15px !important;
-        min-height: 180px;
-    }
-}
-
-@media (min-width: 901px) {
-    .ck-toolbar button {
-        font-size: 14px;
-        padding: 8px 12px;
-    }
-
-    .ck-editor__editable {
-        font-size: 16px !important;
-        min-height: 200px;
-    }
-}
-
-.news-header {
+.offers-header {
   display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  align-items: center;
   justify-content: flex-start;
   margin-bottom: 20px;
-  gap: 20px;
+  flex-wrap: wrap;
 }
 .header-title {
   display: flex;
@@ -268,51 +16,45 @@ textarea:focus {
   /* font-family: 'StandardPoster'; */
 }
 .img_post {
-  flex: 0 0 200px;
-  max-width: 200px;
-  margin-right: 10px;
+  flex-shrink: 0;
+  margin-right: 20px;
 }
 
 .img_post img {
-  width: 100%;
-  height: auto;
+  max-width: 200px;
   border: 1px solid gold;
   border-radius: 10px;
   transition: box-shadow 0.3s ease, transform 0.3s ease;
 }
-
 .img_post img:hover {
   transform: scale(1.05); /* Увеличение при наведении */
   box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5); /* Свечение тени при наведении */
 }
 
 .rows-title {
-  flex: 1 1 0;
-  min-width: 250px;
-  word-break: break-word;
-  overflow-wrap: break-word;
+  display: grid; /* Используем grid для контейнера */
   text-align: center;
-  display: grid;
-  gap: 20px 0;
+  margin: 0 auto;
+  gap: 20px 0; /* Задаём отступы по вертикали */
 }
 
-.task-info {            
+.info {            
   display: block;            
 }
 
-.task-title {
+.title {
   margin-left: auto;
   margin-right: auto;
   margin-bottom: 15px;
   text-align: center;
 }
 
-.task-title h5 {
+.title h5 {
   color: #00ffff;  
   font-size: 1.5rem;
 }
 
-.task-info  {
+.info  {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -320,7 +62,7 @@ textarea:focus {
   margin-top: 10px;
   
 }
-.task-info2{
+.info2{
   display: flex;
   flex-direction: row;
     text-align: center;
@@ -329,40 +71,25 @@ textarea:focus {
     color: gold;
     column-gap: 10px;
 }
-.task-category{
+.category{
   font-size: 1.5rem;
 }
-.task-views,
-.task-data,
-.task-comment {
+.views,
+.data,
+.comments {
   font-size: 0.875rem;
   margin-right: 10px;
 }
 
-.news-title {
-  text-align: center;
-  color: #00ffff;
-  margin-bottom: 20px;
-}
 
-.news-content {
+
+.page-content {
   color: #ffffff;
   margin-bottom: 20px;
   font-size: 0.9rem;
 }
 
-.news-text p a {
-  color: #00ffff;       /* Наследует цвет текста родителя */
-  text-decoration: none;  /* Убираем подчеркивание */
-  cursor: pointer;     /* Изменяем курсор при наведении */
-}
-
-.news-text p a:hover {
-  color: gold;         /* Цвет текста при наведении */
-  text-decoration: underline;  /* Добавляем подчеркивание */
-}
-
-.news-content li {
+.page-content li {
   margin: 10px 15px;
   /* Отступы между элементами списка */
 }
@@ -399,14 +126,13 @@ textarea:focus {
 .btn-link{
   font-weight:400;
   color:#00ffff;
-  text-decoration:none;
-  text-align: right;
+  text-decoration:none
 }
-
-.btn-link:hover{
-  color:#00ffff;
-  text-decoration:none;
-}
+  
+  .btn-link:hover{
+    color:#00ffff;
+    text-decoration:none
+  }
 
 .comment {
   background-color: #2b2c2e;
@@ -417,7 +143,8 @@ textarea:focus {
 }
 
 .z_com {
-  text-align: center;  
+  text-align: center;
+  
   color: #00ffff;
   margin-bottom: 20px;
   font-size: 1.3rem;
@@ -498,7 +225,6 @@ textarea:focus {
   border-color: #00ffff;
 }
 
-
 /* Основной стиль фильтров */
 .filters {
   margin-bottom: 20px;
@@ -526,13 +252,11 @@ textarea:focus {
     justify-content: center;
     align-items: center;
     margin-top: 1rem;
-
   }
 /* Элементы фильтров */
 .filter-item {
   display: flex;
-  align-items: center;
-  
+  align-items: center;  
   margin-bottom: 0; /* Убираем отступы снизу */
   }
 
@@ -682,12 +406,12 @@ transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
       padding: 10px;
   }
 
-  .news-header {
+  .offers-header {
       flex-direction: column;
       align-items: center;
       text-align: center;
   }
-  .task-title{
+  .title{
     margin-top: 15px;
   }
   .rows-title {
@@ -710,26 +434,26 @@ transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     height: auto;  /* сохраняем пропорции изображения */
   }
 
-  .task-info {
+  .info {
       flex-direction: column;
       text-align: center;
       justify-content: center;
       align-items: center;
       
   }
-  .task-info2{
+  .info2{
     flex-direction: row;
       text-align: center;
       justify-content: center;
       align-items: center;
   }
 
-  .task-category {
+  .category {
     font-size: 1.2rem;
   }
-  .task-views,
-  .task-data,
-  .task-comment {
+  .views,
+  .data,
+  .comment {
       margin-bottom: 5px;
       font-size: 0.9rem;
   }
@@ -769,14 +493,14 @@ transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @media (max-width: 480px) {
-  .task-title h5 {
+  .title h5 {
       font-size: 1.2rem;
   }
 
   .img_post img{
     width: 400px;
   }
-  .news-content {
+  .page-content {
       font-size: 0.85rem;
   }
 
@@ -797,12 +521,10 @@ transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   textarea {
       height: 100px;
   }
+
+  .filter2{
+    column-gap: 3px;
+  }
   }
 
-.alert-danger {
-    background-color: rgba(255, 0, 0, 0.8);
-    color: #fff;
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-}
+  

@@ -4,7 +4,7 @@ return [
     'create_offer_title' => 'Создать предложение',
     'edit_offer_title' => 'Редактировать предложение',
     'offer_title' => 'Название предложения',
-    'category' => 'Категория',
+    'category_offers' => 'Категория',
     'select_category' => 'Выберите категорию',
     'image' => 'Изображение',
     'offer_image' => 'Изображение предложения',
@@ -26,14 +26,16 @@ return [
     'cancel' => 'Отменить',
     'offers_image' => 'Изображение',
 
-    'offer_title_ru' => 'Заголовок новости (Русский)',
-    'offer_title_en' => 'Заголовок новости (English)',
+    'offer_title_ru' => 'Заголовок (Русский)',
+    'offer_title_en' => 'Заголовок (English)',
 
-    'offer_content_ru' => 'Контент новости (Русский)',
-    'offer_content_en' => 'Контент новости (English)',
+    'offer_content_ru' => 'Контент (Русский)',
+    'offer_content_en' => 'Контент (English)',
 
     'category_name_ru' => 'Название категории (Русский)',
     'category_name_en' => 'Название категории (English)',
+
+    
 
     'validation' => [
         'name_required' => 'Название категории обязательно для заполнения.',

@@ -4,7 +4,7 @@ return [
     'create_offer_title' => 'Create Offer',
     'edit_offer_title' => 'Edit Offer',
     'offer_title' => 'Offer Title',
-    'category' => 'Category Offers',
+    'category_offers' => 'Category Offers',
     'select_category' => 'Select a category',
     'category_name' => 'Category name',
     'image' => 'Image',

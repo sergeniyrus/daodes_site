@@ -64,6 +64,7 @@ return [
     'deadline' => 'Дедлайн',
     'budget' => 'Бюджет',
     'category' => 'Категория',
+    'attachments' => 'Изображение задания',
     'save_changes' => 'Сохранить изменения',
     'task_updated_success' => 'Задание успешно обновлено!',
     'validation_error' => 'Ошибка валидации',

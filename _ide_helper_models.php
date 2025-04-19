@@ -97,6 +97,30 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $name_ru
+ * @property string $name_en
+ * @property string|null $created_at
+ * @property string|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $Tasks
+ * @property-read int|null $tasks_count
+ * @property-read mixed $name
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryTasks newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryTasks newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryTasks query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryTasks whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryTasks whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryTasks whereNameEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryTasks whereNameRu($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|CategoryTasks whereUpdatedAt($value)
+ */
+	class CategoryTasks extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property string $name
  * @property string $type
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -255,7 +279,7 @@ namespace App\Models{
  * @property string|null $img
  * @property int $category_id
  * @property int|null $user_id
- * @property int|null $views
+ * @property int $views
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\CategoryNews $category
@@ -426,13 +450,16 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $title
- * @property string $content
+ * @property string $title_ru
+ * @property string $title_en
+ * @property string $content_ru
+ * @property string $content_en
  * @property string $budget
+ * @property string|null $img
  * @property string|null $deadline
  * @property string $status
  * @property int $user_id
- * @property int|null $category_id
+ * @property int $category_id
  * @property int $likes
  * @property int $dislikes
  * @property int|null $accepted_bid_id
@@ -446,7 +473,7 @@ namespace App\Models{
  * @property-read \App\Models\Bid|null $acceptedBid
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Bid> $bids
  * @property-read int|null $bids_count
- * @property-read \App\Models\TaskCategory|null $category
+ * @property-read \App\Models\CategoryTasks $category
  * @property-read \App\Models\User $user
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\TaskVote> $votes
  * @property-read int|null $votes_count
@@ -458,42 +485,24 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereCategoryId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereCompleted($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereCompletionTime($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereContent($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereContentEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereContentRu($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereDeadline($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereDislikes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereEndTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereImg($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereLikes($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereStartTime($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereStatus($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereTitleEn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereTitleRu($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Task whereUserId($value)
  */
 	class Task extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * 
- *
- * @property int $id
- * @property string $name
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Task> $tasks
- * @property-read int|null $tasks_count
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskCategory newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskCategory newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskCategory query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskCategory whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskCategory whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskCategory whereName($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|TaskCategory whereUpdatedAt($value)
- */
-	class TaskCategory extends \Eloquent {}
 }
 
 namespace App\Models{

@@ -3,7 +3,7 @@
 @section('title_page', __('admin_news.create_news_title'))
 
 @section('main')
-<link rel="stylesheet" href="{{ asset('css/news.css') }}">
+@vite(['resources/css/redactor.css'])
 
 <div class="container">
     <h2 class="text-center">{{ __('admin_news.create_news_title') }}</h2>
@@ -120,7 +120,7 @@
 <input type="hidden" id="cropped-image" name="cropped_image">
 
 <!-- CKEditor CSS and JS -->
-<link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
+@vite(['resources/css/ckeditor.css'])
 <script src="{{ asset('js/ckeditor.js') }}"></script>
 <script src="{{ asset('js/ckeditor-init.js') }}"></script>
 <script src="{{ asset('js/form-validation.js') }}"></script>

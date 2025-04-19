@@ -10,7 +10,14 @@ class News extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title_ru', 'title_en', 'content_ru', 'content_en', 'user_id', 'category_id', 'img', // обновите этот список согласно вашему таблицу
+        'title_ru',
+        'title_en',
+        'content_ru',
+        'content_en',
+        'user_id',
+        'category_id',
+        'img',
+        'views',
     ];
 
     public function user()
@@ -23,5 +30,4 @@ class News extends Model
     {
         return $this->belongsTo(CategoryNews::class, 'category_id'); // Замените CategoryNews на фактическое имя вашей модели категории
     }
-    
 }

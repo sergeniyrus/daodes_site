@@ -73,7 +73,17 @@ class OffersController extends Controller
         $contentField = $locale === 'ru' ? 'content_ru' : 'content_en';
 
         $offers = DB::table('offers')
-            ->select('id', 'title_ru', 'title_en', 'content_ru', 'content_en', 'category_id', 'user_id', 'img', 'views', 'created_at', 'state')
+            ->select(
+                'id',
+                'category_id',
+                'user_id',
+                'img',
+                'views',
+                'created_at',
+                'state',
+                $titleField . ' as title',
+                $contentField . ' as content'
+            )
             ->where('id', $id)
             ->first();
 
@@ -154,12 +164,9 @@ class OffersController extends Controller
             // Лог: оффер успешно создан
             Log::info('Создание оффера: успешно создан', ['offersId' => $offers->id]);
 
-            // Редирект с успехом
-            return redirect()->route('good', [
-                'post' => 'offers',
-                'id' => $offers->id,
-                'action' => 'create'
-            ])->with('success', __('message.offers_created_success'));
+            // Редирект на просмотр оффера
+            return redirect()->route('offers.show', $offers->id)
+                ->with('success', __('message.offers_created_success'));
         } catch (\Exception $e) {
             // Лог: ошибка при создании
             Log::error('Ошибка при создании оффера: ' . $e->getMessage(), [
@@ -317,7 +324,6 @@ class OffersController extends Controller
                 'message' => __('message.category_added_success'),
                 'category' => $category
             ]);
-            
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
@@ -356,7 +362,7 @@ class OffersController extends Controller
             'name_ru.regex' => __('admin_offers.validation.name_regex'),
             'name_en.regex' => __('admin_offers.validation.name_regex'),
         ]);
-    
+
         if ($validator->fails()) {
             return redirect()
                 ->back()
@@ -364,19 +370,18 @@ class OffersController extends Controller
                 ->with('error', __('admin_offers.validation.validation_error'))
                 ->withErrors($validator);
         }
-    
+
         try {
             CategoryOffers::create([
                 'name_ru' => $request->name_ru,
                 'name_en' => $request->name_en
             ]);
-            
+
             Log::info('Создание категории оффера статично');
 
             return redirect()
                 ->route('offerscategories.index')
                 ->with('success', __('admin_offers.category.created'));
-                
         } catch (\Exception $e) {
             return redirect()
                 ->back()
@@ -393,7 +398,7 @@ class OffersController extends Controller
     }
 
 
-    
+
     public function categoryUpdate(Request $request, $id)
     {
         $category = CategoryOffers::findOrFail($id);

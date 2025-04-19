@@ -61,15 +61,20 @@ class NewsController extends Controller
     public function show($id)
     {
         // Определяем текущую локаль
-        $locale = app()->getLocale(); // 'ru' или 'en'
-
-        // Определяем поля заголовка и контента в зависимости от локали
+        $locale = app()->getLocale();
         $titleField = $locale === 'ru' ? 'title_ru' : 'title_en';
         $contentField = $locale === 'ru' ? 'content_ru' : 'content_en';
 
-        // Получаем новость по ID, включая нужные поля
         $news = DB::table('news')
-            ->select('id', 'category_id', 'created_at', 'img', $titleField . ' as title', $contentField . ' as content', 'views')
+            ->select(
+                'id',
+                'category_id',
+                'created_at',
+                'img',
+                'views',
+                $titleField . ' as title',
+                $contentField . ' as content'
+            )
             ->where('id', $id)
             ->first();
 
@@ -139,11 +144,9 @@ class NewsController extends Controller
             ]);
 
             // Перенаправление с сообщением об успехе
-            return redirect()->route('good', [
-                'post'   => 'news',
-                'id'     => $news->id,
-                'action' => 'create'
-            ])->with('success', __('message.news_created_success'));
+            // Редирект на просмотр оффера
+            return redirect()->route('news.show', $news->id)
+                ->with('success', __('message.news_created_success'));
         } catch (\Exception $e) {
             Log::error('News creation error: ' . $e->getMessage());
             return back()->withErrors(['error' => __('message.news_creation_failed')]);
@@ -323,26 +326,25 @@ class NewsController extends Controller
     }
 
     public function categoryUpdate(Request $request, $id)
-{
-    $category = CategoryNews::findOrFail($id);
+    {
+        $category = CategoryNews::findOrFail($id);
 
-    $request->validate([
-        'name_ru' => 'required|string|max:255|unique:category_news,name_ru,' . $id,
-        'name_en' => 'required|string|max:255|unique:category_news,name_en,' . $id,
-    ]);
-
-    try {
-        $category->update([
-            'name_ru' => $request->name_ru,
-            'name_en' => $request->name_en,
+        $request->validate([
+            'name_ru' => 'required|string|max:255|unique:category_news,name_ru,' . $id,
+            'name_en' => 'required|string|max:255|unique:category_news,name_en,' . $id,
         ]);
 
-        return redirect()->route('newscategories.index')->with('success', __('message.category_updated_success'));
+        try {
+            $category->update([
+                'name_ru' => $request->name_ru,
+                'name_en' => $request->name_en,
+            ]);
 
-    } catch (\Exception $e) {
-        return redirect()->back()->withErrors(['error' => __('message.category_update_failed')]);
+            return redirect()->route('newscategories.index')->with('success', __('message.category_updated_success'));
+        } catch (\Exception $e) {
+            return redirect()->back()->withErrors(['error' => __('message.category_update_failed')]);
+        }
     }
-}
 
 
     public function categoryDestroy($id)

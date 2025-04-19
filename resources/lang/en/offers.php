@@ -70,4 +70,6 @@ return [
     'no_comment_yet' => 'You have not yet expressed your opinion in the comments. Please share your thoughts.',
     'offer_rejected' => 'The offer has been rejected based on the discussion results',
     'starting_vote' => 'Starting the vote!',
+    'confirm_delete' => 'Are you sure you want to delete this offer?',
+
 ];

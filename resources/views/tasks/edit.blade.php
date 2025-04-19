@@ -1,135 +1,164 @@
 @extends('template')
-@section('title_page', __('tasks.edit_task'))
+
+@section('title_page')
+    {{ __('tasks.edit_task') }}
+@endsection
+
 @section('main')
-
-<style>
-    .container {
-        padding: 20px;
-        margin: 0 auto;
-        max-width: 800px;
-        background-color: rgba(20, 20, 20, 0.9);
-        border-radius: 20px;
-        border: 1px solid #d7fc09;
-        color: #f8f9fa;
-        font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
-        margin-top: 30px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-    }
-
-    .form-group label {
-        color: #d7fc09;
-        font-size: 1.2rem;
-        display: block;
-        margin: 10px 0;
-        text-align: left;
-        font-weight: bold;
-    }
-
-    .input_dark, textarea {
-        background-color: #1a1a1a;
-        color: #a0ff08;
-        border: 1px solid #d7fc09;
-        border-radius: 5px;
-        width: 100%;
-        padding: 12px;
-        margin-top: 5px;
-        transition: border 0.3s ease;
-    }
-
-    .input_dark:focus, textarea:focus {
-        border: 1px solid #a0ff08;
-        outline: none;
-        box-shadow: 0 0 5px #d7fc09;
-    }
-
-    .des-btn {
-        display: inline-block;
-        color: #ffffff;
-        font-size: 1.2rem;
-        background: #0b0c18;
-        padding: 12px 25px;
-        border: 1px solid #d7fc09;
-        border-radius: 10px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
-        cursor: pointer;
-        transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
-        margin-top: 20px;
-    }
-
-    .des-btn:hover {
-        box-shadow: 0 0 20px #d7fc09, 0 0 40px #d7fc09, 0 0 60px #d7fc09;
-        transform: scale(1.05);
-        background: #1a1a1a;
-    }
-</style>
+@vite(['resources/css/redactor.css'])
 
 <div class="container">
-    <div class="text-center mb-4">
-        <h1 class="display-4">{{ __('tasks.edit_task') }}</h1>
-    </div>
+    <h2 class="text-center">{{ __('tasks.edit_task') }}</h2>
 
-    <!-- Display success flash messages -->
-    {{-- @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    <!-- Display validation errors -->
-    @if($errors->any()))
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif --}}
-
-    <!-- Task editing form -->
-    <form action="{{ route('tasks.update', $task) }}" method="POST">
+    <form id="task-form" method="POST" action="{{ route('tasks.update', $task->id) }}" enctype="multipart/form-data">
         @csrf
-        @method('PUT') <!-- Specify the PUT method for updating -->
+        @method('PUT')
 
+        <!-- Title fields -->
         <div class="form-group">
-            <label for="title">{{ __('tasks.task_title') }}:</label>
-            <input type="text" name="title" id="title" value="{{ old('title', $task->title) }}" required class="input_dark">
+            <label for="title_ru">{{ __('admin_offers.offer_title_ru') }}</label>
+            <input type="text" name="title_ru" class="input_dark" value="{{ old('title_ru', $task->title_ru) }}" required>
+        </div>
+        <div class="form-group">
+            <label for="title_en">{{ __('admin_offers.offer_title_en') }}</label>
+            <input type="text" name="title_en" class="input_dark" value="{{ old('title_en', $task->title_en) }}" required>
+        </div>
+
+        <!-- Category selection -->
+        <div class="form-group">
+            <label for="category_id">{{ __('tasks.category') }}</label>
+            <div class="category-container">
+                <div class="category-select-wrapper">
+                    <select name="category_id" class="input_dark" id="category-select" required>
+                        <option value="" selected disabled>{{ __('tasks.select_category') }}</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}"
+                                {{ old('category_id', $task->category_id) == $category->id ? 'selected' : '' }}>
+                                {{ $category->name_ru }} / {{ $category->name_en }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+                <button type="button" class="des-btn add-category-btn" id="open-category-modal">
+                    <i class="fas fa-plus-circle"></i> {{ __('tasks.add_category') }}
+                </button>
+            </div>
+        </div>
+
+        <!-- Deadline -->
+        <div class="form-group">
+            <label for="deadline">{{ __('tasks.deadline') }}</label>
+            <input type="date" name="deadline" class="input_dark" value="{{ old('deadline', \Carbon\Carbon::parse($task->deadline)->format('Y-m-d')) }}" required>
+        </div>
+
+        <!-- Budget -->
+        <div class="form-group">
+            <label for="budget">{{ __('tasks.budget') }}</label>
+            <div class="input-with-currency">
+                <input type="number" name="budget" class="input_dark" step="0.01" value="{{ old('budget', $task->budget) }}" required>
+                <span class="currency-symbol">USD</span>
+            </div>
+        </div>
+
+        <!-- Image Upload -->
+        <div class="form-group">
+            <label for="filename">{{ __('tasks.attachments') }}</label>
+            <div class="file-input-wrapper">
+                <img id="preview" src="{{ $task->img ?? '#' }}" alt="Image Preview"
+                    style="display: {{ $task->img ? 'block' : 'none' }}; max-width: 100px;">
+                <div class="file-info">
+                    <span id="file-name" class="file-name">
+                        {{ $task->img ? basename($task->img) : __('admin_offers.no_file_selected') }}
+                    </span>
+                    <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
+                        {{ __('admin_offers.choose_file') }}
+                    </button>
+                    <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+                </div>
+            </div>
+            <p style="color: red; text-align: left; margin: 10px 0 0 10px; font-size:0.9rem;">
+                {{ __('admin_offers.image_requirements') }}
+            </p>
+        </div>
+
+        <!-- Content fields -->
+        <div class="form-group">
+            <label for="content_ru">{{ __('admin_offers.offer_content_ru') }}</label>
+            <textarea id="editor-ru" name="content_ru">{{ old('content_ru', $task->content_ru) }}</textarea>
         </div>
 
         <div class="form-group">
-            <label for="content">{{ __('tasks.task_description') }}:</label>
-            <textarea name="content" id="editor" rows="5" required class="input_dark">{{ old('content', $task->content) }}</textarea>
+            <label for="content_en">{{ __('admin_offers.offer_content_en') }}</label>
+            <textarea id="editor-en" name="content_en">{{ old('content_en', $task->content_en) }}</textarea>
         </div>
 
-        <div class="form-group">
-            <label for="deadline">{{ __('tasks.deadline') }}:</label>
-            <input type="date" name="deadline" id="deadline" value="{{ old('deadline', $task->deadline ? $task->deadline->format('Y-m-d') : '') }}" required class="input_dark">
-        </div>
-
-        <div class="form-group">
-            <label for="budget">{{ __('tasks.budget') }}:</label>
-            <input type="number" name="budget" id="budget" step="0.01" value="{{ old('budget', $task->budget) }}" required class="input_dark">
-        </div>
-
-        <!-- Add category selection -->
-        <div class="form-group">
-            <label for="category_id">{{ __('tasks.category') }}:</label>
-            <select name="category_id" id="category_id" class="input_dark" required>
-                @foreach($categories as $category)
-                    <option value="{{ $category->id }}" {{ $category->id == old('category_id', $task->category_id) ? 'selected' : '' }}>
-                        {{ $category->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-
-        <div class="text-center">
-            <button type="submit" class="des-btn"><i class="fas fa-save"></i> {{ __('tasks.save_changes') }}</button>
+        <div style="text-align: center;">
+            <button type="submit" class="des-btn">{{ __('tasks.save_changes_button') }}</button>
         </div>
     </form>
 </div>
 
-{{-- Инициализация CKEditor --}}
-<link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
+<!-- Modal for adding new category -->
+<div id="category-modal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>{{ __('tasks.add_category') }}</h2>
+        <form id="category-form" method="POST" action="{{ route('taskscategories.store') }}">
+            @csrf
+            <div class="form-group">
+                <label for="category-name_ru">{{ __('admin_offers.category_name_ru') }}</label>
+                <input type="text" name="name_ru" id="category-name_ru" class="input_dark" placeholder="{{ __('admin_offers.name_regex') }}" required>
+            </div>
+            <div class="form-group">
+                <label for="category-name_en">{{ __('admin_offers.category_name_en') }}</label>
+                <input type="text" name="name_en" id="category-name_en" class="input_dark" placeholder="{{ __('admin_offers.name_regex') }}" required>
+            </div>
+            <div id="category-error" class="error-message"></div>
+            <div style="text-align: center;">
+                <button type="submit" class="des-btn" id="submit-category-btn">
+                    <i class="fas fa-plus-circle"></i> {{ __('tasks.add_category') }}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Modal for image cropping -->
+<div id="crop-modal" class="modal">
+    <div class="modal-content" style="max-width: 800px;">
+        <span class="close" id="close-crop-modal">&times;</span>
+        <h2>{{ __('tasks.crop_image') }}</h2>
+        <div id="crop-container-wrapper">
+            <div id="crop-container"></div>
+        </div>
+        <div class="cropper-actions">
+            <button id="cancel-crop" class="des-btn">{{ __('admin_offers.cancel') }}</button>
+            <button id="crop-button" class="des-btn">{{ __('admin_offers.crop_image') }}</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for confirmation -->
+<div id="confirmation-modal" class="modal">
+    <div class="modal-content">
+        <h2 id="confirmation-title">{{ __('tasks.confirmation') }}</h2>
+        <p id="confirmation-message"></p>
+        <div class="modal-buttons">
+            <button id="confirm-cancel" class="des-btn">{{ __('tasks.cancel') }}</button>
+            <button id="confirm-ok" class="des-btn">{{ __('tasks.confirm') }}</button>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden input for cropped image data -->
+<input type="hidden" id="cropped-image" name="cropped_image">
+
+<!-- JS и CSS -->
+@vite(['resources/css/ckeditor.css'])
 <script src="{{ asset('js/ckeditor.js') }}"></script>
+<script src="{{ asset('js/ckeditor-init.js') }}"></script>
+<script src="{{ asset('js/form-validation.js') }}"></script>
+<script src="{{ asset('js/category-modal.js') }}"></script>
+<script src="{{ asset('js/category-submit.js') }}"></script>
+<script src="{{ asset('js/cropper-init.js') }}"></script>
 @endsection

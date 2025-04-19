@@ -1,20 +1,20 @@
-<link rel="stylesheet" href="{{ asset('css/menu.css') }}">
+@vite(['resources/css/menu.css'])
 <!-- Кнопка гамбургерного меню  -->
 <div class="mobile-hamburger-header">
     <!-- Левая часть -->
     <div class="mobile-header-left">
         <button id="mobile-hamburger-button" class="mobile-hamburger-button" title="Menu">☰ Menu</button>
 
-        @auth
-            @if (Auth::user()->access_level >= 3)
+        
+            {{-- @if (Auth::user()->access_level >= 0) --}}
                 <div class="language-switcher">
                     <a href="{{ route('language.change', 'en') }}"
                         class="{{ app()->getLocale() === 'en' ? 'active' : '' }}">EN</a>
                     <a href="{{ route('language.change', 'ru') }}"
                         class="{{ app()->getLocale() === 'ru' ? 'active' : '' }}">RU</a>
                 </div>
-            @endif
-        @endauth
+            {{-- @endif --}}
+        
     </div>
 
     <!-- Правая часть -->

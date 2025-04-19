@@ -5,7 +5,7 @@ Edit the offer
 @endsection
 
 @section('main')
-<link rel="stylesheet" href="{{ asset('css/news.css') }}">
+@vite(['resources/css/redactor.css'])
 <div class="container">
     <h2 class="text-center">{{ __('admin_offers.edit_offer_title') }}</h2>
 

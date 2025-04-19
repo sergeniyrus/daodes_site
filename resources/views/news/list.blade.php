@@ -1,9 +1,7 @@
 @extends('template')
-
 @section('title_page', __('news.title_page'))
-
 @section('main')
-    <link rel="stylesheet" href="{{ asset('css/news.css') }}">
+    @vite(['resources/css/page.css'])
 
     <div class="container my-5">
         <div class="header-title">
@@ -62,30 +60,30 @@
         <div>
             @forelse($news as $newsItem)
                 <div class="card shadow-sm">
-                    <div class="">
-                        <div class="task-title">
-                            <a href="{{ route('news.show', $newsItem->id) }}" class="des-btn2">
-                                <h5>{{ $newsItem->title }}</h5>
-                            </a>
+                    <div class="page-header">
+                        <div class="img_post">
+                            <img src="{{ $newsItem->img }}" alt="Image for {{ $newsItem->title }}" />
                         </div>
-                        <div class="news-header">
-                            <div class="img_post">
-                                <img src="{{ $newsItem->img }}" alt="Image for {{ $newsItem->title }}" />
-                            </div>
-                            <div class="rows-title">
-                                <div class="task-info">
-                                    <p class="task-category">{!! __('news.category_label') !!}
+                        <div class="rows-title">
+                            <div class="page-title">
+                                <a href="{{ route('news.show', $newsItem->id) }}" class="des-btn2">
+                                    <h5>{{ $newsItem->title }}</h5>
+                                </a>
+                            </div>                            
+                                <div class="info">
+                                    <p class="category">{!! __('news.category_label') !!}
                                         {{ $categories[$newsItem->category_id] ?? __('news.uncategorized') }}
                                     </p>
                                 </div>
-                                <div class="task-info2">
-                                    <p class="task-data">{!! __('news.date_label') !!}
+                                <div class="info2">
+                                    <p class="data">{!! __('news.date_label') !!}
                                         {{ \Carbon\Carbon::parse($newsItem->created_at)->format('d/m/y') }}</p>
-                                    <p class="task-views">{!! __('news.views_label') !!} {{ $newsItem->views }}</p>
-                                    <p class="task-comment">{!! __('news.comments_label') !!}
+                                    <p class="views">{!! __('news.views_label') !!} {{ $newsItem->views }}</p>
+                                    <p class="comments">{!! __('news.comments_label') !!}
                                         {{ $commentCount[$newsItem->id] ?? 0 }}</p>
                                 </div>
-                            </div>
+                            
+
                         </div>
                         <div class="card-text">
                             <div class="news-text">

@@ -17,13 +17,16 @@ class Task extends Model
     const STATUS_FAILED = 'failed';
 
     protected $fillable = [
-        'title',
-        'content',
+        'title_ru',
+        'title_en',
+        'content_ru',
+        'content_en',
         'budget',
         'deadline',
         'status',
         'user_id',
         'category_id',
+        'img',
         'accepted_bid_id',
         'rating',
         'completed',
@@ -64,7 +67,7 @@ class Task extends Model
 
     public function category()
     {
-        return $this->belongsTo(TaskCategory::class);
+        return $this->belongsTo(CategoryTasks::class);
     }
 
     public function acceptedBid()

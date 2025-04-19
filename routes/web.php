@@ -12,8 +12,8 @@ use App\Http\Controllers\{
     CommentController,
     SpamController,
     DiscussionController,
-    TaskController,
-    TasksCategoryController,
+    TasksController,
+    CategoryTasksController,
     BidController,
     HomeController,
     TeamController,
@@ -202,53 +202,56 @@ Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () 
 Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
     
     // Просмотр задач
-    Route::get('/', [TaskController::class, 'list'])->name('list');
-    Route::get('/{task}', [TaskController::class, 'show'])->name('show');
+    Route::get('/', [TasksController::class, 'list'])->name('list');
+    Route::get('/{task}', [TasksController::class, 'show'])->name('show');
     
     // Создание задачи
-    Route::get('/create', [TaskController::class, 'create'])->name('create');
-    Route::post('/store', [TaskController::class, 'store'])->name('store');
+    Route::get('/create', [TasksController::class, 'create'])->name('create');
+    Route::post('/store', [TasksController::class, 'store'])->name('store');
     
     // Редактирование задачи
-    Route::get('/{task}/edit', [TaskController::class, 'edit'])->name('edit');
-    Route::put('/{task}', [TaskController::class, 'update'])->name('update');
-    Route::delete('/{task}', [TaskController::class, 'destroy'])->name('destroy');
+    Route::get('/{task}/edit', [TasksController::class, 'edit'])->name('edit');
+    Route::put('/{task}', [TasksController::class, 'update'])->name('update');
+    Route::delete('/{task}', [TasksController::class, 'destroy'])->name('destroy');
     
     // Взаимодействие с задачей
-    Route::post('/{task}/bid', [TaskController::class, 'bid'])->name('bid');
-    Route::post('/{task}/like', [TaskController::class, 'like'])->name('like');
-    Route::post('/{task}/dislike', [TaskController::class, 'dislike'])->name('dislike');
+    Route::post('/{task}/bid', [TasksController::class, 'bid'])->name('bid');
+    Route::post('/{task}/like', [TasksController::class, 'like'])->name('like');
+    Route::post('/{task}/dislike', [TasksController::class, 'dislike'])->name('dislike');
     
     // Работа с задачей
-    Route::post('/{task}/start-work', [TaskController::class, 'startWork'])->name('start_work');
-    Route::post('/{task}/complete', [TaskController::class, 'complete'])->name('complete');
-    Route::post('/{task}/freelancer-complete', [TaskController::class, 'freelancerComplete'])->name('freelancerComplete');
-    Route::post('/{task}/accept', [TaskController::class, 'acceptTask'])->name('accept');
-    Route::post('/{task}/revision', [TaskController::class, 'requestRevision'])->name('revision');
-    Route::post('/{task}/continue', [TaskController::class, 'continueTask'])->name('continue');
-    Route::post('/{task}/fail', [TaskController::class, 'fail'])->name('fail');
+    Route::post('/{task}/start-work', [TasksController::class, 'startWork'])->name('start_work');
+    Route::post('/{task}/complete', [TasksController::class, 'complete'])->name('complete');
+    Route::post('/{task}/freelancer-complete', [TasksController::class, 'freelancerComplete'])->name('freelancerComplete');
+    Route::post('/{task}/accept', [TasksController::class, 'acceptTask'])->name('accept');
+    Route::post('/{task}/revision', [TasksController::class, 'requestRevision'])->name('revision');
+    Route::post('/{task}/continue', [TasksController::class, 'continueTask'])->name('continue');
+    Route::post('/{task}/fail', [TasksController::class, 'fail'])->name('fail');
     
     // Оценки и оплата
-    Route::post('/{task}/rate', [TaskController::class, 'rate'])->name('rate');
-    Route::post('/{task}/accept-bid/{bid}', [TaskController::class, 'acceptBid'])->name('accept-bid');
+    Route::post('/{task}/rate', [TasksController::class, 'rate'])->name('rate');
+    Route::post('/{task}/accept-bid/{bid}', [TasksController::class, 'acceptBid'])->name('accept-bid');
 });
 
 // Альтернативный маршрут для создания задачи (если нужен отдельный URL)
-Route::get('/addtask', [TaskController::class, 'create'])
+Route::get('/addtask', [TasksController::class, 'create'])
     ->name('addtask')
     ->middleware('auth');
+
+
+
 
 // Принятие предложений
 Route::post('/bids/{bid}/accept', [BidController::class, 'accept'])->name('bids.accept');
 
 // Категории задач
 Route::middleware('auth')->prefix('taskscategories')->name('taskscategories.')->group(function () {
-    Route::get('/', [TasksCategoryController::class, 'index'])->name('index');
-    Route::get('/create', [TasksCategoryController::class, 'create'])->name('create');
-    Route::post('/', [TasksCategoryController::class, 'store'])->name('store');
-    Route::get('/{taskCategory}/edit', [TasksCategoryController::class, 'edit'])->name('edit');
-    Route::put('/{taskCategory}', [TasksCategoryController::class, 'update'])->name('update');
-    Route::delete('/{taskCategory}', [TasksCategoryController::class, 'destroy'])->name('destroy');
+    Route::get('/', [CategoryTasksController::class, 'index'])->name('index');
+    Route::get('/create', [CategoryTasksController::class, 'create'])->name('create');
+    Route::post('/', [CategoryTasksController::class, 'store'])->name('store');
+    Route::get('/{taskCategory}/edit', [CategoryTasksController::class, 'edit'])->name('edit');
+    Route::put('/{taskCategory}', [CategoryTasksController::class, 'update'])->name('update');
+    Route::delete('/{taskCategory}', [CategoryTasksController::class, 'destroy'])->name('destroy');
 });
 
 /// Защищённые маршруты профиля

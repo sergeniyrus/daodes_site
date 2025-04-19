@@ -12,9 +12,9 @@ class Offers extends Model
     use HasFactory;
 
     protected $fillable = [
-        'title_ru',
-        'content_ru',
+        'title_ru',        
         'title_en',
+        'content_ru',
         'content_en',
         'category_id',
         'user_id',

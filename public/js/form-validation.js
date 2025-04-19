@@ -1,29 +1,30 @@
-
 document.addEventListener('DOMContentLoaded', function () {
-    document.getElementById('news-form').addEventListener('submit', function (e) {
-        if (editor_ru) {
-            document.getElementById('content_ru').value = editor_ru.getData();
-        }
-        if (editor_en) {
-            document.getElementById('content_en').value = editor_en.getData();
-        }
+    const form = document.querySelector('form[id$="-form"]'); // подойдет и для news-form и task-form
+    if (!form) return;
 
-        const contentRu = document.getElementById('content_ru').value.trim();
-        const contentEn = document.getElementById('content_en').value.trim();
-        const titleRu = document.getElementById('title_ru').value.trim();
-        const titleEn = document.getElementById('title_en').value.trim();
+    form.addEventListener('submit', function (e) {
+        const contentRu = typeof editor_ru !== 'undefined' ? editor_ru.getData().trim() : '';
+        const contentEn = typeof editor_en !== 'undefined' ? editor_en.getData().trim() : '';
 
-        if (!contentRu || !contentEn || !titleRu || !titleEn) {
+        const textareaRu = document.querySelector('[name="content_ru"]');
+        const textareaEn = document.querySelector('[name="content_en"]');
+        if (textareaRu) textareaRu.value = contentRu;
+        if (textareaEn) textareaEn.value = contentEn;
+
+        const titleRu = document.querySelector('[name="title_ru"]').value.trim();
+        const titleEn = document.querySelector('[name="title_en"]').value.trim();
+
+        if (!titleRu || !titleEn || !contentRu || !contentEn) {
             e.preventDefault();
-            alert('Content and Title are required in both languages');
-            return false;
-        }
 
-        const content = document.getElementById('editor')?.value;
-        if (content !== undefined && (!content || content.trim() === '')) {
-            e.preventDefault();
-            alert('Content is required');
-            editor?.editing.view.focus();
+            alert('Все поля (заголовки и описания) должны быть заполнены на обоих языках.');
+
+            if (!contentRu && typeof editor_ru !== 'undefined') {
+                editor_ru.editing.view.focus();
+            } else if (!contentEn && typeof editor_en !== 'undefined') {
+                editor_en.editing.view.focus();
+            }
+
             return false;
         }
 

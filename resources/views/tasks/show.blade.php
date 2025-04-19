@@ -1,42 +1,80 @@
 @extends('template')
-@section('title_page') {{ __('tasks.title_page') }}
+@section('title_page')
+    {{ __('tasks.title_page') }}
 @endsection
-
 @section('main')
-<link rel="stylesheet" href="{{ asset('css/tasks.css') }}">
+    @vite(['resources/css/page.css'])
+
     <!-- Task Exchange -->
-    <div class="container">
-        <div class="task-title">
-            <h5 style="text-align: center">{{ $task->title }}</h5>
-        </div>
-        <div class="task-wrapper">
+    <div class="container my-5">
+        <div class="page-header">
+            <div class="img_post">
+                <img src="{{ $task->img }}" alt="Image for {{ $task->title }}" />
+            </div>
 
-            <div class="task-info">
-                <p class="task-category"><i class="fas fa-folder-open"></i>
-                    {{ $task->category ? $task->category->name : __('tasks.no_category') }}
-                </p>
-                <p class="task-budget"><i class="fas fa-dollar-sign"></i> {{ $task->budget }}</p>
-                <p class="task-deadline">
-                    <i class="fas fa-clock"></i> {{ \Carbon\Carbon::parse($task->deadline)->translatedFormat('j.m.Y') }}
-                </p>
-                <div class="task-author">
-                    <p><strong>&copy;</strong>
-                        <a href="{{ route('user_profile.show', ['id' => $task->user_id]) }}" title="Profile"
-                            style="color: gold; text-decoration: none;">
-                            {{ $task->user->name }}
-                        </a>
-                    </p>
+            <div class="rows-title">
+                <div class="title">
+                    <h5>{{ $task->title }}</h5>
                 </div>
+
+
+                <div class="info">
+                    <p class="category"><i class="fas fa-folder-open"></i>
+                        {{ $task->category ? $task->category->name : __('tasks.no_category') }}
+                    </p>
+                    <div class="task-author">
+                        <p>
+                            <a href="{{ route('user_profile.show', ['id' => $task->user_id]) }}" class="task-author-link" title="Profile">
+                            <i class="fas fa-user"></i>    {{ $task->user->name }}
+                            </a>
+                        </p>
+                    </div>
+                </div>
+                <div class="info2">
+                    <p class="task-budget"><i class="fas fa-dollar-sign"></i> {{ $task->budget }}</p>
+
+                    <p class="task-deadline">
+                        <i class="fas fa-clock"></i>
+                        {{ \Carbon\Carbon::parse($task->deadline)->translatedFormat('j.m.Y') }}
+                    </p>
+                    <p class="task-status"><i class="fas fa-info-circle"></i>
+                        {{ __('tasks.statuses.' . $task->status) }}</p>
+
+                </div>
+                @auth
+                    @if (Auth::id() === $task->user_id && !$task->accepted_bid_id)
+                        <div class="admin_menu">
+                            <div>
+                                <a href="{{ route('tasks.edit', $task) }}" class="des-btn" title="{{ __('tasks.edit') }}">
+                                    <i class="fas fa-edit icon-edit"></i> 
+                                </a>
+                            </div>
+                            <div>
+                                <a href="{{ route('news.destroy', ['id' => $task->id]) }}" class="des-btn"
+                                    onclick="event.preventDefault(); if (confirm('{{ __('offers.confirm_delete') }}')) { document.getElementById('delete-form-{{ $task->id }}').submit(); }">
+                                    {!! __('offers.delete_button') !!}
+                                </a>
+                                <form id="delete-task-form-{{ $task->id }}" action="{{ route('tasks.destroy', $task) }}"
+                                    method="POST" style="display: none;">
+                                    @csrf
+                                    @method('DELETE')
+                                </form>
+                            </div>
+                        </div>
+                    @endif
+                @endauth
+
             </div>
         </div>
-        <div class="bid">
 
-            <div>
-                <p>{!! $task->content !!}</p>
+        <hr class="hr_title">
+
+        <div class="page-content ">
+            <div class="card">
+                <div class="news-text">{!! $task->content !!}</div>
             </div>
         </div>
 
-        <br>
 
         <!-- Task timer, visible to all users -->
         @if ($task->status === 'in_progress')
@@ -76,7 +114,7 @@
 
         <!-- Task management buttons -->
         <div class="button-container">
-            @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
+            {{-- @if (Auth::id() == $task->user_id && !$task->accepted_bid_id)
                 <form action="{{ route('tasks.edit', $task) }}" method="GET" style="display:inline;">
                     @csrf
                     <button type="submit" class="des-btn" title="{{ __('tasks.edit') }}">
@@ -91,7 +129,7 @@
                         <i class="fas fa-trash-alt icon-delete"></i>
                     </button>
                 </form>
-            @endif
+            @endif --}}
 
             @if ($task->status === 'negotiation')
                 @if (Auth::id() == $task->acceptedBid->user_id)
@@ -128,15 +166,10 @@
                 </div>
             @endif
 
-            {{-- @if (session('success'))
-                <div class="alert" style="color:#ffdf00; text-align:center">
-                    {{ session('success') }}
-                </div>
-            @endif --}}
+            
         </div>
-        <br>
-        <br>
-        <hr>
+        
+        <hr class="hr_title">
 
         <!-- Bids section -->
         <div class="bids-section">
@@ -171,10 +204,12 @@
                         </a>
                     </p>
                     <p><strong class="task-line">{{ __('tasks.price') }}:</strong> {{ $acceptedBid->price }} $</p>
-                    <p><strong class="task-line">{{ __('tasks.completion_time') }}:</strong> {{ $acceptedBid->days }}
+                    <p><strong class="task-line">{{ __('tasks.completion_time') }}:</strong>
+                        {{ $acceptedBid->days }}
                         {{ __('tasks.completion_days') }}
                         {{ $acceptedBid->hours }} {{ __('tasks.completion_hours') }}</p>
-                    <p><strong class="task-line">{{ __('tasks.comment') }}:</strong> {{ $acceptedBid->comment }}</p>
+                    <p><strong class="task-line">{{ __('tasks.comment') }}:</strong> {{ $acceptedBid->comment }}
+                    </p>
                 </div>
             @else
                 @foreach ($task->bids as $bid)
@@ -190,7 +225,8 @@
                             {{ $bid->price }} DESCoin</p>
                         <p class="task-line2"><strong class="task-line">{{ __('tasks.completion_time') }}:</strong>
                             {{ $bid->days }}
-                            {{ __('tasks.completion_days') }} {{ $bid->hours }} {{ __('tasks.completion_hours') }}</p>
+                            {{ __('tasks.completion_days') }} {{ $bid->hours }}
+                            {{ __('tasks.completion_hours') }}</p>
                         <p class="task-line2"><strong class="task-line">{{ __('tasks.comment') }}:</strong>
                             {{ $bid->comment }}</p>
 
@@ -241,17 +277,17 @@
         @endif
 
         <!-- Proposal submission section -->
-        <div class=" my-5">
+        <div>
             @if (Auth::check() && Auth::id() !== $task->user_id && !$task->accepted_bid_id)
                 @if ($task->bids()->where('user_id', Auth::id())->exists())
                     <p style="text-align: center; color:#ffdf00">{{ __('tasks.already_submitted') }}</p>
                 @else
-                    <div class="bid-form">
+                    <div  class="comment my-5">
                         <h6>{{ __('tasks.leave_suggestion') }}</h6>
                         <form action="{{ route('tasks.bid', $task) }}" method="POST">
                             @csrf
                             <fieldset style="border: none">
-                                
+
 
                                 <!-- Поле "Your price" -->
                                 <div class="form-group">
@@ -268,17 +304,15 @@
                                 <!-- Поле "Completion time (hours)" -->
                                 <div class="form-group">
                                     <label for="hours">{{ __('tasks.completion_hours') }}:</label>
-                                    <input type="number" name="hours" id="hours" class="input_dark" required>
+                                    <input type="number" name="hours" id="hours" class="input_dark" placeholder="{{ __('tasks.completion_hours_hint') }}" required>
 
-                                    <small class="form-text text-muted">{{ __('tasks.completion_hours_hint') }}</small>
+                                    
                                 </div>
                                 <!-- Поле "Message" -->
                                 <div class="form-group">
                                     <label for="comment">{{ __('tasks.message') }}:</label>
-                                    <textarea name="comment" id="comment" class="input_dark" rows="3" maxlength="500" required></textarea>
-                                    <small class="form-text text-muted">
-                                        {{ __('tasks.message_hint') }}
-                                    </small>
+                                    <textarea name="comment" id="comment" class="input_dark" rows="3" maxlength="500" placeholder="{{ __('tasks.message_hint') }}" required></textarea>
+                                    
                                 </div>
 
                                 <!-- Кнопка отправки -->

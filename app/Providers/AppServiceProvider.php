@@ -8,6 +8,8 @@ use Illuminate\Support\ServiceProvider;
 use App\Rules\Recaptcha; // Убедитесь, что это правило существует
 use Illuminate\Support\Facades\Validator;
 use App\Services\IpStackService;
+use Illuminate\Support\Facades\URL;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +20,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
+        if (app()->environment('local')) {
+            URL::forceScheme('https'); // Laravel форсит https
+        }
         
         // Передача переменной $unreadCount во все шаблоны
         View::composer('*', function ($view) {

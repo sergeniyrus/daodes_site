@@ -37,9 +37,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@43.3.1/build/ckeditor.js"></script> <!-- Подключает редактор CKEditor -->
     <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script> <!-- Подключает клиент IPFS для работы с децентрализованным хранилищем -->
 
-    {{--     <script src="js/bt_top.js" type="text/javascript"></script> --}}
+    
 
-    <link rel="stylesheet" href="{{ asset('css/main.css') }}"  type="text/css"> <!-- Подключает основной CSS-файл приложения -->
+    {{-- <link rel="stylesheet" href="{{ asset('css/main.css') }}"> --}}
+    @vite(['resources/css/main.css'])
+
     <script src="{{ asset('js/bt_top.js') }} " type="text/javascript"></script>
     
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />

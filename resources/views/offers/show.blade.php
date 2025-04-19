@@ -1,30 +1,27 @@
 @extends('template')
-
-@section('title_page')
-    {{ __('offers.suggestion_title', ['id' => $offers->id]) }}
+@section('title_page') {{ __('offers.suggestion_title', ['id' => $offers->id]) }}
 @endsection
-
 @section('main')
-    <link rel="stylesheet" href="{{ asset('css/offers.css') }}">
-    <div class="container my-5">
-        <div class="task-title">
-            <h5>{{ app()->getLocale() === 'ru' ? $offers->title_ru : $offers->title_en }}</h5>
+@vite(['resources/css/page.css'])
 
-        </div>
-        <div class="offers-header">
+    <div class="container my-5">        
+        <div class="page-header">
             <div class="img_post">
                 <img src="{{ $offers->img }}" alt="Image Offers" />
             </div>
-
+            
             <div class="rows-title">
-                <div class="task-info">
-                    <p class="task-category">{!! __('offers.category_label') !!} {{ $categoryName }}</p>
+                <div class="-page- title">
+                    <h5>{{ $offers->title }}</h5>        
                 </div>
-                <div class="task-info2">
-                    <p class="task-data">{!! __('offers.date_label') !!}
+                <div class="info">
+                    <p class="category">{!! __('offers.category_label') !!} {{ $categoryName }}</p>
+                </div>
+                <div class="info2">
+                    <p class="data">{!! __('offers.date_label') !!}
                         {{ \Carbon\Carbon::parse($offers->created_at)->format('d/m/y') }}</p>
-                    <p class="task-views">{!! __('offers.views_label') !!} {{ $offers->views }}</p>
-                    <p class="task-comment">{!! __('offers.comments_label') !!} {{ $commentCount }}</p>
+                    <p class="views">{!! __('offers.views_label') !!} {{ $offers->views }}</p>
+                    <p class="comments">{!! __('offers.comments_label') !!} {{ $commentCount }}</p>
                 </div>
                 @auth
                     @if (Auth::user()->access_level >= 3)
@@ -41,9 +38,10 @@
                             </div>
                             <div>
                                 <a href="{{ route('offers.destroy', ['id' => $offers->id]) }}" class="des-btn"
-                                    onclick="event.preventDefault(); document.getElementById('delete-form-{{ $offers->id }}').submit();">
+                                    onclick="event.preventDefault(); if (confirm('{{ __('offers.confirm_delete') }}')) { document.getElementById('delete-form-{{ $offers->id }}').submit(); }">
                                     {!! __('offers.delete_button') !!}
                                 </a>
+                                
                                 <form id="delete-form-{{ $offers->id }}"
                                     action="{{ route('offers.destroy', ['id' => $offers->id]) }}" method="POST"
                                     style="display: none;">
@@ -59,12 +57,12 @@
 
         <hr class="hr_title">
 
-        <div class="offers-content card">
-            <p>{!! app()->getLocale() === 'ru' ? $offers->content_ru : $offers->content_en !!}</p>
+        <div class="page-content card">
+            <p>{!!  $offers->content !!}</p>
 
         </div>
 
-        <div class="offers-content card">
+        <div class="page-content card">
             @if ($offers->state == null || $offers->state == 0)
                 @include('offers.spam')
             @elseif ($offers->state == 1)
@@ -92,7 +90,7 @@
                     <div class="post_com">
                         <div class="name_com">
                             {{ DB::table('users')->where('id', $comment->user_id)->value('name') }}
-                            <div class="date_com">{{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.y at H:i') }}</div>
+                            <div class="date_com">{{ \Carbon\Carbon::parse($comment->created_at)->format('d.m.y H:i') }}</div>
                             <div class="text_com">{!! $comment->text !!}</div>
                         </div>
                     </div>
@@ -104,7 +102,7 @@
                     <form name="comment" action="{{ route('comments.offers') }}" method="post">
                         @csrf
                         <fieldset>
-                            <legend class="z_com">{{ __('offers.write_message') }}</legend>
+                            {{-- <legend class="z_com">{{ __('offers.write_message') }}</legend> --}}
                             <textarea id="editor" name="text" cols="80" rows="10" placeholder="{{ __('offers.your_opinion') }}"></textarea>
                             <input type="hidden" name="offer_id" value="{{ $offers->id }}" />
                         </fieldset><br>
@@ -112,7 +110,7 @@
                             <button type="submit" class="des-btn">
                                 {!! __('offers.save_button') !!}
                             </button>
-                        </div><br>
+                        </div>
                     </form>
                 </div>
             @else
