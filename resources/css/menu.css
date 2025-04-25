@@ -158,16 +158,7 @@
 
 
 
-.mobile-notifications a {
-  color: white;
-  font-size: clamp(18px, 1.5vw, 36px);
-  text-decoration: none;
-  font-weight: bold;
-}
 
-.mobile-notifications a:hover {
-  color: goldenrod;
-}
 
 .auth-buttons-inline {
   display: flex;
@@ -203,19 +194,33 @@
 }
 
 /* оповещения */
+.mobile-notifications {
+  display: flex;
+  align-items: center; /* Это свойство выравнивает элементы по вертикали */
+}
+
 .mobile-notifications a {
+  display: inline-flex;
+  align-items: center; /* Центрирует текст по вертикали */
+  justify-content: center; /* Центрирует по горизонтали (опционально) */
   background-color: red;
   border-radius: 5px;
-  font-size: 24px;
   cursor: pointer;
-  top: 8px;
-  right: 50px;
-  position: absolute;
-  padding: 0 4px;
+  padding: 0 4px 6px 4px ; 
   font-family: Georgia, "Times New Roman", Times, serif;
   color: #ffffff;
   text-decoration: none;
   font-weight: 600;
+  /* Остальные стили */
+  color: white;
+  font-size: clamp(18px, 1.5vw, 36px);
+  text-decoration: none;
+  font-weight: bold;
+  
+}
+
+.mobile-notifications a:hover {
+  color: gold ;
 }
 
 /* Menu */
@@ -226,7 +231,6 @@
   text-decoration: none;
 }
 
-.mobile-notifications a:hover,
 .logout-icon:hover,
 .profile-link a:hover,
 .log-link a:hover {

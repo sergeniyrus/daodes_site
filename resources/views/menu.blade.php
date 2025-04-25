@@ -5,26 +5,21 @@
     <div class="mobile-header-left">
         <button id="mobile-hamburger-button" class="mobile-hamburger-button" title="Menu">☰ Menu</button>
 
-        
-            {{-- @if (Auth::user()->access_level >= 0) --}}
+        {{-- @auth
+            @if (Auth::user()->access_level >= 3) --}}
                 <div class="language-switcher">
                     <a href="{{ route('language.change', 'en') }}"
                         class="{{ app()->getLocale() === 'en' ? 'active' : '' }}">EN</a>
                     <a href="{{ route('language.change', 'ru') }}"
                         class="{{ app()->getLocale() === 'ru' ? 'active' : '' }}">RU</a>
                 </div>
-            {{-- @endif --}}
-        
+            {{-- @endif
+        @endauth --}}
     </div>
 
     <!-- Правая часть -->
     <div class="mobile-header-right">
         @auth
-            <div class="profile-link">
-                <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}">
-                    {{ Auth::user()->name }}
-                </a>
-            </div>
             @if ($unreadCount > 0)
                 <div class="mobile-notifications">
                     <a href="/notifications" title="{{ __('chats.notifications') }}">
@@ -32,6 +27,13 @@
                     </a>
                 </div>
             @endif
+            
+            <div class="profile-link">
+                <a href="{{ route('user_profile.show', ['id' => Auth::id()]) }}" title="{{ __('menu.profile') }}">
+                    {{ Auth::user()->name }}
+                </a>
+            </div>
+            
             <div class="log-link">
                 <a href="{{ route('logout') }}"
                     onclick="event.preventDefault(); document.getElementById('mobile-logout-form').submit();"
