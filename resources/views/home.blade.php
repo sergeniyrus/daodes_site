@@ -169,7 +169,7 @@
             </h6>
         </div>
 
-        <div class="pubble-app" data-app-id="128664" data-app-identifier="128664"></div>
-        <script type="text/javascript" src="https://cdn.chatify.com/javascript/loader.js" defer></script>
+        {{-- <div class="pubble-app" data-app-id="128664" data-app-identifier="128664"></div>
+        <script type="text/javascript" src="https://cdn.chatify.com/javascript/loader.js" defer></script> --}}
     </main>
 @endsection
