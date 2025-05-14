@@ -13,6 +13,11 @@
         @if(isset($pdfIpfsCid))
             <div class="login_prompt" style="text-align: center">
                 {!! __('offers.decision_available', ['link' => "https://daodes.space/ipfs/$pdfIpfsCid"]) !!}
+                <div>
+                @php
+                    echo $pdfIpfsCid;
+                @endphp    
+                    </div>
             </div>
         @else
             <div class="msg">

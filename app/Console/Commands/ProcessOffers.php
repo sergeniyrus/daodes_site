@@ -47,7 +47,11 @@ class ProcessOffers extends Command
 
            // Log::info("Offer ID $offer_id started at {$offer->start_vote}, Hours elapsed: $hoursElapsed");
 
-            $totalUsers = DB::table('users')->count() - 2;
+           $totalUsers = DB::table('users')
+           ->whereNotIn('id', [1, 2])
+           ->count();
+
+
             $counts = DB::table('offer_votes')
                 ->select(DB::raw('vote, COUNT(*) as count'))
                 ->where('offer_id', $offer_id)
@@ -69,18 +73,22 @@ class ProcessOffers extends Command
             }
 
             $totalVotes = $za + $no;
-            $za_percentage = $totalUsers > 0 ? ($za * 100) / $totalUsers : 0;
-            $no_percentage = $totalUsers > 0 ? ($no * 100) / $totalUsers : 0;
-            $za_percentage = round($za_percentage, 2);
-            $no_percentage = round($no_percentage, 2);
+$za_percentage = $totalUsers > 0 ? ($za * 100) / $totalUsers : 0;
+$no_percentage = $totalUsers > 0 ? ($no * 100) / $totalUsers : 0;
+$vozd_percentage = $totalUsers > 0 ? (($totalUsers - $totalVotes) * 100) / $totalUsers : 0;
+
+$za_percentage = round($za_percentage, 2);
+$no_percentage = round($no_percentage, 2);
+$vozd_percentage = round($vozd_percentage, 2);
+
 
            // Log::info("Processing offer ID $offer_id. Hours elapsed: $hoursElapsed, Za: $za_percentage%, No: $no_percentage%.");
 
-            if ($hoursElapsed > 72 || $za_percentage > 30 || $no_percentage > 30) {
-                if ($za_percentage > 30) {
+            if ($hoursElapsed > 72 || $za_percentage > 50 || $no_percentage > 50) {
+                if ($za_percentage > 50) {
                     $newState = 4; // Принято "за"
                     //Log::info("Offer ID $offer_id state updated to 4 (Za > 50%).");
-                } elseif ($no_percentage > 30) {
+                } elseif ($no_percentage > 50) {
                     $newState = 5; // Принято "против"
                     //Log::info("Offer ID $offer_id state updated to 5 (No > 50%).");
                 } elseif ($hoursElapsed > 72) {
@@ -93,7 +101,8 @@ class ProcessOffers extends Command
                         ->where('id', $offer_id)
                         ->update(['state' => $newState]);
 
-                    $pdfFilePath = $this->createPdf($offer, $za_percentage, $no_percentage, $totalUsers - $totalVotes);
+                    $pdfFilePath = $this->createPdf($offer, $za_percentage, $no_percentage, $vozd_percentage);
+
 
                     if ($pdfFilePath) {
                         $ipfsUrl = $this->uploadToIPFS($pdfFilePath, $offer->id);

@@ -28,8 +28,8 @@
         <div class="date">Date: {{ \Carbon\Carbon::now()->format('d.m.Y') }}</div>
         <h1>Offer Decision</h1>
         <div class="section">
-            <h2>{{ $offer->title }}</h2>
-            {!! $offer->content !!}
+            <h2>{{ $offer->title_ru }}</h2>
+            {!! $offer->content_ru !!}
         </div>
         <div class="stats">
             <h3>Voting Results</h3>
