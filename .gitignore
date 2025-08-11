@@ -30,3 +30,5 @@ secret.key
 test.php
 extensions.txt
 app/Console/Commands/MergeAdminLang.php
+public/img/svg
+.gitignore

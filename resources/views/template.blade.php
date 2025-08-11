@@ -41,7 +41,7 @@
 
     {{-- <link rel="stylesheet" href="{{ asset('css/main.css') }}"> --}}
     @vite(['resources/css/main.css'])
-
+    @vite(['resources/css/ckeditor.css'])
     <script src="{{ asset('js/bt_top.js') }} " type="text/javascript"></script>
     
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
