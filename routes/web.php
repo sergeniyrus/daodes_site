@@ -50,10 +50,6 @@ Route::post('/cookies/reject', [CookieConsentController::class, 'reject'])->name
 Route::get('/cookie-policy', [CookieConsentController::class, 'policy'])
     ->name('cookie.policy');
 
-
-
-
-
 Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
 
 Route::get('/captcha', [CaptchaController::class, 'show'])->name('captcha.show')->withoutMiddleware([SetLocale::class]);

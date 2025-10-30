@@ -23107,6 +23107,73 @@ namespace Torann\GeoIP\Facades {
             }
     }
 
+namespace Webklex\IMAP\Facades {
+    /**
+     * Class Client
+     *
+     * @package Webklex\IMAP\Facades
+     */
+    class Client {
+        /**
+         * Safely create a new client instance which is not listed in accounts
+         *
+         * @param array $config
+         * @return \Client 
+         * @throws Exceptions\MaskNotFoundException
+         * @static 
+         */
+        public static function make($config)
+        {
+            /** @var \Webklex\PHPIMAP\ClientManager $instance */
+            return $instance->make($config);
+        }
+
+        /**
+         * Resolve a account instance.
+         *
+         * @param string|null $name
+         * @return \Client 
+         * @throws Exceptions\MaskNotFoundException
+         * @static 
+         */
+        public static function account($name = null)
+        {
+            /** @var \Webklex\PHPIMAP\ClientManager $instance */
+            return $instance->account($name);
+        }
+
+        /**
+         * Merge the vendor settings with the local config
+         * 
+         * The default account identifier will be used as default for any missing account parameters.
+         * If however the default account is missing a parameter the package default account parameter will be used.
+         * This can be disabled by setting imap.default in your config file to 'false'
+         *
+         * @param array|string|\Config $config
+         * @return \Webklex\PHPIMAP\ClientManager 
+         * @static 
+         */
+        public static function setConfig($config)
+        {
+            /** @var \Webklex\PHPIMAP\ClientManager $instance */
+            return $instance->setConfig($config);
+        }
+
+        /**
+         * Get the config instance
+         *
+         * @return \Config 
+         * @static 
+         */
+        public static function getConfig()
+        {
+            /** @var \Webklex\PHPIMAP\ClientManager $instance */
+            return $instance->getConfig();
+        }
+
+            }
+    }
+
 namespace Illuminate\Http {
     /**
      * 
@@ -27853,6 +27920,7 @@ namespace  {
     class ReCaptcha extends \Biscolab\ReCaptcha\Facades\ReCaptcha {}
     class Telegram extends \Telegram\Bot\Laravel\Facades\Telegram {}
     class GeoIP extends \Torann\GeoIP\Facades\GeoIP {}
+    class Client extends \Webklex\IMAP\Facades\Client {}
 }
 
 

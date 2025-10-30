@@ -16,7 +16,7 @@ class IPFSServiceProvider extends ServiceProvider
     {
         $this->app->singleton(Client::class, function ($app) {
             return new Client([
-                'base_uri' => env('IPFS_API_URL', 'http://localhost:5001'),
+                'base_uri' => env('IPFS_API_URL', 'http://daodes.space:5001'),
             ]);
         });
     }
