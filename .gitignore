@@ -32,3 +32,5 @@ extensions.txt
 app/Console/Commands/MergeAdminLang.php
 public/img/svg
 .gitignore
+
+continue.config.js
