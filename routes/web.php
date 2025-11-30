@@ -25,6 +25,11 @@ use App\Http\Controllers\{
     CaptchaController,
     NotificationController,
     CookieConsentController,
+    MailerAdminController,
+    MailerTrackController,
+    MailerClickController,
+    MailTemplateController,
+
 };
 use App\Http\Middleware\SetLocale;
 // use App\Services\IpStackService;
@@ -41,6 +46,70 @@ use App\Http\Middleware\SetLocale;
 //         'longitude' => $location['longitude'],
 //     ];
 // });
+
+//Мониторинг работы
+
+Route::get('/health', function () {
+    return response('OK', 200)->header('Content-Type', 'text/plain');
+});
+
+//почтовая рассылка
+Route::middleware(['auth', 'admin'])
+    ->prefix('admin/mailer')
+    ->name('mailer.')
+    ->group(function () 
+    {
+
+        Route::get('/', [MailerAdminController::class, 'dashboard'])->name('dashboard');
+
+        // Маршруты для управления шаблонами писем
+        Route::prefix('templates')->name('templates.')->group(function () {
+            Route::get('/', [MailTemplateController::class, 'index'])->name('index');
+            Route::get('/create', [MailTemplateController::class, 'create'])->name('create');
+            Route::post('/', [MailTemplateController::class, 'store'])->name('store');
+            Route::get('/{template}/edit', [MailTemplateController::class, 'edit'])->name('edit');
+            Route::put('/{template}', [MailTemplateController::class, 'update'])->name('update');
+            Route::delete('/{template}', [MailTemplateController::class, 'destroy'])->name('destroy');
+            Route::get('/{template}', [MailTemplateController::class, 'show'])->name('show'); // ← вот этот добавлен
+        });
+
+        // Контакты
+        Route::get('/recipients', [MailerAdminController::class, 'recipientsIndex'])->name('recipients.index');
+        Route::get('/recipients/create', [MailerAdminController::class, 'recipientsCreate'])->name('recipients.create');
+        Route::post('/recipients', [MailerAdminController::class, 'recipientsStore'])->name('recipients.store');
+        Route::get('/recipients/{recipient}/edit', [MailerAdminController::class, 'recipientsEdit'])->name('recipients.edit');
+        Route::put('/recipients/{recipient}', [MailerAdminController::class, 'recipientsUpdate'])->name('recipients.update');
+        Route::delete('/recipients/{recipient}', [MailerAdminController::class, 'recipientsDestroy'])->name('recipients.destroy');
+        Route::get('/recipients/import', [MailerAdminController::class, 'recipientsImportForm'])->name('recipients.import.form');
+        Route::post('/recipients/import', [MailerAdminController::class, 'recipientsImport'])->name('recipients.import');
+
+        // Списки контактов
+        Route::get('/lists', [MailerAdminController::class, 'listsIndex'])->name('lists.index');
+        Route::get('/lists/create', [MailerAdminController::class, 'listsCreate'])->name('lists.create');
+        Route::post('/lists', [MailerAdminController::class, 'listsStore'])->name('lists.store');
+        Route::get('/lists/{list}/edit', [MailerAdminController::class, 'listsEdit'])->name('lists.edit');
+        Route::put('/lists/{list}', [MailerAdminController::class, 'listsUpdate'])->name('lists.update');
+        Route::delete('/lists/{list}', [MailerAdminController::class, 'listsDestroy'])->name('lists.destroy');
+
+        // Рассылки
+        Route::get('/send', [MailerAdminController::class, 'sendForm'])->name('send.form');
+        Route::post('/send', [MailerAdminController::class, 'send'])->name('send');
+        Route::get('/history', [MailerAdminController::class, 'history'])->name('history');
+
+        // Трекинг открытия писем
+        Route::get('/track/{logId}', [MailerAdminController::class, 'trackEmail'])->name('track');
+
+        //Статистика рассылок
+        Route::get('/mailer/track/{logId}', [\App\Http\Controllers\MailerTrackController::class, 'track'])
+    ->name('mailer.track');
+
+    });
+
+    //Отслеживаем прочтение рассылки
+    Route::get('/mailer/track/{logId}', [MailerTrackController::class, 'track'])
+    ->name('mailer.track');
+    Route::get('/mailer/c/{logId}', [MailerClickController::class, 'redirect'])
+    ->name('mailer.click');
 
 // Cookie consent routes
 Route::post('/cookies/accept', [CookieConsentController::class, 'accept'])->name('cookies.accept');

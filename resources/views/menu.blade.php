@@ -70,6 +70,31 @@
             <span class="mobile-chapter-title">{{ __('menu.home') }}</span>
         </a>
     </div>
+
+<!-- Админка рассылки-->
+@auth
+            @if (Auth::user()->access_level >= 3)   
+                <div class="mobile-chapter-container">
+        <a href="/admin/mailer/" class="mobile-chapter-header" target="_blank" rel="noopener noreferrer">
+    <span class="mobile-chapter-title">Рассылка</span>
+</a>
+
+    </div>
+            @endif
+@endauth
+
+<!-- Почта-->
+@auth
+            
+                <div class="mobile-chapter-container">
+        <a href="https://mail.daodes.space/" class="mobile-chapter-header">
+            <span class="mobile-chapter-title">Почта</span>
+        </a>
+    </div>
+            
+@endauth
+
+
     <div class="mobile-chapter-container" id="news-mobile-menu">
         <a href="/news" class="mobile-chapter-header">
             <span class="mobile-chapter-title">{{ __('menu.news') }}</span>
@@ -237,12 +262,19 @@ document.addEventListener('DOMContentLoaded', function() {
         menuContainer.appendChild(submenuContainer);
 
         // Добавление обработчика события для открытия подменю
-        header.addEventListener('click', function(event) {
-            event.preventDefault(); // Предотвращаем переход по ссылке
-            event.stopPropagation(); // Останавливаем всплытие события
-            submenuContainer.classList.toggle('open'); // Переключаем класс .open
-            console.log('Подменю открыто/закрыто'); // Для отладки
-        });
+header.addEventListener('click', function(event) {
+
+    // Если у пункта НЕТ подменю — даем обычный переход
+    if (!submenus[headerPath]) {
+        return; 
+    }
+
+    // Если подменю есть — блокируем переход и открываем/закрываем
+    event.preventDefault();
+    event.stopPropagation();
+    submenuContainer.classList.toggle('open');
+});
+
         @endif
         @endauth
     }

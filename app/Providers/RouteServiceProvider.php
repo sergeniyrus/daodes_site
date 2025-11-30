@@ -30,6 +30,14 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        // если у вас метод boot уже есть, просто добавьте строку ниже
+        $this->app['router']->aliasMiddleware('admin', \App\Http\Middleware\AdminMiddleware::class);
+
+        // если вы используете Route facade:
+        // Route::aliasMiddleware('admin', \App\Http\Middleware\AdminMiddleware::class);
+
+        // остальной существующий код boot()...
+
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('api')

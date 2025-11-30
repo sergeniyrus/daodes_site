@@ -217,6 +217,27 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Recipient> $recipients
+ * @property-read int|null $recipients_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactList newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactList newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactList query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactList whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactList whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactList whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ContactList whereUpdatedAt($value)
+ */
+	class ContactList extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property int $from_wallet_id
  * @property int $to_wallet_id
  * @property string $amount The amount of money transferred between wallets.
@@ -237,6 +258,58 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|HistoryPay whereUpdatedAt($value)
  */
 	class HistoryPay extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $template_id
+ * @property int $recipient_id
+ * @property string $status
+ * @property string|null $sent_at
+ * @property string|null $read_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Recipient $recipient
+ * @property-read \App\Models\MailTemplate $template
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog whereReadAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog whereRecipientId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog whereSentAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog whereTemplateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailLog whereUpdatedAt($value)
+ */
+	class MailLog extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $subject
+ * @property string $body
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailTemplate newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailTemplate newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailTemplate query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailTemplate whereBody($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailTemplate whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailTemplate whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailTemplate whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailTemplate whereSubject($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MailTemplate whereUpdatedAt($value)
+ */
+	class MailTemplate extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -375,6 +448,31 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Offers whereViews($value)
  */
 	class Offers extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $email
+ * @property string|null $imported_from
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ContactList> $lists
+ * @property-read int|null $lists_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient whereEmail($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient whereImportedFrom($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient whereUpdatedAt($value)
+ */
+	class Recipient extends \Eloquent {}
 }
 
 namespace App\Models{

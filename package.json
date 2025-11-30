@@ -2,23 +2,25 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "build": "vite build"
     },
     "devDependencies": {
-        "@tailwindcss/postcss": "*",
-        "autoprefixer": "*",
-        "laravel-vite-plugin": "*",
-        "postcss": "*",
-        "tailwindcss": "*",
-        "vite": "*"
+        "@ckeditor/ckeditor5-build-classic": "^43.3.1",
+        "@tailwindcss/postcss": "^4.1.17",
+        "@vitejs/plugin-vue": "^6.0.1",
+        "autoprefixer": "^10.4.22",
+        "laravel-vite-plugin": "^2.0.0",
+        "postcss": "^8.5.6",
+        "tailwindcss": "^3.4.18",
+        "vite": "^7.2.2"
     },
     "dependencies": {
-        "ably": "*",
-        "alpinejs": "*",
+        "alpinejs": "^3.13.0",
         "axios": "^1.13.1",
-        "laravel-echo": "*",
-        "lodash": "^4.17.21",
-        "socket.io-client": "*"
+        "codemirror": "^6.0.2",
+        "highlight.js": "^11.11.1",
+        "js-beautify": "^1.15.4",
+        "lodash": "^4.17.21"
     }
 }
