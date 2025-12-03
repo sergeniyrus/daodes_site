@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Notifications\Notifiable; // Подключаем трейт для уведомлений
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Date;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable; // Добавляем трейт Notifiable
+    use HasFactory, Notifiable;
 
     /**
      * Поля, которые можно массово назначать.
@@ -18,7 +19,6 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        //'email',  Добавлено поле email
         'keyword',
         'password',
     ];
@@ -40,7 +40,8 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'password' => 'hashed', // Убрано email_verified_at
+            'password' => 'hashed',
+            'last_seen_at' => 'datetime', // ← добавлено для корректной работы isOnline()
         ];
     }
 
@@ -91,4 +92,35 @@ class User extends Authenticatable
     {
         return $this->hasMany(Notification::class);
     }
+
+
+
+ /**
+ * Проверяет, онлайн ли пользователь прямо сейчас (в течение последних 30 секунд).
+ * Используется для уведомлений и отображения статуса.
+ */
+public function isOnline(): bool
+{
+    return $this->last_seen_at && 
+           $this->last_seen_at->isAfter(now()->subSeconds(30));
+}
+
+/**
+ * Человекопонятное представление статуса
+ */
+public function lastSeenHuman(): string
+{
+    if ($this->isOnline()) {
+        return 'В сети';
+    }
+
+    if (!$this->last_seen_at) {
+        return 'Не в сети';
+    }
+
+    return $this->last_seen_at->diffForHumans(null, \Carbon\Carbon::DIFF_RELATIVE_TO_NOW, true);
+}
+
+
+
 }

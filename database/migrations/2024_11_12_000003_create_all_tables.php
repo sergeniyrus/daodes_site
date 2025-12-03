@@ -280,7 +280,8 @@ return new class extends Migration
                 $table->enum('role', ['executor', 'customer', 'both'])->default('customer');
                 // Контактные данные
                 $table->string('avatar_url')->nullable();
-                $table->string('nickname')->nullable(); // Индекс для быстрого поиска по нику
+                $table->string('nickname')->nullable()->unique(); // Индекс для быстрого поиска по нику
+                $table->bigInteger('telegram_chat_id')->nullable()->unique();
                 $table->enum('gender', ['male', 'female'])->nullable(); // Ограничиваем поле гендера
                 $table->string('timezone')->nullable();
                 $table->text('languages')->nullable();

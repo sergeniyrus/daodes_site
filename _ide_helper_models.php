@@ -268,8 +268,8 @@ namespace App\Models{
  * @property int $template_id
  * @property int $recipient_id
  * @property string $status
- * @property string|null $sent_at
- * @property string|null $read_at
+ * @property \Illuminate\Support\Carbon|null $sent_at
+ * @property \Illuminate\Support\Carbon|null $read_at
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Recipient $recipient
@@ -640,6 +640,7 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $last_seen_at
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Bid> $bids
  * @property-read int|null $bids_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Chat> $chats
@@ -659,6 +660,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereKeyword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastSeenAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereRememberToken($value)
@@ -694,7 +696,7 @@ namespace App\Models{
  * @property string|null $achievements
  * @property string|null $created_at
  * @property string|null $updated_at
- * @property-read UserProfile|null $profile
+ * @property int|null $telegram_chat_id Telegram chat_id для уведомлений
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile newQuery()
@@ -718,6 +720,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereSpecialization($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereTasksCompleted($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereTasksFailed($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereTelegramChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereTimezone($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereTrustLevel($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereUpdatedAt($value)

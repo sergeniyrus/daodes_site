@@ -1,9 +1,4 @@
-Вот полный код файла с комментариями, переведёнными на русский язык:
-
-```php
 <?php
-// app/Http/Controllers/MailerClickController.php
-
 namespace App\Http\Controllers;
 
 use App\Models\MailLog;
@@ -67,4 +62,3 @@ class MailerClickController extends Controller
         return response('', 204);
     }
 }
-```

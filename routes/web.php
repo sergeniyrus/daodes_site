@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Middleware\SetLocale;
+use App\Models\User;
 use App\Http\Controllers\{
     ProfileController,
     NewsController,
@@ -29,29 +31,29 @@ use App\Http\Controllers\{
     MailerTrackController,
     MailerClickController,
     MailTemplateController,
+    UserStatusController,
 
 };
-use App\Http\Middleware\SetLocale;
-// use App\Services\IpStackService;
 
-// Route::get('/test-ipstack', function () {
-//     $ipstack = app('ipstack');
-//     $location = $ipstack->getLocation(request()->ip());
+// определение онлайн у пользователя
 
-//     return [
-//         'ip' => request()->ip(),
-//         'country' => $location['country_name'],
-//         'city' => $location['city'],
-//         'latitude' => $location['latitude'],
-//         'longitude' => $location['longitude'],
-//     ];
-// });
-
-//Мониторинг работы
-
-Route::get('/health', function () {
-    return response('OK', 200)->header('Content-Type', 'text/plain');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/user/online', [UserStatusController::class, 'online'])
+        ->withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
+        ->name('user.online');
 });
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/user/{user}/status', function (User $user) {
+        return response()->json([
+            'is_online' => $user->isOnline(),
+            'last_seen_human' => $user->lastSeenHuman(),
+        ]);
+    })->name('user.status');
+});
+
+//Мониторинг работы для системного бота в ТГ
+Route::get('/health', function () {return response('OK', 200)->header('Content-Type', 'text/plain');});
 
 //почтовая рассылка
 Route::middleware(['auth', 'admin'])

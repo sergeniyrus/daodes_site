@@ -170,10 +170,65 @@
         from { opacity: 0; transform: translateY(10px); }
         to { opacity: 1; transform: translateY(0); }
     }
+
+.chat-header {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.chat-status {
+    color: #aaa;
+    font-size: 0.9rem;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.status-indicator.online {
+    background-color: #4caf50; /* Зелёный */
+    box-shadow: 0 0 6px #4caf50;
+}
+
+.status-indicator.offline {
+    background-color: #777; /* Серый */
+}
+
+    
 </style>
 
 <div class="chat-container">
-    <h2 class="chat-title">{{ $chat->getChatNameForUser(auth()->id()) }}</h2>
+    {{-- <h2 class="chat-title">{{ $chat->getChatNameForUser(auth()->id()) }}</h2> --}}
+
+<div class="chat-header">
+    @if($chat->type === 'personal' && $otherUser)
+        <h2 class="chat-title">{{ $otherUser->name }}</h2>
+        <p class="chat-status">
+            @if($otherUser->isOnline())
+    <span class="status-indicator online"></span> {{ __('chats.online') }}
+@else
+    <span class="status-indicator offline"></span> {{ $otherUser->lastSeenHuman() }}
+@endif
+        </p>
+    @else
+        <h2 class="chat-title">{{ $chat->name }}</h2>
+        <p class="chat-status">
+    {{ __('chats.online_participants', [
+        'online' => $chat->onlineParticipantsCount(),
+        'total' => $chat->totalParticipantsCount()
+    ]) }}
+</p>
+    @endif
+</div>
+
 
     <div id="chat-messages" class="chat-messages">
         @foreach ($chat->messages as $message)
@@ -330,5 +385,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
     setInterval(loadNewMessages, 3000);
 });
+
+// Внутри твоего chat script
+async function updatePeerStatus() {
+    if ({{ $chat->type === 'personal' ? 'true' : 'false' }}) {
+        const otherUserId = {{ $otherUser->id ?? 0 }};
+        if (!otherUserId) return;
+
+        const res = await fetch(`/user/${otherUserId}/status`);
+        const data = await res.json();
+        const statusEl = document.querySelector('.chat-status');
+        if (statusEl) {
+            if (data.is_online) {
+                statusEl.innerHTML = '<span class="status-indicator online"></span> В сети';
+            } else {
+                statusEl.innerHTML = `<span class="status-indicator offline"></span> ${data.last_seen_human}`;
+            }
+        }
+    }
+}
+
+// Обновляем раз в 15 сек
+if ({{ $chat->type === 'personal' ? 'true' : 'false' }}) {
+    setInterval(updatePeerStatus, 15_000);
+}
+
+
+
+
 </script>
 @endsection

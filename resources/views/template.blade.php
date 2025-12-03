@@ -6,9 +6,11 @@
     <meta charset="utf-8"> <!-- Устанавливает кодировку символов на UTF-8 -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Включает CSRF-токен для защиты от межсайтовых подделок запросов -->
+    <meta name="user-id" content="{{ auth()->check() ? auth()->id() : '' }}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Настраивает масштабирование страницы для мобильных устройств -->
+    
 
     <!-- иконка сайта -->
     <link rel="icon" href="/../favicon.ico" type="image/x-icon"> <!-- Подключает иконку сайта (favicon) -->
@@ -37,13 +39,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@ckeditor/ckeditor5-build-classic@43.3.1/build/ckeditor.js"></script> <!-- Подключает редактор CKEditor -->
     <script src="https://cdn.jsdelivr.net/npm/ipfs-http-client/dist/index.min.js"></script> <!-- Подключает клиент IPFS для работы с децентрализованным хранилищем -->
 
-    
+
 
     {{-- <link rel="stylesheet" href="{{ asset('css/main.css') }}"> --}}
     @vite(['resources/css/main.css'])
     @vite(['resources/css/ckeditor.css'])
     <script src="{{ asset('js/bt_top.js') }} " type="text/javascript"></script>
-    
+
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/slick-carousel@1.8.1/slick/slick.css" />
     <!-- Подключает стили для карусели Slick -->
     <link rel="stylesheet" type="text/css"
@@ -67,6 +69,7 @@
  <!-- /Yandex.Metrika counter --> --}}
 </head>
 @yield('scripts')
+
 <body>
     <style>
         /*бегущая строка */
@@ -110,6 +113,63 @@
     <!-- Подвал-->
     @include('footer')
     @include('components.cookie-consent')
-</body>
 
+    {{-- Скрипт определения онлайн --}}
+
+@if(Auth::check())
+<script>
+(function () {
+    'use strict';
+
+    const ONLINE_ENDPOINT = "{{ route('user.online') }}";
+    let heartbeatInterval = null;
+
+    function sendOnline() {
+        fetch(ONLINE_ENDPOINT, {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
+            }
+        }).catch(() => {
+            // Игнорируем ошибки — не критично
+        });
+    }
+
+    function startHeartbeat() {
+        sendOnline(); // сразу
+        heartbeatInterval = setInterval(sendOnline, 25_000);
+    }
+
+    function stopHeartbeat() {
+        if (heartbeatInterval) {
+            clearInterval(heartbeatInterval);
+            heartbeatInterval = null;
+        }
+    }
+
+    // Запуск при загрузке
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', startHeartbeat);
+    } else {
+        startHeartbeat();
+    }
+
+    // Остановка при сворачивании/переключении вкладки
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            stopHeartbeat();
+        } else {
+            startHeartbeat();
+        }
+    });
+
+})();
+</script>
+@endif
+
+
+</body>
 </html>

@@ -13,21 +13,17 @@ class UserProfile extends Model
         'user_id', 'wallet_address', 'role', 'avatar_url', 'nickname', 'timezone', 
         'languages', 'birth_date', 'education', 'resume', 'portfolio', 'specialization', 
         'rating', 'trust_level', 'sbt_tokens', 'tasks_completed', 'tasks_failed', 
-        'recommendations', 'activity_log', 'achievements', 'gender' 
+        'recommendations', 'activity_log', 'achievements', 'gender',
+        // Добавлено:
+        'telegram_chat_id',  // ← только это
     ];
 
-    // Отключение автоматического управления метками времени
     public $timestamps = false; 
 
     public function user()
-{
-    return $this->belongsTo(User::class, 'user_id');
-}
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     
-public function profile()
-{
-    return $this->hasOne(UserProfile::class, 'user_id');
 }
-
-}
-

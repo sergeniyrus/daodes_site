@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\DB;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -45,17 +46,17 @@ class AuthenticatedSessionController extends Controller
     /**
      * Destroy an authenticated session.
      */
-    public function destroy(Request $request): RedirectResponse
-    {
-        Auth::guard('web')->logout();
+    
 
-        $request->session()->invalidate();
+public function destroy(Request $request): RedirectResponse
+{
+    Auth::guard('web')->logout();
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+    $request->session()->flash('message', __('login.logout'));
 
-        $request->session()->regenerateToken();
+    return redirect('/');
+}
 
-        // Добавляем сообщение о выходе из системы
-        $request->session()->flash('message', __('login.logout'));
 
-        return redirect('/');
-    }
 }

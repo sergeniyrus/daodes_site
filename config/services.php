@@ -36,8 +36,13 @@ return [
     ],
 
     'ipfs' => [
-    'host' => env('IPFS_HOST', 'localhost'),
-    'port' => env('IPFS_PORT', 5001),
-],
+        'host' => env('IPFS_HOST', 'localhost'),
+        'port' => env('IPFS_PORT', 5001),
+    ],
+
+    'telegram' => [
+        'bot_token' => env('TELEGRAM_BOT_TOKEN'),
+        'secret_token' => env('TELEGRAM_SECRET_TOKEN'),
+    ],
 
 ];

@@ -36,4 +36,28 @@ return [
     'footnote2' => 'To translate a line, press Shift + Enter.',
     'online_users' => 'Online:',
     'type_message' => 'The message',
+    // Statuses
+    'online' => 'Online',
+    'online_participants' => ':online of :total online',
+
+    'group_chat' => 'Group Chat',
+'direct_chat' => 'Private Chat',
+'group_name_optional' => 'Optional for personal chats',
+'direct_chat_no_name' => 'No name required',
+'select_at_least_one_user' => 'Select at least one user',
+'select_exactly_one_user' => 'Select exactly one user for a private chat',
+'search_users' => 'Search for participants...',
+
+'invalid_chat_type' => 'Invalid chat type.',
+'invalid_users_selected' => 'Invalid users have been selected.',
+'select_at_least_one_user' => 'Please select at least one participant.',
+
+'chat_name_required' => 'The name of the group chat is required',
+'select_at_least_one_user' => 'No user selected',
+'users_required' => 'No user selected',
+'invalid_chat_type' => 'Invalid chat type',
+'chat_name_exists' => 'A chat with that name already exists',
+'chat_exists' => 'A private chat with this user already exists',
+'chat_created' => 'Chat has been created successfully!',
+
 ];

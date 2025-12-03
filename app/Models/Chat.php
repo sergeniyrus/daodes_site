@@ -54,4 +54,22 @@ public function unreadMessagesCount($userId)
         ->count();
 }
 
+/**
+ * Возвращает количество участников чата, которые онлайн прямо сейчас.
+ */
+public function onlineParticipantsCount(): int
+{
+    return $this->users->filter(fn($user) => $user->isOnline())->count();
+}
+
+/**
+ * Возвращает общее количество участников чата.
+ */
+public function totalParticipantsCount(): int
+{
+    return $this->users->count();
+}
+
+
+
 }

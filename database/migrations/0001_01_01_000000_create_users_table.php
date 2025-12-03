@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('password', 255); // Для хранения хэша пароля
             $table->string('keyword', 255);
             $table->unsignedInteger('access_level')->nullable();
-
+            $table->timestamp('last_seen_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

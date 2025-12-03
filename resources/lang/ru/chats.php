@@ -36,4 +36,28 @@ return [
     'footnote2' => 'Для перевода строки Shift + Enter',
     'online_users' => 'В сети:',
     'type_message' => 'Сообщение',
+    // Статусы
+    'online' => 'В сети',
+    'online_participants' => ':online из :total онлайн',
+
+    'group_chat' => 'Групповой чат',
+'direct_chat' => 'Личный чат',
+'group_name_optional' => 'Необязательно для личных чатов',
+'direct_chat_no_name' => 'Имя не требуется',
+'select_at_least_one_user' => 'Выберите хотя бы одного пользователя',
+'select_exactly_one_user' => 'Для личного чата выберите ровно одного пользователя',
+'search_users' => 'Поиск участников...',
+
+'invalid_chat_type' => 'Недопустимый тип чата.',
+'invalid_users_selected' => 'Выбраны недопустимые пользователи.',
+'select_at_least_one_user' => 'Пожалуйста, выберите хотя бы одного участника.',
+
+'chat_name_required' => 'Название группового чата обязательно',
+'select_at_least_one_user' => 'Не выбрано ни одного пользователя',
+'users_required' => 'Не выбрано ни одного пользователя',
+'invalid_chat_type' => 'Недопустимый тип чата',
+'chat_name_exists' => 'Чат с таким названием уже существует',
+'chat_exists' => 'Личный чат с этим пользователем уже существует',
+'chat_created' => 'Чат успешно создан!',
+
 ];

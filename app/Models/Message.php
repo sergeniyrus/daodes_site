@@ -17,6 +17,9 @@ class Message extends Model
         'ipfs_cid', // CID из IPFS
     ];
 
+// 👇 ЭТО ВАЖНО!
+    protected $appends = ['message'];
+
     public function chat()
     {
         return $this->belongsTo(Chat::class);

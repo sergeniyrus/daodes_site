@@ -68,134 +68,161 @@ class ChatController extends Controller
         return $uniqueChats;
     }
 
-    /**
-     * Отображает страницу создания чата.
-     * Получает список пользователей, исключая текущего.
-     */
-    public function create()
-    {
-        // Получаем всех пользователей, кроме текущего
-        $users = User::where('id', '!=', Auth::user()->id)->get();
+  /**
+ * Отображает страницу создания чата.
+ * Получает список пользователей, исключая текущего и системных (ID=1,2),
+ * и подгружает аватарки из user_profiles.
+ */
+public function create()
+{
+    $currentUser = Auth::user();
 
-        // Возвращаем представление для создания чата
-        return view('chats.create', compact('users'));
+    $users = User::with('profile')
+        ->where('id', '!=', $currentUser->id)
+        ->whereNotIn('id', [1, 2])
+        ->get()
+        ->map(function ($user) {
+            return [
+                'id' => $user->id,
+                'name' => $user->name,
+                'avatar' => $user->profile?->avatar_url ?? '/img/main/default-avatar.png',
+            ];
+        });
+
+    return view('chats.create', compact('users'));
+}
+
+    /**
+ * Сохраняет новый чат в базе данных.
+ * Определяет тип чата (личный или групповой) и создает его.
+ */
+public function store(Request $request)
+{
+    // Определяем тип чата
+    $chatType = $request->input('chat_type', 'group');
+
+    // Валидация базовых полей
+    $rules = [
+        'chat_type' => 'required|in:group,direct',
+        'users' => 'required|string',
+    ];
+
+    $messages = [
+        'chat_type.in' => __('chats.invalid_chat_type'),
+        'users.required' => __('chats.select_at_least_one_user'), // ← Используем твой текст ошибки
+    ];
+
+    // Название обязательно только для группового чата
+    if ($chatType === 'group') {
+        $rules['name'] = [
+            'required',
+            'string',
+            'max:255',
+            function ($attribute, $value, $fail) {
+                if (Chat::whereRaw('LOWER(name) = LOWER(?)', [$value])->exists()) {
+                    $fail(__('chats.chat_name_exists'));
+                }
+            },
+        ];
+        $messages['name.required'] = __('chats.chat_name_required');
     }
 
-    /**
-     * Сохраняет новый чат в базе данных.
-     * Определяет тип чата (личный или групповой) и создает его.
-     */
-    public function store(Request $request)
-    {
-        // Логируем входные данные
-        // Log::info('Request data:', $request->all());
-        // Log::info('Users array:', $request->users);
+    // Ручная валидация → ошибка через session('error')
+    $validator = \Validator::make($request->all(), $rules, $messages);
+    if ($validator->fails()) {
+        return redirect()->back()
+            ->with('error', $validator->errors()->first())
+            ->withInput();
+    }
 
-        // Определяем тип чата: personal (на двоих) или group
-        $type = count($request->users) >= 2 ? 'group' : 'personal';
-        // Log::info('Chat type determined:', ['type' => $type]);
+    // Декодируем пользователей
+    $userIds = json_decode($request->input('users'), true);
+    if (!is_array($userIds) || empty($userIds)) {
+        return redirect()->back()
+            ->with('error', __('chats.select_at_least_one_user'))
+            ->withInput();
+    }
 
-        // Правила валидации
-        $rules = [
-            'users' => 'required|array',
-        ];
+    // Фильтрация ID
+    $userIds = array_map('intval', $userIds);
+    $userIds = array_filter($userIds, fn($id) => $id > 0 && $id !== Auth::id() && !in_array($id, [1, 2]));
 
-        // Для групповых чатов добавляем проверку на уникальность названия
-        if ($type === 'group') {
-            $rules['name'] = [
-                'required',
-                'string',
-                'max:255',
-                function ($attribute, $value, $fail) {
-                    // Проверяем уникальность названия, игнорируя регистр
-                    $exists = Chat::whereRaw('LOWER(name) = LOWER(?)', [$value])->exists();
-                    if ($exists) {
-                        $fail(__('chats.chat_name_exists'));
-                    }
-                },
-            ];
-        } else {
-            $rules['name'] = 'nullable'; // Для чатов на двоих название не требуется
-        }
+    if (empty($userIds)) {
+        return redirect()->back()
+            ->with('error', __('chats.select_at_least_one_user')) // или более точный текст
+            ->withInput();
+    }
 
-        // Логируем правила валидации
-        // Log::info('Validation rules:', $rules);
+    // Определяем тип чата
+    $type = ($chatType === 'direct' || count($userIds) === 1) ? 'personal' : 'group';
 
-        // Валидация запроса с кастомными сообщениями
-        $request->validate($rules, [
-            'name.unique' => __('chats.chat_name_exists'),
-            'name.required' => __('chats.chat_name_required'),
-            'users.required' => __('chats.users_required'),
-        ]);
+    // Проверка существования личного чата
+    if ($type === 'personal') {
+        $otherUserId = $userIds[0];
 
-        // Если это чат на двоих, проверяем, существует ли уже такой чат
-        if ($type === 'personal') {
-            $otherUserId = $request->users[0]; // ID второго пользователя
-            // Log::info('Checking for existing personal chat with user:', ['otherUserId' => $otherUserId]);
-
-            // Проверяем, существует ли уже чат между текущим пользователем и выбранным пользователем
-            $existingChat = Chat::whereHas('users', function ($query) use ($otherUserId) {
+        $existingChat = Chat::whereHas('users', function ($query) use ($otherUserId) {
                 $query->where('user_id', Auth::user()->id);
-            })->whereHas('users', function ($query) use ($otherUserId) {
+            })
+            ->whereHas('users', function ($query) use ($otherUserId) {
                 $query->where('user_id', $otherUserId);
             })
-            ->withCount('users') // Добавляем подсчет количества пользователей в чате
-            ->having('users_count', '=', 2) // Фильтруем только чаты с двумя пользователями
+            ->withCount('users')
+            ->having('users_count', '=', 2)
             ->first();
 
-            // Если чат уже существует, перенаправляем на него
-            if ($existingChat) {
-                // Log::info('Existing chat found:', ['chatId' => $existingChat->id]);
-                return redirect()->route('chats.show', $existingChat->id)
-                    ->with('info', __('chats.chat_exists'));
-            }
+        if ($existingChat) {
+            return redirect()->route('chats.show', $existingChat->id)
+                ->with('info', __('chats.chat_exists'));
         }
-
-        // Создаем новый чат
-        $chat = Chat::create([
-            'name' => $type === 'personal' ? 'personal' : $request->name, // Для чатов на двоих название не нужно
-            'type' => $type, // Указываем тип чата
-        ]);
-        // Log::info('New chat created:', ['chatId' => $chat->id, 'name' => $chat->name, 'type' => $chat->type]);
-
-        // Добавляем участников
-        $usersToAttach = array_merge($request->users, [Auth::user()->id]);
-        //Log::info('Attaching users to chat:', ['users' => $usersToAttach]);
-        $chat->users()->attach($usersToAttach);
-
-        // Перенаправляем на страницу чата
-        return redirect()->route('chats.index')
-            ->with('message', __('chats.chat_created'));
     }
+
+    // Создаём чат
+    $chat = Chat::create([
+        'name' => $type === 'personal' ? 'personal' : $request->name,
+        'type' => $type,
+    ]);
+
+    // Добавляем участников
+    $allUserIds = array_unique(array_merge($userIds, [Auth::id()]));
+    $chat->users()->attach($allUserIds);
+
+    return redirect()->route('chats.index')
+        ->with('message', __('chats.chat_created'));
+}
 
     /**
      * Отображает страницу чата.
      * Удаляет все уведомления из этого чата для текущего пользователя.
      */
     public function show($chatId)
-    {
-        try {
-            // Находим чат
-            $chat = Chat::with(['users', 'messages.sender'])->findOrFail($chatId);
+{
+    try {
+        // Находим чат с участниками и сообщениями
+        $chat = Chat::with(['users', 'messages.sender'])->findOrFail($chatId);
 
-            // Получаем ID текущего пользователя
-            $userId = Auth::user()->id;
+        $userId = Auth::user()->id;
+        $otherUser = null; // ← Инициализируем явно!
 
-            // Удаляем все уведомления из этого чата для текущего пользователя
-            Notification::whereHas('message', function ($query) use ($chatId) {
-                $query->where('chat_id', $chatId);
-            })
-            ->where('user_id', $userId)
-            ->delete();
-
-            // Возвращаем представление с сообщением
-            return view('chats.show', compact('chat'))->with('message', __('chats.notification_read'));
-
-        } catch (\Exception $e) {
-            Log::error("Error in ChatController@show: " . $e->getMessage());
-            return redirect()->back()->with('error', __('chats.error_loading_chat'));
+        // Определяем собеседника — только для личного чата
+        if ($chat->type === 'personal') {
+            $otherUser = $chat->users->first(fn($user) => $user->id !== $userId);
         }
+
+        // Удаляем уведомления текущего пользователя в этом чате
+        Notification::whereHas('message', function ($query) use ($chatId) {
+            $query->where('chat_id', $chatId);
+        })
+        ->where('user_id', $userId)
+        ->delete();
+
+        // Передаём обе переменные — $chat и $otherUser (может быть null)
+        return view('chats.show', compact('chat', 'otherUser'));
+
+    } catch (\Exception $e) {
+        Log::error("Error in ChatController@show: " . $e->getMessage());
+        return redirect()->back()->with('error', __('chats.error_loading_chat'));
     }
+}
 
     public function getMessages(Chat $chat)
     {
@@ -258,6 +285,27 @@ public function sendMessage(Request $request, $chatId)
         if (!empty($notifications)) {
             Notification::insert($notifications);
         }
+
+        
+// === Отправка Telegram-уведомлений ===
+$chat = Chat::with('users')->findOrFail($chatId);
+$sender = Auth::user();
+
+$baseUrl = config('app.url'); // https://daodes.space
+$chatUrl = "{$baseUrl}/chats/{$chat->id}";
+
+foreach ($recipientIds as $recipientId) {
+    $isPersonal = $chat->type === 'personal';
+    $payload = [
+        'is_personal' => $isPersonal,
+        'sender_login' => $sender->name, // или $sender->username, если есть
+        'chat_name' => $isPersonal ? 'личный чат' : $chat->name,
+        'chat_url' => $chatUrl,
+    ];
+
+    \App\Services\TelegramNotifier::notifyNewMessage($recipientId, $payload);
+}
+
 
         return response()->json([
             'status' => 'success',
