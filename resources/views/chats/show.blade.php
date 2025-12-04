@@ -409,9 +409,70 @@ async function updatePeerStatus() {
 if ({{ $chat->type === 'personal' ? 'true' : 'false' }}) {
     setInterval(updatePeerStatus, 15_000);
 }
-
-
-
-
 </script>
+
+<script>
+// === Утилиты base64 ↔ Uint8Array (безопасное определение) ===
+if (typeof b64ToU8 !== 'function') {
+    function b64ToU8(b64) {
+        return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    }
+    function u8ToB64(u8) {
+        return btoa(String.fromCharCode(...u8));
+    }
+}
+
+@if(auth()->check() && isset($chat))
+(function () {
+    const chatId = {{ $chat->id }};
+    const privKeyBase64 = localStorage.getItem('userPrivateKey');
+    if (!privKeyBase64) {
+        console.error('🔒 Приватный ключ не найден');
+        return;
+    }
+
+    fetch(`/chats/${chatId}/my-key`, {
+        credentials: 'include',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+            'Accept': 'application/json'
+        }
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Не удалось загрузить ключ чата: ' + res.status);
+        return res.json();
+    })
+    .then(data => {
+        const encryptedKey = b64ToU8(data.encrypted_key);
+        const nonce = b64ToU8(data.nonce);
+        const initiatorPubKey = b64ToU8(data.initiator_public_key);
+        const mySecretKey = b64ToU8(privKeyBase64);
+
+        // Расшифровка: nacl.box.open(шифр, nonce, публичный_ключ_отправителя, мой_приватный_ключ)
+        const chatKey = nacl.box.open(encryptedKey, nonce, initiatorPubKey, mySecretKey);
+
+        if (!chatKey) {
+            throw new Error('Не удалось расшифровать чат-ключ (неверный ключ или повреждённые данные)');
+        }
+
+        // Сохраняем в глобальной переменной (только для текущей сессии)
+        window.CURRENT_CHAT_KEY = chatKey;
+        console.log('✅ Чат-ключ успешно расшифрован');
+
+        // Опционально: запуск расшифровки уже загруженных сообщений
+        decryptExistingMessages();
+    })
+    .catch(err => {
+        console.error('🚨 Ошибка при работе с чат-ключом:', err);
+        alert('Невозможно получить доступ к зашифрованному чату: ' + err.message);
+    });
+})();
+@endif
+
+// Функция для расшифровки сообщений (заглушки для этапа 4)
+function decryptExistingMessages() {
+    // Позже: пройдись по всем элементам .encrypted-message и расшифруй их
+}
+</script>
+
 @endsection

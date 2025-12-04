@@ -170,6 +170,9 @@
         }
     </style>
 
+
+
+
     <div class="container">
         <h2 class="text-center">{{ __('user_profile.create') }}</h2>
 

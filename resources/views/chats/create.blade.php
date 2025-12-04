@@ -65,7 +65,6 @@
     text-align: center;
   }
 
-  /* --- Новые стили --- */
   .selected-users {
     display: flex;
     flex-wrap: wrap;
@@ -164,12 +163,12 @@
     <div class="mode-btn active" data-mode="group" onclick="setChatMode('group')">
       {{ __('chats.group_chat') }}
     </div>
-    <div class="mode-btn" data-mode="direct" onclick="setChatMode('direct')">
+    <div class="mode-btn" data-mode="personal" onclick="setChatMode('personal')">
       {{ __('chats.direct_chat') }}
     </div>
   </div>
 
-  <form id="createChatForm" method="POST" action="{{ route('chats.store') }}">
+  <form id="create-chat-form" method="POST" action="{{ route('chats.store') }}">
     @csrf
     <input type="hidden" name="chat_type" id="chatType" value="group">
 
@@ -209,14 +208,11 @@
     chatMode = mode;
     document.getElementById('chatType').value = mode;
     
-    // Обновляем UI кнопок
     document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
     document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
 
-    // В личном чате — макс. 1 участник
-    if (mode === 'direct') {
+    if (mode === 'personal') {
       if (selectedUsers.size > 1) {
-        // Оставляем только первого
         const first = [...selectedUsers][0];
         selectedUsers.clear();
         selectedUsers.add(first);
@@ -229,7 +225,7 @@
 
   function toggleChatName() {
     const nameField = document.getElementById('chatName');
-    if (chatMode === 'direct') {
+    if (chatMode === 'personal') {
       nameField.disabled = true;
       nameField.placeholder = "{{ __('chats.direct_chat_no_name') }}";
     } else {
@@ -259,12 +255,11 @@
       container.appendChild(tag);
     });
 
-    // Обновляем скрытое поле
     document.getElementById('selectedUsersInput').value = JSON.stringify([...selectedUsers]);
   }
 
   function removeUser(id) {
-    if (chatMode === 'direct') {
+    if (chatMode === 'personal') {
       selectedUsers.clear();
     } else {
       selectedUsers.delete(id);
@@ -273,7 +268,6 @@
   }
 
   function updateUI() {
-    // Обновляем выделение
     document.querySelectorAll('.user-item').forEach(item => {
       const id = parseInt(item.dataset.id);
       if (selectedUsers.has(id)) {
@@ -285,12 +279,11 @@
     updateSelectedUsersUI();
   }
 
-  // Инициализация
   document.querySelectorAll('.user-item').forEach(item => {
     item.addEventListener('click', () => {
       const id = parseInt(item.dataset.id);
       
-      if (chatMode === 'direct') {
+      if (chatMode === 'personal') {
         selectedUsers.clear();
         selectedUsers.add(id);
       } else {
@@ -304,7 +297,6 @@
     });
   });
 
-  // Поиск
   document.getElementById('userSearch').addEventListener('input', (e) => {
     const term = e.target.value.toLowerCase();
     document.querySelectorAll('.user-item').forEach(item => {
@@ -313,21 +305,115 @@
     });
   });
 
-  // Отправка формы — валидация
-//   document.getElementById('createChatForm').addEventListener('submit', (e) => {
-//     if (selectedUsers.size === 0) {
-//       e.preventDefault();
-//       alert("{{ __('chats.select_at_least_one_user') }}");
-//       return;
-//     }
-//     if (chatMode === 'direct' && selectedUsers.size !== 1) {
-//       e.preventDefault();
-//       alert("{{ __('chats.select_exactly_one_user') }}");
-//       return;
-//     }
-//   });
-
-  // Инициализация
   toggleChatName();
 </script>
+
+<script>
+// === Утилиты base64 ↔ Uint8Array ===
+function b64ToU8(b64) {
+    return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+}
+function u8ToB64(u8) {
+    return btoa(String.fromCharCode(...u8));
+}
+
+async function fetchPublicKeys(userIds) {
+    console.log("📡 Запрашиваем публичные ключи для:", userIds);
+
+    const res = await fetch('/users/public-keys', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        },
+        body: JSON.stringify({ user_ids: userIds })
+    });
+
+    console.log("📡 Статус ответа public-keys:", res.status);
+
+    if (!res.ok) throw new Error(`Ошибка загрузки ключей: ${res.status}`);
+
+    const data = await res.json();
+    console.log("📡 Публичные ключи получены:", data);
+    return data;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('create-chat-form');
+    if (!form) {
+        console.log("⚠️ create-chat-form не найден");
+        return;
+    }
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        console.log("🚀 Отправка формы создания чата...");
+
+        const usersInput = form.querySelector('input[name="users"]');
+        let userIDs = JSON.parse(usersInput.value);
+
+        console.log("👥 Пользователи:", userIDs);
+
+        const currentUserId = {{ auth()->id() }};
+        const allUserIds = [...new Set([...userIDs, currentUserId])];
+
+        console.log("👥 Все участники:", allUserIds);
+
+        try {
+            const publicKeys = await fetchPublicKeys(allUserIds);
+
+            for (const uid of allUserIds) {
+                if (!publicKeys[uid]) {
+                    console.error(`❌ У UID=${uid} нет публичного ключа`);
+                    alert(`У пользователя ID=${uid} нет публичного ключа`);
+                    return;
+                }
+            }
+
+            console.log("🔑 Все ключи присутствуют, генерируем chatKey…");
+
+            const chatKey = nacl.randomBytes(nacl.secretbox.keyLength);
+            const myPrivKeyString = localStorage.getItem('userPrivateKey');
+            console.log("🔐 Приватный ключ из localStorage:", myPrivKeyString);
+            const myPrivKey = b64ToU8(myPrivKeyString);
+
+            const encryptedKeys = {};
+            for (const uid of allUserIds) {
+                const pubKey = b64ToU8(publicKeys[uid]);
+                const nonce = nacl.randomBytes(nacl.box.nonceLength);
+                const encrypted = nacl.box(chatKey, nonce, pubKey, myPrivKey);
+                encryptedKeys[uid] = {
+                    encrypted_key: u8ToB64(encrypted),
+                    nonce: u8ToB64(nonce)
+                };
+            }
+
+            console.log("📦 encryptedKeys готов:", encryptedKeys);
+
+            for (const uid in encryptedKeys) {
+                console.log(`📥 Добавляем encrypted_keys[${uid}]`);
+                const ek = encryptedKeys[uid];
+                let keyInput = document.createElement('input');
+                keyInput.type = 'hidden';
+                keyInput.name = `encrypted_keys[${uid}][encrypted_key]`;
+                keyInput.value = ek.encrypted_key;
+                form.appendChild(keyInput);
+                let nonceInput = document.createElement('input');
+                nonceInput.type = 'hidden';
+                nonceInput.name = `encrypted_keys[${uid}][nonce]`;
+                nonceInput.value = ek.nonce;
+                form.appendChild(nonceInput);
+            }
+
+            console.log("📨 Отправляем форму…");
+            form.submit();
+        } catch (err) {
+            console.error("🚨 Ошибка JS при создании чата:", err);
+            alert(err.message);
+        }
+    });
+});
+</script>
+
 @endsection

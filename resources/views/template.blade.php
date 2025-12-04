@@ -4,13 +4,16 @@
 
 <head>
     <meta charset="utf-8"> <!-- Устанавливает кодировку символов на UTF-8 -->
+    
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <!-- Включает CSRF-токен для защиты от межсайтовых подделок запросов -->
+    <meta name="user-public-key" content="{{ auth()->user()->public_key ?? '' }}">
     <meta name="user-id" content="{{ auth()->check() ? auth()->id() : '' }}">
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Настраивает масштабирование страницы для мобильных устройств -->
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/tweetnacl/nacl.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tweetnacl-util/nacl-util.min.js"></script>
 
     <!-- иконка сайта -->
     <link rel="icon" href="/../favicon.ico" type="image/x-icon"> <!-- Подключает иконку сайта (favicon) -->
@@ -116,60 +119,62 @@
 
     {{-- Скрипт определения онлайн --}}
 
-@if(Auth::check())
-<script>
-(function () {
-    'use strict';
+    @if (Auth::check())
+        <script>
+            (function() {
+                'use strict';
 
-    const ONLINE_ENDPOINT = "{{ route('user.online') }}";
-    let heartbeatInterval = null;
+                const ONLINE_ENDPOINT = "{{ route('user.online') }}";
+                let heartbeatInterval = null;
 
-    function sendOnline() {
-        fetch(ONLINE_ENDPOINT, {
-            method: 'POST',
-            credentials: 'same-origin',
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest',
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
-            }
-        }).catch(() => {
-            // Игнорируем ошибки — не критично
-        });
-    }
+                function sendOnline() {
+                    fetch(ONLINE_ENDPOINT, {
+                        method: 'POST',
+                        credentials: 'same-origin',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute(
+                                'content') || ''
+                        }
+                    }).catch(() => {
+                        // Игнорируем ошибки — не критично
+                    });
+                }
 
-    function startHeartbeat() {
-        sendOnline(); // сразу
-        heartbeatInterval = setInterval(sendOnline, 25_000);
-    }
+                function startHeartbeat() {
+                    sendOnline(); // сразу
+                    heartbeatInterval = setInterval(sendOnline, 25_000);
+                }
 
-    function stopHeartbeat() {
-        if (heartbeatInterval) {
-            clearInterval(heartbeatInterval);
-            heartbeatInterval = null;
-        }
-    }
+                function stopHeartbeat() {
+                    if (heartbeatInterval) {
+                        clearInterval(heartbeatInterval);
+                        heartbeatInterval = null;
+                    }
+                }
 
-    // Запуск при загрузке
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', startHeartbeat);
-    } else {
-        startHeartbeat();
-    }
+                // Запуск при загрузке
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', startHeartbeat);
+                } else {
+                    startHeartbeat();
+                }
 
-    // Остановка при сворачивании/переключении вкладки
-    document.addEventListener('visibilitychange', () => {
-        if (document.hidden) {
-            stopHeartbeat();
-        } else {
-            startHeartbeat();
-        }
-    });
+                // Остановка при сворачивании/переключении вкладки
+                document.addEventListener('visibilitychange', () => {
+                    if (document.hidden) {
+                        stopHeartbeat();
+                    } else {
+                        startHeartbeat();
+                    }
+                });
 
-})();
-</script>
-@endif
+            })();
+        </script>
+    @endif
 
 
 </body>
+
 </html>

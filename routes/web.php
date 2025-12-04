@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\SetLocale;
 use App\Models\User;
+use App\Models\Chat;
 use App\Http\Controllers\{
     ProfileController,
     NewsController,
@@ -32,8 +33,53 @@ use App\Http\Controllers\{
     MailerClickController,
     MailTemplateController,
     UserStatusController,
-
+    UserKeyController
 };
+// === E2E-маршруты ===
+Route::middleware('auth')->group(function () {
+
+    Route::get('/profile/has-public-key', function () {
+        $hasKey = (bool) auth()->user()->profile?->public_key;
+        return response()->json(['has_public_key' => $hasKey]);
+    });
+
+    Route::post('/profile/set-public-key', [UserProfileController::class, 'setPublicKey']);
+
+    Route::get('/chats/{chat}/my-key', function (Chat $chat) {
+        if (!$chat->users->contains(auth()->id())) {
+            abort(403, 'You are not a member of this chat');
+        }
+
+        $keyRecord = $chat->memberKeys()->where('user_id', auth()->id())->first();
+        if (!$keyRecord) {
+            return response()->json(['error' => 'Encrypted chat key not found'], 404);
+        }
+
+        $initiator = $chat->initiator;
+        if (!$initiator || !$initiator->profile?->public_key) {
+            return response()->json(['error' => 'Chat initiator or their public key not found'], 400);
+        }
+
+        return response()->json([
+            'encrypted_key' => $keyRecord->encrypted_key,
+            'nonce' => $keyRecord->nonce,
+            'initiator_public_key' => $initiator->profile->public_key,
+        ]);
+    }); 
+
+    Route::get('/api/users/list-for-chat', function () {
+        $users = \App\Models\User::where('id', '!=', auth()->id())
+            ->whereNotIn('id', [1, 2])
+            ->select('id', 'name')
+            ->get();
+        return response()->json($users);
+    });
+}); // ← закрывает auth-группу
+
+// Этот маршрут вне auth-группы (как и должно быть)
+Route::post('/users/public-keys', [UserKeyController::class, 'getPublicKeys'])
+    ->name('users.public-keys');
+
 
 // определение онлайн у пользователя
 
@@ -53,14 +99,15 @@ Route::middleware(['auth'])->group(function () {
 });
 
 //Мониторинг работы для системного бота в ТГ
-Route::get('/health', function () {return response('OK', 200)->header('Content-Type', 'text/plain');});
+Route::get('/health', function () {
+    return response('OK', 200)->header('Content-Type', 'text/plain');
+});
 
 //почтовая рассылка
 Route::middleware(['auth', 'admin'])
     ->prefix('admin/mailer')
     ->name('mailer.')
-    ->group(function () 
-    {
+    ->group(function () {
 
         Route::get('/', [MailerAdminController::class, 'dashboard'])->name('dashboard');
 
@@ -98,19 +145,18 @@ Route::middleware(['auth', 'admin'])
         Route::post('/send', [MailerAdminController::class, 'send'])->name('send');
         Route::get('/history', [MailerAdminController::class, 'history'])->name('history');
 
-        // Трекинг открытия писем
-        Route::get('/track/{logId}', [MailerAdminController::class, 'trackEmail'])->name('track');
+        // // Трекинг открытия писем
+        // Route::get('/track/{logId}', [MailerAdminController::class, 'trackEmail'])->name('track');
 
-        //Статистика рассылок
-        Route::get('/mailer/track/{logId}', [\App\Http\Controllers\MailerTrackController::class, 'track'])
-    ->name('mailer.track');
-
+        // //Статистика рассылок
+        // Route::get('/mailer/track/{logId}', [\App\Http\Controllers\MailerTrackController::class, 'track'])
+        //     ->name('mailer.track');
     });
 
-    //Отслеживаем прочтение рассылки
-    Route::get('/mailer/track/{logId}', [MailerTrackController::class, 'track'])
+//Отслеживаем прочтение рассылки
+Route::get('/mailer/track/{logId}', [MailerTrackController::class, 'track'])
     ->name('mailer.track');
-    Route::get('/mailer/c/{logId}', [MailerClickController::class, 'redirect'])
+Route::get('/mailer/c/{logId}', [MailerClickController::class, 'redirect'])
     ->name('mailer.click');
 
 // Cookie consent routes
@@ -134,7 +180,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/chats/create', [ChatController::class, 'create'])->name('chats.create');
     Route::post('/chats', [ChatController::class, 'store'])->name('chats.store');
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
-    
+
     Route::get('/chats/{chat}/messages', [ChatController::class, 'getMessages'])->name('messages.get');
     Route::post('/chats/{chat}/messages', [ChatController::class, 'sendMessage'])->name('messages.send');
 
@@ -202,9 +248,9 @@ Route::prefix('offers')->group(function () {
 
     // Только авторизованные пользователи могут добавлять, редактировать и удалять новости
     Route::middleware('auth')->group(function () {
-        
-       // Route::get('/create', [OffersController::class, 'create'])->name('offers.create');
-       // Route::post('/store', [OffersController::class, 'store'])->name('offers.store');
+
+        // Route::get('/create', [OffersController::class, 'create'])->name('offers.create');
+        // Route::post('/store', [OffersController::class, 'store'])->name('offers.store');
         Route::get('/{id}/edit', [OffersController::class, 'edit'])->name('offers.edit');
         Route::put('/{id}', [OffersController::class, 'update'])->name('offers.update');
         Route::delete('/{id}', [OffersController::class, 'destroy'])->name('offers.destroy');
@@ -218,10 +264,10 @@ Route::middleware('auth')->prefix('offerscategories')->name('offerscategories.')
     Route::post('/', [OffersController::class, 'categoryStore'])->name('categoryStore');
 
     // Route::post('/', [OffersController::class, 'categoryStoreState'])->name('categoryStoreState');
-    
+
     Route::get('/{id}/edit', [OffersController::class, 'categoryEdit'])->name('edit');
     Route::put('/{id}', [OffersController::class, 'categoryUpdate'])->name('update');
-    
+
     Route::delete('/{id}', [OffersController::class, 'categoryDestroy'])->name('destroy');
 });
 
@@ -267,25 +313,25 @@ Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () 
 
 /// Маршруты задач
 Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
-    
+
     // Просмотр задач
     Route::get('/', [TasksController::class, 'list'])->name('list');
     Route::get('/{task}', [TasksController::class, 'show'])->name('show');
-    
+
     // Создание задачи
     Route::get('/create', [TasksController::class, 'create'])->name('create');
     Route::post('/store', [TasksController::class, 'store'])->name('store');
-    
+
     // Редактирование задачи
     Route::get('/{task}/edit', [TasksController::class, 'edit'])->name('edit');
     Route::put('/{task}', [TasksController::class, 'update'])->name('update');
     Route::delete('/{task}', [TasksController::class, 'destroy'])->name('destroy');
-    
+
     // Взаимодействие с задачей
     Route::post('/{task}/bid', [TasksController::class, 'bid'])->name('bid');
     Route::post('/{task}/like', [TasksController::class, 'like'])->name('like');
     Route::post('/{task}/dislike', [TasksController::class, 'dislike'])->name('dislike');
-    
+
     // Работа с задачей
     Route::post('/{task}/start-work', [TasksController::class, 'startWork'])->name('start_work');
     Route::post('/{task}/complete', [TasksController::class, 'complete'])->name('complete');
@@ -294,7 +340,7 @@ Route::middleware('auth')->prefix('tasks')->name('tasks.')->group(function () {
     Route::post('/{task}/revision', [TasksController::class, 'requestRevision'])->name('revision');
     Route::post('/{task}/continue', [TasksController::class, 'continueTask'])->name('continue');
     Route::post('/{task}/fail', [TasksController::class, 'fail'])->name('fail');
-    
+
     // Оценки и оплата
     Route::post('/{task}/rate', [TasksController::class, 'rate'])->name('rate');
     Route::post('/{task}/accept-bid/{bid}', [TasksController::class, 'acceptBid'])->name('accept-bid');
@@ -331,7 +377,7 @@ Route::middleware(['auth'])->prefix('profile')->name('user_profile.')->group(fun
     Route::get('/create', [UserProfileController::class, 'create'])->name('create');
     Route::post('/store', [UserProfileController::class, 'store'])->name('store');
 
-    Route::get('/edit', [UserProfileController::class, 'edit'])->name('edit');    
+    Route::get('/edit', [UserProfileController::class, 'edit'])->name('edit');
     Route::put('/update', [UserProfileController::class, 'updateFullProfile'])->name('update');
 
 

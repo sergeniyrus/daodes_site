@@ -95,32 +95,29 @@ class User extends Authenticatable
 
 
 
- /**
- * Проверяет, онлайн ли пользователь прямо сейчас (в течение последних 30 секунд).
- * Используется для уведомлений и отображения статуса.
- */
-public function isOnline(): bool
-{
-    return $this->last_seen_at && 
-           $this->last_seen_at->isAfter(now()->subSeconds(30));
-}
-
-/**
- * Человекопонятное представление статуса
- */
-public function lastSeenHuman(): string
-{
-    if ($this->isOnline()) {
-        return 'В сети';
+    /**
+     * Проверяет, онлайн ли пользователь прямо сейчас (в течение последних 30 секунд).
+     * Используется для уведомлений и отображения статуса.
+     */
+    public function isOnline(): bool
+    {
+        return $this->last_seen_at &&
+            $this->last_seen_at->isAfter(now()->subSeconds(30));
     }
 
-    if (!$this->last_seen_at) {
-        return 'Не в сети';
+    /**
+     * Человекопонятное представление статуса
+     */
+    public function lastSeenHuman(): string
+    {
+        if ($this->isOnline()) {
+            return 'В сети';
+        }
+
+        if (!$this->last_seen_at) {
+            return 'Не в сети';
+        }
+
+        return $this->last_seen_at->diffForHumans(null, \Carbon\Carbon::DIFF_RELATIVE_TO_NOW, true);
     }
-
-    return $this->last_seen_at->diffForHumans(null, \Carbon\Carbon::DIFF_RELATIVE_TO_NOW, true);
-}
-
-
-
 }

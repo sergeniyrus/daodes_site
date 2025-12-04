@@ -6,6 +6,8 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Http\Controllers\UserStatusController;
 use App\Http\Controllers\TelegramBotController;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Telegram webhook
@@ -38,3 +40,6 @@ Route::middleware(['web', 'auth'])->group(function () {
         ->withoutMiddleware([VerifyCsrfToken::class])
         ->name('user.online');
 });
+
+
+

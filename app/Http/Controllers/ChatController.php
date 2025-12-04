@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Log;
 use App\Services\EncryptionService;
 use GuzzleHttp\Client;
 use App\Events\NewMessage;
+use App\Models\ChatMemberKey;
 
 class ChatController extends Controller
 {
@@ -96,99 +97,65 @@ public function create()
  * Сохраняет новый чат в базе данных.
  * Определяет тип чата (личный или групповой) и создает его.
  */
+
+
 public function store(Request $request)
 {
-    // Определяем тип чата
-    $chatType = $request->input('chat_type', 'group');
+    Log::info("STORE REQUEST RAW:", $request->all());
 
-    // Валидация базовых полей
-    $rules = [
-        'chat_type' => 'required|in:group,direct',
-        'users' => 'required|string',
-    ];
-
-    $messages = [
-        'chat_type.in' => __('chats.invalid_chat_type'),
-        'users.required' => __('chats.select_at_least_one_user'), // ← Используем твой текст ошибки
-    ];
-
-    // Название обязательно только для группового чата
-    if ($chatType === 'group') {
-        $rules['name'] = [
-            'required',
-            'string',
-            'max:255',
-            function ($attribute, $value, $fail) {
-                if (Chat::whereRaw('LOWER(name) = LOWER(?)', [$value])->exists()) {
-                    $fail(__('chats.chat_name_exists'));
-                }
-            },
-        ];
-        $messages['name.required'] = __('chats.chat_name_required');
-    }
-
-    // Ручная валидация → ошибка через session('error')
-    $validator = \Validator::make($request->all(), $rules, $messages);
-    if ($validator->fails()) {
-        return redirect()->back()
-            ->with('error', $validator->errors()->first())
-            ->withInput();
-    }
-
-    // Декодируем пользователей
-    $userIds = json_decode($request->input('users'), true);
-    if (!is_array($userIds) || empty($userIds)) {
-        return redirect()->back()
-            ->with('error', __('chats.select_at_least_one_user'))
-            ->withInput();
-    }
-
-    // Фильтрация ID
-    $userIds = array_map('intval', $userIds);
-    $userIds = array_filter($userIds, fn($id) => $id > 0 && $id !== Auth::id() && !in_array($id, [1, 2]));
-
-    if (empty($userIds)) {
-        return redirect()->back()
-            ->with('error', __('chats.select_at_least_one_user')) // или более точный текст
-            ->withInput();
-    }
-
-    // Определяем тип чата
-    $type = ($chatType === 'direct' || count($userIds) === 1) ? 'personal' : 'group';
-
-    // Проверка существования личного чата
-    if ($type === 'personal') {
-        $otherUserId = $userIds[0];
-
-        $existingChat = Chat::whereHas('users', function ($query) use ($otherUserId) {
-                $query->where('user_id', Auth::user()->id);
-            })
-            ->whereHas('users', function ($query) use ($otherUserId) {
-                $query->where('user_id', $otherUserId);
-            })
-            ->withCount('users')
-            ->having('users_count', '=', 2)
-            ->first();
-
-        if ($existingChat) {
-            return redirect()->route('chats.show', $existingChat->id)
-                ->with('info', __('chats.chat_exists'));
-        }
-    }
-
-    // Создаём чат
-    $chat = Chat::create([
-        'name' => $type === 'personal' ? 'personal' : $request->name,
-        'type' => $type,
+    $validated = $request->validate([
+        'chat_type' => 'required|string|in:group,personal',
+        'name'      => 'nullable|string|max:255',
+        'users'     => 'nullable|string',
+        'encrypted_keys' => 'required|array',
+        'encrypted_keys.*.encrypted_key' => 'required|string',
+        'encrypted_keys.*.nonce' => 'required|string',
     ]);
 
-    // Добавляем участников
-    $allUserIds = array_unique(array_merge($userIds, [Auth::id()]));
-    $chat->users()->attach($allUserIds);
+    $userIds = json_decode($validated['users'] ?? '[]', true);
+    if (!is_array($userIds)) $userIds = [];
+    $userIds = array_map('intval', $userIds);
 
-    return redirect()->route('chats.index')
-        ->with('message', __('chats.chat_created'));
+    $initiatorId = auth()->id();
+    if (!in_array($initiatorId, $userIds)) {
+        $userIds[] = $initiatorId;
+    }
+
+    Log::info("STORE PARSED users:", $userIds);
+
+    // ===== СОЗДАЁМ ЧАТ =====
+    $chat = Chat::create([
+        'name'         => $request->chat_type === 'direct' ? null : $request->name,
+        'type'         => $request->chat_type,
+        'initiator_id' => $initiatorId,
+    ]);
+
+    Log::info("STORE Chat created:", ['chat_id' => $chat->id]);
+
+    // ===== СОХРАНЯЕМ УЧАСТНИКОВ ЧЕРЕЗ attach() =====
+    $chat->users()->attach(array_unique($userIds));
+
+    Log::info("STORE Chat members added");
+
+    // ===== СОХРАНЯЕМ encrypted_keys =====
+    $ekeys = $validated['encrypted_keys'];
+
+    foreach ($ekeys as $uid => $data) {
+        Log::info("STORE Key for UID=$uid", $data);
+
+        ChatMemberKey::create([
+            'chat_id'       => $chat->id,
+            'user_id'       => $uid,
+            'encrypted_key' => $data['encrypted_key'],
+            'nonce'         => $data['nonce'],
+        ]);
+    }
+
+    Log::info("STORE OK: CHAT CREATED");
+
+    return redirect()->route('chats.show', $chat->id);
 }
+
 
     /**
      * Отображает страницу чата.
@@ -494,4 +461,29 @@ foreach ($recipientIds as $recipientId) {
         // Перенаправляем на страницу чата
         return redirect()->route('chats.show', $chat->id);
     }
+
+    public function myKey($chatId)
+{
+    $userId = auth()->id();
+
+    $record = \DB::table('chat_member_keys')
+        ->where('chat_id', $chatId)
+        ->where('user_id', $userId)
+        ->first();
+
+    if (!$record) {
+        \Log::error("❌ my-key: нет ключа chat_id=$chatId user_id=$userId");
+        return response()->json(['error' => 'No key found'], 400);
+    }
+
+    return response()->json([
+        'encrypted_key'        => $record->encrypted_key,
+        'nonce'                => $record->nonce,
+        'initiator_public_key' => $record->initiator_public_key,
+    ]);
+}
+
+
+
+
 }

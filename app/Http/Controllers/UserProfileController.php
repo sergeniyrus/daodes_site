@@ -100,7 +100,7 @@ class UserProfileController extends Controller
         UserProfile::create($data);
 
         return redirect()->route('user_profile.index')
-                         ->with('success', __('message.profile_created'));
+            ->with('success', __('message.profile_created'));
     }
 
     public function show($id)
@@ -108,7 +108,7 @@ class UserProfileController extends Controller
         $profile = UserProfile::with('user')->find($id);
         if (!$profile) {
             return redirect()->route('user_profile.index')
-                             ->with('error', __('message.profile_not_found'));
+                ->with('error', __('message.profile_not_found'));
         }
 
         return view('user_profile.index', compact('profile'));
@@ -164,7 +164,7 @@ class UserProfileController extends Controller
         $profile->save();
 
         return redirect()->route('user_profile.show', $profile->id)
-                         ->with('info', __('message.profile_updated'));
+            ->with('info', __('message.profile_updated'));
     }
 
     private function uploadToIPFS($file)
@@ -212,4 +212,26 @@ class UserProfileController extends Controller
 
         return $existingAvatar ?: 'https://daodes.space/ipfs/QmPdPDwGSrfWYxomC3u9FLBtB9MGH8iqVGRZ9TLPxZTekj';
     }
+
+    public function setPublicKey(Request $request)
+{
+    if (!auth()->check()) {
+        return response()->json(['error' => 'Unauthorized'], 401);
+    }
+
+    $request->validate([
+        'public_key' => 'required|string|regex:/^[A-Za-z0-9+\/=]+$/|max:255',
+    ]);
+
+    $user = auth()->user();
+
+    $profile = $user->profile()->updateOrCreate([], [
+        'public_key' => $request->public_key,
+    ]);
+
+    return response()->json(['message' => 'ok']);
+}
+
+
+
 }

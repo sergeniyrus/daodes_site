@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Chat extends Model
 {
-    protected $fillable = ['name','type',]; // Убедитесь, что 'name' указан здесь
+    protected $fillable = ['name','type', 'initiator_id', ]; // Убедитесь, что 'name' указан здесь
 
     // Отношение "многие ко многим" с пользователями
     public function users()
@@ -70,6 +70,15 @@ public function totalParticipantsCount(): int
     return $this->users->count();
 }
 
+public function memberKeys()
+{
+    return $this->hasMany(ChatMemberKey::class, 'chat_id');
+}
+
+public function initiator()
+{
+    return $this->belongsTo(User::class, 'initiator_id');
+}
 
 
 }
