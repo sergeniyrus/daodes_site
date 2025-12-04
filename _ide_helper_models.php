@@ -121,10 +121,14 @@ namespace App\Models{
  * 
  *
  * @property int $id
- * @property string $name
+ * @property string|null $name
  * @property string $type
+ * @property int|null $initiator_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $initiator
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ChatMemberKey> $memberKeys
+ * @property-read int|null $member_keys_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Message> $messages
  * @property-read int|null $messages_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $participants
@@ -136,11 +140,39 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereInitiatorId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereType($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Chat whereUpdatedAt($value)
  */
 	class Chat extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $chat_id
+ * @property int $user_id
+ * @property string $encrypted_key
+ * @property string $nonce
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Chat $chat
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey whereChatId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey whereEncryptedKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey whereNonce($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ChatMemberKey whereUserId($value)
+ */
+	class ChatMemberKey extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -697,6 +729,7 @@ namespace App\Models{
  * @property string|null $created_at
  * @property string|null $updated_at
  * @property int|null $telegram_chat_id Telegram chat_id для уведомлений
+ * @property string|null $public_key
  * @property-read \App\Models\User $user
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile newQuery()
@@ -712,6 +745,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereLanguages($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereNickname($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile wherePortfolio($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile wherePublicKey($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereRating($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereRecommendations($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|UserProfile whereResume($value)

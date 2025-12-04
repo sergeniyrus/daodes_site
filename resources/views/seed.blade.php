@@ -55,12 +55,7 @@
         transition: all 0.3s ease;
         text-decoration: none;
         margin: 5px;
-         /* Добавьте эти свойства для button 
-    border: none;
-    outline: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    appearance: none;*/
+         
     }
 
     /* Убедитесь, что стили применяются и к button */

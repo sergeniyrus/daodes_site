@@ -194,73 +194,66 @@
 }
 
 .status-indicator.online {
-    background-color: #4caf50; /* Зелёный */
+    background-color: #4caf50;
     box-shadow: 0 0 6px #4caf50;
 }
 
 .status-indicator.offline {
-    background-color: #777; /* Серый */
+    background-color: #777;
 }
-
-    
 </style>
 
 <div class="chat-container">
-    {{-- <h2 class="chat-title">{{ $chat->getChatNameForUser(auth()->id()) }}</h2> --}}
-
 <div class="chat-header">
     @if($chat->type === 'personal' && $otherUser)
         <h2 class="chat-title">{{ $otherUser->name }}</h2>
         <p class="chat-status">
             @if($otherUser->isOnline())
-    <span class="status-indicator online"></span> {{ __('chats.online') }}
-@else
-    <span class="status-indicator offline"></span> {{ $otherUser->lastSeenHuman() }}
-@endif
+                <span class="status-indicator online"></span> {{ __('chats.online') }}
+            @else
+                <span class="status-indicator offline"></span> {{ $otherUser->lastSeenHuman() }}
+            @endif
         </p>
     @else
         <h2 class="chat-title">{{ $chat->name }}</h2>
         <p class="chat-status">
-    {{ __('chats.online_participants', [
-        'online' => $chat->onlineParticipantsCount(),
-        'total' => $chat->totalParticipantsCount()
-    ]) }}
-</p>
+            {{ __('chats.online_participants', [
+                'online' => $chat->onlineParticipantsCount(),
+                'total' => $chat->totalParticipantsCount()
+            ]) }}
+        </p>
     @endif
 </div>
 
-
-    <div id="chat-messages" class="chat-messages">
-        @foreach ($chat->messages as $message)
-            <div class="message {{ $message->sender_id === auth()->id() ? 'sent' : 'received' }}">
-                <div class="{{ $message->sender_id === auth()->id() ? 'my-card-body' : 'card-body' }}">
-                    <p class="card-title">
-                        {{ $message->sender->name }}
-                        <small>{{ $message->created_at->format('H:i, d M') }}</small>
-                    </p>
-                    <p class="card-text">{!! nl2br(e(str_replace('\\n', "\n", $message->message))) !!}</p>
-                </div>
+<div id="chat-messages" class="chat-messages">
+    @foreach ($chat->messages as $message)
+        <div class="message {{ $message->sender_id === auth()->id() ? 'sent' : 'received' }}">
+            <div class="{{ $message->sender_id === auth()->id() ? 'my-card-body' : 'card-body' }}">
+                <p class="card-title">
+                    {{ $message->sender->name }}
+                    <small>{{ $message->created_at->format('H:i, d M') }}</small>
+                </p>
+                <p class="card-text" data-encrypted="{{ $message->message }}">Загрузка...</p>
             </div>
-        @endforeach
-    </div>
-
-    {{-- форма с защитой от обычного submit --}}
-    <form id="messageForm" onsubmit="return false;" action="{{ route('messages.send', $chat->id) }}">
-        @csrf
-        <div class="input-group">
-            <div class="input-wrapper">
-                <textarea id="messageInput" name="message" placeholder="{{ __('chats.type_message') }}" rows="1" required></textarea>
-            </div>
-            {{-- type="button" чтобы Enter не вызывал сабмит --}}
-            <button type="button" id="sendBtn" class="send-btn">{{ __('chats.send') }}</button>
         </div>
-    </form>
+    @endforeach
+</div>
 
-    <div class="additional-buttons">
-        <a href="/chats" class="des-btn">{{ __('chats.to_chats') }}</a>
-        <a href="/chats/create" class="des-btn">{{ __('chats.new_chat') }}</a>
-        <a href="/notifications" class="des-btn">{{ __('chats.notifications') }}</a>
+<form id="messageForm" onsubmit="return false;" action="{{ route('messages.send', $chat->id) }}">
+    @csrf
+    <div class="input-group">
+        <div class="input-wrapper">
+            <textarea id="messageInput" name="message" placeholder="{{ __('chats.type_message') }}" rows="1" required></textarea>
+        </div>
+        <button type="button" id="sendBtn" class="send-btn">{{ __('chats.send') }}</button>
     </div>
+</form>
+
+<div class="additional-buttons">
+    <a href="/chats" class="des-btn">{{ __('chats.to_chats') }}</a>
+    <a href="/chats/create" class="des-btn">{{ __('chats.new_chat') }}</a>
+    <a href="/notifications" class="des-btn">{{ __('chats.notifications') }}</a>
+</div>
 </div>
 
 <audio id="notificationSound" preload="auto">
@@ -269,16 +262,50 @@
 @endsection
 
 @section('scripts')
-<script defer>
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('Chat script initialized');
+<script src="https://cdn.jsdelivr.net/npm/tweetnacl/nacl.min.js"></script>
+<script>
+// === Утилиты ===
+if (typeof b64ToU8 !== 'function') {
+    function b64ToU8(b64) {
+        return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    }
+    function u8ToB64(u8) {
+        return btoa(String.fromCharCode(...u8));
+    }
+}
 
+// === Расшифровка одного сообщения ===
+function decryptMessage(encryptedPayload) {
+    if (!window.CURRENT_CHAT_KEY) return '[Ключ не загружен]';
+    try {
+        const [nonceB64, ciphertextB64] = encryptedPayload.split('|');
+        if (!nonceB64 || !ciphertextB64) return '[Повреждено]';
+        const nonce = b64ToU8(nonceB64);
+        const ciphertext = b64ToU8(ciphertextB64);
+        const decrypted = nacl.secretbox.open(ciphertext, nonce, window.CURRENT_CHAT_KEY);
+        if (!decrypted) return '[Не удалось расшифровать]';
+        return new TextDecoder().decode(decrypted);
+    } catch (e) {
+        console.error('Ошибка расшифровки:', e);
+        return '[Ошибка]';
+    }
+}
+
+// === Расшифровка всех сообщений ===
+function decryptExistingMessages() {
+    document.querySelectorAll('.card-text[data-encrypted]').forEach(el => {
+        const encrypted = el.getAttribute('data-encrypted');
+        el.textContent = decryptMessage(encrypted);
+        el.innerHTML = el.textContent.replace(/\n/g, '<br>');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#messageForm');
     const input = document.querySelector('#messageInput');
     const chatMessages = document.querySelector('#chat-messages');
     const sendBtn = document.querySelector('#sendBtn');
     const notificationSound = document.getElementById('notificationSound');
-
     const chatId = {{ $chat->id }};
     const userId = {{ auth()->id() }};
     let lastMessageId = {{ $chat->messages->last()?->id ?? 0 }};
@@ -286,14 +313,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const scrollToBottom = () => chatMessages.scrollTop = chatMessages.scrollHeight;
     scrollToBottom();
 
+    // === Отправка сообщения ===
     async function sendMessage() {
         const text = input.value.trim();
-        if (!text) return;
+        if (!text || !window.CURRENT_CHAT_KEY) return;
 
         sendBtn.disabled = true;
         sendBtn.textContent = 'Отправка...';
 
         try {
+            const messageBytes = new TextEncoder().encode(text);
+            const nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
+            const encrypted = nacl.secretbox(messageBytes, nonce, window.CURRENT_CHAT_KEY);
+            const encryptedB64 = u8ToB64(encrypted);
+            const nonceB64 = u8ToB64(nonce);
+
             const response = await fetch(form.getAttribute('action'), {
                 method: 'POST',
                 headers: {
@@ -301,19 +335,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     'Content-Type': 'application/json',
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
-                body: JSON.stringify({ message: text })
+                body: JSON.stringify({ message: encryptedB64, nonce: nonceB64 })
             });
 
             if (!response.ok) throw new Error('Network error');
             const data = await response.json();
 
             if (data.status === 'success') {
-                const msg = data.message;
+                // Отображаем исходный текст
                 chatMessages.insertAdjacentHTML('beforeend', `
                     <div class="message sent">
                         <div class="my-card-body">
-                            <p class="card-title">${msg.sender}<small>${new Date().toLocaleTimeString()}</small></p>
-                            <p class="card-text">${msg.text.replace(/\n/g, '<br>')}</p>
+                            <p class="card-title">${data.message.sender}<small>${new Date().toLocaleTimeString()}</small></p>
+                            <p class="card-text">${text.replace(/\n/g, '<br>')}</p>
                         </div>
                     </div>`);
                 input.value = '';
@@ -324,31 +358,26 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         } catch (err) {
             console.error('Ошибка отправки:', err);
-            alert('Ошибка соединения с сервером');
+            alert('Ошибка: ' + err.message);
         } finally {
             sendBtn.disabled = false;
             sendBtn.textContent = '{{ __("chats.send") }}';
         }
     }
 
-    // кнопка отправки
     sendBtn.addEventListener('click', sendMessage);
-
-    // Enter = отправка (Shift+Enter — новая строка)
     input.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && !e.shiftKey) {
             e.preventDefault();
             sendMessage();
         }
     });
-
-    // автоизменение высоты textarea
     input.addEventListener('input', function() {
         this.style.height = 'auto';
         this.style.height = Math.min(this.scrollHeight, 150) + 'px';
     });
 
-    // подгрузка новых сообщений
+    // === Загрузка новых сообщений ===
     async function loadNewMessages() {
         try {
             const res = await fetch(`/chats/${chatId}/messages?last_id=${lastMessageId}`, {
@@ -365,11 +394,12 @@ document.addEventListener('DOMContentLoaded', () => {
             msgs.forEach(msg => {
                 if (msg.id > lastMessageId) lastMessageId = msg.id;
                 const isSent = msg.sender.id === userId;
+                const decryptedText = decryptMessage(msg.message);
                 chatMessages.insertAdjacentHTML('beforeend', `
                     <div class="message ${isSent ? 'sent' : 'received'}">
                         <div class="${isSent ? 'my-card-body' : 'card-body'}">
                             <p class="card-title">${msg.sender.name}<small>${new Date(msg.created_at).toLocaleTimeString()}</small></p>
-                            <p class="card-text">${msg.message.replace(/\n/g, '<br>')}</p>
+                            <p class="card-text">${decryptedText.replace(/\n/g, '<br>')}</p>
                         </div>
                     </div>`);
                 if (!isSent) gotNew = true;
@@ -377,51 +407,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (gotNew) notificationSound.play().catch(() => {});
             if (wasAtBottom) scrollToBottom();
-
         } catch (e) {
             console.error('Ошибка при обновлении сообщений:', e);
         }
     }
 
     setInterval(loadNewMessages, 3000);
+    decryptExistingMessages();
 });
 
-// Внутри твоего chat script
+// === Статус собеседника ===
+@if($chat->type === 'personal' && isset($otherUser))
 async function updatePeerStatus() {
-    if ({{ $chat->type === 'personal' ? 'true' : 'false' }}) {
-        const otherUserId = {{ $otherUser->id ?? 0 }};
-        if (!otherUserId) return;
-
-        const res = await fetch(`/user/${otherUserId}/status`);
-        const data = await res.json();
-        const statusEl = document.querySelector('.chat-status');
-        if (statusEl) {
-            if (data.is_online) {
-                statusEl.innerHTML = '<span class="status-indicator online"></span> В сети';
-            } else {
-                statusEl.innerHTML = `<span class="status-indicator offline"></span> ${data.last_seen_human}`;
-            }
+    const otherUserId = {{ $otherUser->id }};
+    const res = await fetch(`/user/${otherUserId}/status`);
+    const data = await res.json();
+    const statusEl = document.querySelector('.chat-status');
+    if (statusEl) {
+        if (data.is_online) {
+            statusEl.innerHTML = '<span class="status-indicator online"></span> В сети';
+        } else {
+            statusEl.innerHTML = `<span class="status-indicator offline"></span> ${data.last_seen_human}`;
         }
     }
 }
-
-// Обновляем раз в 15 сек
-if ({{ $chat->type === 'personal' ? 'true' : 'false' }}) {
-    setInterval(updatePeerStatus, 15_000);
-}
+setInterval(updatePeerStatus, 15_000);
+@endif
 </script>
 
 <script>
-// === Утилиты base64 ↔ Uint8Array (безопасное определение) ===
-if (typeof b64ToU8 !== 'function') {
-    function b64ToU8(b64) {
-        return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-    }
-    function u8ToB64(u8) {
-        return btoa(String.fromCharCode(...u8));
-    }
-}
-
 @if(auth()->check() && isset($chat))
 (function () {
     const chatId = {{ $chat->id }};
@@ -448,31 +462,20 @@ if (typeof b64ToU8 !== 'function') {
         const initiatorPubKey = b64ToU8(data.initiator_public_key);
         const mySecretKey = b64ToU8(privKeyBase64);
 
-        // Расшифровка: nacl.box.open(шифр, nonce, публичный_ключ_отправителя, мой_приватный_ключ)
         const chatKey = nacl.box.open(encryptedKey, nonce, initiatorPubKey, mySecretKey);
-
         if (!chatKey) {
-            throw new Error('Не удалось расшифровать чат-ключ (неверный ключ или повреждённые данные)');
+            throw new Error('Не удалось расшифровать чат-ключ');
         }
 
-        // Сохраняем в глобальной переменной (только для текущей сессии)
         window.CURRENT_CHAT_KEY = chatKey;
         console.log('✅ Чат-ключ успешно расшифрован');
-
-        // Опционально: запуск расшифровки уже загруженных сообщений
         decryptExistingMessages();
     })
     .catch(err => {
-        console.error('🚨 Ошибка при работе с чат-ключом:', err);
+        console.error('🚨 Ошибка:', err);
         alert('Невозможно получить доступ к зашифрованному чату: ' + err.message);
     });
 })();
 @endif
-
-// Функция для расшифровки сообщений (заглушки для этапа 4)
-function decryptExistingMessages() {
-    // Позже: пройдись по всем элементам .encrypted-message и расшифруй их
-}
 </script>
-
 @endsection
