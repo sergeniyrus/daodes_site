@@ -52,6 +52,8 @@ return [
 'invalid_users_selected' => 'Invalid users have been selected.',
 'select_at_least_one_user' => 'Please select at least one participant.',
 
+'group_name_required' => 'Group chat name is required.',
+'select_at_least_one_participant' => 'Please select at least one participant.',
 'chat_name_required' => 'The name of the group chat is required',
 'select_at_least_one_user' => 'No user selected',
 'users_required' => 'No user selected',

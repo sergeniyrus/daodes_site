@@ -1,419 +1,464 @@
 @extends('template')
 @section('title_page', __('chats.create_chat_title'))
 @section('main')
-<style>
-  .container {
-    padding: 20px;
-    margin: 0 auto;
-    max-width: 800px;
-    background-color: rgba(20, 20, 20, 0.9);
-    border-radius: 20px;
-    border: 1px solid #d7fc09;
-    color: #f8f9fa;
-    font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
-    margin-top: 30px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  }
-
-  .form-group label {
-    color: #d7fc09;
-    font-size: 1.2rem;
-    display: block;
-    margin: 10px 0;
-    text-align: left;
-    font-weight: bold;
-  }
-
-  .input_dark {
-    background-color: #1a1a1a;
-    color: #a0ff08;
-    border: 1px solid #d7fc09;
-    border-radius: 5px;
-    width: 100%;
-    padding: 12px;
-    margin-top: 5px;
-    transition: border 0.3s ease;
-  }
-
-  .input_dark:focus {
-    border: 1px solid #a0ff08;
-    outline: none;
-    box-shadow: 0 0 5px #d7fc09;
-  }
-
-  .des-btn {
-    display: inline-block;
-    color: #ffffff;
-    background: #0b0c18;
-    padding: 10px 20px;
-    font-size: 1.3rem;
-    border: 1px solid gold;
-    border-radius: 10px;
-    transition: box-shadow 0.3s ease, transform 0.3s ease;
-    text-decoration: none;
-    margin: 20px auto;
-    display: block;
-  }
-
-  .des-btn:hover {
-    box-shadow: 0 0 20px goldenrod;
-    transform: scale(1.05);
-    color: #ffffff;
-  }
-
-  h1, h2, h3 {
-    text-align: center;
-  }
-
-  .selected-users {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 15px;
-  }
-
-  .selected-user {
-    background: #2a2a2a;
-    color: #d7fc09;
-    padding: 6px 12px;
-    border-radius: 20px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .selected-user img {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    object-fit: cover;
-  }
-
-  .user-list {
-    max-height: 300px;
-    overflow-y: auto;
-    border: 1px solid #444;
-    border-radius: 8px;
-    margin-top: 10px;
-  }
-
-  .user-item {
-    display: flex;
-    align-items: center;
-    padding: 12px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  .user-item:hover {
-    background: #333;
-  }
-
-  .user-item img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 12px;
-    border: 2px solid #d7fc09;
-  }
-
-  .user-item .name {
-    font-size: 1.1rem;
-    color: #f8f9fa;
-  }
-
-  .user-item.selected {
-    background: rgba(215, 252, 9, 0.15);
-  }
-
-  .user-item.selected::after {
-    content: "✓";
-    color: #d7fc09;
-    margin-left: auto;
-    font-weight: bold;
-  }
-
-  .mode-toggle {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    margin: 15px 0;
-  }
-
-  .mode-btn {
-    padding: 8px 16px;
-    background: #333;
-    color: #d7fc09;
-    border: 1px solid #d7fc09;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  .mode-btn.active {
-    background: #d7fc09;
-    color: #000;
-  }
-</style>
-
-<div class="container">
-  <h1>{{ __('chats.create_chat_title') }}</h1>
-
-  <div class="mode-toggle">
-    <div class="mode-btn active" data-mode="group" onclick="setChatMode('group')">
-      {{ __('chats.group_chat') }}
-    </div>
-    <div class="mode-btn" data-mode="personal" onclick="setChatMode('personal')">
-      {{ __('chats.direct_chat') }}
-    </div>
-  </div>
-
-  <form id="create-chat-form" method="POST" action="{{ route('chats.store') }}">
-    @csrf
-    <input type="hidden" name="chat_type" id="chatType" value="group">
-
-    <div class="form-group">
-      <label for="chatName">{{ __('chats.chat_name_label') }}</label>
-      <input type="text" class="input_dark" id="chatName" name="name" value="{{ old('name') }}">
-      <div class="form-text text-muted">{{ __('chats.group_name_optional') }}</div>
-    </div>
-
-    <div class="form-group">
-      <label>{{ __('chats.participants_label') }}</label>
-      <input type="text" id="userSearch" class="input_dark" placeholder="{{ __('chats.search_users') }}">
-
-      <div class="selected-users" id="selectedUsers"></div>
-
-      <input type="hidden" name="users" id="selectedUsersInput" value="">
-
-      <div class="user-list" id="userList">
-        @foreach ($users as $user)
-          <div class="user-item" data-id="{{ $user['id'] }}" data-name="{{ $user['name'] }}" data-avatar="{{ $user['avatar'] }}">
-            <img src="{{ $user['avatar'] }}" alt="{{ $user['name'] }}">
-            <span class="name">{{ $user['name'] }}</span>
-          </div>
-        @endforeach
-      </div>
-    </div>
-
-    <button type="submit" class="des-btn">{{ __('chats.create') }}</button>
-  </form>
-</div>
-
-<script>
-  let selectedUsers = new Set();
-  let chatMode = 'group';
-
-  function setChatMode(mode) {
-    chatMode = mode;
-    document.getElementById('chatType').value = mode;
-    
-    document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
-    document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
-
-    if (mode === 'personal') {
-      if (selectedUsers.size > 1) {
-        const first = [...selectedUsers][0];
-        selectedUsers.clear();
-        selectedUsers.add(first);
-      }
-    }
-
-    updateSelectedUsersUI();
-    toggleChatName();
-  }
-
-  function toggleChatName() {
-    const nameField = document.getElementById('chatName');
-    if (chatMode === 'personal') {
-      nameField.disabled = true;
-      nameField.placeholder = "{{ __('chats.direct_chat_no_name') }}";
-    } else {
-      nameField.disabled = false;
-      nameField.placeholder = "{{ __('chats.chat_name_label') }}";
-    }
-  }
-
-  function updateSelectedUsersUI() {
-    const container = document.getElementById('selectedUsers');
-    container.innerHTML = '';
-
-    selectedUsers.forEach(id => {
-      const el = document.querySelector(`.user-item[data-id="${id}"]`);
-      if (!el) return;
-
-      const name = el.dataset.name;
-      const avatar = el.dataset.avatar;
-
-      const tag = document.createElement('div');
-      tag.className = 'selected-user';
-      tag.innerHTML = `
-        <img src="${avatar}" alt="${name}">
-        <span>${name}</span>
-        <span style="cursor:pointer;color:#ff6b6b;" onclick="removeUser(${id})">×</span>
-      `;
-      container.appendChild(tag);
-    });
-
-    document.getElementById('selectedUsersInput').value = JSON.stringify([...selectedUsers]);
-  }
-
-  function removeUser(id) {
-    if (chatMode === 'personal') {
-      selectedUsers.clear();
-    } else {
-      selectedUsers.delete(id);
-    }
-    updateUI();
-  }
-
-  function updateUI() {
-    document.querySelectorAll('.user-item').forEach(item => {
-      const id = parseInt(item.dataset.id);
-      if (selectedUsers.has(id)) {
-        item.classList.add('selected');
-      } else {
-        item.classList.remove('selected');
-      }
-    });
-    updateSelectedUsersUI();
-  }
-
-  document.querySelectorAll('.user-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const id = parseInt(item.dataset.id);
-      
-      if (chatMode === 'personal') {
-        selectedUsers.clear();
-        selectedUsers.add(id);
-      } else {
-        if (selectedUsers.has(id)) {
-          selectedUsers.delete(id);
-        } else {
-          selectedUsers.add(id);
+    <style>
+        .container {
+            padding: 20px;
+            margin: 0 auto;
+            max-width: 800px;
+            background-color: rgba(20, 20, 20, 0.9);
+            border-radius: 20px;
+            border: 1px solid #d7fc09;
+            color: #f8f9fa;
+            font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
+            margin-top: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
         }
-      }
-      updateUI();
-    });
-  });
 
-  document.getElementById('userSearch').addEventListener('input', (e) => {
-    const term = e.target.value.toLowerCase();
-    document.querySelectorAll('.user-item').forEach(item => {
-      const name = item.dataset.name.toLowerCase();
-      item.style.display = name.includes(term) ? 'flex' : 'none';
-    });
-  });
+        .form-group label {
+            color: #d7fc09;
+            font-size: 1.2rem;
+            display: block;
+            margin: 10px 0;
+            text-align: left;
+            font-weight: bold;
+        }
 
-  toggleChatName();
-</script>
+        .input_dark {
+            background-color: #1a1a1a;
+            color: #a0ff08;
+            border: 1px solid #d7fc09;
+            border-radius: 5px;
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            transition: border 0.3s ease;
+        }
 
-<script>
-// === Утилиты base64 ↔ Uint8Array ===
-function b64ToU8(b64) {
-    return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
-}
-function u8ToB64(u8) {
-    return btoa(String.fromCharCode(...u8));
-}
+        .input_dark:focus,
+        .input_dark.error {
+            border: 1px solid #ff6666;
+            outline: none;
+            box-shadow: 0 0 5px #ff6666;
+        }
 
-async function fetchPublicKeys(userIds) {
-    console.log("📡 Запрашиваем публичные ключи для:", userIds);
+        .error-message {
+            color: #ff6666;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
 
-    const res = await fetch('/users/public-keys', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
-        },
-        body: JSON.stringify({ user_ids: userIds })
-    });
+        .des-btn {
+            display: inline-block;
+            color: #ffffff;
+            background: #0b0c18;
+            padding: 10px 20px;
+            font-size: 1.3rem;
+            border: 1px solid gold;
+            border-radius: 10px;
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            text-decoration: none;
+            margin: 20px auto;
+            display: block;
+        }
 
-    console.log("📡 Статус ответа public-keys:", res.status);
+        .des-btn:hover {
+            box-shadow: 0 0 20px goldenrod;
+            transform: scale(1.05);
+            color: #ffffff;
+        }
 
-    if (!res.ok) throw new Error(`Ошибка загрузки ключей: ${res.status}`);
+        h1,
+        h2,
+        h3 {
+            text-align: center;
+        }
 
-    const data = await res.json();
-    console.log("📡 Публичные ключи получены:", data);
-    return data;
-}
+        .selected-users {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
 
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('create-chat-form');
-    if (!form) {
-        console.log("⚠️ create-chat-form не найден");
-        return;
-    }
+        .selected-user {
+            background: #2a2a2a;
+            color: #d7fc09;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
 
-    form.addEventListener('submit', async function (e) {
-        e.preventDefault();
-        console.log("🚀 Отправка формы создания чата...");
+        .selected-user img {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
 
-        const usersInput = form.querySelector('input[name="users"]');
-        let userIDs = JSON.parse(usersInput.value);
+        .user-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #444;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
 
-        console.log("👥 Пользователи:", userIDs);
+        .user-item {
+            display: flex;
+            align-items: center;
+            padding: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
 
-        const currentUserId = {{ auth()->id() }};
-        const allUserIds = [...new Set([...userIDs, currentUserId])];
+        .user-item:hover {
+            background: #333;
+        }
 
-        console.log("👥 Все участники:", allUserIds);
+        .user-item img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 12px;
+            border: 2px solid #d7fc09;
+        }
 
-        try {
-            const publicKeys = await fetchPublicKeys(allUserIds);
+        .user-item .name {
+            font-size: 1.1rem;
+            color: #f8f9fa;
+        }
 
-            for (const uid of allUserIds) {
-                if (!publicKeys[uid]) {
-                    console.error(`❌ У UID=${uid} нет публичного ключа`);
-                    alert(`У пользователя ID=${uid} нет публичного ключа`);
-                    return;
+        .user-item.selected {
+            background: rgba(215, 252, 9, 0.15);
+        }
+
+        .user-item.selected::after {
+            content: "✓";
+            color: #d7fc09;
+            margin-left: auto;
+            font-weight: bold;
+        }
+
+        .mode-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            background: #333;
+            color: #d7fc09;
+            border: 1px solid #d7fc09;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .mode-btn.active {
+            background: #d7fc09;
+            color: #000;
+        }
+    </style>
+
+    <div class="container">
+        <h1>{{ __('chats.create_chat_title') }}</h1>
+
+        <div class="mode-toggle">
+            <div class="mode-btn active" data-mode="group" onclick="setChatMode('group')">
+                {{ __('chats.group_chat') }}
+            </div>
+            <div class="mode-btn" data-mode="personal" onclick="setChatMode('personal')">
+                {{ __('chats.direct_chat') }}
+            </div>
+        </div>
+
+        <form id="create-chat-form" method="POST" action="{{ route('chats.store') }}">
+            @csrf
+            <input type="hidden" name="chat_type" id="chatType" value="group">
+
+            <div class="form-group">
+                <label for="chatName">{{ __('chats.chat_name_label') }}</label>
+                <input type="text" class="input_dark" id="chatName" name="name" value="{{ old('name') }}">
+                <div class="error-message" id="chatNameError">{{ __('chats.group_name_required') }}</div>
+                <div class="form-text text-muted">{{ __('chats.group_name_optional') }}</div>
+            </div>
+
+            <div class="form-group">
+                <label>{{ __('chats.participants_label') }}</label>
+                <input type="text" id="userSearch" class="input_dark" placeholder="{{ __('chats.search_users') }}">
+
+                <div class="selected-users" id="selectedUsers"></div>
+
+                <input type="hidden" name="users" id="selectedUsersInput" value="">
+
+                <div class="user-list" id="userList">
+                    @foreach ($users as $user)
+                        <div class="user-item" data-id="{{ $user['id'] }}" data-name="{{ $user['name'] }}"
+                            data-avatar="{{ $user['avatar'] }}">
+                            <img src="{{ $user['avatar'] }}" alt="{{ $user['name'] }}">
+                            <span class="name">{{ $user['name'] }}</span>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <button type="submit" class="des-btn">{{ __('chats.create') }}</button>
+        </form>
+    </div>
+
+    <script>
+        let selectedUsers = new Set();
+        let chatMode = 'group';
+
+        function setChatMode(mode) {
+            chatMode = mode;
+            document.getElementById('chatType').value = mode;
+
+            document.querySelectorAll('.mode-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.mode-btn[data-mode="${mode}"]`).classList.add('active');
+
+            if (mode === 'personal') {
+                if (selectedUsers.size > 1) {
+                    const first = [...selectedUsers][0];
+                    selectedUsers.clear();
+                    selectedUsers.add(first);
                 }
             }
 
-            console.log("🔑 Все ключи присутствуют, генерируем chatKey…");
-
-            const chatKey = nacl.randomBytes(nacl.secretbox.keyLength);
-            const myPrivKeyString = localStorage.getItem('userPrivateKey');
-            console.log("🔐 Приватный ключ из localStorage:", myPrivKeyString);
-            const myPrivKey = b64ToU8(myPrivKeyString);
-
-            const encryptedKeys = {};
-            for (const uid of allUserIds) {
-                const pubKey = b64ToU8(publicKeys[uid]);
-                const nonce = nacl.randomBytes(nacl.box.nonceLength);
-                const encrypted = nacl.box(chatKey, nonce, pubKey, myPrivKey);
-                encryptedKeys[uid] = {
-                    encrypted_key: u8ToB64(encrypted),
-                    nonce: u8ToB64(nonce)
-                };
-            }
-
-            console.log("📦 encryptedKeys готов:", encryptedKeys);
-
-            for (const uid in encryptedKeys) {
-                console.log(`📥 Добавляем encrypted_keys[${uid}]`);
-                const ek = encryptedKeys[uid];
-                let keyInput = document.createElement('input');
-                keyInput.type = 'hidden';
-                keyInput.name = `encrypted_keys[${uid}][encrypted_key]`;
-                keyInput.value = ek.encrypted_key;
-                form.appendChild(keyInput);
-                let nonceInput = document.createElement('input');
-                nonceInput.type = 'hidden';
-                nonceInput.name = `encrypted_keys[${uid}][nonce]`;
-                nonceInput.value = ek.nonce;
-                form.appendChild(nonceInput);
-            }
-
-            console.log("📨 Отправляем форму…");
-            form.submit();
-        } catch (err) {
-            console.error("🚨 Ошибка JS при создании чата:", err);
-            alert(err.message);
+            updateSelectedUsersUI();
+            toggleChatName();
         }
-    });
-});
-</script>
+
+        function toggleChatName() {
+            const nameField = document.getElementById('chatName');
+            const errorEl = document.getElementById('chatNameError');
+            if (chatMode === 'personal') {
+                nameField.disabled = true;
+                nameField.placeholder = "{{ __('chats.direct_chat_no_name') }}";
+                errorEl.style.display = 'none';
+                nameField.classList.remove('error');
+            } else {
+                nameField.disabled = false;
+                nameField.placeholder = "{{ __('chats.chat_name_label') }}";
+            }
+        }
+
+        function updateSelectedUsersUI() {
+            const container = document.getElementById('selectedUsers');
+            container.innerHTML = '';
+
+            selectedUsers.forEach(id => {
+                const el = document.querySelector(`.user-item[data-id="${id}"]`);
+                if (!el) return;
+
+                const name = el.dataset.name;
+                const avatar = el.dataset.avatar;
+
+                const tag = document.createElement('div');
+                tag.className = 'selected-user';
+                tag.innerHTML = `
+                    <img src="${avatar}" alt="${name}">
+                    <span>${name}</span>
+                    <span style="cursor:pointer;color:#ff6b6b;" onclick="removeUser(${id})">×</span>
+                `;
+                container.appendChild(tag);
+            });
+
+            document.getElementById('selectedUsersInput').value = JSON.stringify([...selectedUsers]);
+        }
+
+        function removeUser(id) {
+            if (chatMode === 'personal') {
+                selectedUsers.clear();
+            } else {
+                selectedUsers.delete(id);
+            }
+            updateUI();
+        }
+
+        function updateUI() {
+            document.querySelectorAll('.user-item').forEach(item => {
+                const id = parseInt(item.dataset.id);
+                if (selectedUsers.has(id)) {
+                    item.classList.add('selected');
+                } else {
+                    item.classList.remove('selected');
+                }
+            });
+            updateSelectedUsersUI();
+        }
+
+        document.querySelectorAll('.user-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const id = parseInt(item.dataset.id);
+
+                if (chatMode === 'personal') {
+                    selectedUsers.clear();
+                    selectedUsers.add(id);
+                } else {
+                    if (selectedUsers.has(id)) {
+                        selectedUsers.delete(id);
+                    } else {
+                        selectedUsers.add(id);
+                    }
+                }
+                updateUI();
+            });
+        });
+
+        document.getElementById('userSearch').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            document.querySelectorAll('.user-item').forEach(item => {
+                const name = item.dataset.name.toLowerCase();
+                item.style.display = name.includes(term) ? 'flex' : 'none';
+            });
+        });
+
+        toggleChatName();
+    </script>
+
+    <script>
+        // === Утилиты base64 ↔ Uint8Array ===
+        function b64ToU8(b64) {
+            return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+        }
+
+        function u8ToB64(u8) {
+            return btoa(String.fromCharCode(...u8));
+        }
+
+        async function fetchPublicKeys(userIds) {
+            console.log("📡 Запрашиваем публичные ключи для:", userIds);
+
+            const res = await fetch('/users/public-keys', {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    user_ids: userIds
+                })
+            });
+
+            console.log("📡 Статус ответа public-keys:", res.status);
+
+            if (!res.ok) throw new Error(`Ошибка загрузки ключей: ${res.status}`);
+
+            const data = await res.json();
+            console.log("📡 Публичные ключи получены:", data);
+            return data;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('create-chat-form');
+            if (!form) {
+                console.log("⚠️ create-chat-form не найден");
+                return;
+            }
+
+            form.addEventListener('submit', async function(e) {
+                const chatType = document.getElementById('chatType').value;
+                const chatName = document.getElementById('chatName');
+                const errorEl = document.getElementById('chatNameError');
+
+                // ✅ Проверка названия для группового чата
+                if (chatType === 'group') {
+                    const nameValue = chatName.value.trim();
+                    if (!nameValue) {
+                        e.preventDefault();
+                        chatName.classList.add('error');
+                        errorEl.style.display = 'block';
+                        chatName.focus();
+                        return;
+                    } else {
+                        chatName.classList.remove('error');
+                        errorEl.style.display = 'none';
+                    }
+                }
+
+                e.preventDefault();
+                console.log("🚀 Отправка формы создания чата...");
+
+                const usersInput = form.querySelector('input[name="users"]');
+                let userIDs = JSON.parse(usersInput.value || '[]');
+
+                if (userIDs.length === 0) {
+                    alert('{{ __("chats.select_at_least_one_participant") }}');
+                    return;
+                }
+
+                console.log("👥 Пользователи:", userIDs);
+
+                const currentUserId = {{ auth()->id() }};
+                const allUserIds = [...new Set([...userIDs, currentUserId])];
+
+                console.log("👥 Все участники:", allUserIds);
+
+                try {
+                    const publicKeys = await fetchPublicKeys(allUserIds);
+
+                    for (const uid of allUserIds) {
+                        if (!publicKeys[uid]) {
+                            console.error(`❌ У UID=${uid} нет публичного ключа`);
+                            alert(`У пользователя ID=${uid} нет публичного ключа`);
+                            return;
+                        }
+                    }
+
+                    console.log("🔑 Все ключи присутствуют, генерируем chatKey…");
+
+                    const chatKey = nacl.randomBytes(nacl.secretbox.keyLength);
+                    const CURRENT_USER_ID = {{ auth()->id() }};
+                    const myPrivKeyString = localStorage.getItem(`userPrivateKey_${CURRENT_USER_ID}`);
+                    console.log("🔐 Приватный ключ из localStorage:", myPrivKeyString);
+                    const myPrivKey = b64ToU8(myPrivKeyString);
+
+                    const encryptedKeys = {};
+                    for (const uid of allUserIds) {
+                        const pubKey = b64ToU8(publicKeys[uid]);
+                        const nonce = nacl.randomBytes(nacl.box.nonceLength);
+                        const encrypted = nacl.box(chatKey, nonce, pubKey, myPrivKey);
+                        encryptedKeys[uid] = {
+                            encrypted_key: u8ToB64(encrypted),
+                            nonce: u8ToB64(nonce)
+                        };
+                    }
+
+                    console.log("📦 encryptedKeys готов:", encryptedKeys);
+
+                    // Очистить старые скрытые поля (на случай повторной отправки)
+                    document.querySelectorAll('input[name^="encrypted_keys"]').forEach(el => el.remove());
+
+                    for (const uid in encryptedKeys) {
+                        const ek = encryptedKeys[uid];
+                        let keyInput = document.createElement('input');
+                        keyInput.type = 'hidden';
+                        keyInput.name = `encrypted_keys[${uid}][encrypted_key]`;
+                        keyInput.value = ek.encrypted_key;
+                        form.appendChild(keyInput);
+                        let nonceInput = document.createElement('input');
+                        nonceInput.type = 'hidden';
+                        nonceInput.name = `encrypted_keys[${uid}][nonce]`;
+                        nonceInput.value = ek.nonce;
+                        form.appendChild(nonceInput);
+                    }
+
+                    console.log("📨 Отправляем форму…");
+                    form.submit();
+                } catch (err) {
+                    console.error("🚨 Ошибка JS при создании чата:", err);
+                    alert(err.message);
+                }
+            });
+        });
+    </script>
 
 @endsection

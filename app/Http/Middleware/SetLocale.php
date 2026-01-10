@@ -40,11 +40,11 @@ class SetLocale
             $isTrustedIp = in_array($ip, self::TRUSTED_IPS);
 
             // Проверка CAPTCHA (пропускаем для доверенных IP и страниц CAPTCHA)
-            if (!$request->routeIs('captcha.show', 'captcha.verify') && 
-                !$isTrustedIp && 
-                !Session::has('captcha_passed')) {
-                return Redirect::route('captcha.show');
-            }
+            // if (!$request->routeIs('captcha.show', 'captcha.verify') && 
+            //     !$isTrustedIp && 
+            //     !Session::has('captcha_passed')) {
+            //     return Redirect::route('captcha.show');
+            // }
 
             // Установка локали
             if (Session::has('locale')) {

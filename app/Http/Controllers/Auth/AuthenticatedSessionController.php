@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -27,18 +28,25 @@ class AuthenticatedSessionController extends Controller
 
     public function store(LoginRequest $request): RedirectResponse
     {
+        // Выполняем аутентификацию
         $request->authenticate();
+        Session::regenerate();
 
-        $request->session()->regenerate();
+        // Получаем текущего пользователя
+        $user = Auth::user();
 
-        // Получаем предыдущий URL из сессии
-        $intendedUrl = $request->session()->pull('url.intended', route('home'));
+        // Если public_key уже существует — пускаем внутрь
+        if ($user->profile?->public_key) {
+            return redirect()->intended(route('home'));
+        }
 
-        // Добавляем сообщение о успешном входе с использованием перевода
-        $request->session()->flash('message', __('login.login'));
+        // Иначе — перенаправляем на настройку ключей
+        // Сохраняем intended URL, чтобы после setup вернуться туда
+        $intended = Session::pull('url.intended', route('home'));
+        Session::put('url.intended', $intended);
 
-        // Перенаправляем пользователя на главную страницу
-        return redirect()->route('home');
+        return redirect()->route('auth.seed.setup')
+            ->with('warning', __('auth.seed_required_to_access'));
     }
 
 
@@ -50,6 +58,8 @@ class AuthenticatedSessionController extends Controller
 
 public function destroy(Request $request): RedirectResponse
 {
+
+    
     Auth::guard('web')->logout();
     $request->session()->invalidate();
     $request->session()->regenerateToken();

@@ -4,7 +4,7 @@
 
 <head>
     <meta charset="utf-8"> <!-- Устанавливает кодировку символов на UTF-8 -->
-    
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="user-public-key" content="{{ auth()->user()->public_key ?? '' }}">
     <meta name="user-id" content="{{ auth()->check() ? auth()->id() : '' }}">
@@ -118,7 +118,6 @@
     @include('components.cookie-consent')
 
     {{-- Скрипт определения онлайн --}}
-
     @if (Auth::check())
         <script>
             (function() {
@@ -173,6 +172,49 @@
             })();
         </script>
     @endif
+
+
+  {{-- Проверка ключей — НЕ ЗАПУСКАТЬ на страницах setup-keys --}}
+@if (auth()->check())
+    <script>
+        // 🔒 Не запускать проверку, если это страница ввода сид-фразы
+        if (document.getElementById('setup-keys-page')) {
+            console.log("[KEYCHECK] На странице setup-keys — пропуск.");
+        } else {
+            document.addEventListener("DOMContentLoaded", () => {
+                console.log("%c[KEYCHECK] Запуск проверки ключей...", "color: gold");
+
+                const CURRENT_USER_ID = {{ auth()->id() }};
+                const privateKey = localStorage.getItem(`userPrivateKey_${CURRENT_USER_ID}`);
+
+                if (!privateKey) {
+                    console.warn("%c[KEYCHECK] Приватный ключ отсутствует → редирект", "color: orange; font-weight: bold;");
+                    sessionStorage.setItem("url.intended", location.href);
+                    window.location.href = "/setup-keys?new_device=1";
+                    return;
+                }
+
+                fetch("{{ route('profile.has-public-key') }}", {
+                    credentials: "include",
+                    headers: { "Accept": "application/json" }
+                })
+                .then(r => r.json())
+                .then(data => {
+                    if (!data.has_public_key) {
+                        sessionStorage.setItem("url.intended", location.href);
+                        window.location.href = "/setup-keys";
+                    }
+                })
+                .catch(err => {
+                    console.error("[KEYCHECK ERROR]", err);
+                });
+            });
+        }
+    </script>
+
+@endif
+
+
 
 
 </body>

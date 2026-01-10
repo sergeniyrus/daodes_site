@@ -33,15 +33,12 @@ use App\Http\Controllers\{
     MailerClickController,
     MailTemplateController,
     UserStatusController,
-    UserKeyController
+    UserKeyController,
+    SeedSetupController,
+    MessageController,
 };
 // === E2E-маршруты ===
 Route::middleware('auth')->group(function () {
-
-    Route::get('/profile/has-public-key', function () {
-        $hasKey = (bool) auth()->user()->profile?->public_key;
-        return response()->json(['has_public_key' => $hasKey]);
-    });
 
     Route::post('/profile/set-public-key', [UserProfileController::class, 'setPublicKey']);
 
@@ -65,7 +62,7 @@ Route::middleware('auth')->group(function () {
             'nonce' => $keyRecord->nonce,
             'initiator_public_key' => $initiator->profile->public_key,
         ]);
-    }); 
+    });
 
     Route::get('/api/users/list-for-chat', function () {
         $users = \App\Models\User::where('id', '!=', auth()->id())
@@ -79,6 +76,34 @@ Route::middleware('auth')->group(function () {
 // Этот маршрут вне auth-группы (как и должно быть)
 Route::post('/users/public-keys', [UserKeyController::class, 'getPublicKeys'])
     ->name('users.public-keys');
+
+// Ввод сид-фразы
+Route::middleware('auth')->group(function () {
+
+    // Проверка: есть ли у пользователя public_key
+    Route::get('/profile/has-public-key', [SeedSetupController::class, 'hasPublicKey'])
+        ->name('profile.has-public-key');
+
+    // Страница ввода сид-фразы
+    Route::get('/setup-keys', [SeedSetupController::class, 'show'])
+        ->name('auth.seed.setup');
+
+    // Фиксация ошибки сид-фразы
+    Route::post('/setup-keys/report-invalid', [SeedSetupController::class, 'reportInvalidSeed']);
+
+    Route::get('/profile/public-key', [SeedSetupController::class, 'getPublicKey'])
+        ->name('profile.public-key');
+
+    Route::post('/setup-keys/verify', [SeedSetupController::class, 'verifySeedPhrase'])
+        ->name('setup-keys.verify');
+});
+
+
+
+
+
+
+
 
 
 // определение онлайн у пользователя
@@ -175,18 +200,33 @@ Route::post('/captcha', [CaptchaController::class, 'verify'])->name('captcha.ver
 // Маршрут для смены языка
 Route::get('/language/{locale}', [LanguageController::class, 'change'])->name('language.change');
 
+
+
+// Чаты
 Route::middleware('auth')->group(function () {
     Route::get('/chats', [ChatController::class, 'index'])->name('chats.index');
     Route::get('/chats/create', [ChatController::class, 'create'])->name('chats.create');
     Route::post('/chats', [ChatController::class, 'store'])->name('chats.store');
     Route::get('/chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
 
-    Route::get('/chats/{chat}/messages', [ChatController::class, 'getMessages'])->name('messages.get');
-    Route::post('/chats/{chat}/messages', [ChatController::class, 'sendMessage'])->name('messages.send');
+    // Ключ шифрования чата
+    Route::get('/chats/{chat}/my-key', [ChatController::class, 'myKey']);
 
+    // Сообщения
+    Route::get('/chats/{chat}/messages', [MessageController::class, 'index'])->name('messages.get');
+    Route::post('/chats/{chat}/messages', [MessageController::class, 'store'])->name('messages.send');
+    Route::patch('/messages/{message}', [MessageController::class, 'update']);
+    Route::delete('/messages/{message}', [MessageController::class, 'destroy']);
+
+    // Уведомления
     Route::get('/notifications', [ChatController::class, 'notifications'])->name('chats.notifications');
-    Route::post('/notifications/{notification}/mark-as-read', [ChatController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/{notification}/mark-as-read', [ChatController::class, 'markAsRead']);
+
+    // Вспомогательные
+    Route::get('/chats/create-with-user/{user}', [ChatController::class, 'createWithUser']);
 });
+
+
 Route::post('/chats/create-with-user/{userId}', [ChatController::class, 'createWithUser'])
     ->name('chats.createWithUser');
 

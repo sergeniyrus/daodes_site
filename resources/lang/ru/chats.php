@@ -52,6 +52,8 @@ return [
 'invalid_users_selected' => 'Выбраны недопустимые пользователи.',
 'select_at_least_one_user' => 'Пожалуйста, выберите хотя бы одного участника.',
 
+'group_name_required' => 'Название группового чата обязательно.',
+'select_at_least_one_participant' => 'Выберите хотя бы одного участника.',
 'chat_name_required' => 'Название группового чата обязательно',
 'select_at_least_one_user' => 'Не выбрано ни одного пользователя',
 'users_required' => 'Не выбрано ни одного пользователя',

@@ -1,4 +1,4 @@
-<?php
+<?php // app/Models/Message.php
 
 namespace App\Models;
 
@@ -14,8 +14,6 @@ class Message extends Model
         'sender_id',
         'ipfs_cid',
     ];
-
-    protected $appends = ['message'];
 
     public function chat()
     {
@@ -33,13 +31,13 @@ class Message extends Model
     }
 
     /**
-     * Загружает зашифрованное сообщение в IPFS и возвращает CID.
+     * Загружает строку вида "nonce|ciphertext" в IPFS.
      */
-    public function uploadMessageToIPFS($encryptedPayload)
+    public function uploadMessageToIPFS(string $fullPayload): string
     {
         try {
             $client = new Client([
-                'base_uri' => 'https://daodes.space',
+                'base_uri' => rtrim(config('services.ipfs.gateway', 'https://daodes.space'), '/'),
                 'timeout' => 60.0,
             ]);
 
@@ -47,17 +45,17 @@ class Message extends Model
                 'multipart' => [
                     [
                         'name'     => 'file',
-                        'contents' => $encryptedPayload,
+                        'contents' => $fullPayload,
                         'filename' => 'message.txt',
                     ]
                 ]
             ]);
 
             $data = json_decode($response->getBody(), true);
-            if (isset($data['Hash'])) {
-                return $data['Hash'];
+            if (!isset($data['Hash'])) {
+                throw new Exception('IPFS did not return CID');
             }
-            throw new Exception('No CID from IPFS');
+            return $data['Hash'];
         } catch (Exception $e) {
             Log::error('IPFS upload error: ' . $e->getMessage());
             throw $e;
@@ -65,48 +63,35 @@ class Message extends Model
     }
 
     /**
-     * Получает зашифрованное сообщение из IPFS.
+     * Получает полный payload из IPFS: "nonce|ciphertext"
      */
-    public function getMessageFromIPFS($cid)
+    public function getMessageFromIPFS(string $cid): string
     {
+        if (!$cid) {
+            return '';
+        }
+
         try {
             $client = new Client([
-                'base_uri' => 'https://daodes.space'
+                'base_uri' => rtrim(config('services.ipfs.gateway', 'https://daodes.space'), '/'),
             ]);
 
             $response = $client->request('GET', "/ipfs/{$cid}");
-            $fileContent = $response->getBody()->getContents();
-
-            if (empty($fileContent)) {
-                throw new Exception('IPFS returned empty data');
-            }
-
-            return $fileContent; // Возвращаем как есть — расшифровка на клиенте
+            return $response->getBody()->getContents();
         } catch (Exception $e) {
-            Log::error('Ошибка при получении данных из IPFS', [
-                'cid' => $cid,
-                'error' => $e->getMessage(),
-            ]);
-            throw $e;
+            Log::error('IPFS fetch error', ['cid' => $cid, 'error' => $e->getMessage()]);
+            return '[Ошибка загрузки]';
         }
     }
 
     /**
-     * Возвращает зашифрованное сообщение из IPFS (без расшифровки).
+     * Обновляет содержимое сообщения: загружает новый payload в IPFS и обновляет CID.
      */
-    public function getMessageAttribute($value)
+    public function updateMessageContent(string $newFullPayload): string
     {
-        if ($this->ipfs_cid) {
-            try {
-                return $this->getMessageFromIPFS($this->ipfs_cid);
-            } catch (Exception $e) {
-                Log::error('Ошибка при загрузке сообщения из IPFS', [
-                    'cid' => $this->ipfs_cid,
-                    'error' => $e->getMessage(),
-                ]);
-                return 'Ошибка загрузки сообщения';
-            }
-        }
-        return null;
+        $newCid = $this->uploadMessageToIPFS($newFullPayload);
+        $this->ipfs_cid = $newCid;
+        $this->save();
+        return $newCid;
     }
 }

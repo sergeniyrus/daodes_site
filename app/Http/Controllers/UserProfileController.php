@@ -225,7 +225,17 @@ class UserProfileController extends Controller
 
     $user = auth()->user();
 
-    $profile = $user->profile()->updateOrCreate([], [
+    // 🔐 Если ключ уже есть — НЕ обновляем!
+    if ($user->profile?->public_key) {
+        // Можно вернуть текущий ключ для проверки
+        return response()->json([
+            'message' => 'already exists',
+            'public_key' => $user->profile->public_key
+        ]);
+    }
+
+    // Иначе — создаём или обновляем профиль с ключом
+    $user->profile()->updateOrCreate([], [
         'public_key' => $request->public_key,
     ]);
 

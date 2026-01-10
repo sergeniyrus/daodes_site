@@ -8,5 +8,7 @@ return [
     'copy_button_text' => 'Copy Seed Phrase',
     'copy_success_message' => 'Seed phrase copied to clipboard.',
     'saving_text' => 'Saving in the blockchain...',
+    'new_device_warning' => 'You are on a new device. Please confirm ownership of the seed phrase for this account.',
+    'first_time_setup' => 'Welcome! Enter your seed phrase to activate your secure account.',
 
 ];

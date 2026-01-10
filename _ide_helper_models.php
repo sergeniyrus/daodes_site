@@ -355,7 +355,6 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Chat $chat
- * @property-read mixed $message
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Notification> $notifications
  * @property-read int|null $notifications_count
  * @property-read \App\Models\User $sender
@@ -667,7 +666,6 @@ namespace App\Models{
  * @property int $id
  * @property string $name
  * @property string $password
- * @property string $keyword
  * @property int|null $access_level
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -691,7 +689,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereAccessLevel($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereKeyword($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereLastSeenAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|User wherePassword($value)

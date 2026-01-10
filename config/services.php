@@ -38,6 +38,7 @@ return [
     'ipfs' => [
         'host' => env('IPFS_HOST', 'localhost'),
         'port' => env('IPFS_PORT', 5001),
+        'gateway' => env('IPFS_GATEWAY', 'https://daodes.space'),
     ],
 
     'telegram' => [
