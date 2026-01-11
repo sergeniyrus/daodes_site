@@ -315,6 +315,8 @@
 
 
 
+
+
 @section('scripts')
 
     <script src="https://cdn.jsdelivr.net/npm/tweetnacl/nacl.min.js"></script>
@@ -350,6 +352,11 @@
             'edit' => __('chats.edit'),
             'delete' => __('chats.delete'),
         ]);
+
+        // Храним ID всех сообщений в чате для отслеживания удалений
+        const allMessageIds = new Set();
+        // Храним последний известный highestMessageId для определения новых сообщений
+        let highestKnownMessageId = 0;
 
         /* ============================================================
            ==================== РАСШИФРОВКА ===========================
@@ -389,6 +396,8 @@
 
                     // Проверяем, было ли сообщение отредактировано
                     const isEdited = messageEl.getAttribute('data-is-edited');
+                    
+                    // ДОБАВЛЯЕМ карандаш ТОЛЬКО если isEdited === 'true'
                     if (isEdited === 'true') {
                         const cardTitle = messageEl.querySelector('.card-title');
                         if (cardTitle && !cardTitle.querySelector('.message-status.edited')) {
@@ -396,6 +405,13 @@
                             editedSpan.className = 'message-status edited';
                             editedSpan.textContent = '✏️';
                             cardTitle.appendChild(editedSpan);
+                        }
+                    } else if (isEdited === 'false') {
+                        // Удаляем карандаш если сообщение не редактировалось
+                        const cardTitle = messageEl.querySelector('.card-title');
+                        if (cardTitle) {
+                            const editedSpans = cardTitle.querySelectorAll('.message-status.edited');
+                            editedSpans.forEach(span => span.remove());
                         }
                     }
                 }
@@ -529,6 +545,7 @@
             const data = await res.json();
             if (data.status === 'success') {
                 messageEl.remove();
+                allMessageIds.delete(parseInt(messageId));
                 if (editingMessageId == messageId) cancelEditing();
             }
         }
@@ -546,6 +563,13 @@
             const chatId = {{ $chat->id }};
             const userId = {{ auth()->id() }};
             let lastMessageId = {{ $chat->messages->last()?->id ?? 0 }};
+
+            /* Инициализируем allMessageIds с уже загруженными сообщениями */
+            document.querySelectorAll('.message').forEach(msgEl => {
+                const msgId = parseInt(msgEl.dataset.id);
+                allMessageIds.add(msgId);
+                highestKnownMessageId = Math.max(highestKnownMessageId, msgId);
+            });
 
             /* ❌ отключаем submit формы полностью */
             form.addEventListener('submit', e => {
@@ -618,11 +642,11 @@
                 }
 
                 if (e.key === 'Enter' && !e.shiftKey) {
-    e.preventDefault();
-    if (!isSending) {
-        sendMessageNow();
-    }
-}
+                    e.preventDefault();
+                    if (!isSending) {
+                        sendMessageNow();
+                    }
+                }
             });
 
             /* ========================================================
@@ -636,6 +660,8 @@
 
                 isSending = true;
                 sendBtn.disabled = true;
+                // Не очищаем input сразу — для rollback при ошибке
+                const originalInputValue = input.value;
                 input.value = '';
 
                 let optimisticEl = null;
@@ -643,15 +669,9 @@
 
                 try {
                     const bytes = new TextEncoder().encode(text);
-                    let nonce, nonceB64;
-
-                    if (editingMessageId) {
-                        nonceB64 = window.editingNonceB64;
-                        nonce = b64ToU8(nonceB64);
-                    } else {
-                        nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
-                        nonceB64 = u8ToB64(nonce);
-                    }
+                    // 🔒 ВСЕГДА генерируем НОВЫЙ nonce — даже при редактировании!
+                    const nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
+                    const nonceB64 = u8ToB64(nonce);
 
                     const encrypted = nacl.secretbox(bytes, nonce, CURRENT_CHAT_KEY);
 
@@ -665,13 +685,12 @@
                             optimisticEl.setAttribute('data-plaintext', text);
 
                             // Сохраняем оригинальный статус перед установкой нового
-                            const cardTitle = optimisticEl.closest('.my-card-body').querySelector(
-                                '.card-title');
+                            const cardTitle = optimisticEl.closest('.my-card-body')?.querySelector('.card-title');
                             if (cardTitle) {
                                 originalEditedStatus = cardTitle.querySelector('.message-status.edited');
                             }
 
-                            // Добавляем индикатор редактирования
+                            // Добавляем индикатор редактирования (если ещё не стоит)
                             if (cardTitle && !cardTitle.querySelector('.message-status.edited')) {
                                 const editedSpan = document.createElement('small');
                                 editedSpan.className = 'message-status edited';
@@ -697,24 +716,34 @@
                     );
 
                     const data = await res.json();
-                    if (data.status !== 'success') throw new Error();
+                    if (data.status !== 'success') throw new Error('Server error');
 
                     /* ===== COMMIT ===== */
                     if (editingMessageId) {
                         const msgEl = document.querySelector(`.message[data-id="${editingMessageId}"]`);
                         if (msgEl) {
                             msgEl.classList.remove('editing');
-                            // Обновляем plaintext атрибут в HTML элементе
                             const cardTextEl = msgEl.querySelector('.card-text');
                             if (cardTextEl) {
+                                // Обновляем зашифрованные данные в DOM
+                                cardTextEl.setAttribute('data-encrypted', `${nonceB64}|${u8ToB64(encrypted)}`);
                                 cardTextEl.setAttribute('data-plaintext', text);
+                                // Помечаем как расшифрованное (текст уже отображается)
+                                cardTextEl.dataset.decrypted = '1';
                             }
-                            // Обновляем backup текст на текущий после успешного редактирования
                             editingBackupText = text;
 
-                            // Убедимся, что индикатор редактирования установлен
+                            // Обновляем data-is-edited атрибут на true
+                            msgEl.setAttribute('data-is-edited', 'true');
+
+                            // Убеждаемся, что значок редактирования отображается
                             const cardTitle = msgEl.querySelector('.card-title');
-                            if (cardTitle && !cardTitle.querySelector('.message-status.edited')) {
+                            if (cardTitle) {
+                                // Удаляем старые значки редактирования
+                                const oldEditedSpans = cardTitle.querySelectorAll('.message-status.edited');
+                                oldEditedSpans.forEach(span => span.remove());
+
+                                // Добавляем новый
                                 const editedSpan = document.createElement('small');
                                 editedSpan.className = 'message-status edited';
                                 editedSpan.textContent = '✏️';
@@ -722,54 +751,60 @@
                             }
                         }
                     } else {
+                        // НОВОЕ СООБЩЕНИЕ - не добавляем индикатор редактирования
+                        // Принудительно устанавливаем false для новых сообщений
                         chatMessages.insertAdjacentHTML('beforeend', `
-                <div class="message sent" data-id="${data.message.id}">
-                    <div class="my-card-body">
-                        <p class="card-title">
-                            ${data.message.sender}
-                            <small>${new Date().toLocaleTimeString()}</small>
-                            ${data.message.is_edited ? '<small class="message-status edited">✏️</small>' : ''}
-                        </p>
-                        <p class="card-text"
-                           data-encrypted="${nonceB64}|${u8ToB64(encrypted)}"
-                           data-decrypted="1"
-                           data-plaintext="${text.replace(/"/g,'&quot;')}">
-                           ${text.replace(/\n/g,'<br>')}
-                        </p>
-                    </div>
-                </div>
-            `);
+                            <div class="message sent" data-id="${data.message.id}" data-is-edited="false">
+                                <div class="my-card-body">
+                                    <p class="card-title">
+                                        ${data.message.sender}
+                                        <small>${new Date().toLocaleTimeString()}</small>
+                                        <!-- НЕ добавляем ✏️ для новых сообщений -->
+                                    </p>
+                                    <p class="card-text"
+                                       data-encrypted="${nonceB64}|${u8ToB64(encrypted)}"
+                                       data-decrypted="1"
+                                       data-plaintext="${text.replace(/"/g,'&quot;')}">
+                                       ${text.replace(/\n/g,'<br>')}
+                                    </p>
+                                </div>
+                            </div>
+                        `);
 
                         attachEditButton(chatMessages.lastElementChild, text, nonceB64);
-                        lastMessageId = data.message.id;
+                        allMessageIds.add(data.message.id);
+                        highestKnownMessageId = Math.max(highestKnownMessageId, data.message.id);
+                        lastMessageId = Math.max(lastMessageId, data.message.id);
                         scrollToBottom();
                     }
 
                     cancelEditing();
 
-                } catch {
+                } catch (err) {
                     /* ===== ROLLBACK ===== */
+                    input.value = originalInputValue; // восстанавливаем текст в поле
+
                     if (optimisticEl && editingBackupText !== null) {
                         optimisticEl.innerHTML = editingBackupText.replace(/\n/g, '<br>');
+                        optimisticEl.setAttribute('data-plaintext', editingBackupText);
 
-                        // Восстанавливаем оригинальное состояние галочек
-                        const cardTitle = optimisticEl.closest('.my-card-body').querySelector('.card-title');
+                        const cardTitle = optimisticEl.closest('.my-card-body')?.querySelector('.card-title');
                         if (cardTitle) {
-                            // Удаляем все галочки редактирования
+                            // Удаляем все значки редактирования
                             const editedSpans = cardTitle.querySelectorAll('.message-status.edited');
                             editedSpans.forEach(span => span.remove());
 
-                            // Если сообщение было отредактировано ранее, восстанавливаем галочку
+                            // Восстанавливаем предыдущий статус (если сообщение было отредактировано ранее)
                             if (originalEditedStatus) {
                                 cardTitle.appendChild(originalEditedStatus.cloneNode(true));
                             }
                         }
                     }
-                    alert('Ошибка отправки');
+
+                    alert('Ошибка отправки. Попробуйте снова.');
                 } finally {
                     isSending = false;
                     sendBtn.disabled = false;
-                    // Сбрасываем флаг при завершении отправки
                     enterPressed = false;
                 }
             }
@@ -806,42 +841,141 @@
                     });
             })();
 
+            // Разблокировка аудио при первом взаимодействии
+            let audioUnlocked = false;
+            function unlockAudio() {
+                if (audioUnlocked) return;
+                const sound = document.getElementById('notificationSound');
+                if (sound) {
+                    sound.play().then(() => {
+                        sound.pause();
+                        sound.currentTime = 0;
+                        audioUnlocked = true;
+                    }).catch(() => {});
+                }
+            }
+
+            // Слушаем любое взаимодействие
+            ['click', 'keydown', 'touchstart'].forEach(evt => {
+                document.addEventListener(evt, unlockAudio, { once: true, passive: true });
+            });
+
             async function loadNewMessages() {
-                const res = await fetch(`/chats/${chatId}/messages?last_id=${lastMessageId}`);
+                // Запрашиваем ВСЕ сообщения, чтобы видеть обновления и удаления
+                const res = await fetch(`/chats/${chatId}/messages?last_id=0`);
                 if (!res.ok) return;
 
                 const msgs = await res.json();
-                const wasAtBottom = isAtBottom(); // сохраняем состояние до добавления новых сообщений
+                const wasAtBottom = isAtBottom();
 
+                let hasIncoming = false;
+                
+                // Создаем Set из ID сообщений, которые получили от сервера
+                const serverMessageIds = new Set();
+                
+                // Сначала обрабатываем все сообщения от сервера
                 msgs.forEach(msg => {
-                    if (msg.id <= lastMessageId) return;
-                    if (document.querySelector(`.message[data-id="${msg.id}"]`)) return;
-
+                    const msgId = msg.id;
+                    serverMessageIds.add(msgId);
+                    
+                    const existingMessage = document.querySelector(`.message[data-id="${msgId}"]`);
                     const isOwn = msg.sender.id === userId;
 
-                    chatMessages.insertAdjacentHTML('beforeend', `
-            <div class="message ${isOwn ? 'sent' : 'received'}" data-id="${msg.id}" data-is-edited="${msg.is_edited ? 'true' : 'false'}">
-                <div class="${isOwn ? 'my-card-body' : 'card-body'}">
-                    <p class="card-title">
-                        ${msg.sender.name}
-                        <small>${new Date(msg.created_at).toLocaleTimeString()}</small>
-                        ${msg.is_edited ? '<small class="message-status edited">✏️</small>' : ''}
-                    </p>
-                    <p class="card-text" data-encrypted="${msg.message}">
-                        Загрузка...
-                    </p>
-                </div>
-            </div>
-        `);
+                    // ИСПРАВЛЕНИЕ: поле edited_at - tinyint (0/1)
+                    const isEdited = msg.is_edited === true;
 
-                    lastMessageId = msg.id;
+                    if (existingMessage) {
+                        // Сообщение уже существует - проверяем обновления
+                        const currentIsEdited = existingMessage.getAttribute('data-is-edited');
+                        
+                        // Обновляем данные сообщения ВСЕГДА (на случай повторного редактирования)
+                        const cardTextEl = existingMessage.querySelector('.card-text');
+                        if (cardTextEl) {
+                            // Обновляем зашифрованные данные
+                            cardTextEl.setAttribute('data-encrypted', msg.message);
+                            // Сбрасываем флаг расшифровки
+                            delete cardTextEl.dataset.decrypted;
+                        }
+                        
+                        // Обновляем статус редактирования
+                        existingMessage.setAttribute('data-is-edited', isEdited);
+                        
+                        // Обновляем карандаш
+                        setTimeout(() => {
+                            const cardTitle = existingMessage.querySelector('.card-title');
+                            if (cardTitle) {
+                                // Удаляем старые значки редактирования
+                                const oldEditedSpans = cardTitle.querySelectorAll('.message-status.edited');
+                                oldEditedSpans.forEach(span => span.remove());
+                                
+                                // Добавляем новый если нужно
+                                if (isEdited) {
+                                    const editedSpan = document.createElement('small');
+                                    editedSpan.className = 'message-status edited';
+                                    editedSpan.textContent = '✏️';
+                                    cardTitle.appendChild(editedSpan);
+                                }
+                            }
+                        }, 100);
+                        
+                    } else {
+                        // НОВОЕ сообщение - проверяем, действительно ли оно новое
+                        const isNewMessage = msgId > highestKnownMessageId && !isOwn;
+                        
+                        if (!isOwn && isNewMessage) {
+                            hasIncoming = true;
+                        }
+                        
+                        // Новое сообщение
+                        const messageHTML = `
+                            <div class="message ${isOwn ? 'sent' : 'received'}" data-id="${msgId}" data-is-edited="${isEdited}">
+                                <div class="${isOwn ? 'my-card-body' : 'card-body'}">
+                                    <p class="card-title">
+                                        ${msg.sender.name}
+                                        <small>${new Date(msg.created_at).toLocaleTimeString()}</small>
+                                        <!-- НЕ добавляем карандаш здесь - он будет добавлен в decryptAndAttachActions если нужно -->
+                                    </p>
+                                    <p class="card-text" data-encrypted="${msg.message}">
+                                        Загрузка...
+                                    </p>
+                                </div>
+                            </div>
+                        `;
+
+                        chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+                        allMessageIds.add(msgId);
+                        highestKnownMessageId = Math.max(highestKnownMessageId, msgId);
+                        lastMessageId = Math.max(lastMessageId, msgId);
+                    }
+                });
+                
+                // Теперь проверяем, какие сообщения были удалены
+                // Сравниваем allMessageIds с serverMessageIds
+                allMessageIds.forEach(msgId => {
+                    if (!serverMessageIds.has(msgId)) {
+                        // Сообщение есть у нас, но нет на сервере - значит оно удалено
+                        const deletedMessage = document.querySelector(`.message[data-id="${msgId}"]`);
+                        if (deletedMessage) {
+                            console.log('Удаляем сообщение:', msgId);
+                            deletedMessage.remove();
+                            allMessageIds.delete(msgId);
+                        }
+                    }
                 });
 
+                // Всегда расшифровываем сообщения
                 decryptAndAttachActions();
 
-                // Автопрокрутка только если пользователь был внизу до получения новых сообщений
                 if (wasAtBottom) {
                     scrollToBottom();
+                }
+
+                // Проигрываем звук только на действительно новые входящие сообщения
+                if (hasIncoming) {
+                    const sound = document.getElementById('notificationSound');
+                    if (sound) {
+                        sound.play().catch(() => {});
+                    }
                 }
             }
         });
