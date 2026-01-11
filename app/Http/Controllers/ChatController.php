@@ -100,25 +100,35 @@ class ChatController extends Controller
     }
 
     public function show($chatId)
-    {
-        $chat = Chat::with(['users', 'messages.sender'])->findOrFail($chatId);
-        $userId = Auth::id();
-        $otherUser = $chat->type === 'personal'
-            ? $chat->users->first(fn($u) => $u->id !== $userId)
-            : null;
+{
+    $chat = Chat::with(['users', 'messages.sender'])->findOrFail($chatId);
+    $userId = Auth::id();
+    $otherUser = $chat->type === 'personal'
+        ? $chat->users->first(fn($u) => $u->id !== $userId)
+        : null;
 
-            // Подгружаем payload для всех сообщений
+    // Подгружаем payload для всех сообщений
     foreach ($chat->messages as $message) {
         $message->setAttribute('full_payload', $message->getMessageFromIPFS($message->ipfs_cid));
     }
 
-        // Удаляем уведомления
-        \App\Models\Notification::whereHas('message', fn($q) => $q->where('chat_id', $chatId))
-            ->where('user_id', $userId)
-            ->delete();
+    // Находим первое непрочитанное сообщение для текущего пользователя
+    $firstUnreadMessage = \App\Models\Notification::where('user_id', $userId)
+        ->whereHas('message', fn($q) => $q->where('chat_id', $chatId))
+        ->where('is_read', false)
+        ->with('message')
+        ->orderBy('created_at', 'asc')
+        ->first();
 
-        return view('chats.show', compact('chat', 'otherUser'));
-    }
+    $firstUnreadMessageId = $firstUnreadMessage ? $firstUnreadMessage->message->id : null;
+
+    // Удаляем уведомления
+    \App\Models\Notification::whereHas('message', fn($q) => $q->where('chat_id', $chatId))
+        ->where('user_id', $userId)
+        ->delete();
+
+    return view('chats.show', compact('chat', 'otherUser', 'firstUnreadMessageId'));
+}
 
     public function notifications()
     {

@@ -40,6 +40,10 @@ return [
     'online' => 'Online',
     'online_participants' => ':online of :total online',
 
+    //кнопки подменю
+    'edit' => '✏️ Edit',
+    'delete' => '🗑 Delete',
+
     'group_chat' => 'Group Chat',
 'direct_chat' => 'Private Chat',
 'group_name_optional' => 'Optional for personal chats',

@@ -8,6 +8,7 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Services\TelegramNotifier;
 
 class MessageController extends Controller
 {
@@ -29,6 +30,7 @@ class MessageController extends Controller
                     ],
                     'message' => $payload, // ← "nonce|ciphertext"
                     'created_at' => $msg->created_at->toIso8601String(),
+                    'is_edited' => !is_null($msg->edited_at),
                 ];
             });
 
@@ -70,6 +72,7 @@ class MessageController extends Controller
             $sender = Auth::user();
             $baseUrl = config('app.url');
             $chatUrl = "{$baseUrl}/chats/{$chat->id}";
+            $miniAppUrl = "https://t.me/DAODES_Robot/DAODES_Dapp?chat_id={$chat->id}";
             $isPersonal = $chat->type === 'personal';
 
             foreach ($recipientIds as $recipientId) {
@@ -78,8 +81,9 @@ class MessageController extends Controller
                     'sender_login' => $sender->name,
                     'chat_name' => $isPersonal ? 'личный чат' : $chat->name,
                     'chat_url' => $chatUrl,
+                'mini_app_url' => $miniAppUrl, // Передаем URL Mini App
                 ];
-                \App\Services\TelegramNotifier::notifyNewMessage($recipientId, $payload);
+                TelegramNotifier::notifyNewMessage($recipientId, $payload); // Вызов остается прежним
             }
 
             return response()->json([
@@ -88,6 +92,7 @@ class MessageController extends Controller
                     'id' => $message->id,
                     'sender' => $sender->name,
                     'created_at' => now()->toDateTimeString(),
+                    'is_edited' => false,
                 ]
             ]);
         } catch (\Exception $e) {
@@ -110,12 +115,16 @@ class MessageController extends Controller
         $fullPayload = $request->nonce . '|' . $request->message;
         $newCid = $message->updateMessageContent($fullPayload);
 
+        // Обновляем поле edited_at при редактировании
+        $message->update(['edited_at' => 1]);
+
         return response()->json([
             'status' => 'success',
             'message' => [
                 'id' => $message->id,
                 'encrypted' => $fullPayload,
                 'ipfs_cid' => $newCid,
+                'is_edited' => true,
             ]
         ]);
     }

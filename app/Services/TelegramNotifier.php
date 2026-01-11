@@ -42,20 +42,33 @@ class TelegramNotifier
         $originalLocale = App::getLocale();
         App::setLocale($locale);
 
-        // Подготавливаем параметры для перевода
+        // Подготавливаем текст уведомления (без кнопок в тексте)
         $translationKey = $payload['is_personal'] ? 'new_message.personal' : 'new_message.group';
         $text = __(
             "telegram.{$translationKey}",
             [
                 'sender_login' => $payload['sender_login'] ?? '',
                 'chat_name' => $payload['chat_name'] ?? '',
-                'chat_url' => $payload['chat_url'],
             ]
         );
 
+        // Подготавливаем inline-кнопки
+        $inlineKeyboard = [
+            [
+                [
+                    'text' => __('telegram.open_on_site'), // Локализованная строка "Открыть на сайте"
+                    'url' => $payload['chat_url']
+                ],
+                [
+                    'text' => __('telegram.open_in_mini_app'), // Локализованная строка "Открыть в mini app"
+                    'url' => $payload['mini_app_url']
+                ]
+            ]
+        ];
+
         App::setLocale($originalLocale);
 
-        // Отправляем сообщение
+        // Отправляем сообщение с кнопками
         try {
             $telegram = new Api(config('services.telegram.bot_token'));
             $telegram->sendMessage([
@@ -63,6 +76,9 @@ class TelegramNotifier
                 'text' => $text,
                 'parse_mode' => 'Markdown',
                 'disable_web_page_preview' => true,
+                'reply_markup' => json_encode([ // Используем reply_markup для inline-клавиатуры
+                    'inline_keyboard' => $inlineKeyboard
+                ])
             ]);
         } catch (\Exception $e) {
             Log::warning('Не удалось отправить Telegram-уведомление', [

@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     'no_username' => "⚠️ You do not have a public username set in Telegram.\n\n"
         . "Please set your username in Telegram settings and send /start again.",
 
@@ -12,18 +11,17 @@ return [
         . "After that, send /start again.",
 
     'bound_success' => "🎉 Successfully connected, @:username!\n\n"
-        . "You will now receive notifications about new private messages and mentions.",
+        . "You will now receive notifications about new private messages and mentions.\n\n"
+        . "💡 *Tip*: Press `/start` again if you change your Telegram username.",
 
     'new_message' => [
         'personal' => "🔐 You have a new secret message from **:sender_login**.\n"
-            . "👉 [Open chat](:chat_url)",
+            . "👉 Go to chat:",
 
         'group' => "💬 New messages in the secret chat **\":chat_name\"**.\n"
-            . "👉 [Open chat](:chat_url)",
+            . "👉 Go to chat:",
     ],
 
-'bound_success' => '🎉 Success! You’re now connected, @:username.
-
-💡 *Tip*: Press `/start` again if you change your Telegram username.',
-
+    'open_on_site' => '🌐 Open on Website',
+    'open_in_mini_app' => '📱 Open in Mini App',
 ];

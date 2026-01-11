@@ -354,6 +354,7 @@ namespace App\Models{
  * @property string $ipfs_cid
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int|null $edited_at
  * @property-read \App\Models\Chat $chat
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Notification> $notifications
  * @property-read int|null $notifications_count
@@ -363,6 +364,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message query()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereChatId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereEditedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereIpfsCid($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereSenderId($value)

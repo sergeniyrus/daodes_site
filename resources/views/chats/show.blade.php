@@ -234,6 +234,17 @@
         .context-menu>div:not(:last-child) {
             border-bottom: 1px solid #444;
         }
+
+        .message-status {
+            display: inline-block;
+            font-size: 0.8rem;
+            margin-left: 5px;
+            color: #aaa;
+        }
+
+        .message-status.edited {
+            color: gold;
+        }
     </style>
 
     <div class="chat-container">
@@ -266,6 +277,9 @@
                         <p class="card-title">
                             {{ $message->sender->name }}
                             <small>{{ $message->created_at->format('H:i, d M') }}</small>
+                            @if ($message->edited_at)
+                                <small class="message-status edited">✏️</small>
+                            @endif
                         </p>
                         <p class="card-text" data-encrypted="{{ $message->full_payload }}">Загрузка...</p>
                     </div>
@@ -288,6 +302,10 @@
             <a href="/chats/create" class="des-btn">{{ __('chats.new_chat') }}</a>
             <a href="/notifications" class="des-btn">{{ __('chats.notifications') }}</a>
         </div>
+
+        <div id="translations" data-edit="{{ __('chats.edit') }}" data-delete="{{ __('chats.delete') }}"
+            style="display:none;">
+        </div>
     </div>
 
     <audio id="notificationSound" preload="auto">
@@ -295,329 +313,422 @@
     </audio>
 @endsection
 
+
+
 @section('scripts')
 
-<script src="https://cdn.jsdelivr.net/npm/tweetnacl/nacl.min.js    "></script>
-<script>
-    /* ============================================================
-       ======================= УТИЛИТЫ ============================
-       ============================================================ */
-    if (typeof b64ToU8 !== 'function') {
-        function b64ToU8(b64) {
-            return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+    <script src="https://cdn.jsdelivr.net/npm/tweetnacl/nacl.min.js"></script>
+    <script>
+        /* ============================================================
+                    ======================= УТИЛИТЫ ============================
+                       ============================================================ */
+        if (typeof b64ToU8 !== 'function') {
+            function b64ToU8(b64) {
+                return Uint8Array.from(atob(b64), c => c.charCodeAt(0));
+            }
+
+            function u8ToB64(u8) {
+                return btoa(String.fromCharCode(...u8));
+            }
         }
 
-        function u8ToB64(u8) {
-            return btoa(String.fromCharCode(...u8));
-        }
-    }
+        /* ============================================================
+        ======================= ГЛОБАЛЫ =============================
+           ============================================================ */
+        let CURRENT_CHAT_KEY = null; // ключ чата
+        let editingMessageId = null; // id редактируемого сообщения
+        let editingBackupText = null; // текст до редактирования (rollback)
+        let isSending = false; // защита от дублей
+        let enterPressed = false; // флаг для предотвращения дублирования при удержании Enter
+        let autoScrollEnabled = true; // флаг для автопрокрутки
 
-    /* ============================================================
-       ======================= ГЛОБАЛЫ =============================
-       ============================================================ */
-    let CURRENT_CHAT_KEY = null; // ключ чата
-    let editingMessageId = null; // id редактируемого сообщения
-    let editingBackupText = null; // текст до редактирования (rollback)
-    let isSending = false; // защита от дублей
-    let enterPressed = false; // флаг для предотвращения дублирования при удержании Enter
+        const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+        const CURRENT_USER_ID = {{ auth()->id() }};
+        const FIRST_UNREAD_MESSAGE_ID = {{ $firstUnreadMessageId ?? 'null' }};
 
-    const CSRF_TOKEN = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    const CURRENT_USER_ID = {{ auth()->id() }};
+        const TRANSLATIONS = @json([
+            'edit' => __('chats.edit'),
+            'delete' => __('chats.delete'),
+        ]);
 
-    /* ============================================================
-       ==================== РАСШИФРОВКА ===========================
-       ============================================================ */
-    function decryptMessage(encryptedPayload) {
-        if (!CURRENT_CHAT_KEY) return '[Ключ загружается...]';
-
-        try {
-            const [nonceB64, cipherB64] = encryptedPayload.split('|');
-            const decrypted = nacl.secretbox.open(
-                b64ToU8(cipherB64),
-                b64ToU8(nonceB64),
-                CURRENT_CHAT_KEY
-            );
-            return decrypted ?
-                new TextDecoder().decode(decrypted) :
-                '[Ошибка]';
-        } catch {
-            return '[Ошибка]';
-        }
-    }
-
-    function decryptAndAttachActions() {
-        if (!CURRENT_CHAT_KEY) return;
-
-        document.querySelectorAll('.card-text[data-encrypted]').forEach(el => {
-            const messageEl = el.closest('.message');
-            if (!messageEl) return;
-
-            const isOwn = messageEl.classList.contains('sent');
-
-            if (!el.dataset.decrypted) {
-                const txt = decryptMessage(el.dataset.encrypted);
-                el.innerHTML = txt.replace(/\n/g, '<br>');
-                el.dataset.plaintext = txt;
-                el.dataset.decrypted = '1';
-            }
-
-            if (isOwn) {
-                const nonceB64 = el.dataset.encrypted.split('|')[0];
-                attachEditButton(messageEl, el.dataset.plaintext, nonceB64);
-            }
-        });
-    }
-
-    /* ============================================================
-       ===================== КНОПКА ⋮ =============================
-       ============================================================ */
-    function attachEditButton(messageEl, plaintext, nonceB64) {
-        if (messageEl.querySelector('.edit-actions')) return;
-
-        const body = messageEl.querySelector('.my-card-body');
-        if (!body) return;
-
-        const actions = document.createElement('div');
-        actions.className = 'edit-actions';
-        actions.innerHTML = '<span class="dots">⋮</span>';
-        body.appendChild(actions);
-
-        actions.querySelector('.dots').onclick = e => {
-            e.stopPropagation();
-            createContextMenu(messageEl.dataset.id, messageEl, plaintext, nonceB64);
-        };
-
-        body.onmouseenter = () => actions.style.opacity = '1';
-        body.onmouseleave = () => actions.style.opacity = '0';
-    }
-
-    /* ============================================================
-       ================== КОНТЕКСТНОЕ МЕНЮ ========================
-       ============================================================ */
-    function createContextMenu(messageId, messageEl, text, nonceB64) {
-        document.querySelectorAll('.context-menu').forEach(e => e.remove());
-
-        const menu = document.createElement('div');
-        menu.className = 'context-menu';
-
-        const editBtn = document.createElement('div');
-        editBtn.textContent = 'Редактировать';
-        editBtn.onclick = () => {
-            menu.remove();
-            // Берём текст из HTML элемента, чтобы получить последнюю версию
-            const currentTextElement = messageEl.querySelector('.card-text');
-            const currentText = currentTextElement ? currentTextElement.dataset.plaintext || currentTextElement
-                .innerText : text;
-            startEditing(messageId, messageEl, currentText, nonceB64);
-        };
-
-        const delBtn = document.createElement('div');
-        delBtn.textContent = 'Удалить';
-        delBtn.style.color = '#ff6b6b';
-        delBtn.onclick = () => {
-            menu.remove();
-            confirmDelete(messageId, messageEl);
-        };
-
-        menu.append(editBtn, delBtn);
-        document.body.appendChild(menu);
-
-        const r = messageEl.getBoundingClientRect();
-        menu.style.top = (r.top + window.scrollY + 10) + 'px';
-        menu.style.left = (r.right + window.scrollX - 120) + 'px';
-
-        setTimeout(() => {
-            document.addEventListener('click', e => {
-                if (!menu.contains(e.target)) menu.remove();
-            }, {
-                once: true
-            });
-        }, 0);
-    }
-
-    /* ============================================================
-       ==================== РЕДАКТИРОВАНИЕ ========================
-       ============================================================ */
-    function startEditing(messageId, messageEl, text, nonceB64) {
-        cancelEditing(); // на случай если уже что-то редактируется
-
-        editingMessageId = messageId;
-        editingBackupText = text;
-        window.editingNonceB64 = nonceB64;
-
-        messageEl.classList.add('editing'); // 🔥 подсветка
-
-        const input = document.getElementById('messageInput');
-        input.value = text;
-        input.focus();
-
-        document.getElementById('sendBtn').textContent = 'Сохранить';
-    }
-
-    /* Отмена редактирования (Esc) */
-    function cancelEditing() {
-        if (!editingMessageId) return;
-
-        const msgEl = document.querySelector(`.message[data-id="${editingMessageId}"]`);
-        if (msgEl) msgEl.classList.remove('editing');
-
-        editingMessageId = null;
-        editingBackupText = null;
-        delete window.editingNonceB64;
-
-        document.getElementById('messageInput').value = '';
-        document.getElementById('sendBtn').textContent = '{{ __('chats.send') }}';
-    }
-
-    /* ============================================================
-       ======================= УДАЛЕНИЕ ===========================
-       ============================================================ */
-    async function confirmDelete(messageId, messageEl) {
-        if (!confirm('Удалить сообщение?')) return;
-
-        const res = await fetch(`/messages/${messageId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': CSRF_TOKEN,
-                Accept: 'application/json'
-            }
-        });
-
-        const data = await res.json();
-        if (data.status === 'success') {
-            messageEl.remove();
-            if (editingMessageId == messageId) cancelEditing();
-        }
-    }
-
-    /* ============================================================
-       ======================= ОСНОВНОЙ ===========================
-       ============================================================ */
-    document.addEventListener('DOMContentLoaded', () => {
-
-        const form = document.getElementById('messageForm');
-        const input = document.getElementById('messageInput');
-        const sendBtn = document.getElementById('sendBtn');
-        const chatMessages = document.getElementById('chat-messages');
-
-        const chatId = {{ $chat->id }};
-        const userId = {{ auth()->id() }};
-        let lastMessageId = {{ $chat->messages->last()?->id ?? 0 }};
-
-        /* ❌ отключаем submit формы полностью */
-        form.addEventListener('submit', e => {
-            e.preventDefault();
-            e.stopPropagation();
-            return false;
-        });
-
-        const scrollToBottom = () => {
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        };
-        scrollToBottom();
-
-        /* ENTER + ESC */
-        input.addEventListener('keydown', e => {
-            if (e.key === 'Escape') {
-                e.preventDefault();
-                cancelEditing();
-                return;
-            }
-
-            if (e.key === 'Enter' && !e.shiftKey) {
-                e.preventDefault();
-                
-                // Проверяем, не было ли уже нажатие Enter
-                if (!enterPressed && !isSending) {
-                    enterPressed = true;
-                    sendMessageNow();
-                    
-                    // Сброс флага через короткий промежуток времени
-                    setTimeout(() => {
-                        enterPressed = false;
-                    }, 300); // 300 мс должно быть достаточно для предотвращения дублирования
-                }
-            }
-        });
-
-        /* ========================================================
-           ============== ОТПРАВКА / РЕДАКТИРОВАНИЕ ===============
-           ======================================================== */
-        async function sendMessageNow() {
-            if (isSending) return;
-
-            const text = input.value.trim();
-            if (!text) return;
-
-            isSending = true;
-            sendBtn.disabled = true;
-            input.value = '';
-
-            let optimisticEl = null;
+        /* ============================================================
+           ==================== РАСШИФРОВКА ===========================
+           ============================================================ */
+        function decryptMessage(encryptedPayload) {
+            if (!CURRENT_CHAT_KEY) return '[Ключ загружается...]';
 
             try {
-                const bytes = new TextEncoder().encode(text);
-                let nonce, nonceB64;
-
-                if (editingMessageId) {
-                    nonceB64 = window.editingNonceB64;
-                    nonce = b64ToU8(nonceB64);
-                } else {
-                    nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
-                    nonceB64 = u8ToB64(nonce);
-                }
-
-                const encrypted = nacl.secretbox(bytes, nonce, CURRENT_CHAT_KEY);
-
-                /* ===== OPTIMISTIC UI для редактирования ===== */
-                if (editingMessageId) {
-                    optimisticEl = document.querySelector(
-                        `.message[data-id="${editingMessageId}"] .card-text`);
-                    if (optimisticEl) {
-                        optimisticEl.innerHTML = text.replace(/\n/g, '<br>');
-                        // Обновляем plaintext атрибут
-                        optimisticEl.setAttribute('data-plaintext', text);
-                    }
-                }
-
-                const res = await fetch(
-                    editingMessageId ? `/messages/${editingMessageId}` : form.action, {
-                        method: editingMessageId ? 'PATCH' : 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': CSRF_TOKEN,
-                            'Content-Type': 'application/json',
-                            Accept: 'application/json'
-                        },
-                        body: JSON.stringify({
-                            message: u8ToB64(encrypted),
-                            nonce: nonceB64
-                        })
-                    }
+                const [nonceB64, cipherB64] = encryptedPayload.split('|');
+                const decrypted = nacl.secretbox.open(
+                    b64ToU8(cipherB64),
+                    b64ToU8(nonceB64),
+                    CURRENT_CHAT_KEY
                 );
+                return decrypted ?
+                    new TextDecoder().decode(decrypted) :
+                    '[Ошибка]';
+            } catch {
+                return '[Ошибка]';
+            }
+        }
 
-                const data = await res.json();
-                if (data.status !== 'success') throw new Error();
+        function decryptAndAttachActions() {
+            if (!CURRENT_CHAT_KEY) return;
 
-                /* ===== COMMIT ===== */
-                if (editingMessageId) {
-                    const msgEl = document.querySelector(`.message[data-id="${editingMessageId}"]`);
-                    if (msgEl) {
-                        msgEl.classList.remove('editing');
-                        // Обновляем plaintext атрибут в HTML элементе
-                        const cardTextEl = msgEl.querySelector('.card-text');
-                        if (cardTextEl) {
-                            cardTextEl.setAttribute('data-plaintext', text);
+            document.querySelectorAll('.card-text[data-encrypted]').forEach(el => {
+                const messageEl = el.closest('.message');
+                if (!messageEl) return;
+
+                const isOwn = messageEl.classList.contains('sent');
+
+                if (!el.dataset.decrypted) {
+                    const txt = decryptMessage(el.dataset.encrypted);
+                    el.innerHTML = txt.replace(/\n/g, '<br>');
+                    el.dataset.plaintext = txt;
+                    el.dataset.decrypted = '1';
+
+                    // Проверяем, было ли сообщение отредактировано
+                    const isEdited = messageEl.getAttribute('data-is-edited');
+                    if (isEdited === 'true') {
+                        const cardTitle = messageEl.querySelector('.card-title');
+                        if (cardTitle && !cardTitle.querySelector('.message-status.edited')) {
+                            const editedSpan = document.createElement('small');
+                            editedSpan.className = 'message-status edited';
+                            editedSpan.textContent = '✏️';
+                            cardTitle.appendChild(editedSpan);
                         }
-                        // Обновляем backup текст на текущий после успешного редактирования
-                        editingBackupText = text;
                     }
-                } else {
-                    chatMessages.insertAdjacentHTML('beforeend', `
+                }
+
+                if (isOwn) {
+                    const nonceB64 = el.dataset.encrypted.split('|')[0];
+                    attachEditButton(messageEl, el.dataset.plaintext, nonceB64);
+                }
+            });
+        }
+
+        /* ============================================================
+           ===================== КНОПКА ⋮ =============================
+           ============================================================ */
+        function attachEditButton(messageEl, plaintext, nonceB64) {
+            if (messageEl.querySelector('.edit-actions')) return;
+
+            const body = messageEl.querySelector('.my-card-body');
+            if (!body) return;
+
+            const actions = document.createElement('div');
+            actions.className = 'edit-actions';
+            actions.innerHTML = '<span class="dots">⋮</span>';
+            body.appendChild(actions);
+
+            actions.querySelector('.dots').onclick = e => {
+                e.stopPropagation();
+                createContextMenu(messageEl.dataset.id, messageEl, plaintext, nonceB64);
+            };
+
+            body.onmouseenter = () => actions.style.opacity = '1';
+            body.onmouseleave = () => actions.style.opacity = '0';
+        }
+
+        /* ============================================================
+           ================== КОНТЕКСТНОЕ МЕНЮ ========================
+           ============================================================ */
+        function createContextMenu(messageId, messageEl, text, nonceB64) {
+            // Удаляем старые меню
+            document.querySelectorAll('.context-menu').forEach(e => e.remove());
+
+            const menu = document.createElement('div');
+            menu.className = 'context-menu';
+
+            // Кнопка "Редактировать"
+            const editBtn = document.createElement('div');
+            editBtn.textContent = TRANSLATIONS.edit;
+            editBtn.onclick = () => {
+                menu.remove();
+                const currentTextElement = messageEl.querySelector('.card-text');
+                const currentText = currentTextElement ?
+                    currentTextElement.dataset.plaintext || currentTextElement.innerText :
+                    text;
+                startEditing(messageId, messageEl, currentText, nonceB64);
+            };
+
+            // Кнопка "Удалить"
+            const delBtn = document.createElement('div');
+            delBtn.textContent = TRANSLATIONS.delete;
+            delBtn.style.color = '#ff6b6b';
+            delBtn.onclick = () => {
+                menu.remove();
+                confirmDelete(messageId, messageEl);
+            };
+
+            menu.append(editBtn, delBtn);
+            document.body.appendChild(menu);
+
+            const r = messageEl.getBoundingClientRect();
+            menu.style.top = (r.top + window.scrollY + 10) + 'px';
+            menu.style.left = (r.right + window.scrollX - 120) + 'px';
+
+            // Закрытие по клику вне меню
+            setTimeout(() => {
+                document.addEventListener('click', e => {
+                    if (!menu.contains(e.target)) menu.remove();
+                }, {
+                    once: true
+                });
+            }, 0);
+        }
+
+        /* ============================================================
+           ==================== РЕДАКТИРОВАНИЕ ========================
+           ============================================================ */
+        function startEditing(messageId, messageEl, text, nonceB64) {
+            cancelEditing(); // на случай если уже что-то редактируется
+
+            editingMessageId = messageId;
+            editingBackupText = text;
+            window.editingNonceB64 = nonceB64;
+
+            messageEl.classList.add('editing'); // 🔥 подсветка
+
+            const input = document.getElementById('messageInput');
+            input.value = text;
+            input.focus();
+
+            document.getElementById('sendBtn').textContent = 'Сохранить';
+        }
+
+        /* Отмена редактирования (Esc) */
+        function cancelEditing() {
+            if (!editingMessageId) return;
+
+            const msgEl = document.querySelector(`.message[data-id="${editingMessageId}"]`);
+            if (msgEl) msgEl.classList.remove('editing');
+
+            editingMessageId = null;
+            editingBackupText = null;
+            delete window.editingNonceB64;
+
+            document.getElementById('messageInput').value = '';
+            document.getElementById('sendBtn').textContent = '{{ __('chats.send') }}';
+        }
+
+        /* ============================================================
+           ======================= УДАЛЕНИЕ ===========================
+           ============================================================ */
+        async function confirmDelete(messageId, messageEl) {
+            if (!confirm('Удалить сообщение?')) return;
+
+            const res = await fetch(`/messages/${messageId}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': CSRF_TOKEN,
+                    Accept: 'application/json'
+                }
+            });
+
+            const data = await res.json();
+            if (data.status === 'success') {
+                messageEl.remove();
+                if (editingMessageId == messageId) cancelEditing();
+            }
+        }
+
+        /* ============================================================
+           ======================= ОСНОВНОЙ ===========================
+           ============================================================ */
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const form = document.getElementById('messageForm');
+            const input = document.getElementById('messageInput');
+            const sendBtn = document.getElementById('sendBtn');
+            const chatMessages = document.getElementById('chat-messages');
+
+            const chatId = {{ $chat->id }};
+            const userId = {{ auth()->id() }};
+            let lastMessageId = {{ $chat->messages->last()?->id ?? 0 }};
+
+            /* ❌ отключаем submit формы полностью */
+            form.addEventListener('submit', e => {
+                e.preventDefault();
+                e.stopPropagation();
+                return false;
+            });
+
+            // Функция проверки, находится ли пользователь внизу чата
+            function isAtBottom() {
+                const threshold = 10; // порог в пикселях
+                return chatMessages.scrollHeight - chatMessages.scrollTop <= chatMessages.clientHeight + threshold;
+            }
+
+            // Функция проверки, находится ли пользователь вверху чата
+            function isAtTop() {
+                return chatMessages.scrollTop <= 10;
+            }
+
+            // Отключаем автопрокрутку при скролле пользователя
+            chatMessages.addEventListener('scroll', () => {
+                autoScrollEnabled = isAtBottom();
+            });
+
+            // Включаем автопрокрутку, если пользователь проскроллил вниз
+            function enableAutoScrollIfAtBottom() {
+                if (isAtBottom()) {
+                    autoScrollEnabled = true;
+                }
+            }
+
+            // Обновим функцию scrollToBottom
+            function scrollToBottom() {
+                if (autoScrollEnabled) {
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }
+            }
+
+            // Прокрутка к первому непрочитанному сообщению при загрузке
+            if (FIRST_UNREAD_MESSAGE_ID) {
+                setTimeout(() => {
+                    const unreadMessageEl = document.querySelector(
+                        `.message[data-id="${FIRST_UNREAD_MESSAGE_ID}"]`);
+                    if (unreadMessageEl) {
+                        unreadMessageEl.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center'
+                        });
+                        // Отключаем автопрокрутку, если пользователь просматривает историю
+                        autoScrollEnabled = false;
+                    } else {
+                        // Если сообщение не найдено, прокручиваем вниз
+                        scrollToBottom();
+                    }
+                }, 100);
+            } else {
+                // Если нет непрочитанных сообщений, прокручиваем вниз
+                setTimeout(() => {
+                    scrollToBottom();
+                    autoScrollEnabled = true;
+                }, 100);
+            }
+
+            /* ENTER + ESC */
+            input.addEventListener('keydown', e => {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    cancelEditing();
+                    return;
+                }
+
+                if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    if (!isSending) {
+        sendMessageNow();
+    }
+}
+            });
+
+            /* ========================================================
+               ============== ОТПРАВКА / РЕДАКТИРОВАНИЕ ===============
+               ======================================================== */
+            async function sendMessageNow() {
+                if (isSending) return;
+
+                const text = input.value.trim();
+                if (!text) return;
+
+                isSending = true;
+                sendBtn.disabled = true;
+                input.value = '';
+
+                let optimisticEl = null;
+                let originalEditedStatus = null; // Сохраняем оригинальный статус редактирования
+
+                try {
+                    const bytes = new TextEncoder().encode(text);
+                    let nonce, nonceB64;
+
+                    if (editingMessageId) {
+                        nonceB64 = window.editingNonceB64;
+                        nonce = b64ToU8(nonceB64);
+                    } else {
+                        nonce = nacl.randomBytes(nacl.secretbox.nonceLength);
+                        nonceB64 = u8ToB64(nonce);
+                    }
+
+                    const encrypted = nacl.secretbox(bytes, nonce, CURRENT_CHAT_KEY);
+
+                    /* ===== OPTIMISTIC UI для редактирования ===== */
+                    if (editingMessageId) {
+                        optimisticEl = document.querySelector(
+                            `.message[data-id="${editingMessageId}"] .card-text`);
+                        if (optimisticEl) {
+                            optimisticEl.innerHTML = text.replace(/\n/g, '<br>');
+                            // Обновляем plaintext атрибут
+                            optimisticEl.setAttribute('data-plaintext', text);
+
+                            // Сохраняем оригинальный статус перед установкой нового
+                            const cardTitle = optimisticEl.closest('.my-card-body').querySelector(
+                                '.card-title');
+                            if (cardTitle) {
+                                originalEditedStatus = cardTitle.querySelector('.message-status.edited');
+                            }
+
+                            // Добавляем индикатор редактирования
+                            if (cardTitle && !cardTitle.querySelector('.message-status.edited')) {
+                                const editedSpan = document.createElement('small');
+                                editedSpan.className = 'message-status edited';
+                                editedSpan.textContent = '✏️';
+                                cardTitle.appendChild(editedSpan);
+                            }
+                        }
+                    }
+
+                    const res = await fetch(
+                        editingMessageId ? `/messages/${editingMessageId}` : form.action, {
+                            method: editingMessageId ? 'PATCH' : 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': CSRF_TOKEN,
+                                'Content-Type': 'application/json',
+                                Accept: 'application/json'
+                            },
+                            body: JSON.stringify({
+                                message: u8ToB64(encrypted),
+                                nonce: nonceB64
+                            })
+                        }
+                    );
+
+                    const data = await res.json();
+                    if (data.status !== 'success') throw new Error();
+
+                    /* ===== COMMIT ===== */
+                    if (editingMessageId) {
+                        const msgEl = document.querySelector(`.message[data-id="${editingMessageId}"]`);
+                        if (msgEl) {
+                            msgEl.classList.remove('editing');
+                            // Обновляем plaintext атрибут в HTML элементе
+                            const cardTextEl = msgEl.querySelector('.card-text');
+                            if (cardTextEl) {
+                                cardTextEl.setAttribute('data-plaintext', text);
+                            }
+                            // Обновляем backup текст на текущий после успешного редактирования
+                            editingBackupText = text;
+
+                            // Убедимся, что индикатор редактирования установлен
+                            const cardTitle = msgEl.querySelector('.card-title');
+                            if (cardTitle && !cardTitle.querySelector('.message-status.edited')) {
+                                const editedSpan = document.createElement('small');
+                                editedSpan.className = 'message-status edited';
+                                editedSpan.textContent = '✏️';
+                                cardTitle.appendChild(editedSpan);
+                            }
+                        }
+                    } else {
+                        chatMessages.insertAdjacentHTML('beforeend', `
                 <div class="message sent" data-id="${data.message.id}">
                     <div class="my-card-body">
                         <p class="card-title">
                             ${data.message.sender}
                             <small>${new Date().toLocaleTimeString()}</small>
+                            ${data.message.is_edited ? '<small class="message-status edited">✏️</small>' : ''}
                         </p>
                         <p class="card-text"
                            data-encrypted="${nonceB64}|${u8ToB64(encrypted)}"
@@ -629,76 +740,92 @@
                 </div>
             `);
 
-                    attachEditButton(chatMessages.lastElementChild, text, nonceB64);
-                    lastMessageId = data.message.id;
-                    scrollToBottom();
-                }
-
-                cancelEditing();
-
-            } catch {
-                /* ===== ROLLBACK ===== */
-                if (optimisticEl && editingBackupText !== null) {
-                    optimisticEl.innerHTML = editingBackupText.replace(/\n/g, '<br>');
-                }
-                alert('Ошибка отправки');
-            } finally {
-                isSending = false;
-                sendBtn.disabled = false;
-                // Сбрасываем флаг при завершении отправки
-                enterPressed = false;
-            }
-        }
-
-        sendBtn.addEventListener('click', sendMessageNow);
-
-        /* ========================================================
-           ================ CHAT KEY + POLLING ====================
-           ======================================================== */
-        (function loadChatKey() {
-            const privKeyB64 = localStorage.getItem(`userPrivateKey_${CURRENT_USER_ID}`);
-            if (!privKeyB64) {
-                sessionStorage.setItem('url.intended', location.href);
-                location.href = '/setup-keys?new_device=1';
-                return;
-            }
-
-            fetch(`/chats/${chatId}/my-key`, {
-                    headers: {
-                        'X-CSRF-TOKEN': CSRF_TOKEN,
-                        Accept: 'application/json'
+                        attachEditButton(chatMessages.lastElementChild, text, nonceB64);
+                        lastMessageId = data.message.id;
+                        scrollToBottom();
                     }
-                })
-                .then(r => r.json())
-                .then(data => {
-                    CURRENT_CHAT_KEY = nacl.box.open(
-                        b64ToU8(data.encrypted_key),
-                        b64ToU8(data.nonce),
-                        b64ToU8(data.initiator_public_key),
-                        b64ToU8(privKeyB64)
-                    );
-                    decryptAndAttachActions();
-                    setInterval(loadNewMessages, 2000);
-                });
-        })();
 
-        async function loadNewMessages() {
-            const res = await fetch(`/chats/${chatId}/messages?last_id=${lastMessageId}`);
-            if (!res.ok) return;
+                    cancelEditing();
 
-            const msgs = await res.json();
-            msgs.forEach(msg => {
-                if (msg.id <= lastMessageId) return;
-                if (document.querySelector(`.message[data-id="${msg.id}"]`)) return;
+                } catch {
+                    /* ===== ROLLBACK ===== */
+                    if (optimisticEl && editingBackupText !== null) {
+                        optimisticEl.innerHTML = editingBackupText.replace(/\n/g, '<br>');
 
-                const isOwn = msg.sender.id === userId;
+                        // Восстанавливаем оригинальное состояние галочек
+                        const cardTitle = optimisticEl.closest('.my-card-body').querySelector('.card-title');
+                        if (cardTitle) {
+                            // Удаляем все галочки редактирования
+                            const editedSpans = cardTitle.querySelectorAll('.message-status.edited');
+                            editedSpans.forEach(span => span.remove());
 
-                chatMessages.insertAdjacentHTML('beforeend', `
-            <div class="message ${isOwn ? 'sent' : 'received'}" data-id="${msg.id}">
+                            // Если сообщение было отредактировано ранее, восстанавливаем галочку
+                            if (originalEditedStatus) {
+                                cardTitle.appendChild(originalEditedStatus.cloneNode(true));
+                            }
+                        }
+                    }
+                    alert('Ошибка отправки');
+                } finally {
+                    isSending = false;
+                    sendBtn.disabled = false;
+                    // Сбрасываем флаг при завершении отправки
+                    enterPressed = false;
+                }
+            }
+
+            sendBtn.addEventListener('click', sendMessageNow);
+
+            /* ========================================================
+               ================ CHAT KEY + POLLING ====================
+               ======================================================== */
+            (function loadChatKey() {
+                const privKeyB64 = localStorage.getItem(`userPrivateKey_${CURRENT_USER_ID}`);
+                if (!privKeyB64) {
+                    sessionStorage.setItem('url.intended', location.href);
+                    location.href = '/setup-keys?new_device=1';
+                    return;
+                }
+
+                fetch(`/chats/${chatId}/my-key`, {
+                        headers: {
+                            'X-CSRF-TOKEN': CSRF_TOKEN,
+                            Accept: 'application/json'
+                        }
+                    })
+                    .then(r => r.json())
+                    .then(data => {
+                        CURRENT_CHAT_KEY = nacl.box.open(
+                            b64ToU8(data.encrypted_key),
+                            b64ToU8(data.nonce),
+                            b64ToU8(data.initiator_public_key),
+                            b64ToU8(privKeyB64)
+                        );
+                        decryptAndAttachActions();
+                        setInterval(loadNewMessages, 2000);
+                    });
+            })();
+
+            async function loadNewMessages() {
+                const res = await fetch(`/chats/${chatId}/messages?last_id=${lastMessageId}`);
+                if (!res.ok) return;
+
+                const msgs = await res.json();
+                const wasAtBottom = isAtBottom(); // сохраняем состояние до добавления новых сообщений
+
+                msgs.forEach(msg => {
+                    if (msg.id <= lastMessageId) return;
+                    if (document.querySelector(`.message[data-id="${msg.id}"]`)) return;
+
+                    const isOwn = msg.sender.id === userId;
+
+                    chatMessages.insertAdjacentHTML('beforeend', `
+            <div class="message ${isOwn ? 'sent' : 'received'}" data-id="${msg.id}" data-is-edited="${msg.is_edited ? 'true' : 'false'}">
                 <div class="${isOwn ? 'my-card-body' : 'card-body'}">
                     <p class="card-title">
                         ${msg.sender.name}
                         <small>${new Date(msg.created_at).toLocaleTimeString()}</small>
+                        ${msg.is_edited ? '<small class="message-status edited">✏️</small>' : ''}
                     </p>
                     <p class="card-text" data-encrypted="${msg.message}">
                         Загрузка...
@@ -707,12 +834,16 @@
             </div>
         `);
 
-                lastMessageId = msg.id;
-            });
+                    lastMessageId = msg.id;
+                });
 
-            decryptAndAttachActions();
-            scrollToBottom();
-        }
-    });
-</script>
+                decryptAndAttachActions();
+
+                // Автопрокрутка только если пользователь был внизу до получения новых сообщений
+                if (wasAtBottom) {
+                    scrollToBottom();
+                }
+            }
+        });
+    </script>
 @endsection

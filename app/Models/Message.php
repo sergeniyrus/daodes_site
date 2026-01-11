@@ -13,6 +13,7 @@ class Message extends Model
         'chat_id',
         'sender_id',
         'ipfs_cid',
+        'edited_at',
     ];
 
     public function chat()
