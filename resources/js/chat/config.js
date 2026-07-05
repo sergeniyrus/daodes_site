@@ -12,6 +12,10 @@ export function loadChatConfig() {
         translations: {
             edit: el.dataset.translateEdit,
             delete: el.dataset.translateDelete,
+            reply: el.dataset.translateReply,
+            send: el.dataset.translateSend,
+            copy: el.dataset.translateCopy
+            
         },
     };
 }

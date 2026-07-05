@@ -294,7 +294,7 @@
 
 /* Форма превью ответа над полем ввода */
 .reply-preview-form {
-    background: rgba(255, 215, 0, 0.08);
+    background: rgba(255, 215, 0, 0.15);
     border-top: 2px solid gold;
     border-left: 3px solid gold;
     border-right: 3px solid gold;

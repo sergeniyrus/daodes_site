@@ -52,9 +52,9 @@ export class ChatUI {
         const menu = document.createElement('div');
         menu.className = 'context-menu';
 
-        // Кнопка Ответить
+        // Кнопка Ответить — с переводом и иконкой
         const replyBtn = document.createElement('div');
-        replyBtn.innerHTML = '↩️ Ответить';
+        replyBtn.innerHTML = '<i class="fa fa-reply" aria-hidden="true"></i> ' + (this.config.translations.reply || 'Ответить');
         replyBtn.onclick = () => {
             menu.remove();
             const titleEl = messageEl.querySelector('.card-title');
@@ -64,9 +64,9 @@ export class ChatUI {
             this.startReply(messageId, senderName, text);
         };
 
-        // Кнопка Копировать
+        // Кнопка Копировать — с переводом и иконкой
         const copyBtn = document.createElement('div');
-        copyBtn.innerHTML = '📋 Копировать';
+        copyBtn.innerHTML = '<i class="fa fa-copy" aria-hidden="true"></i> ' + (this.config.translations.copy || 'Копировать');
         copyBtn.onclick = async () => {
             try {
                 await navigator.clipboard.writeText(text);
@@ -94,8 +94,10 @@ export class ChatUI {
         document.querySelectorAll('.context-menu').forEach(e => e.remove());
         const menu = document.createElement('div');
         menu.className = 'context-menu';
+
+        // Кнопка Ответить — с переводом и иконкой
         const replyBtn = document.createElement('div');
-        replyBtn.textContent = this.config.translations.reply || '↩️ Ответить';
+        replyBtn.innerHTML = '<i class="fa fa-reply" aria-hidden="true"></i> ' + (this.config.translations.reply || 'Ответить');
         replyBtn.onclick = () => {
             menu.remove();
             const titleEl = messageEl.querySelector('.card-title');
@@ -105,6 +107,8 @@ export class ChatUI {
             const currentText = messageEl.querySelector('.card-text')?.dataset.plaintext || text;
             this.startReply(messageId, senderName, currentText);
         };
+
+        // Кнопка Редактировать — с переводом
         const editBtn = document.createElement('div');
         editBtn.textContent = this.config.translations.edit;
         editBtn.onclick = () => {
@@ -112,6 +116,8 @@ export class ChatUI {
             const currentText = messageEl.querySelector('.card-text')?.dataset.plaintext || text;
             this.startEditing(messageId, messageEl, currentText, nonceB64);
         };
+
+        // Кнопка Удалить — с переводом
         const delBtn = document.createElement('div');
         delBtn.textContent = this.config.translations.delete;
         delBtn.style.color = '#ff6b6b';
@@ -119,11 +125,14 @@ export class ChatUI {
             menu.remove();
             this.confirmDelete(messageId, messageEl);
         };
+
         menu.append(replyBtn, editBtn, delBtn);
         document.body.appendChild(menu);
+
         const r = messageEl.getBoundingClientRect();
         menu.style.top = (r.top + window.scrollY + 10) + 'px';
         menu.style.left = (r.right + window.scrollX - 120) + 'px';
+
         setTimeout(() => {
             document.addEventListener('click', e => {
                 if (!menu.contains(e.target)) menu.remove();

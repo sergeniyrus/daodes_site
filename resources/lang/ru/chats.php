@@ -41,8 +41,12 @@ return [
     'online_participants' => ':online из :total онлайн',
 
     //кнопки подменю
+    'reply' => 'Ответить',
     'edit' => '✏️ Редактировать',
     'delete' => '🗑 Удалить',
+    'copy' => 'Копировать',
+
+    'download' => 'Загрузка...',
     
     'group_chat' => 'Групповой чат',
 'direct_chat' => 'Личный чат',

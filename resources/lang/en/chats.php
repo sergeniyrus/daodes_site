@@ -41,8 +41,12 @@ return [
     'online_participants' => ':online of :total online',
 
     //кнопки подменю
+    'reply' => 'Reply',
     'edit' => '✏️ Edit',
     'delete' => '🗑 Delete',
+    'copy' => 'Copy',
+  
+    'download' => 'Download...',
 
     'group_chat' => 'Group Chat',
 'direct_chat' => 'Private Chat',

@@ -37,8 +37,8 @@
             
             @if ($message->reply_to_message_id)
                 <div class="reply-preview" data-reply-id="{{ $message->reply_to_message_id }}">
-                    <div class="reply-indicator">↩️</div>
-                    <div class="reply-content">Загрузка...</div>
+                    <div class="reply-indicator"><i class="fa fa-reply" aria-hidden="true"></i></div>
+                    <div class="reply-content">{{ __('chats.download') }} <i class="fa fa-spinner" aria-hidden="true"></i></div>
                 </div>
             @endif
             
@@ -51,7 +51,7 @@
                         <small class="message-status edited">✏️</small>
                     @endif
                 </p>
-                <p class="card-text">Загрузка...</p>
+                <p class="card-text">{{ __('chats.download') }} <i class="fa fa-spinner" aria-hidden="true"></i></p>
             </div>
         </div>
     @endforeach
@@ -60,7 +60,7 @@
 {{-- Превью ответа над полем ввода --}}
 <div id="replyPreview" class="reply-preview-form" style="display: none;">
     <div class="reply-info">
-        <span class="reply-icon">↩️</span>
+        <span class="reply-icon"><i class="fa fa-reply" aria-hidden="true"></i></span>
         <span class="reply-to-name"></span>
         <span class="reply-to-text"></span>
     </div>
@@ -83,7 +83,7 @@
             <a href="/notifications" class="chat-btn">{{ __('chats.notifications') }}</a>
         </div>
 
-        <div id="translations" data-edit="{{ __('chats.edit') }}" data-delete="{{ __('chats.delete') }}"
+        <div id="translations" data-reply="{{ __('chats.reply') }}" data-edit="{{ __('chats.edit') }}" data-delete="{{ __('chats.delete') }}" data-copy="{{ __('chat.copy') }}"
             style="display:none;">
         </div>
     </div>
@@ -103,7 +103,9 @@
      data-translate-edit="{{ __('chats.edit') }}"
      data-translate-delete="{{ __('chats.delete') }}"
      data-translate-reply="{{ __('chats.reply') }}"
-     data-translate-send="{{ __('chats.send') }}">
+     data-translate-send="{{ __('chats.send') }}"
+     data-translate-copy="{{ __('chats.copy') }}"
+     >
 </div>
 
     @push('scripts')

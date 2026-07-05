@@ -189,8 +189,8 @@ export class MessagePoller {
 
                     const replyPreview = msg.reply_to_message_id
                         ? `<div class="reply-preview" data-reply-id="${msg.reply_to_message_id}">
-                               <div class="reply-indicator">↩️</div>
-                               <div class="reply-content">Загрузка...</div>
+                               <div class="reply-indicator"><i class="fa fa-reply" aria-hidden="true"></i></div>
+                               <div class="reply-content">{{ __('chats.download') }} <i class="fa fa-spinner" aria-hidden="true"></i></div>
                            </div>`
                         : '';
 
@@ -205,7 +205,7 @@ export class MessagePoller {
                                     ${this.escapeHtml(msg.sender.name)}
                                     <small>${new Date(msg.created_at).toLocaleTimeString()}</small>
                                 </p>
-                                <p class="card-text">Загрузка...</p>
+                                <p class="card-text">{{ __('chats.download') }} <i class="fa fa-spinner" aria-hidden="true"></i></p>
                             </div>
                         </div>
                     `;
