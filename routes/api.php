@@ -5,7 +5,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Http\Controllers\UserStatusController;
 use App\Http\Controllers\TelegramBotController;
-
+use App\Http\Controllers\Api\AppVersionController;
+use App\Http\Controllers\AIController;
 
 
 /*
@@ -42,4 +43,12 @@ Route::middleware(['web', 'auth'])->group(function () {
 });
 
 
+
+
+Route::get('/app/version', [AppVersionController::class, 'check']);
+
+
+Route::get('/ai/patches', [AIController::class, 'patches']);
+Route::post('/ai/patch/approve', [AIController::class, 'approve']);
+Route::post('/ai/patch/reject', [AIController::class, 'reject']);
 

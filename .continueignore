@@ -1,0 +1,24 @@
+# Исключаем все SQLite файлы и базы данных из индексации
+*.sqlite
+*.sqlite3
+*.db
+*.db-shm
+*.db-wal
+
+# Исключаем папки кэша и логов Laravel
+storage/logs/
+storage/framework/cache/
+storage/framework/sessions/
+storage/framework/views/
+bootstrap/cache/
+
+# Исключаем вендоры и node_modules
+vendor/
+node_modules/
+
+# Исключаем бинарники и большие файлы
+*.zip
+*.tar.gz
+*.log
+
+.git/

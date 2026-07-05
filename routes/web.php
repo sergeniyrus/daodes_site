@@ -37,6 +37,14 @@ use App\Http\Controllers\{
     SeedSetupController,
     MessageController,
 };
+use App\Http\Controllers\Admin\AppVersionAdminController;
+
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/admin/app-versions', [AppVersionAdminController::class, 'index'])->name('admin.app_versions.index');
+    Route::post('/admin/app-versions', [AppVersionAdminController::class, 'store'])->name('admin.app_versions.store');
+});
+
+
 // === E2E-маршруты ===
 Route::middleware('auth')->group(function () {
 
@@ -217,6 +225,13 @@ Route::middleware('auth')->group(function () {
     Route::post('/chats/{chat}/messages', [MessageController::class, 'store'])->name('messages.send');
     Route::patch('/messages/{message}', [MessageController::class, 'update']);
     Route::delete('/messages/{message}', [MessageController::class, 'destroy']);
+ // Превью ответа
+    Route::get('/messages/{message}/reply-info', [MessageController::class, 'getReplyInfo'])
+        ->name('messages.replyInfo');
+
+    // Проверка удалённых сообщений (для polling)
+    Route::get('/chats/{chat}/messages/ids', [MessageController::class, 'getMessageIds'])
+        ->name('messages.ids');
 
     // Уведомления
     Route::get('/notifications', [ChatController::class, 'notifications'])->name('chats.notifications');

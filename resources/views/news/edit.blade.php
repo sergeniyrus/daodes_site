@@ -5,7 +5,7 @@
 @endsection
 
 @section('main')
-@vite(['resources/css/redactor.css'])
+    @vite(['resources/css/redactor.css'])
 
     <div class="container">
         <h2 class="text-center">{{ __('admin_news.edit_news_title') }}</h2>
@@ -51,18 +51,19 @@
                 <label for="filename">{{ __('admin_news.news_image') }}</label>
                 <div class="file-input-wrapper">
                     <!-- If an image exists, show it; otherwise, hide it -->
-                <img id="preview" src="{{ $news->img ?? '#' }}" alt="Image Preview"
-                style="display: {{ $news->img ? 'block' : 'none' }}; max-width: 100px;">
-    
-            <div class="file-info">
-                <!-- If an image exists, display the file name; otherwise, show "No file chosen" -->
-                <span id="file-name" class="file-name">{{ $news->img ? basename($news->img) : __('admin_offers.no_file_chosen') }}</span>
-                <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
-                    {{ __('admin_offers.choose_file') }}
-                </button>
-                <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
-            </div>
-        </div>
+                    <img id="preview" src="{{ $news->img ?? '#' }}" alt="Image Preview"
+                        style="display: {{ $news->img ? 'block' : 'none' }}; max-width: 100px;">
+
+                    <div class="file-info">
+                        <!-- If an image exists, display the file name; otherwise, show "No file chosen" -->
+                        <span id="file-name"
+                            class="file-name">{{ $news->img ? basename($news->img) : __('admin_offers.no_file_chosen') }}</span>
+                        <button type="button" class="des-btn" onclick="document.getElementById('file-input').click();">
+                            {{ __('admin_offers.choose_file') }}
+                        </button>
+                        <input type="file" id="file-input" name="filename" accept="image/*" style="display: none;">
+                    </div>
+                </div>
                 <p style="color: red; text-align: left; margin: 10px 0 0 10px; font-size:0.9rem;">
                     {{ __('admin_news.image_requirements') }}
                 </p>
@@ -130,12 +131,20 @@
     <!-- Hidden input for cropped image data -->
     <input type="hidden" id="cropped-image" name="cropped_image">
 
-    <!-- CKEditor CSS and JS -->
+  <!-- CKEditor CSS and JS -->
+@push('styles')
     @vite(['resources/css/ckeditor.css'])
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
-    <script src="{{ asset('js/ckeditor-init.js') }}"></script>
-    <script src="{{ asset('js/form-validation.js') }}"></script>
-    <script src="{{ asset('js/category-modal.js') }}"></script>
-    <script src="{{ asset('js/category-submit.js') }}"></script>
-    <script src="{{ asset('js/cropper-init.js') }}"></script>
+@endpush
+
+@push('scripts')
+    @vite([
+        'resources/js/ckeditor.js',
+        'resources/js/ckeditor-init.js',
+        'resources/js/form-validation.js',
+        'resources/js/category-modal.js',
+        'resources/js/category-submit.js',
+        'resources/js/cropper-init.js',
+    ])
+@endpush
+    
 @endsection

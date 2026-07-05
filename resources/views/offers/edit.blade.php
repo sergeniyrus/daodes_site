@@ -125,11 +125,19 @@ Edit the offer
 <input type="hidden" id="cropped-image" name="cropped_image">
 
 <!-- CKEditor CSS and JS -->
-<link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
-<script src="{{ asset('js/ckeditor.js') }}"></script>
-<script src="{{ asset('js/ckeditor-init.js') }}"></script>
-<script src="{{ asset('js/form-validation.js') }}"></script>
-<script src="{{ asset('js/category-modal.js') }}"></script>
-<script src="{{ asset('js/category-submit.js') }}"></script>
-<script src="{{ asset('js/cropper-init.js') }}"></script>
+@push('styles')
+    @vite(['resources/css/ckeditor.css'])
+@endpush
+
+@push('scripts')
+    @vite([
+        'resources/js/ckeditor.js',
+        'resources/js/ckeditor-init.js',
+        'resources/js/form-validation.js',
+        'resources/js/category-modal.js',
+        'resources/js/category-submit.js',
+        'resources/js/cropper-init.js',
+    ])
+@endpush
+
 @endsection

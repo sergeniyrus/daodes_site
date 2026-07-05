@@ -159,3 +159,11 @@ img.avatar {
   border: 2px solid gold;
   margin: 25px auto 25px auto;
 }
+
+.avatar-img {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid gold;
+}

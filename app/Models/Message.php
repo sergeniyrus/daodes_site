@@ -13,6 +13,7 @@ class Message extends Model
         'chat_id',
         'sender_id',
         'ipfs_cid',
+        'reply_to_message_id',
         'edited_at',
     ];
 
@@ -95,4 +96,16 @@ class Message extends Model
         $this->save();
         return $newCid;
     }
+// Сообщение, на которое отвечаем
+public function replyToMessage()
+{
+    return $this->belongsTo(Message::class, 'reply_to_message_id');
+}
+
+// Ответы на это сообщение
+public function replies()
+{
+    return $this->hasMany(Message::class, 'reply_to_message_id');
+}
+
 }

@@ -16,6 +16,36 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int $version_code
+ * @property string $version_name
+ * @property string $apk_file
+ * @property bool $force_update
+ * @property array<array-key, mixed>|null $changelog
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read string $apk_url
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereApkFile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereChangelog($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereForceUpdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereVersionCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereVersionName($value)
+ */
+	class AppVersion extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property int $task_id
  * @property int $user_id
  * @property string $price

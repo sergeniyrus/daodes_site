@@ -32,9 +32,10 @@ return [
     */
 'stores' => [
     'redis' => [
-        'driver' => 'redis',
-        'connection' => 'cache', // Указываем подключение 'cache' из config/database.php
-    ],
+    'driver' => 'redis',
+    'connection' => 'cache',
+    'lock_connection' => 'default',
+],
 ],
     // 'stores' => [
 

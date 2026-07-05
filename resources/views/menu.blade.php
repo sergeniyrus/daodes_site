@@ -1,4 +1,7 @@
-@vite(['resources/css/menu.css'])
+
+    @vite(['resources/css/menu.css'])
+
+
 <!-- Кнопка гамбургерного меню  -->
 <div class="mobile-hamburger-header">
     <!-- Левая часть -->

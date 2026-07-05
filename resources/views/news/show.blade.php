@@ -108,7 +108,13 @@
         </div>
     </div>
 
-    {{-- // Initialize CKEditor --}}
-    <link rel="stylesheet" href="{{ asset('css/ckeditor.css') }}">
-    <script src="{{ asset('js/ckeditor.js') }}"></script>
+    <!-- CKEditor CSS and JS -->
+@push('styles')
+    @vite(['resources/css/ckeditor.css'])   
+@endpush
+
+@push('scripts')
+    @vite('resources/js/ckeditor.js')    
+@endpush
+
 @endsection
