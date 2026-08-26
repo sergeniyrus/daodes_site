@@ -83,8 +83,16 @@
 </a>
 
     </div>
+    <div class="mobile-chapter-container">
+    <a href="organizations" class="mobile-chapter-header">
+        <span class="mobile-chapter-title">Организация</span>
+    </a>
+</div>
             @endif
 @endauth
+
+
+
 
 <!-- Почта-->
 @auth

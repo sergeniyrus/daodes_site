@@ -16,6 +16,46 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int $category_id
+ * @property string $version
+ * @property int $version_code
+ * @property string $title
+ * @property string|null $description
+ * @property string|null $apk_url
+ * @property string|null $apk_sha256
+ * @property int|null $apk_size
+ * @property bool $is_required
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $released_at
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\ReleaseCategory $category
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereApkSha256($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereApkSize($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereApkUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereCategoryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereIsRequired($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereReleasedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereVersionCode($value)
+ */
+	class AppRelease extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property int $version_code
  * @property string $version_name
  * @property string $apk_file
@@ -379,15 +419,83 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int $menu_section_id
+ * @property string $name
+ * @property numeric|null $weight
+ * @property string|null $unit
+ * @property numeric $price
+ * @property string|null $description
+ * @property int $sort_order
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\MenuSection $section
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereMenuSectionId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem wherePrice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuItem whereWeight($value)
+ */
+	class MenuItem extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $organization_id
+ * @property string $name
+ * @property int $sort_order
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\MenuItem> $activeItems
+ * @property-read int|null $active_items_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\MenuItem> $items
+ * @property-read int|null $items_count
+ * @property-read \App\Models\Organization $organization
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection whereOrganizationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection whereSortOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|MenuSection whereUpdatedAt($value)
+ */
+	class MenuSection extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
  * @property int $chat_id
  * @property int $sender_id
  * @property string $ipfs_cid
+ * @property int|null $reply_to_message_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int|null $edited_at
  * @property-read \App\Models\Chat $chat
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Notification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, Message> $replies
+ * @property-read int|null $replies_count
+ * @property-read Message|null $replyToMessage
  * @property-read \App\Models\User $sender
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message newQuery()
@@ -397,6 +505,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereEditedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereIpfsCid($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereReplyToMessageId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereSenderId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Message whereUpdatedAt($value)
  */
@@ -519,6 +628,62 @@ namespace App\Models{
  *
  * @property int $id
  * @property string $name
+ * @property int|null $type_id
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\MenuSection> $menuSections
+ * @property-read int|null $menu_sections_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrganizationUser> $organizationUsers
+ * @property-read int|null $organization_users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
+ * @property-read int|null $users_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization whereUpdatedAt($value)
+ */
+	class Organization extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property int $organization_id
+ * @property int $user_id
+ * @property string $role
+ * @property string $status
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Organization $organization
+ * @property-read \App\Models\User $user
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser whereOrganizationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|OrganizationUser whereUserId($value)
+ */
+	class OrganizationUser extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $name
  * @property string $email
  * @property string|null $imported_from
  * @property \Illuminate\Support\Carbon|null $created_at
@@ -536,6 +701,33 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Recipient whereUpdatedAt($value)
  */
 	class Recipient extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * 
+ *
+ * @property int $id
+ * @property string $slug
+ * @property string $name
+ * @property string|null $description
+ * @property bool $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AppRelease> $releases
+ * @property-read int|null $releases_count
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory query()
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereSlug($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereUpdatedAt($value)
+ */
+	class ReleaseCategory extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -709,6 +901,8 @@ namespace App\Models{
  * @property-read int|null $chats_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Notification> $notifications
  * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Organization> $organizations
+ * @property-read int|null $organizations_count
  * @property-read \App\Models\UserProfile|null $profile
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Seed> $seeds
  * @property-read int|null $seeds_count

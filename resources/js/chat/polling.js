@@ -58,7 +58,6 @@ export class MessagePoller {
                 const nonceB64 = encrypted.split('|')[0];
                 this.ui.attachEditButton(messageEl, txt, nonceB64);
             } else {
-                // Меню с тремя точками для чужих сообщений
                 this.ui.attachMessageMenu(messageEl);
             }
         });
@@ -88,7 +87,7 @@ export class MessagePoller {
                 const contentEl = preview.querySelector('.reply-content');
 
                 if (res.status === 404) {
-                    contentEl.innerHTML = '<em>Сообщение удалено</em>';
+                    contentEl.innerHTML = '<em>' + this.config.translations.messageDeleted + '</em>';
                     preview.dataset.loaded = '1';
                     continue;
                 }
@@ -157,6 +156,10 @@ export class MessagePoller {
             const wasAtBottom = this.isAtBottom();
             let hasIncoming = false;
 
+            // Локальные строки для подстановки в HTML
+            const downloadText = this.config.translations.download;
+            const downloadIcon = '<i class="fa fa-spinner fa-spin" aria-hidden="true"></i>';
+
             msgs.forEach(msg => {
                 const existing = document.querySelector(`.message[data-id="${msg.id}"]`);
                 const isOwn = msg.sender.id === this.config.userId;
@@ -190,7 +193,7 @@ export class MessagePoller {
                     const replyPreview = msg.reply_to_message_id
                         ? `<div class="reply-preview" data-reply-id="${msg.reply_to_message_id}">
                                <div class="reply-indicator"><i class="fa fa-reply" aria-hidden="true"></i></div>
-                               <div class="reply-content">{{ __('chats.download') }} <i class="fa fa-spinner" aria-hidden="true"></i></div>
+                               <div class="reply-content">${downloadText} ${downloadIcon}</div>
                            </div>`
                         : '';
 
@@ -205,7 +208,7 @@ export class MessagePoller {
                                     ${this.escapeHtml(msg.sender.name)}
                                     <small>${new Date(msg.created_at).toLocaleTimeString()}</small>
                                 </p>
-                                <p class="card-text">{{ __('chats.download') }} <i class="fa fa-spinner" aria-hidden="true"></i></p>
+                                <p class="card-text">${downloadText} ${downloadIcon}</p>
                             </div>
                         </div>
                     `;

@@ -97,7 +97,7 @@ export class ChatUI {
 
         // Кнопка Ответить — с переводом и иконкой
         const replyBtn = document.createElement('div');
-        replyBtn.innerHTML = '<i class="fa fa-reply" aria-hidden="true"></i> ' + (this.config.translations.reply || 'Ответить');
+        replyBtn.innerHTML = '<i class="fa fa-reply" aria-hidden="true"></i> ' + (this.config.translations.reply);
         replyBtn.onclick = () => {
             menu.remove();
             const titleEl = messageEl.querySelector('.card-title');
@@ -108,18 +108,18 @@ export class ChatUI {
             this.startReply(messageId, senderName, currentText);
         };
 
-        // Кнопка Редактировать — с переводом
+        // Кнопка Редактировать — с переводом и иконкой
         const editBtn = document.createElement('div');
-        editBtn.textContent = this.config.translations.edit;
+        editBtn.innerHTML = '<i class="fa fa-pencil" aria-hidden="true"></i> ' + (this.config.translations.edit);
         editBtn.onclick = () => {
             menu.remove();
             const currentText = messageEl.querySelector('.card-text')?.dataset.plaintext || text;
             this.startEditing(messageId, messageEl, currentText, nonceB64);
         };
 
-        // Кнопка Удалить — с переводом
+        // Кнопка Удалить — с переводом и иконкой
         const delBtn = document.createElement('div');
-        delBtn.textContent = this.config.translations.delete;
+        delBtn.innerHTML = '<i class="fa fa-trash" aria-hidden="true"></i> ' + (this.config.translations.delete);
         delBtn.style.color = '#ff6b6b';
         delBtn.onclick = () => {
             menu.remove();
@@ -150,7 +150,8 @@ export class ChatUI {
         const input = document.getElementById('messageInput');
         input.value = text;
         input.focus();
-        document.getElementById('sendBtn').textContent = 'Сохранить';
+        const sendBtn = document.getElementById('sendBtn');
+        sendBtn.innerHTML = '<i class="fa fa-floppy-o" aria-hidden="true"></i> ' + (this.config.translations.save);
     }
 
     cancelEditing() {
@@ -161,7 +162,9 @@ export class ChatUI {
         this.editingBackupText = null;
         this.editingNonceB64 = null;
         document.getElementById('messageInput').value = '';
-        document.getElementById('sendBtn').textContent = this.config.translations?.send || 'Отправить';
+        // Кнопка "Отправить" — только иконка самолётика
+        const sendBtn = document.getElementById('sendBtn');
+        sendBtn.innerHTML = '<i class="fa fa-paper-plane" aria-hidden="true"></i>';
     }
 
     startReply(messageId, senderName, text) {
@@ -186,7 +189,7 @@ export class ChatUI {
     }
 
     async confirmDelete(messageId, messageEl) {
-        if (!confirm('Удалить сообщение?')) return;
+        if (!confirm(this.config.translations.deleteConfirm || 'Удалить сообщение?')) return;
         const res = await fetch(`/messages/${messageId}`, {
             method: 'DELETE',
             headers: {

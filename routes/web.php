@@ -38,11 +38,93 @@ use App\Http\Controllers\{
     MessageController,
 };
 use App\Http\Controllers\Admin\AppVersionAdminController;
+use App\Http\Controllers\OrganizationController;
+use App\Http\Controllers\Admin\ReleaseAdminController;
+use App\Http\Middleware\ReleaseAdmin;
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/admin/app-versions', [AppVersionAdminController::class, 'index'])->name('admin.app_versions.index');
-    Route::post('/admin/app-versions', [AppVersionAdminController::class, 'store'])->name('admin.app_versions.store');
-});
+/*
+|--------------------------------------------------------------------------
+| RELEASE ADMIN PANEL
+|--------------------------------------------------------------------------
+|
+| Управление релизами приложения "Ёлки Иголки".
+|
+| Доступ только DAO_Root — user.id = 3.
+|
+*/
+
+Route::middleware([
+    'auth',
+    ReleaseAdmin::class,
+])
+    ->prefix('admin/releases')
+    ->name('admin.releases.')
+    ->group(function () {
+
+        /*
+         * Список релизов
+         */
+        Route::get('/', [
+            ReleaseAdminController::class,
+            'index'
+        ])->name('index');
+
+
+        /*
+         * Создание релиза
+         */
+        Route::get('/create', [
+            ReleaseAdminController::class,
+            'create'
+        ])->name('create');
+
+
+        /*
+         * Сохранение релиза
+         */
+        Route::post('/', [
+            ReleaseAdminController::class,
+            'store'
+        ])->name('store');
+
+
+        /*
+         * Редактирование релиза
+         */
+        Route::get('/{release}/edit', [
+            ReleaseAdminController::class,
+            'edit'
+        ])->name('edit');
+
+
+        /*
+         * Обновление релиза
+         */
+        Route::put('/{release}', [
+            ReleaseAdminController::class,
+            'update'
+        ])->name('update');
+
+
+        /*
+         * Удаление релиза
+         */
+        Route::delete('/{release}', [
+            ReleaseAdminController::class,
+            'destroy'
+        ])->name('destroy');
+
+
+        /*
+         * Активация релиза
+         */
+        Route::post('/{release}/activate', [
+            ReleaseAdminController::class,
+            'activate'
+        ])->name('activate');
+
+    });
+
 
 
 // === E2E-маршруты ===
@@ -357,6 +439,77 @@ Route::middleware('guest')->prefix('password')->name('password.')->group(functio
     Route::get('/reset', [KeywordResetPasswordController::class, 'showResetForm'])->name('reset');
     Route::put('/update', [KeywordResetPasswordController::class, 'updatePassword'])->name('update');
 });
+
+// Организации
+Route::middleware('auth')
+    ->prefix('organizations')
+    ->name('organizations.')
+    ->group(function () {
+
+        Route::get('/', [OrganizationController::class, 'index'])
+            ->name('index');
+
+        Route::get('/create', [OrganizationController::class, 'create'])
+            ->name('create');
+
+        Route::post('/', [OrganizationController::class, 'store'])
+            ->name('store');
+
+        /*
+         * Управление организацией
+         *
+         * Доступ только активному менеджеру организации.
+         */
+        Route::get('/{organization}/manage', [OrganizationController::class, 'manage'])
+            ->middleware('organization.manager')
+            ->name('manage');
+
+        /*
+         * Добавление сотрудника
+         *
+         * Доступ только активному менеджеру организации.
+         */
+        Route::post('/{organization}/employees', [OrganizationController::class, 'storeEmployee'])
+            ->middleware('organization.manager')
+            ->name('employees.store');
+
+        /*
+         * Изменение роли сотрудника
+         *
+         * Доступ только активному менеджеру организации.
+         */
+        Route::post(
+            '/{organization}/employees/{user}/role',
+            [OrganizationController::class, 'updateEmployeeRole']
+        )
+            ->middleware('organization.manager')
+            ->name('employees.role');
+
+        /*
+         * Изменение статуса сотрудника
+         *
+         * Доступ только активному менеджеру организации.
+         */
+        Route::post(
+            '/{organization}/employees/{user}/status',
+            [OrganizationController::class, 'updateEmployeeStatus']
+        )
+            ->middleware('organization.manager')
+            ->name('employees.status');
+
+        /*
+         * Удаление сотрудника
+         *
+         * Доступ только активному менеджеру организации.
+         */
+        Route::delete(
+            '/{organization}/employees/{user}',
+            [OrganizationController::class, 'destroyEmployee']
+        )
+            ->middleware('organization.manager')
+            ->name('employees.destroy');
+    });
+
 
 // Кошелёк и переводы
 Route::middleware('auth')->prefix('wallet')->name('wallet.')->group(function () {

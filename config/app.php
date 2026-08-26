@@ -27,6 +27,11 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+    'release_encryption_key' => env(
+                                    'APP_RELEASE_ENCRYPTION_KEY'
+                                    ),
+
+
     'maintenance' => [
         'driver' => 'file',
         // 'store' => 'redis',

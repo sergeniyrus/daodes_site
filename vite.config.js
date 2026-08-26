@@ -16,8 +16,10 @@ export default defineConfig({
                 'resources/css/ckeditor.css',
                 'resources/css/category.css',
                 'resources/css/chat_index.css',
-                'resources/css/chat_show.css',
-                
+                'resources/css/chat_show.css',                
+                'resources/css/organizations.css',
+                'resources/css/chat_index.css',
+                'resources/css/chat_show.css',                
                 'resources/js/app.js',
                 'resources/js/bt_top.js',
                 'resources/js/chat_index.js',

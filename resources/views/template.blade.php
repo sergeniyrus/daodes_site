@@ -55,6 +55,9 @@
     @vite([
         'resources/css/main.css',
         'resources/css/ckeditor.css',
+        'resources/css/organizations.css',
+        'resources/css/chat_index.css',
+    'resources/css/chat_show.css',
         'resources/js/bt_top.js'
     ])
 

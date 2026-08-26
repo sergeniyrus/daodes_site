@@ -1,3 +1,8 @@
+/* =========================================================
+   CHAT SHOW
+   Стиль DAODES / Организации
+   ========================================================= */
+
 .chat-container {
     max-width: 900px;
     margin: 0 auto;
@@ -6,73 +11,224 @@
     border-radius: 15px;
     border: 1px solid gold;
     color: #fff;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.chat-header {
+    text-align: center;
+    margin-bottom: 15px;
 }
 
 .chat-title {
     color: gold;
     text-align: center;
-    margin-bottom: 15px;
-    font-size: 1.5rem;
+    margin: 0 0 8px;
+    font-size: 1.6rem;
+    font-weight: 600;
 }
+
+.chat-status {
+    color: #aaa;
+    font-size: 0.95rem;
+    margin-top: 4px;
+
+    display: flex;
+    gap: 8px;
+
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    flex-shrink: 0;
+}
+
+.status-indicator.online {
+    background-color: #4caf50;
+
+    box-shadow: 0 0 6px #4caf50;
+}
+
+.status-indicator.offline {
+    background-color: #777;
+}
+
+
+/* =========================================================
+   MESSAGES
+   ========================================================= */
 
 .chat-messages {
     height: 500px;
+
     overflow-y: auto;
+
     background: #1a1a1a;
+
     border: 1px solid gold;
+
     border-radius: 12px;
+
     padding: 15px;
+
     display: flex;
+
     flex-direction: column;
+
     gap: 10px;
+
+    box-sizing: border-box;
 }
+
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+.chat-messages::-webkit-scrollbar {
+    width: 7px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #0b0c18;
+
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #555;
+
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: gold;
+}
+
+
+/* =========================================================
+   MESSAGE
+   ========================================================= */
 
 .message {
     max-width: 80%;
+
     animation: fadeIn 0.3s ease;
+
     position: relative;
+
     border: 2px solid transparent;
+
     border-radius: 18px;
-    transition: border-color 0.2s ease;
+
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease;
 }
 
 .message.sent {
     align-self: flex-end;
+
     text-align: right;
 }
 
 .message.received {
     align-self: flex-start;
+
     text-align: left;
 }
+
+
+/* =========================================================
+   MESSAGE CARDS
+   ========================================================= */
 
 .card-body,
 .my-card-body {
     border-radius: 18px;
+
     padding: 10px 15px;
+
     display: inline-block;
+
     word-wrap: break-word;
+
+    overflow-wrap: break-word;
+
     position: relative;
+
+    box-sizing: border-box;
 }
+
+
+/* Полученное сообщение */
 
 .card-body {
     background: #2B2C2E;
+
     border: 1px solid #444;
+
     border-radius: 18px 18px 18px 0;
 }
 
+
+/* Моё сообщение */
+
 .my-card-body {
     background: #313335;
+
     border: 1px solid gold;
+
     border-radius: 18px 18px 0 18px;
 }
 
+
+/* =========================================================
+   HOVER
+   ========================================================= */
+
+.message:hover {
+    border-color: rgba(255, 215, 0, 0.35);
+}
+
+.card-body:hover {
+    border-color: #666;
+}
+
+.my-card-body:hover {
+    border-color: gold;
+}
+
+
+/* =========================================================
+   EDIT ACTIONS
+   ========================================================= */
+
 .edit-actions {
     position: absolute;
+
     top: 4px;
     right: 6px;
+
     opacity: 0;
+
     transition: opacity 0.2s;
+
     z-index: 5;
 }
 
@@ -84,155 +240,258 @@
 
 .edit-actions .dots {
     cursor: pointer;
+
     font-size: 1.1rem;
+
     color: gold;
+
     user-select: none;
+
     padding: 0 4px;
 }
 
+.edit-actions .dots:hover {
+    color: #fff;
+}
+
+
+/* =========================================================
+   MESSAGE TITLE
+   ========================================================= */
+
 .card-title {
     color: gold;
+
     font-size: 0.9rem;
+
     margin-bottom: 5px;
+
     padding-right: 20px;
 }
 
 .card-title small {
     color: #aaa;
+
     margin-left: 8px;
 }
 
+
+/* =========================================================
+   MESSAGE TEXT
+   ========================================================= */
+
 .card-text {
     color: #fff;
+
     font-size: 1rem;
+
     line-height: 1.4;
 }
 
+
+/* =========================================================
+   MESSAGE STATUS
+   ========================================================= */
+
+.message-status {
+    display: inline-block;
+
+    font-size: 0.8rem;
+
+    margin-left: 5px;
+
+    color: #aaa;
+}
+
+.message-status.edited {
+    color: gold;
+}
+
+
+/* =========================================================
+   INPUT
+   ========================================================= */
+
 .input-group {
     display: flex;
+
     align-items: flex-end;
+
     gap: 10px;
+
     margin-top: 15px;
 }
 
 .input-wrapper {
     flex: 1;
+
     position: relative;
+
+    min-width: 0;
 }
 
 #messageInput {
     width: 100%;
+
     min-height: 50px;
+
     max-height: 150px;
+
     background-color: #1a1a1a;
+
     color: #fff;
+
     border: 1px solid gold;
+
     border-radius: 25px;
+
     resize: none;
+
     outline: none;
+
     font-size: 1.05rem;
+
     line-height: 1.4;
+
     padding: 12px 18px;
-    transition: border 0.3s ease;
+
+    transition:
+        border 0.3s ease,
+        box-shadow 0.3s ease;
+
+    box-sizing: border-box;
 }
+
+#messageInput:focus {
+    border-color: gold;
+
+    box-shadow:
+        0 0 8px rgba(255, 215, 0, 0.35);
+}
+
+#messageInput::placeholder {
+    color: #777;
+}
+
+
+/* =========================================================
+   SEND BUTTON
+   ========================================================= */
 
 .send-btn {
     height: 50px;
+
     padding: 0 25px;
+
     background: #0b0c18;
+
     color: gold;
+
     border: 1px solid gold;
+
     border-radius: 25px;
+
     font-weight: bold;
+
     cursor: pointer;
+
     transition: 0.2s;
+
+    white-space: nowrap;
 }
 
 .send-btn:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    transform: scale(1.03);
+
+    box-shadow:
+        0 0 10px rgba(255, 215, 0, 0.5);
+
     background: gold;
-    color: #0b0c18; ;
+
+    color: #0b0c18;
 }
+
+.send-btn:active {
+    transform: scale(0.98);
+}
+
+
+/* =========================================================
+   CHAT BUTTON
+   ========================================================= */
 
 .chat-btn {
     flex: 1;
+
     text-align: center;
+
     padding: 10px;
+
     background: #0b0c18;
+
     color: gold;
+
     border: 1px solid gold;
+
     border-radius: 5px;
+
     transition: 0.2s;
+
     text-decoration: none;
+
+    box-sizing: border-box;
 }
 
 .chat-btn:hover {
     background: gold;
+
     color: #0b0c18;
 }
 
+
+/* =========================================================
+   ADDITIONAL BUTTONS
+   ========================================================= */
+
 .additional-buttons {
     display: flex;
+
     gap: 10px;
+
     margin-top: 20px;
 }
 
-.chat-header {
-    text-align: center;
-    margin-bottom: 15px;
-}
 
-.chat-status {
-    color: #aaa;
-    font-size: 0.9rem;
-    margin-top: 4px;
-    display: flex;
-    gap: 6px;
-    justify-content: center;
-}
-
-.status-indicator {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-}
-
-.status-indicator.online {
-    background-color: #4caf50;
-    box-shadow: 0 0 6px #4caf50;
-}
-
-.status-indicator.offline {
-    background-color: #777;
-}
-
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+/* =========================================================
+   CONTEXT MENU
+   ========================================================= */
 
 .context-menu {
     position: absolute;
+
     background: #2a2a2a;
+
     border: 1px solid gold;
+
     border-radius: 6px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.5);
+
     z-index: 1000;
+
     min-width: 140px;
+
     font-size: 0.9rem;
+
     padding: 4px 0;
 }
 
 .context-menu > div {
     padding: 8px 12px;
+
     color: white;
+
     cursor: pointer;
 }
 
@@ -242,33 +501,41 @@
 
 .context-menu > div:hover {
     background: #3a3a3a;
-}
 
-.message-status {
-    display: inline-block;
-    font-size: 0.8rem;
-    margin-left: 5px;
-    color: #aaa;
-}
-
-.message-status.edited {
     color: gold;
 }
 
-/* Превью ответа внутри сообщения */
+
+/* =========================================================
+   REPLY PREVIEW
+   ========================================================= */
+
 .reply-preview {
     background: rgba(255, 215, 0, 0.08);
+
     border-left: 3px solid gold;
+
     border-top: 2px solid gold;
+
     border-right: 3px solid gold;
+
     padding: 6px 10px;
+
     margin-bottom: 6px;
+
     border-radius: 18px;
+
     cursor: pointer;
+
     display: flex;
+
     align-items: center;
+
     gap: 8px;
+
     font-size: 13px;
+
+    transition: background 0.2s ease;
 }
 
 .reply-preview:hover {
@@ -277,14 +544,19 @@
 
 .reply-indicator {
     font-size: 14px;
+
     flex-shrink: 0;
 }
 
 .reply-content {
     color: #ccc;
+
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
+
     max-width: 300px;
 }
 
@@ -292,78 +564,215 @@
     color: gold;
 }
 
-/* Форма превью ответа над полем ввода */
+
+/* =========================================================
+   REPLY FORM
+   ========================================================= */
+
 .reply-preview-form {
     background: rgba(255, 215, 0, 0.15);
+
     border-top: 2px solid gold;
+
     border-left: 3px solid gold;
+
     border-right: 3px solid gold;
 
     border-radius: 18px;
+
     color: #fff;
+
     padding: 8px 16px;
+
     margin-top: 10px;
+
     margin-bottom: -15px;
+
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 12px;
+
+    box-sizing: border-box;
 }
 
 .reply-info {
     display: flex;
+
     align-items: center;
+
     gap: 8px;
+
     flex: 1;
+
     overflow: hidden;
+
+    min-width: 0;
 }
 
 .reply-icon {
     font-size: 18px;
+
     flex-shrink: 0;
 }
 
 .reply-to-name {
     font-weight: 600;
+
     color: gold;
+
     flex-shrink: 0;
 }
 
 .reply-to-text {
     color: #fff;
+
     font-size: 14px;
+
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 }
 
 .cancel-reply {
     background: none;
+
     border: none;
+
     font-size: 20px;
+
     color: gold;
+
     cursor: pointer;
+
     padding: 2px 10px;
+
     border-radius: 4px;
+
+    flex-shrink: 0;
 }
 
 .cancel-reply:hover {
     background: gold;
+
     color: #000;
 }
 
-/* Подсветка сообщения при клике на превью — мигание золотой рамкой 3 секунды */
+
+/* =========================================================
+   REPLY HIGHLIGHT
+   ========================================================= */
+
 .message.reply-highlight {
     animation: reply-gold-blink 0.6s ease-in-out 5;
 }
 
 @keyframes reply-gold-blink {
-    0%, 100% {
+
+    0%,
+    100% {
         border-color: gold;
-        box-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
+
+        box-shadow:
+            0 0 8px rgba(255, 215, 0, 0.6);
     }
+
     50% {
         border-color: transparent;
+
         box-shadow: none;
+    }
+}
+
+
+/* =========================================================
+   FADE IN
+   ========================================================= */
+
+@keyframes fadeIn {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .chat-container {
+        width: calc(100% - 20px);
+
+        padding: 12px;
+
+        border-radius: 12px;
+    }
+
+    .chat-title {
+        font-size: 1.4rem;
+    }
+
+    .chat-messages {
+        height: 450px;
+
+        padding: 10px;
+    }
+
+    .message {
+        max-width: 90%;
+    }
+
+    .input-group {
+        flex-direction: column;
+
+        align-items: stretch;
+    }
+
+    .input-wrapper {
+        width: 100%;
+    }
+
+    #messageInput {
+        min-height: 50px;
+    }
+
+    .send-btn {
+        width: 100%;
+    }
+
+    .additional-buttons {
+        flex-direction: column;
+    }
+
+    .chat-btn {
+        width: 100%;
+    }
+
+    .reply-content {
+        max-width: 180px;
+    }
+
+    .reply-preview-form {
+        padding: 8px 10px;
+    }
+
+    .reply-to-text {
+        max-width: 160px;
     }
 }

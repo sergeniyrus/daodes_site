@@ -10,7 +10,7 @@
         {{-- </div> --}}
         <div class="container">
 
-            {{ $slot }}
+            @yield('content')
         </div>
     </div>
 @endsection

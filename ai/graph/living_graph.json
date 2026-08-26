@@ -1,0 +1,824 @@
+{
+    "nodes": [
+        {
+            "id": "9f4f81ee2edd12de3a69520190959555",
+            "file": "app/Console/Commands/BuildLivingGraph.php",
+            "type": "file"
+        },
+        {
+            "id": "296d31590d0463c454f9256b6e18198b",
+            "file": "app/Console/Commands/MergeAdminLang.php",
+            "type": "file"
+        },
+        {
+            "id": "4143e234aced2915e757555619ab96dd",
+            "file": "app/Console/Commands/ProcessOffers.php",
+            "type": "ipfs"
+        },
+        {
+            "id": "af0736f31d038dcbf9edb3b92a4bc5f4",
+            "file": "app/Console/Commands/TelegramWebhookCommand.php",
+            "type": "file"
+        },
+        {
+            "id": "fea1bd13991ccb576dbd12169c7bde99",
+            "file": "app/Console/Kernel.php",
+            "type": "file"
+        },
+        {
+            "id": "f7a2a29fdbd23eba1d75ea77b6291397",
+            "file": "app/Events/NewMessage.php",
+            "type": "file"
+        },
+        {
+            "id": "a0dcda41d5fad8c9f1e2d57ead045819",
+            "file": "app/Events/NewMessageNotification.php",
+            "type": "file"
+        },
+        {
+            "id": "c8497472bc9ae03778ab2af9d31f7fa7",
+            "file": "app/Http/Controllers/AIController.php",
+            "type": "controller"
+        },
+        {
+            "id": "f7d05ee9259f156d6a68a32e06797875",
+            "file": "app/Http/Controllers/Admin/AppVersionAdminController.php",
+            "type": "controller"
+        },
+        {
+            "id": "6def0cc6e8bae688dcabe4e076841fa9",
+            "file": "app/Http/Controllers/Api/AppVersionController.php",
+            "type": "controller"
+        },
+        {
+            "id": "0de258ac76c39868ccc877c77d3c7e7a",
+            "file": "app/Http/Controllers/Auth/AuthenticatedSessionController.php",
+            "type": "controller"
+        },
+        {
+            "id": "5baa367cb20e34f01df3b6cec220fa7f",
+            "file": "app/Http/Controllers/Auth/ConfirmablePasswordController.php",
+            "type": "controller"
+        },
+        {
+            "id": "c40d781bec15aa2cd0752da0205730be",
+            "file": "app/Http/Controllers/Auth/EmailVerificationNotificationController.php",
+            "type": "controller"
+        },
+        {
+            "id": "993ad0e7db20706aa13047c79bf09604",
+            "file": "app/Http/Controllers/Auth/EmailVerificationPromptController.php",
+            "type": "controller"
+        },
+        {
+            "id": "bb645baecd1c33b3eb01a2592a2147ba",
+            "file": "app/Http/Controllers/Auth/NewPasswordController.php",
+            "type": "controller"
+        },
+        {
+            "id": "e14fb441e05650bc4687859426c6a4f1",
+            "file": "app/Http/Controllers/Auth/PasswordController.php",
+            "type": "controller"
+        },
+        {
+            "id": "b335e8c41063ae7503df0104f9526450",
+            "file": "app/Http/Controllers/Auth/PasswordResetLinkController.php",
+            "type": "controller"
+        },
+        {
+            "id": "613bf6f0ed81aec893d7d1746a6df57b",
+            "file": "app/Http/Controllers/Auth/RegisteredUserController.php",
+            "type": "controller"
+        },
+        {
+            "id": "bf540de47a09694905bb14e021714ab9",
+            "file": "app/Http/Controllers/Auth/VerifyEmailController.php",
+            "type": "controller"
+        },
+        {
+            "id": "86151093dc3571e645de01f6aa8df25c",
+            "file": "app/Http/Controllers/BidController.php",
+            "type": "controller"
+        },
+        {
+            "id": "ea56af653435391fc67b3b3cc22e0ffe",
+            "file": "app/Http/Controllers/CaptchaController.php",
+            "type": "controller"
+        },
+        {
+            "id": "b25f3321aab71593aa793626ae16b741",
+            "file": "app/Http/Controllers/CategoryController.php",
+            "type": "controller"
+        },
+        {
+            "id": "a217b5e35590eb12eb023ab2ee775073",
+            "file": "app/Http/Controllers/CategoryTasksController.php",
+            "type": "controller"
+        },
+        {
+            "id": "0009c87e076466af5afeb02c5e2f7704",
+            "file": "app/Http/Controllers/ChatController.php",
+            "type": "controller"
+        },
+        {
+            "id": "fe97e1a4f3b72f3fc59b55d148efd2d9",
+            "file": "app/Http/Controllers/CommentController.php",
+            "type": "controller"
+        },
+        {
+            "id": "258ade1aebf5c646a132686209e2f4b0",
+            "file": "app/Http/Controllers/Controller.php",
+            "type": "controller"
+        },
+        {
+            "id": "32bdd1be94385e190d3c8f7f96f8433d",
+            "file": "app/Http/Controllers/CookieConsentController.php",
+            "type": "controller"
+        },
+        {
+            "id": "a3bb31405a0b0126bea2573957aa80c6",
+            "file": "app/Http/Controllers/DiscussionController.php",
+            "type": "controller"
+        },
+        {
+            "id": "8d8ba9fa80b98fa4f55939be9b786d3d",
+            "file": "app/Http/Controllers/HomeController.php",
+            "type": "controller"
+        },
+        {
+            "id": "a8307977502745417ef987bd3410cc6a",
+            "file": "app/Http/Controllers/KeywordResetPasswordController.php",
+            "type": "controller"
+        },
+        {
+            "id": "47eb45c75129d16ca53c130e1df754b3",
+            "file": "app/Http/Controllers/LanguageController.php",
+            "type": "controller"
+        },
+        {
+            "id": "28384fcb7039cafc3ac531d756ec8fd2",
+            "file": "app/Http/Controllers/MailTemplateController.php",
+            "type": "controller"
+        },
+        {
+            "id": "149a8dc4b3b3745833baeebd7d7402b3",
+            "file": "app/Http/Controllers/MailerAdminController.php",
+            "type": "controller"
+        },
+        {
+            "id": "dd8bcd33cdc86b4f831aa9f6d0057d7a",
+            "file": "app/Http/Controllers/MailerClickController.php",
+            "type": "controller"
+        },
+        {
+            "id": "38dd44eaaf190a27000e2d43fa437da6",
+            "file": "app/Http/Controllers/MailerTrackController.php",
+            "type": "controller"
+        },
+        {
+            "id": "0e37c09475821965409c9f979519b0a2",
+            "file": "app/Http/Controllers/MenuController.php",
+            "type": "controller"
+        },
+        {
+            "id": "7d6ebe3c9c6011e5eeec0881111695d6",
+            "file": "app/Http/Controllers/MessageController.php",
+            "type": "controller"
+        },
+        {
+            "id": "e973ab2b18ad575aed595556d26eb2e9",
+            "file": "app/Http/Controllers/NewsController.php",
+            "type": "controller"
+        },
+        {
+            "id": "35effe7b785f45e3fd291ae6bbe72946",
+            "file": "app/Http/Controllers/NotificationController.php",
+            "type": "controller"
+        },
+        {
+            "id": "89ffe568f0115b7a455563069d05487f",
+            "file": "app/Http/Controllers/OffersController.php",
+            "type": "controller"
+        },
+        {
+            "id": "5e64c53b7427436ed88ea5edc0cc6e10",
+            "file": "app/Http/Controllers/PageController.php",
+            "type": "controller"
+        },
+        {
+            "id": "02bb5d3f4d6407f756eb661c09c7863e",
+            "file": "app/Http/Controllers/ProfileController.php",
+            "type": "controller"
+        },
+        {
+            "id": "f2cc80341bb898dd819bfdd90c321b62",
+            "file": "app/Http/Controllers/SeedController.php",
+            "type": "controller"
+        },
+        {
+            "id": "d2a1907d97d35cb145a1080bc5e7bd4c",
+            "file": "app/Http/Controllers/SeedSetupController.php",
+            "type": "controller"
+        },
+        {
+            "id": "c056f97ab279535f5d3d7eafc86f202e",
+            "file": "app/Http/Controllers/SpamController.php",
+            "type": "controller"
+        },
+        {
+            "id": "7cbf7d90aa6564a4a1e1f8088413625d",
+            "file": "app/Http/Controllers/TasksController.php",
+            "type": "controller"
+        },
+        {
+            "id": "e5b18aba7ecc8c23e987782476323527",
+            "file": "app/Http/Controllers/TeamController.php",
+            "type": "controller"
+        },
+        {
+            "id": "dcb41c77f131911a841fbf3e19a21d43",
+            "file": "app/Http/Controllers/TelegramBotController.php",
+            "type": "controller"
+        },
+        {
+            "id": "0f683df1aefa5a4ff3198350b94ca86a",
+            "file": "app/Http/Controllers/TelegramController.php",
+            "type": "controller"
+        },
+        {
+            "id": "f19badb540f145fae79d9307c06aff8f",
+            "file": "app/Http/Controllers/UploadController.php",
+            "type": "controller"
+        },
+        {
+            "id": "ef911530f6b61d2385eb254d0e87fb32",
+            "file": "app/Http/Controllers/UserKeyController.php",
+            "type": "controller"
+        },
+        {
+            "id": "fe7e6bb64d321a27f96ebd2230378440",
+            "file": "app/Http/Controllers/UserProfileController.php",
+            "type": "controller"
+        },
+        {
+            "id": "8e3772deeba261748e3a419edab25549",
+            "file": "app/Http/Controllers/UserStatusController.php",
+            "type": "controller"
+        },
+        {
+            "id": "f9782ed31e76487dbdecbc7251297b6b",
+            "file": "app/Http/Controllers/VoteController.php",
+            "type": "controller"
+        },
+        {
+            "id": "482a80bc8a61353b634b4a4fe55f40a0",
+            "file": "app/Http/Controllers/WalletController.php",
+            "type": "controller"
+        },
+        {
+            "id": "7ef68a7b8972520b9d45c468a98c1597",
+            "file": "app/Http/Controllers/WpController.php",
+            "type": "controller"
+        },
+        {
+            "id": "5f3154d380e300af6f8aec7d0bd0ab05",
+            "file": "app/Http/Middleware/AdminMiddleware.php",
+            "type": "file"
+        },
+        {
+            "id": "8a19553c2ccbec2194ef405605d387dc",
+            "file": "app/Http/Middleware/CheckAccess.php",
+            "type": "file"
+        },
+        {
+            "id": "5e3dd011d4a13c3cbf93e6775c7fe5aa",
+            "file": "app/Http/Middleware/CheckCookieConsent.php",
+            "type": "file"
+        },
+        {
+            "id": "d3ff4fb8a85ce5e5b5a346e679c4057e",
+            "file": "app/Http/Middleware/IpFilterMiddleware.php",
+            "type": "file"
+        },
+        {
+            "id": "d55fd02910d8978e93013ec7b4764a3e",
+            "file": "app/Http/Middleware/SetLocale.php",
+            "type": "file"
+        },
+        {
+            "id": "dda98621296cb0dac020d387897c63e9",
+            "file": "app/Http/Middleware/SuspiciousActivityMiddleware.php",
+            "type": "file"
+        },
+        {
+            "id": "51f71bc7541c227b064ad8daade4efe4",
+            "file": "app/Http/Middleware/VerifyCsrfToken.php",
+            "type": "file"
+        },
+        {
+            "id": "8c850c6f3c4fa2059ea12989b9e07623",
+            "file": "app/Http/Requests/Auth/LoginRequest.php",
+            "type": "file"
+        },
+        {
+            "id": "6ea592354020c56aecc94ade78881ee0",
+            "file": "app/Http/Requests/ProfileUpdateRequest.php",
+            "type": "file"
+        },
+        {
+            "id": "0a51fc15c11e9c4d5b4be7a7b1480795",
+            "file": "app/Imports/RecipientsImport.php",
+            "type": "file"
+        },
+        {
+            "id": "f057a4f559291dc5998dab22b8b7d557",
+            "file": "app/Listeners/UpdateMailLogStatus.php",
+            "type": "file"
+        },
+        {
+            "id": "492d8b4abd77337b9aada79e4f801780",
+            "file": "app/Mail/NewsletterMail.php",
+            "type": "file"
+        },
+        {
+            "id": "af96502ab7831a8e7686d809b2e12970",
+            "file": "app/Models/AppVersion.php",
+            "type": "file"
+        },
+        {
+            "id": "999c3f6cdb8b1927c85a6183c760688d",
+            "file": "app/Models/Bid.php",
+            "type": "file"
+        },
+        {
+            "id": "2aaed2a2d51965abec1fa8bdcf3632d8",
+            "file": "app/Models/CategoryNews.php",
+            "type": "file"
+        },
+        {
+            "id": "91c51447083fa5b4e2e10fb9bd1f49b0",
+            "file": "app/Models/CategoryOffers.php",
+            "type": "file"
+        },
+        {
+            "id": "1f103f289f48254093a9b262778f1abd",
+            "file": "app/Models/CategoryTasks.php",
+            "type": "file"
+        },
+        {
+            "id": "0ab10736d423e74492c6a2f9097e1c41",
+            "file": "app/Models/Chat.php",
+            "type": "database"
+        },
+        {
+            "id": "f33a2818638c579f08c78bae8ae38e6e",
+            "file": "app/Models/ChatMemberKey.php",
+            "type": "file"
+        },
+        {
+            "id": "6502417ea37341f0f072d6d2e31eb6eb",
+            "file": "app/Models/Comment.php",
+            "type": "file"
+        },
+        {
+            "id": "83036dedf0b1b7f9885079d8ce5ad513",
+            "file": "app/Models/CommentNews.php",
+            "type": "file"
+        },
+        {
+            "id": "95da6ab7a68400d3bb346b91c815de6c",
+            "file": "app/Models/CommentOffer.php",
+            "type": "file"
+        },
+        {
+            "id": "8e31868ac0e5e32e786185c7980cc766",
+            "file": "app/Models/ContactList.php",
+            "type": "file"
+        },
+        {
+            "id": "dd203b67e076b651dd84fed01456a6ca",
+            "file": "app/Models/HistoryPay.php",
+            "type": "file"
+        },
+        {
+            "id": "0316413e6de9583dad857d8041519f90",
+            "file": "app/Models/MailLog.php",
+            "type": "file"
+        },
+        {
+            "id": "a9d8270214143c57cb9105dc7a02f51e",
+            "file": "app/Models/MailTemplate.php",
+            "type": "file"
+        },
+        {
+            "id": "736186da5a790efee0d7cad7ad884c5c",
+            "file": "app/Models/Message.php",
+            "type": "ipfs"
+        },
+        {
+            "id": "a9f23a35c2e4e496a4dbda615588ee8e",
+            "file": "app/Models/News.php",
+            "type": "file"
+        },
+        {
+            "id": "0a6e926eae8c394f01afeaefc92a7498",
+            "file": "app/Models/Notification.php",
+            "type": "file"
+        },
+        {
+            "id": "43c57748dddc0c5d2efca24517693eca",
+            "file": "app/Models/Offers.php",
+            "type": "file"
+        },
+        {
+            "id": "ff2a66fc255157cdb2acf79fd80da8c0",
+            "file": "app/Models/Recipient.php",
+            "type": "file"
+        },
+        {
+            "id": "cb7885e7b110b523360f5a94d400def4",
+            "file": "app/Models/Seed.php",
+            "type": "file"
+        },
+        {
+            "id": "e411a14ade0e30a2b0c3c6476f052ed7",
+            "file": "app/Models/Task.php",
+            "type": "file"
+        },
+        {
+            "id": "6ad316e49e433e4353453e972ea7ffa5",
+            "file": "app/Models/TaskVote.php",
+            "type": "file"
+        },
+        {
+            "id": "1e1d3a24b74ed6499b4d20feaf7f68cd",
+            "file": "app/Models/User.php",
+            "type": "file"
+        },
+        {
+            "id": "04bab2c87773f2c238483aa2c4b15da5",
+            "file": "app/Models/UserProfile.php",
+            "type": "file"
+        },
+        {
+            "id": "0e14fab8f0c334570379b031ac002915",
+            "file": "app/Models/Wallet.php",
+            "type": "file"
+        },
+        {
+            "id": "954be3e44258d141b185b17a7b5cb89a",
+            "file": "app/Notifications/NewMessageNotification.php",
+            "type": "file"
+        },
+        {
+            "id": "e637c201dc9681ee38f8ac002bd6ccc1",
+            "file": "app/Providers/AppServiceProvider.php",
+            "type": "service"
+        },
+        {
+            "id": "aacd469136347f4abb2c7f6f8a577f30",
+            "file": "app/Providers/BroadcastServiceProvider.php",
+            "type": "service"
+        },
+        {
+            "id": "529d79922c82a18f01a403fdd099622d",
+            "file": "app/Providers/EventServiceProvider.php",
+            "type": "service"
+        },
+        {
+            "id": "508cfafb9ca131698995594cf5635ba7",
+            "file": "app/Providers/IPFSServiceProvider.php",
+            "type": "service"
+        },
+        {
+            "id": "9069ec247899570566c89117d35ae6d3",
+            "file": "app/Providers/RouteServiceProvider.php",
+            "type": "service"
+        },
+        {
+            "id": "c3cdd5712410d611a4051bbab14c215d",
+            "file": "app/Rules/Recaptcha.php",
+            "type": "file"
+        },
+        {
+            "id": "c4a035afb2bfb300a8abb771872c673a",
+            "file": "app/Services/EncryptionService.php",
+            "type": "service"
+        },
+        {
+            "id": "67b63d2ad74be6172d79e71bbfe30617",
+            "file": "app/Services/IPFSService.php",
+            "type": "service"
+        },
+        {
+            "id": "799d87e3e5e53a97a3d468c9af57513d",
+            "file": "app/Services/IpStackService.php",
+            "type": "service"
+        },
+        {
+            "id": "655165d3843e7ee560af1991167c3025",
+            "file": "app/Services/TelegramNotifier.php",
+            "type": "file"
+        },
+        {
+            "id": "b5fa09a5ad202ebecab2886c51c413f5",
+            "file": "app/Services/TemplateParser.php",
+            "type": "file"
+        },
+        {
+            "id": "ddd15587020522c89b31f162418944bd",
+            "file": "app/Services/TestService.php",
+            "type": "service"
+        },
+        {
+            "id": "0e57d27fc50b2befd62a6d7d8d8fd73f",
+            "file": "app/Services/TranslationService.php",
+            "type": "service"
+        },
+        {
+            "id": "6aa3eb069887d3aa113431ebe0155527",
+            "file": "app/Services/WalletService.php",
+            "type": "service"
+        },
+        {
+            "id": "4e69e16bd8541c1c15eadff1470e8cb1",
+            "file": "app/Telegram/Commands/StartCommand.php",
+            "type": "file"
+        },
+        {
+            "id": "647fe6b0ed170d40692ef9c4eb0fa3d6",
+            "file": "app/View/Components/AppLayout.php",
+            "type": "file"
+        },
+        {
+            "id": "bfa47949a6e4e30017032aa6ecffec50",
+            "file": "app/View/Components/GuestLayout.php",
+            "type": "file"
+        }
+    ],
+    "edges": [
+        {
+            "from": "app/Console/Commands/ProcessOffers.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Console/Commands/ProcessOffers.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/Admin/AppVersionAdminController.php",
+            "to": "IPFSService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Http/Controllers/Admin/AppVersionAdminController.php",
+            "to": "IPFSService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Http/Controllers/Admin/AppVersionAdminController.php",
+            "to": "IPFSService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Http/Controllers/Admin/AppVersionAdminController.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Http/Controllers/CategoryController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/ChatController.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Http/Controllers/ChatController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/DiscussionController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/HomeController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/KeywordResetPasswordController.php",
+            "to": "EncryptionService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Http/Controllers/KeywordResetPasswordController.php",
+            "to": "EncryptionService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Http/Controllers/MessageController.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Http/Controllers/NewsController.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Http/Controllers/NewsController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/OffersController.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Http/Controllers/OffersController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/PageController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/SpamController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/TasksController.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Http/Controllers/TasksController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/UploadController.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Http/Controllers/UserProfileController.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Http/Controllers/UserStatusController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/VoteController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Http/Controllers/WalletController.php",
+            "to": "WalletService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Http/Controllers/WalletController.php",
+            "to": "EncryptionService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Http/Controllers/WalletController.php",
+            "to": "WalletService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Http/Controllers/WalletController.php",
+            "to": "EncryptionService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Http/Controllers/WalletController.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        },
+        {
+            "from": "app/Models/Message.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Providers/AppServiceProvider.php",
+            "to": "IpStackService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Providers/AppServiceProvider.php",
+            "to": "AppService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Providers/AppServiceProvider.php",
+            "to": "IpStackService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Providers/AppServiceProvider.php",
+            "to": "IpStackService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Providers/BroadcastServiceProvider.php",
+            "to": "BroadcastService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Providers/EventServiceProvider.php",
+            "to": "EventService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Providers/EventServiceProvider.php",
+            "to": "EventService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Providers/IPFSServiceProvider.php",
+            "to": "IPFSService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Providers/IPFSServiceProvider.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Providers/RouteServiceProvider.php",
+            "to": "RouteService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Providers/RouteServiceProvider.php",
+            "to": "RouteService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Services/EncryptionService.php",
+            "to": "EncryptionService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Services/IPFSService.php",
+            "to": "IPFSService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Services/IPFSService.php",
+            "to": "IPFS_LAYER",
+            "type": "stores_cid"
+        },
+        {
+            "from": "app/Services/IpStackService.php",
+            "to": "IpStackService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Services/TranslationService.php",
+            "to": "TranslationService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Services/WalletService.php",
+            "to": "WalletService",
+            "type": "uses_service"
+        },
+        {
+            "from": "app/Services/WalletService.php",
+            "to": "DATABASE",
+            "type": "queries_db"
+        }
+    ],
+    "summary": {
+        "total_nodes": 111,
+        "total_edges": 50,
+        "types": {
+            "file": 48,
+            "ipfs": 2,
+            "controller": 49,
+            "database": 1,
+            "service": 11
+        },
+        "architecture_mode": "LIVING_GRAPH_V1",
+        "generated_at": "2026-07-05 03:20:24"
+    }
+}

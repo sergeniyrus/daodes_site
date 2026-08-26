@@ -1,59 +1,299 @@
-   .chat-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
+/* =========================================================
+   CHAT LIST — STYLE OF ORGANIZATION CARDS
+   ========================================================= */
 
-        .chat-table th,
-        .chat-table td {
-            padding: 12px;
-            text-align: center;
-            border-bottom: 1px solid gold;
-        }
-
-        .chat-table td:first-child {
-            text-align: left;
-        }
-
-        .chat-table thead {
-            border-top: 1px solid gold;
-        }
-
-        .chat-table th {
-            background-color: #0b0c18;
-            color: gold;
-            font-size: 1.2rem;
-        }
-
-        .chat-table td {
-            background-color: #000000cf;
-            color: #f8f9fa;
-        }
-
-        .chat-table a {
-            color: gold;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .chat-table a:hover {
-            color: #ffffff;
-        }
-
-        .badge {
-            background-color: gold;
-            color: #0b0c18;
-            padding: 5px 10px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-        }
-        .text-center {
-    text-align: center;
+.chat-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    margin-top: 20px;
 }
+
+/* Заголовок таблицы */
+
+.chat-table thead {
+    display: none;
+}
+
+/* Строка превращается в карточку */
+
+.chat-table tbody tr {
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 15px;
+    transition:
+        border-color 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+/*
+ * Важно:
+ * border-radius непосредственно на tr работает
+ * не во всех браузерах одинаково, поэтому делаем
+ * фон и границы также на td.
+ */
+
+.chat-table tbody tr:hover {
+    transform: translateY(-2px);
+}
+
+/* Ячейки */
+
 .chat-table td {
+    padding: 18px 20px;
+    background: #1a1a1a;
+    color: #fff;
+    border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+    vertical-align: middle;
+}
+
+/* Первая ячейка */
+
+.chat-table td:first-child {
+    text-align: left;
+    border-left: 1px solid #444;
+    border-radius: 15px 0 0 15px;
+}
+
+/* Последняя ячейка */
+
+.chat-table td:last-child {
+    border-right: 1px solid #444;
+    border-radius: 0 15px 15px 0;
+}
+
+/* Hover карточки */
+
+.chat-table tbody tr:hover td {
+    border-color: gold;
+}
+
+/* =========================================================
+   Название чата
+   ========================================================= */
+
+.chat-table td:first-child a {
+    display: block;
+
+    color: gold;
+    font-size: 1.35rem;
+    line-height: 1.25;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    word-break: break-word;
+
+    transition: color 0.2s ease;
+}
+
+.chat-table td:first-child a:hover {
+    color: #fff;
+}
+
+/* =========================================================
+   Дополнительная информация
+   ========================================================= */
+
+.chat-table td:not(:first-child) {
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+/* =========================================================
+   Ссылки
+   ========================================================= */
+
+.chat-table a {
+    color: gold;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+.chat-table a:hover {
+    color: #fff;
+}
+
+/* =========================================================
+   Badge
+   ========================================================= */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 28px;
+    padding: 4px 10px;
+
+    border-radius: 14px;
+
+    background: #313335;
+    color: gold;
+
+    border: 1px solid gold;
+
+    font-size: 0.85rem;
+    font-weight: 600;
+
+    box-sizing: border-box;
+}
+
+/* =========================================================
+   Текст по центру
+   ========================================================= */
+
+.text-center {
     text-align: center;
 }
+
+.chat-table td.text-center {
+    text-align: center;
+}
+
+/* =========================================================
+   Большой текст
+   ========================================================= */
+
 .big {
-            font-style: bold;
-            font-size: 3rem;
-        }
+    font-weight: 700;
+    font-size: 1.5rem;
+    color: gold;
+}
+
+/* =========================================================
+   Статус ONLINE
+   ========================================================= */
+
+.chat-table .online {
+    color: #4caf50;
+    border-color: #4caf50;
+    background: rgba(76, 175, 80, 0.08);
+}
+
+.chat-table .offline {
+    color: #888;
+    border-color: #555;
+    background: rgba(100, 100, 100, 0.08);
+}
+
+/* =========================================================
+   Кнопки внутри карточек
+   ========================================================= */
+
+.chat-table .chat-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 42px;
+    padding: 0 18px;
+
+    background: #0b0c18;
+    color: gold;
+
+    border: 1px solid gold;
+    border-radius: 21px;
+
+    text-decoration: none;
+
+    transition: 0.2s;
+}
+
+.chat-table .chat-btn:hover {
+    background: gold;
+    color: #0b0c18;
+
+    transform: scale(1.03);
+
+    box-shadow:
+        0 0 10px rgba(255, 215, 0, 0.5);
+}
+
+/* =========================================================
+   Пустое состояние
+   ========================================================= */
+
+.chat-empty {
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 15px;
+
+    padding: 40px 20px;
+
+    text-align: center;
+    color: #aaa;
+}
+
+.chat-empty-title {
+    color: gold;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.chat-empty-text {
+    color: #aaa;
+}
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .chat-table {
+        border-spacing: 0 10px;
+    }
+
+    /*
+     * На телефоне каждая строка становится
+     * полноценной вертикальной карточкой.
+     */
+
+    .chat-table tbody tr {
+        display: block;
+        width: 100%;
+    }
+
+    .chat-table tbody td {
+        display: block;
+        width: 100%;
+        box-sizing: border-box;
+
+        text-align: left !important;
+
+        border-left: 1px solid #444;
+        border-right: 1px solid #444;
+
+        border-radius: 0;
+    }
+
+    .chat-table tbody td:first-child {
+        border-radius: 15px 15px 0 0;
+        border-top: 1px solid #444;
+    }
+
+    .chat-table tbody td:last-child {
+        border-radius: 0 0 15px 15px;
+        border-bottom: 1px solid #444;
+    }
+
+    .chat-table tbody tr:hover td {
+        border-color: gold;
+    }
+
+    .chat-table td:first-child a {
+        font-size: 1.25rem;
+    }
+
+    .chat-table .chat-btn {
+        width: 100%;
+    }
+
+    .badge {
+        margin-top: 3px;
+    }
+}

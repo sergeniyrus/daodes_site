@@ -1,0 +1,16 @@
+{
+    "summary": {
+        "total_nodes": 111,
+        "total_edges": 50,
+        "types": {
+            "file": 48,
+            "ipfs": 2,
+            "controller": 49,
+            "database": 1,
+            "service": 11
+        },
+        "architecture_mode": "LIVING_GRAPH_V1",
+        "generated_at": "2026-07-05 03:20:24"
+    },
+    "last_update": 1783221624
+}

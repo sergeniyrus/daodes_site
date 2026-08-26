@@ -1,0 +1,260 @@
+# ═══════════════════════════════════════════════════════════════
+# DAODES СПЕЦИФИЧНЫЙ КОНФИГ
+# Наследует глобальные настройки, но добавляет/переопределяет
+# ═══════════════════════════════════════════════════════════════
+
+name: DAODES AI Engine
+version: 1.0.0
+
+# ═══════════════════════════════════════════════════════════════
+# ПЕРЕОПРЕДЕЛЯЕМ МОДЕЛИ (DAODES использует qwen3)
+# ═══════════════════════════════════════════════════════════════
+models:
+  # Основная модель для DAODES
+  - name: Qwen 3 (DAODES Architect)
+    provider: ollama
+    model: qwen3:8b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - chat
+      - edit
+      - apply
+      - summarize
+
+  # Модель для кодинга (оставляем ту же)
+  - name: Qwen Coder (DAODES Code Engine)
+    provider: ollama
+    model: qwen2.5-coder:7b
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - chat
+      - edit
+      - apply
+
+  # Легкая модель для автодополнения
+  - name: Qwen Coder Light
+    provider: ollama
+    model: qwen2.5-coder:1.5b-base
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - autocomplete
+
+  # Для эмбеддингов
+  - name: Nomic Embed
+    provider: ollama
+    model: nomic-embed-text:latest
+    apiBase: http://127.0.0.1:11434
+    roles:
+      - embed
+
+tabAutocompleteModel:
+  name: Qwen Coder Light
+  provider: ollama
+  model: qwen2.5-coder:1.5b-base
+  apiBase: http://127.0.0.1:11434
+
+# ═══════════════════════════════════════════════════════════════
+# РАСШИРЕННАЯ ИНДЕКСАЦИЯ ДЛЯ DAODES
+# ═══════════════════════════════════════════════════════════════
+experimental:
+  codebaseSearch: true
+  codebaseSearchLimit: 25 # Больше файлов для DAODES
+  useReranking: true
+
+# ═══════════════════════════════════════════════════════════════
+# КОНТЕКСТ DAODES (специфичные файлы)
+# ═══════════════════════════════════════════════════════════════
+context:
+  # Основной поиск по кодовой базе (с расширенными параметрами)
+  - provider: codebase
+    params:
+      nRetrieve: 30
+      nFinal: 8
+      useReranking: true
+      ignore:
+        - vendor/
+        - node_modules/
+        - storage/
+        - bootstrap/cache/
+        - .git/
+        - .idea/
+        - .vscode/
+
+  # ⚡ СПЕЦИФИЧНЫЙ КОНТЕКСТ DAODES
+  # Эти файлы будут всегда доступны модели
+
+  # Основной файл контекста
+  - provider: file
+    params:
+      path: ai/continue_context.md
+
+  # Архитектура AI системы
+  - provider: file
+    params:
+      path: ai/architecture/
+
+  # Ядро AI движка
+  - provider: file
+    params:
+      path: ai/engine/
+
+  # Граф знаний
+  - provider: file
+    params:
+      path: ai/graph/
+
+  # Правила поведения
+  - provider: file
+    params:
+      path: ai/rules/
+
+  # Живой граф состояния
+  - provider: file
+    params:
+      path: /var/www/daodes/ai/graph/living_graph.json
+
+  # Laravel специфичные файлы
+  - provider: file
+    params:
+      path: app/Http/Controllers/
+    optional: true
+
+  - provider: file
+    params:
+      path: routes/api.php
+    optional: true
+
+  - provider: file
+    params:
+      path: composer.json
+
+# ═══════════════════════════════════════════════════════════════
+# СИСТЕМНОЕ СООБЩЕНИЕ (специфичное для DAODES)
+# ═══════════════════════════════════════════════════════════════
+
+systemMessage: |
+  You are DAODES AI ENGINE inside VSCode.
+  You work exclusively inside Laravel 11 project at /var/www/daodes
+
+  MODE: AUTO-APPLY ENABLED
+
+  ═══════════════════════════════════════════════════════════════
+  CRITICAL: FILE OUTPUT FORMAT (HIGHEST PRIORITY)
+  ═══════════════════════════════════════════════════════════════
+
+  When creating or editing files, you MUST use this EXACT markdown format:
+
+  ```php:path/to/file.php
+  <?php
+
+  // Complete file content here
+  ```
+
+  ═══════════════════════════════════════════════════════════════
+  DAODES SPECIAL CAPABILITIES
+  ═══════════════════════════════════════════════════════════════
+
+  You have FULL access to DAODES AI system:
+
+  • Read/Write to ai/architecture/
+  • Modify ai/engine/ components
+  • Update ai/graph/ knowledge graph
+  • Apply ai/rules/ behavior rules
+  • Update living_graph.json
+
+  ═══════════════════════════════════════════════════════════════
+  LARAVEL 11 SPECIFIC RULES
+  ═══════════════════════════════════════════════════════════════
+
+  • Follow Laravel 11 conventions strictly
+  • Use Laravel 11 directory structure
+  • Models in app/Models/
+  • Controllers in app/Http/Controllers/
+  • Use Laravel 11 service providers
+  • Use PHP 8.2+ syntax
+  • Use Laravel 11 routing
+  • Follow Laravel 11 naming conventions
+
+  ═══════════════════════════════════════════════════════════════
+  AI SYSTEM RULES
+  ═══════════════════════════════════════════════════════════════
+
+  • All AI components must be in ai/
+  • Graph must be updated in living_graph.json
+  • Architecture must follow existing patterns
+  • Engine must be modular and extensible
+  • Rules must be declarative
+
+# ═══════════════════════════════════════════════════════════════
+# ПРАВИЛА DAODES
+# ═══════════════════════════════════════════════════════════════
+
+rules:
+  - title: "DAODES Architecture Rules"
+    content: |
+      CRITICAL ARCHITECTURE RULES:
+
+        • All AI logic in ai/
+        • Engine must be in ai/engine/
+      • Graphs in ai/graph/
+      • Rules in ai/rules/
+      • Keep living_graph.json updated
+      • Follow existing architecture patterns
+      • Use dependency injection where possible
+
+  - title: "Laravel 11 Standards"
+    content: |
+      Follow Laravel 11 coding standards:
+
+      • Use PSR-12 coding style
+      • Use Laravel 11 directory structure
+      • Models in app/Models/
+      • Controllers in app/Http/Controllers/
+      • Use Laravel 11 service providers
+      • Use PHP 8.2+ features
+      • Use Laravel 11 routing
+      • Use Laravel 11 Eloquent
+
+  - title: "DAODES Safety Rules"
+    content: |
+      CRITICAL SAFETY RULES:
+
+      • NEVER modify files outside /var/www/daodes/
+      • ALWAYS ask before deleting ai/ components
+      • When editing ai/ files, ALWAYS show full content
+      • ALWAYS update living_graph.json when changing graph
+      • Keep a backup of living_graph.json before major changes
+      • Validate JSON syntax before saving graph files
+
+  - title: "Code Quality"
+    content: |
+      Always produce production-quality code:
+
+      • Add PHPDoc comments for all methods
+      • Type hint everything (PHP 8.2+)
+      • Use Laravel 11 best practices
+      • Include error handling
+      • Add validation where needed
+      • Follow SOLID principles
+      • Write unit tests for critical components
+
+# ═══════════════════════════════════════════════════════════════
+# ИГНОРИРУЕМЫЕ ФАЙЛЫ
+# ═══════════════════════════════════════════════════════════════
+
+ignore:
+  - vendor/**
+  - node_modules/**
+  - storage/**
+  - bootstrap/cache/**
+  - .git/**
+  - .idea/**
+  - .vscode/**
+  - .env
+  - .env.*
+  - "*.log"
+  - "*.sqlite"
+  - "*.sqlite-journal"
+  - ai/temp/**
+  - ai/cache/**
+  - ai/backups/**

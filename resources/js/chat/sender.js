@@ -74,7 +74,7 @@ export class MessageSender {
         } catch (err) {
             console.error('Send error:', err);
             input.value = originalInputValue;
-            alert('Ошибка отправки. Попробуйте снова.');
+            alert(this.config.translations.sendError);
         } finally {
             this.isSending = false;
             sendBtn.disabled = false;
