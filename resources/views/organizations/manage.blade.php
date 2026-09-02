@@ -797,17 +797,29 @@
 
     <div class="organization-header">
 
-        <div class="organization-header-main">
+    <div class="organization-header-main">
 
-            <div class="organization-management-title">
-                {{ __('organizations.management') }}
-            </div>
-
-            <div class="organization-name">
-                {{ $organization->name }}
-            </div>
-
+        <div class="organization-management-title">
+            {{ __('organizations.management') }}
         </div>
+
+        <div class="organization-name">
+            {{ $organization->name }}
+        </div>
+
+    </div>
+
+
+    <div style="
+        display:flex;
+        align-items:center;
+        gap:10px;
+        flex-wrap:wrap;
+        justify-content:flex-end;
+    ">
+
+        
+
 
         <div class="organization-header-status">
 
@@ -821,6 +833,8 @@
         </div>
 
     </div>
+
+</div>
 
 
     {{-- =====================================================
@@ -1108,7 +1122,25 @@
         @endif
 
     </div>
+{{-- =====================================================
+     УПРАВЛЕНИЕ МЕНЮ
+     ===================================================== --}}
 
+<div class="organization-section">
+
+    <h2 class="organization-section-title">
+        Управление меню
+    </h2>
+
+    <a
+        href="{{ route('organizations.menu.index', $organization) }}"
+        class="organization-button"
+        style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none;"
+    >
+        🍽 Управление меню
+    </a>
+
+</div>
 
     {{-- =====================================================
          НАЗАД

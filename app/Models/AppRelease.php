@@ -67,4 +67,75 @@ class AppRelease extends Model
             'category_id'
         );
     }
+
+
+    /**
+     * Получить CID из IPFS URL.
+     */
+    public function getIpfsCidAttribute(): ?string
+    {
+        if (!$this->apk_url) {
+            return null;
+        }
+
+
+        $path =
+            parse_url(
+                $this->apk_url,
+                PHP_URL_PATH
+            );
+
+
+        if (!$path) {
+            return null;
+        }
+
+
+        $path =
+            trim(
+                $path,
+                '/'
+            );
+
+
+        /*
+         * Если URL имеет вид:
+         *
+         * /ipfs/CID
+         *
+         * возвращаем CID.
+         */
+
+        if (
+            str_starts_with(
+                $path,
+                'ipfs/'
+            )
+        ) {
+
+            return substr(
+                $path,
+                5
+            );
+        }
+
+
+        /*
+         * Если каким-то образом в apk_url
+         * сохранён просто CID.
+         */
+
+        if (
+            !str_contains(
+                $path,
+                '/'
+            )
+        ) {
+
+            return $path;
+        }
+
+
+        return null;
+    }
 }

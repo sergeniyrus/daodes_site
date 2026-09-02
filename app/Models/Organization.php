@@ -28,10 +28,12 @@ class Organization extends Model
             'organization_users',
             'organization_id',
             'user_id'
-        )->withPivot([
-            'role',
-            'status',
-        ])->withTimestamps();
+        )
+            ->withPivot([
+                'role',
+                'status',
+            ])
+            ->withTimestamps();
     }
 
     /**

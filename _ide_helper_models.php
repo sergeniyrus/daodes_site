@@ -30,6 +30,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\ReleaseCategory $category
+ * @property-read string|null $ipfs_cid
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease query()
@@ -49,36 +50,6 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|AppRelease whereVersionCode($value)
  */
 	class AppRelease extends \Eloquent {}
-}
-
-namespace App\Models{
-/**
- * 
- *
- * @property int $id
- * @property int $version_code
- * @property string $version_name
- * @property string $apk_file
- * @property bool $force_update
- * @property array<array-key, mixed>|null $changelog
- * @property bool $is_active
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read string $apk_url
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion query()
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereApkFile($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereChangelog($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereForceUpdate($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereIsActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereVersionCode($value)
- * @method static \Illuminate\Database\Eloquent\Builder<static>|AppVersion whereVersionName($value)
- */
-	class AppVersion extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -636,6 +607,8 @@ namespace App\Models{
  * @property-read int|null $menu_sections_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\OrganizationUser> $organizationUsers
  * @property-read int|null $organization_users_count
+ * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\ReleaseCategory> $releaseCategories
+ * @property-read int|null $release_categories_count
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\User> $users
  * @property-read int|null $users_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|Organization newModelQuery()
@@ -708,12 +681,14 @@ namespace App\Models{
  * 
  *
  * @property int $id
+ * @property int|null $organization_id
  * @property string $slug
  * @property string $name
  * @property string|null $description
  * @property bool $is_active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Organization|null $organization
  * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\AppRelease> $releases
  * @property-read int|null $releases_count
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory newModelQuery()
@@ -724,6 +699,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereIsActive($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereOrganizationId($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereSlug($value)
  * @method static \Illuminate\Database\Eloquent\Builder<static>|ReleaseCategory whereUpdatedAt($value)
  */

@@ -65,6 +65,11 @@ Route::get(
     [AppReleaseController::class, 'latest']
 );
 
+Route::get(
+    '/app/releases/{release}/download',
+    [AppReleaseController::class, 'download']
+)->name('releases.download');
+    
 /*
 |--------------------------------------------------------------------------
 | RELEASE ADMIN PANEL

@@ -1,0 +1,1301 @@
+/* =========================================================
+   RELEASES ADMIN
+   ========================================================= */
+
+
+/* =========================================================
+   RELEASE INDEX
+   ========================================================= */
+
+.release-container {
+    max-width: 1100px;
+}
+
+.release-page-header {
+    margin-bottom: 25px;
+}
+
+.release-page-header-content {
+    text-align: center;
+}
+
+.release-page-subtitle,
+.release-form-subtitle {
+    color: #aaa;
+    margin: 8px 0 0;
+}
+
+.release-organizations {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+/* =========================================================
+   ORGANIZATION
+   ========================================================= */
+
+.release-organization {
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 15px;
+    overflow: hidden;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.release-organization:hover {
+    border-color: gold;
+    box-shadow: 0 0 14px rgba(255, 215, 0, 0.12);
+}
+
+.release-organization[open] {
+    border-color: gold;
+}
+
+.release-organization-card {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 20px;
+    cursor: pointer;
+    list-style: none;
+}
+
+.release-organization-card::-webkit-details-marker {
+    display: none;
+}
+
+.release-organization-icon {
+    width: 48px;
+    height: 48px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: gold;
+    border: 1px solid gold;
+    border-radius: 50%;
+    background: #0b0c18;
+
+    font-size: 1.15rem;
+}
+
+.release-organization-main {
+    flex: 1;
+    min-width: 0;
+}
+
+.release-organization-name {
+    color: gold;
+    font-size: 1.45rem;
+    font-weight: 700;
+    line-height: 1.25;
+    word-break: break-word;
+}
+
+.release-organization-info {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    color: #999;
+    font-size: 0.85rem;
+
+    margin-top: 7px;
+}
+
+.release-organization-separator {
+    color: #555;
+}
+
+.release-organization-arrow {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: gold;
+    border: 1px solid #555;
+    border-radius: 50%;
+
+    transition:
+        transform 0.2s ease,
+        background 0.2s ease;
+}
+
+.release-organization[open] .release-organization-arrow {
+    transform: rotate(180deg);
+    background: gold;
+    color: #0b0c18;
+}
+
+
+/* =========================================================
+   ORGANIZATION CONTENT
+   ========================================================= */
+
+.release-organization-content {
+    padding: 0 20px 20px;
+    border-top: 1px solid #333;
+}
+
+.release-organization-content-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    padding: 20px 0;
+}
+
+.release-content-title {
+    color: gold;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.release-content-subtitle {
+    color: #888;
+    font-size: 0.85rem;
+    margin-top: 4px;
+}
+
+
+/* =========================================================
+   CATEGORIES
+   ========================================================= */
+
+.release-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.release-category {
+    background: #0b0c18;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.release-category-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.release-category-title-block {
+    min-width: 0;
+}
+
+.release-category-name {
+    color: gold;
+    font-size: 1.15rem;
+    font-weight: 700;
+}
+
+.release-category-slug {
+    color: #777;
+    font-size: 0.8rem;
+    margin-top: 3px;
+}
+
+.release-category-description {
+    color: #aaa;
+    line-height: 1.5;
+    margin: 12px 0;
+}
+
+.release-category-empty {
+    color: #777;
+    padding: 15px 0 5px;
+}
+
+
+/* =========================================================
+   RELEASE LIST
+   ========================================================= */
+
+.release-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+
+/* =========================================================
+   RELEASE CARD
+   ========================================================= */
+
+.release-card {
+    position: relative;
+
+    display: block;
+
+    padding: 15px;
+
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 12px;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.release-card:hover {
+    border-color: #00d4c7;
+    box-shadow: 0 0 10px rgba(0, 212, 199, 0.08);
+}
+
+
+/* =========================================================
+   RELEASE MAIN
+   ========================================================= */
+
+.release-main {
+    width: 100%;
+    min-width: 0;
+
+    box-sizing: border-box;
+
+    padding-right: 260px;
+}
+
+
+/*
+ * Название:
+ * Ёлки Иголки
+ *
+ * Версия:
+ * root-v1
+ */
+
+.release-title {
+    color: #fff;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.25;
+
+    margin: 0;
+}
+
+.release-version {
+    color: gold;
+    font-size: 0.9rem;
+    font-weight: 500;
+
+    margin-top: 3px;
+}
+
+
+/* =========================================================
+   META
+   ========================================================= */
+
+.release-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+
+    margin-top: 9px;
+}
+
+.release-meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    padding: 4px 8px;
+
+    background: #2b2c2e;
+    border: 1px solid #444;
+    border-radius: 8px;
+
+    font-size: 0.75rem;
+
+    white-space: nowrap;
+}
+
+.release-meta-label {
+    color: #777;
+}
+
+.release-meta-value {
+    color: #ccc;
+}
+
+
+/* =========================================================
+   BOTTOM ROW
+   ========================================================= */
+
+.release-bottom-row {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    width: 100%;
+    min-width: 0;
+
+    margin-top: 12px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   STATUS
+   Активен / Обязательный
+   ВЕРХНИЙ ПРАВЫЙ УГОЛ КАРТОЧКИ
+   ========================================================= */
+
+.release-status-block {
+    position: absolute;
+
+    top: 15px;
+    right: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+
+    gap: 7px;
+
+    z-index: 2;
+}
+
+
+/* =========================================================
+   ACTIONS
+   ========================================================= */
+
+.release-actions {
+    /* display: flex; */
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+
+    gap: 7px;
+
+    width: 100%;
+    margin-left: auto;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================================================
+   ЕДИНЫЙ СТИЛЬ
+   ========================================================= */
+
+.release-status-block .organization-status,
+.release-required,
+.release-optional,
+.release-action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+
+    min-height: 34px;
+
+    box-sizing: border-box;
+
+    padding: 6px 10px;
+
+    border-radius: 12px;
+
+    font-size: 0.78rem;
+    line-height: 1;
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   ACTIVE
+   ========================================================= */
+
+.release-status-block .organization-status.active {
+    color: #00d4c7;
+
+    background: rgba(0, 212, 199, 0.08);
+
+    border: 1px solid #00d4c7;
+}
+
+.release-status-block .organization-status.inactive {
+    color: #888;
+
+    background: rgba(100, 100, 100, 0.08);
+
+    border: 1px solid #555;
+}
+
+.release-status-block .organization-status-dot {
+    width: 7px;
+    height: 7px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+
+    background: currentColor;
+}
+
+
+/* =========================================================
+   REQUIRED
+   ========================================================= */
+
+.release-required {
+    color: #ff6b6b;
+
+    background: rgba(255, 107, 107, 0.08);
+
+    border: 1px solid #ff6b6b;
+}
+
+.release-optional {
+    color: #888;
+
+    background: rgba(100, 100, 100, 0.08);
+
+    border: 1px solid #555;
+}
+
+
+/* =========================================================
+   ACTION BUTTONS
+   ========================================================= */
+
+.release-action-button {
+    background: #0b0c18;
+    color: #aaa;
+
+    border: 1px solid #555;
+
+    text-decoration: none;
+    cursor: pointer;
+
+    transition:
+        color 0.2s ease,
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.release-action-button i {
+    flex-shrink: 0;
+}
+
+.release-action-button:hover {
+    color: #fff;
+    border-color: #00d4c7;
+    background: rgba(0, 212, 199, 0.08);
+}
+
+.release-action-button.view:hover {
+    color: #00d4c7;
+    border-color: #00d4c7;
+}
+
+.release-action-button.copy:hover {
+    color: gold;
+    border-color: gold;
+    background: rgba(255, 215, 0, 0.08);
+}
+
+.release-action-button.edit:hover {
+    color: #fff;
+    border-color: gold;
+    background: rgba(255, 215, 0, 0.08);
+}
+
+
+/* =========================================================
+   APK URL
+   ========================================================= */
+
+.release-url-block {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    width: 100%;
+    min-width: 0;
+
+    margin-top: 10px;
+    padding: 9px 10px;
+
+    box-sizing: border-box;
+
+    background: #0b0c18;
+    border: 1px solid #333;
+    border-radius: 8px;
+}
+
+.release-url-block > i {
+    flex-shrink: 0;
+}
+
+.release-url {
+    flex: 1;
+    min-width: 0;
+
+    color: #00d4c7;
+    font-size: 0.75rem;
+    line-height: 1.5;
+
+    word-break: break-all;
+    overflow-wrap: anywhere;
+}
+
+.release-copy-status {
+    display: none;
+
+    flex-shrink: 0;
+
+    color: #00d4c7;
+    font-size: 0.75rem;
+}
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+.release-empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    color: #777;
+
+    padding: 20px;
+
+    background: #1a1a1a;
+    border: 1px dashed #444;
+    border-radius: 12px;
+}
+
+.release-empty i {
+    color: gold;
+}
+
+
+/* =========================================================
+   RELEASE FORM
+   ========================================================= */
+
+.release-form-container {
+    max-width: 900px;
+}
+
+.release-form-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.release-header-separator {
+    color: #555;
+    margin: 0 4px;
+}
+
+.release-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.release-form-subtitle {
+    color: #aaa;
+    margin: 8px 0 0;
+}
+
+
+/* =========================================================
+   FORM ERRORS
+   ========================================================= */
+
+.release-errors-list {
+    margin: 0;
+    padding-left: 20px;
+}
+
+
+/* =========================================================
+   FORM SECTION
+   ========================================================= */
+
+.release-form-section {
+    background: #1a1a1a;
+    border: 1px solid #444;
+    border-radius: 12px;
+    padding: 20px;
+
+    transition: border-color 0.2s ease;
+}
+
+.release-form-section:focus-within {
+    border-color: rgba(255, 215, 0, 0.55);
+}
+
+.release-form-section-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    color: gold;
+    font-size: 1.1rem;
+    font-weight: 700;
+
+    margin-bottom: 18px;
+}
+
+.release-form-section-title i {
+    color: #00d4c7;
+}
+
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
+
+.release-form-group {
+    margin-bottom: 15px;
+}
+
+.release-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.release-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.release-form-label {
+    display: block;
+
+    color: #ccc;
+    font-size: 0.9rem;
+
+    margin-bottom: 7px;
+}
+
+.release-form-control {
+    width: 100%;
+    min-height: 44px;
+
+    padding: 10px 12px;
+
+    background: #0b0c18;
+    color: #fff;
+
+    border: 1px solid #555;
+    border-radius: 9px;
+
+    outline: none;
+    box-sizing: border-box;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.release-form-control:focus {
+    border-color: #00d4c7;
+    box-shadow: 0 0 8px rgba(0, 212, 199, 0.15);
+}
+
+.release-form-control::placeholder {
+    color: #666;
+}
+
+.release-form-textarea {
+    resize: vertical;
+    min-height: 110px;
+}
+
+.release-form-control option {
+    background: #0b0c18;
+    color: #fff;
+}
+
+
+/* =========================================================
+   CURRENT APK
+   ========================================================= */
+
+.release-current-file {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 13px;
+
+    background: #0b0c18;
+    border: 1px solid #444;
+    border-radius: 10px;
+
+    margin-bottom: 15px;
+}
+
+.release-current-file-icon {
+    width: 42px;
+    height: 42px;
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #00d4c7;
+
+    border: 1px solid #00d4c7;
+    border-radius: 50%;
+
+    font-size: 1rem;
+}
+
+.release-current-file-info {
+    min-width: 0;
+    flex: 1;
+}
+
+.release-current-file-title {
+    color: #ddd;
+    font-weight: 600;
+}
+
+.release-current-file-meta {
+    color: #888;
+    font-size: 0.8rem;
+
+    margin-top: 4px;
+
+    word-break: break-all;
+}
+
+.release-current-file-sha {
+    color: #666;
+}
+
+
+/* =========================================================
+   APK FILE
+   ========================================================= */
+
+.release-file-input {
+    width: 100%;
+
+    cursor: pointer;
+
+    padding: 12px;
+
+    box-sizing: border-box;
+}
+
+.release-file-input::file-selector-button {
+    margin-right: 12px;
+
+    padding: 9px 16px;
+
+    background: #0b0c18;
+    color: gold;
+
+    border: 1px solid gold;
+    border-radius: 20px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.release-file-input::file-selector-button:hover {
+    background: gold;
+    color: #0b0c18;
+}
+
+.release-form-hint {
+    margin-top: 8px;
+
+    color: #888;
+    font-size: 0.85rem;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   APK LINK
+   ========================================================= */
+
+.release-apk-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-top: 10px;
+    padding: 8px 12px;
+
+    color: #00d4c7;
+
+    border: 1px solid #00d4c7;
+    border-radius: 8px;
+
+    text-decoration: none;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.release-apk-link:hover {
+    background: rgba(0, 212, 199, 0.12);
+    color: #00d4c7;
+}
+
+
+/* =========================================================
+   SWITCHES
+   ========================================================= */
+
+.release-switch-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 13px;
+    margin-bottom: 10px;
+
+    background: #0b0c18;
+    border: 1px solid #444;
+    border-radius: 10px;
+
+    cursor: pointer;
+}
+
+.release-switch-row:last-child {
+    margin-bottom: 0;
+}
+
+.release-switch-input {
+    position: absolute;
+
+    opacity: 0;
+    pointer-events: none;
+}
+
+.release-switch {
+    position: relative;
+
+    width: 42px;
+    height: 22px;
+
+    flex-shrink: 0;
+
+    background: #444;
+
+    border: 1px solid #666;
+    border-radius: 20px;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
+
+.release-switch::after {
+    content: "";
+
+    position: absolute;
+
+    top: 3px;
+    left: 3px;
+
+    width: 14px;
+    height: 14px;
+
+    border-radius: 50%;
+
+    background: #aaa;
+
+    transition:
+        left 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.release-switch-input:checked + .release-switch {
+    background: rgba(0, 212, 199, 0.2);
+    border-color: #00d4c7;
+}
+
+.release-switch-input:checked + .release-switch::after {
+    left: 23px;
+
+    background: #00d4c7;
+
+    box-shadow: 0 0 7px #00d4c7;
+}
+
+.release-switch-content {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.release-switch-title {
+    color: #ddd;
+    font-weight: 600;
+}
+
+.release-switch-description {
+    color: #777;
+    font-size: 0.8rem;
+}
+
+
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
+
+.release-form-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    margin-top: 5px;
+}
+
+.release-button-secondary {
+    color: #aaa;
+    border-color: #555;
+}
+
+.release-button-secondary:hover {
+    background: #555;
+    color: #fff;
+    box-shadow: none;
+}
+
+
+/* =========================================================
+   MOBILE
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+    .release-container {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .release-form-container {
+        padding: 12px;
+        box-sizing: border-box;
+    }
+
+
+    /* -----------------------------------------------------
+       ORGANIZATION
+       ----------------------------------------------------- */
+
+    .release-organization-card {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .release-organization-icon {
+        width: 42px;
+        height: 42px;
+    }
+
+    .release-organization-name {
+        font-size: 1.2rem;
+    }
+
+    .release-organization-card > .organization-status {
+        display: none;
+    }
+
+    .release-organization-content {
+        padding: 0 12px 12px;
+    }
+
+    .release-organization-content-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+
+    /* -----------------------------------------------------
+       CATEGORY
+       ----------------------------------------------------- */
+
+    .release-category {
+        padding: 12px;
+    }
+
+    .release-category-header {
+        align-items: flex-start;
+    }
+
+
+    /* -----------------------------------------------------
+       RELEASE CARD
+       ----------------------------------------------------- */
+
+    .release-card {
+        display: block;
+
+        padding: 12px;
+    }
+
+    .release-main {
+        width: 100%;
+
+        padding-right: 0;
+    }
+
+    .release-title {
+        font-size: 1.05rem;
+
+        padding-right: 185px;
+    }
+
+    .release-version {
+        font-size: 0.85rem;
+
+        padding-right: 185px;
+    }
+
+    .release-meta {
+        margin-top: 8px;
+    }
+
+
+    /* -----------------------------------------------------
+       STATUS
+       ----------------------------------------------------- */
+
+    .release-status-block {
+        top: 12px;
+        right: 12px;
+
+        gap: 5px;
+    }
+
+    .release-status-block .organization-status,
+    .release-required,
+    .release-optional {
+        min-height: 32px;
+
+        padding: 5px 8px;
+
+        font-size: 0.72rem;
+    }
+
+
+    /* -----------------------------------------------------
+       BOTTOM ROW
+       ----------------------------------------------------- */
+
+    .release-bottom-row {
+        display: block;
+
+        width: 100%;
+
+        margin-top: 10px;
+    }
+
+
+    /* -----------------------------------------------------
+       ACTIONS
+       ----------------------------------------------------- */
+
+    .release-actions {
+        width: 100%;
+
+        display: grid;
+
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+        gap: 8px;
+
+        margin-left: 0;
+    }
+
+    .release-action-button {
+        width: 100%;
+        min-width: 0;
+
+        min-height: 34px;
+
+        padding: 6px 8px;
+
+        font-size: 0.75rem;
+    }
+
+
+    /* -----------------------------------------------------
+       URL
+       ----------------------------------------------------- */
+
+    .release-url-block {
+        width: 100%;
+
+        box-sizing: border-box;
+
+        margin-top: 8px;
+    }
+
+
+    /* -----------------------------------------------------
+       FORM
+       ----------------------------------------------------- */
+
+    .release-form-section {
+        padding: 15px;
+    }
+
+    .release-form-grid {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+        margin-bottom: 0;
+    }
+
+    .release-form-actions {
+        flex-direction: column;
+    }
+
+    .release-form-actions .organization-button {
+        width: 100%;
+    }
+
+
+    /* -----------------------------------------------------
+       CURRENT APK
+       ----------------------------------------------------- */
+
+    .release-current-file {
+        align-items: flex-start;
+    }
+
+
+    /* -----------------------------------------------------
+       APK LINK
+       ----------------------------------------------------- */
+
+    .release-apk-link {
+        width: 100%;
+
+        justify-content: center;
+
+        box-sizing: border-box;
+    }
+
+
+    /* -----------------------------------------------------
+       FILE INPUT
+       ----------------------------------------------------- */
+
+    .release-file-input {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   VERY SMALL SCREENS
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .release-organization-card {
+        padding: 12px;
+    }
+
+    .release-organization-icon {
+        width: 38px;
+        height: 38px;
+        font-size: 1rem;
+    }
+
+    .release-organization-name {
+        font-size: 1.05rem;
+    }
+
+    .release-category {
+        padding: 10px;
+    }
+
+    .release-card {
+        padding: 10px;
+    }
+
+    .release-main {
+        padding-right: 0;
+    }
+
+    .release-title {
+        padding-right: 160px;
+    }
+
+    .release-version {
+        padding-right: 160px;
+    }
+
+    .release-form-container {
+        padding: 8px;
+    }
+
+    .release-form-section {
+        padding: 12px;
+    }
+
+    .release-file-input::file-selector-button {
+        margin-right: 8px;
+        padding: 8px 12px;
+    }
+
+    .release-status-block {
+        top: 10px;
+        right: 10px;
+    }
+
+    .release-status-block .organization-status,
+    .release-required,
+    .release-optional {
+        min-height: 30px;
+
+        padding: 5px 7px;
+
+        font-size: 0.68rem;
+    }
+
+    .release-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}

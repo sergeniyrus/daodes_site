@@ -2,6 +2,9 @@
 
 @section('content')
 
+@vite(['resources/css/admin_releases.css'])
+
+
 <div class="organization-container release-container">
 
     {{-- =========================================================
@@ -74,16 +77,21 @@
             @foreach($organizations as $organization)
 
                 @php
-                    $categories = $organization->releaseCategories;
 
-                    $releaseCount = $categories->sum(
-                        fn ($category) => $category->releases->count()
-                    );
+                    $categories =
+                        $organization->releaseCategories;
+
+                    $releaseCount =
+                        $categories->sum(
+                            fn ($category) =>
+                                $category->releases->count()
+                        );
+
                 @endphp
 
 
                 {{-- =================================================
-                     ORGANIZATION CARD
+                     ORGANIZATION
                      ================================================= --}}
 
                 <details class="release-organization">
@@ -91,7 +99,9 @@
                     <summary class="release-organization-card">
 
                         <div class="release-organization-icon">
+
                             <i class="fas fa-building"></i>
+
                         </div>
 
 
@@ -104,8 +114,14 @@
                             <div class="release-organization-info">
 
                                 <span>
+
                                     {{ $categories->count() }}
-                                    {{ $categories->count() === 1 ? 'категория' : 'категорий' }}
+
+                                    {{ $categories->count() === 1
+                                        ? 'категория'
+                                        : 'категорий'
+                                    }}
+
                                 </span>
 
                                 <span class="release-organization-separator">
@@ -113,8 +129,14 @@
                                 </span>
 
                                 <span>
+
                                     {{ $releaseCount }}
-                                    {{ $releaseCount === 1 ? 'релиз' : 'релизов' }}
+
+                                    {{ $releaseCount === 1
+                                        ? 'релиз'
+                                        : 'релизов'
+                                    }}
+
                                 </span>
 
                             </div>
@@ -127,15 +149,21 @@
                         @if($organization->isActive())
 
                             <span class="organization-status active">
+
                                 <span class="organization-status-dot"></span>
+
                                 Активна
+
                             </span>
 
                         @else
 
                             <span class="organization-status inactive">
+
                                 <span class="organization-status-dot"></span>
+
                                 Отключена
+
                             </span>
 
                         @endif
@@ -144,7 +172,9 @@
                         {{-- ARROW --}}
 
                         <span class="release-organization-arrow">
+
                             <i class="fas fa-chevron-down"></i>
+
                         </span>
 
                     </summary>
@@ -169,6 +199,7 @@
                                 </div>
 
                             </div>
+
 
                             <a href="{{ route('admin.releases.create') }}"
                                class="organization-button">
@@ -211,6 +242,7 @@
 
                                     <div class="release-category">
 
+
                                         {{-- CATEGORY HEADER --}}
 
                                         <div class="release-category-header">
@@ -231,15 +263,21 @@
                                             @if($category->is_active)
 
                                                 <span class="organization-status active">
+
                                                     <span class="organization-status-dot"></span>
+
                                                     Активна
+
                                                 </span>
 
                                             @else
 
                                                 <span class="organization-status inactive">
+
                                                     <span class="organization-status-dot"></span>
+
                                                     Отключена
+
                                                 </span>
 
                                             @endif
@@ -247,12 +285,14 @@
                                         </div>
 
 
-                                        {{-- CATEGORY DESCRIPTION --}}
+                                        {{-- DESCRIPTION --}}
 
                                         @if($category->description)
 
                                             <div class="release-category-description">
+
                                                 {{ $category->description }}
+
                                             </div>
 
                                         @endif
@@ -265,7 +305,9 @@
                                         @if($category->releases->isEmpty())
 
                                             <div class="release-category-empty">
+
                                                 Релизов пока нет.
+
                                             </div>
 
                                         @else
@@ -274,23 +316,60 @@
 
                                                 @foreach($category->releases as $release)
 
-                                                    <div class="release-card">
+                                                    @php
 
-                                                        {{-- RELEASE MAIN --}}
+                                                        /*
+                                                         * Публичная ссылка для скачивания.
+                                                         *
+                                                         * ВАЖНО:
+                                                         * IPFS URL пользователю больше не показываем.
+                                                         */
+
+                                                        $downloadUrl =
+                                                            route(
+                                                                'releases.download',
+                                                                $release
+                                                            );
+
+                                                    @endphp
+
+
+                                                    <div class="release-card">
 
                                                         <div class="release-main">
 
-                                                            <div class="release-version">
-                                                                {{ $release->version }}
-                                                            </div>
+
+                                                            {{-- =================================================
+                                                                 TITLE
+                                                                 ================================================= --}}
 
                                                             <div class="release-title">
+
                                                                 {{ $release->title }}
+
                                                             </div>
+
+
+                                                            {{-- VERSION --}}
+
+                                                            <div class="release-version">
+
+                                                                {{ $release->version }}
+
+                                                            </div>
+
+
+                                                            {{-- =================================================
+                                                                 META
+                                                                 ================================================= --}}
 
                                                             <div class="release-meta">
 
+
+                                                                {{-- ID --}}
+
                                                                 <span class="release-meta-item">
+
                                                                     <span class="release-meta-label">
                                                                         ID
                                                                     </span>
@@ -298,10 +377,14 @@
                                                                     <span class="release-meta-value">
                                                                         {{ $release->id }}
                                                                     </span>
+
                                                                 </span>
 
 
+                                                                {{-- VERSION CODE --}}
+
                                                                 <span class="release-meta-item">
+
                                                                     <span class="release-meta-label">
                                                                         Код
                                                                     </span>
@@ -309,77 +392,285 @@
                                                                     <span class="release-meta-value">
                                                                         {{ $release->version_code }}
                                                                     </span>
+
                                                                 </span>
 
+
+                                                                {{-- DATE --}}
 
                                                                 @if($release->released_at)
 
                                                                     <span class="release-meta-item">
+
                                                                         <span class="release-meta-label">
                                                                             Дата
                                                                         </span>
 
                                                                         <span class="release-meta-value">
-                                                                            {{ $release->released_at?->format('d.m.Y H:i') }}
+
+                                                                            {{ $release->released_at->format('d.m.Y H:i') }}
+
                                                                         </span>
+
+                                                                    </span>
+
+                                                                @endif
+
+
+                                                                {{-- APK SIZE --}}
+
+                                                                @if($release->apk_size)
+
+                                                                    <span class="release-meta-item">
+
+                                                                        <span class="release-meta-label">
+                                                                            APK
+                                                                        </span>
+
+                                                                        <span class="release-meta-value">
+
+                                                                            {{ number_format(
+                                                                                $release->apk_size / 1024 / 1024,
+                                                                                2,
+                                                                                ',',
+                                                                                ' '
+                                                                            ) }}
+
+                                                                            MB
+
+                                                                        </span>
+
                                                                     </span>
 
                                                                 @endif
 
                                                             </div>
 
-                                                        </div>
+
+                                                            {{-- =================================================
+                                                                 SHA256
+                                                                 ================================================= --}}
+
+                                                            @if($release->apk_sha256)
+
+                                                                <div class="release-sha256-block">
+
+                                                                    <div class="release-sha256-header">
+
+                                                                        <div class="release-sha256-title">
+
+                                                                            <i class="fas fa-fingerprint"></i>
+
+                                                                            <span>
+                                                                                SHA-256
+                                                                            </span>
+
+                                                                        </div>
 
 
-                                                        {{-- RELEASE STATUS --}}
+                                                                        <button
+                                                                            type="button"
+                                                                            class="release-sha256-copy"
+                                                                            title="Скопировать SHA-256"
+                                                                            onclick="copySha256(
+                                                                                {{ $release->id }},
+                                                                                @js($release->apk_sha256)
+                                                                            )">
 
-                                                        <div class="release-status-block">
+                                                                            <i class="fas fa-copy"></i>
 
-                                                            @if($release->is_active)
+                                                                            <span>
+                                                                                Копировать
+                                                                            </span>
 
-                                                                <span class="organization-status active">
-                                                                    <span class="organization-status-dot"></span>
-                                                                    Активен
-                                                                </span>
+                                                                        </button>
 
-                                                            @else
+                                                                    </div>
 
-                                                                <span class="organization-status inactive">
-                                                                    <span class="organization-status-dot"></span>
-                                                                    Отключён
-                                                                </span>
+
+                                                                    <div
+                                                                        class="release-sha256-value"
+                                                                        id="sha256-{{ $release->id }}"
+                                                                    >
+
+                                                                        {{ $release->apk_sha256 }}
+
+                                                                    </div>
+
+
+                                                                    <div
+                                                                        class="release-sha256-status"
+                                                                        id="sha256-status-{{ $release->id }}"
+                                                                    >
+
+                                                                        SHA-256 скопирован
+
+                                                                    </div>
+
+                                                                </div>
 
                                                             @endif
 
 
-                                                            @if($release->is_required)
+                                                            {{-- =================================================
+                                                                 STATUS + ACTIONS
+                                                                 ================================================= --}}
 
-                                                                <span class="release-required">
-                                                                    Обязательный
-                                                                </span>
+                                                            <div class="release-bottom-row">
 
-                                                            @else
 
-                                                                <span class="release-optional">
-                                                                    Необязательный
-                                                                </span>
+                                                                {{-- STATUS --}}
+
+                                                                <div class="release-status-block">
+
+                                                                    @if($release->is_active)
+
+                                                                        <span class="organization-status active">
+
+                                                                            <span class="organization-status-dot"></span>
+
+                                                                            Активен
+
+                                                                        </span>
+
+                                                                    @else
+
+                                                                        <span class="organization-status inactive">
+
+                                                                            <span class="organization-status-dot"></span>
+
+                                                                            Отключён
+
+                                                                        </span>
+
+                                                                    @endif
+
+
+                                                                    @if($release->is_required)
+
+                                                                        <span class="release-required">
+                                                                            Обязательный
+                                                                        </span>
+
+                                                                    @else
+
+                                                                        <span class="release-optional">
+                                                                            Необязательный
+                                                                        </span>
+
+                                                                    @endif
+
+                                                                </div>
+
+
+                                                                {{-- ACTIONS --}}
+
+                                                                <div class="release-actions">
+
+
+                                                                    {{-- =================================================
+                                                                         DOWNLOAD
+                                                                         ================================================= --}}
+
+                                                                    @if($release->apk_url)
+
+                                                                        <a
+                                                                            href="{{ $downloadUrl }}"
+                                                                            class="release-action-button view"
+                                                                            title="Скачать APK"
+                                                                        >
+
+                                                                            <i class="fas fa-download"></i>
+
+                                                                            <span>
+                                                                                Скачать APK
+                                                                            </span>
+
+                                                                        </a>
+
+
+                                                                        {{-- =================================================
+                                                                             COPY DOWNLOAD URL
+                                                                             ================================================= --}}
+
+                                                                        <a
+                                                                            href="#"
+                                                                            class="release-action-button copy"
+                                                                            title="Копировать ссылку на скачивание"
+                                                                            onclick="copyReleaseUrl(
+                                                                                {{ $release->id }},
+                                                                                @js($downloadUrl)
+                                                                            ); return false;"
+                                                                        >
+
+                                                                            <i class="fas fa-copy"></i>
+
+                                                                            <span>
+                                                                                Ссылка
+                                                                            </span>
+
+                                                                        </a>
+
+                                                                    @endif
+
+
+                                                                    {{-- EDIT --}}
+
+                                                                    <a
+                                                                        href="{{ route('admin.releases.edit', $release) }}"
+                                                                        class="release-action-button edit"
+                                                                        title="Изменить"
+                                                                    >
+
+                                                                        <i class="fas fa-pen"></i>
+
+                                                                        <span>
+                                                                            Изменить
+                                                                        </span>
+
+                                                                    </a>
+
+                                                                </div>
+
+                                                            </div>
+
+
+                                                            {{-- =================================================
+                                                                 DOWNLOAD URL
+                                                                 ================================================= --}}
+
+                                                            @if($release->apk_url)
+
+                                                                <div class="release-url-block">
+
+                                                                    <i class="fas fa-download"></i>
+
+
+                                                                    <div class="release-url-content">
+
+                                                                        <span class="release-url-label">
+                                                                            Ссылка для скачивания APK
+                                                                        </span>
+
+                                                                        <span class="release-url">
+                                                                            {{ $downloadUrl }}
+                                                                        </span>
+
+                                                                    </div>
+
+
+                                                                    <span
+                                                                        class="release-copy-status"
+                                                                        id="copy-status-{{ $release->id }}"
+                                                                    >
+
+                                                                        Скопировано
+
+                                                                    </span>
+
+                                                                </div>
 
                                                             @endif
-
-                                                        </div>
-
-
-                                                        {{-- ACTION --}}
-
-                                                        <div class="release-action">
-
-                                                            <a href="{{ route('admin.releases.edit', $release) }}"
-                                                               class="organization-open"
-                                                               title="Изменить">
-
-                                                                <i class="fas fa-pen"></i>
-
-                                                            </a>
 
                                                         </div>
 
@@ -410,5 +701,328 @@
     @endif
 
 </div>
+
+
+{{-- =========================================================
+     COPY SCRIPTS
+     ========================================================= --}}
+
+<script>
+
+
+/*
+|--------------------------------------------------------------------------
+| COPY DOWNLOAD URL
+|--------------------------------------------------------------------------
+*/
+
+function copyReleaseUrl(releaseId, url)
+{
+    if (!url) {
+        return;
+    }
+
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        navigator.clipboard
+            .writeText(url)
+            .then(function () {
+
+                showCopyStatus(
+                    releaseId
+                );
+
+            })
+            .catch(function (error) {
+
+                console.error(
+                    'Ошибка копирования:',
+                    error
+                );
+
+                copyReleaseUrlFallback(
+                    releaseId,
+                    url
+                );
+
+            });
+
+        return;
+    }
+
+
+    copyReleaseUrlFallback(
+        releaseId,
+        url
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| FALLBACK URL
+|--------------------------------------------------------------------------
+*/
+
+function copyReleaseUrlFallback(
+    releaseId,
+    url
+) {
+
+    const textarea =
+        document.createElement(
+            'textarea'
+        );
+
+
+    textarea.value =
+        url;
+
+
+    textarea.style.position =
+        'fixed';
+
+    textarea.style.left =
+        '-9999px';
+
+    textarea.style.top =
+        '0';
+
+    textarea.style.opacity =
+        '0';
+
+
+    document.body.appendChild(
+        textarea
+    );
+
+
+    textarea.focus();
+    textarea.select();
+
+
+    try {
+
+        document.execCommand(
+            'copy'
+        );
+
+        showCopyStatus(
+            releaseId
+        );
+
+    } catch (error) {
+
+        console.error(
+            'Ошибка копирования:',
+            error
+        );
+
+    }
+
+
+    document.body.removeChild(
+        textarea
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SHOW URL COPY STATUS
+|--------------------------------------------------------------------------
+*/
+
+function showCopyStatus(
+    releaseId
+) {
+
+    const status =
+        document.getElementById(
+            'copy-status-' + releaseId
+        );
+
+
+    if (!status) {
+        return;
+    }
+
+
+    status.style.display =
+        'inline';
+
+
+    setTimeout(function () {
+
+        status.style.display =
+            'none';
+
+    }, 2000);
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| COPY SHA256
+|--------------------------------------------------------------------------
+*/
+
+function copySha256(
+    releaseId,
+    sha256
+) {
+
+    if (!sha256) {
+        return;
+    }
+
+
+    if (
+        navigator.clipboard &&
+        window.isSecureContext
+    ) {
+
+        navigator.clipboard
+            .writeText(sha256)
+            .then(function () {
+
+                showSha256Status(
+                    releaseId
+                );
+
+            })
+            .catch(function (error) {
+
+                console.error(
+                    'Ошибка копирования SHA-256:',
+                    error
+                );
+
+                copySha256Fallback(
+                    releaseId,
+                    sha256
+                );
+
+            });
+
+        return;
+    }
+
+
+    copySha256Fallback(
+        releaseId,
+        sha256
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SHA256 FALLBACK
+|--------------------------------------------------------------------------
+*/
+
+function copySha256Fallback(
+    releaseId,
+    sha256
+) {
+
+    const textarea =
+        document.createElement(
+            'textarea'
+        );
+
+
+    textarea.value =
+        sha256;
+
+
+    textarea.style.position =
+        'fixed';
+
+    textarea.style.left =
+        '-9999px';
+
+    textarea.style.top =
+        '0';
+
+    textarea.style.opacity =
+        '0';
+
+
+    document.body.appendChild(
+        textarea
+    );
+
+
+    textarea.focus();
+    textarea.select();
+
+
+    try {
+
+        document.execCommand(
+            'copy'
+        );
+
+        showSha256Status(
+            releaseId
+        );
+
+    } catch (error) {
+
+        console.error(
+            'Ошибка копирования SHA-256:',
+            error
+        );
+
+    }
+
+
+    document.body.removeChild(
+        textarea
+    );
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| SHOW SHA256 STATUS
+|--------------------------------------------------------------------------
+*/
+
+function showSha256Status(
+    releaseId
+) {
+
+    const status =
+        document.getElementById(
+            'sha256-status-' + releaseId
+        );
+
+
+    if (!status) {
+        return;
+    }
+
+
+    status.style.display =
+        'block';
+
+
+    setTimeout(function () {
+
+        status.style.display =
+            'none';
+
+    }, 2000);
+}
+
+
+</script>
 
 @endsection
