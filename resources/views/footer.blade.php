@@ -55,8 +55,9 @@
             </div>
         </div> --}}
         <div class="copy">
-            <h1>DAO DES 2026</h1>
+            <h1>© {{ now()->year }} DAODES</h1>
         </div>
     </div>
     <a href="#" class="scrollup">Up</a>
 </footer>
+
