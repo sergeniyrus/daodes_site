@@ -9,6 +9,7 @@ use App\Models\ReleaseCategory;
 use App\Services\IPFSService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule; // <--- 1. ДОБАВЛЕНО
 use Illuminate\View\View;
 use Throwable;
 
@@ -55,15 +56,15 @@ class ReleaseAdminController extends Controller
     /**
      * Форма создания релиза.
      */
-    public function create(): View
+    // <--- 2. ДОБАВЛЕН ПАРАМЕТР Organization $organization
+    public function create(Organization $organization): View
     {
-        $categories =
-            ReleaseCategory::orderBy('id')->get();
-
+        // <--- 3. ПОЛУЧАЕМ КАТЕГОРИИ ТОЛЬКО ЭТОЙ ОРГАНИЗАЦИИ
+        $categories = $organization->releaseCategories()->orderBy('id')->get();
 
         return view(
             'admin.releases.create',
-            compact('categories')
+            compact('categories', 'organization') // <--- 4. ПЕРЕДАЕМ organization в вид
         );
     }
 
@@ -71,8 +72,10 @@ class ReleaseAdminController extends Controller
     /**
      * Сохранение нового релиза.
      */
+    // <--- 5. ДОБАВЛЕН ПАРАМЕТР Organization $organization
     public function store(
-        Request $request
+        Request $request,
+        Organization $organization
     ): RedirectResponse {
 
         $validated = $request->validate([
@@ -80,7 +83,8 @@ class ReleaseAdminController extends Controller
             'category_id' => [
                 'required',
                 'integer',
-                'exists:release_categories,id',
+                // <--- 6. СТРОГАЯ ПРОВЕРКА: категория должна принадлежать этой организации
+                Rule::exists('release_categories', 'id')->where('organization_id', $organization->id),
             ],
 
             'version' => [
@@ -93,6 +97,8 @@ class ReleaseAdminController extends Controller
                 'required',
                 'integer',
                 'min:1',
+                // <--- 7. ПРОВЕРКА УНИКАЛЬНОСТИ: перехватит дубликат до SQL-ошибки
+                Rule::unique('app_releases')->where(fn ($query) => $query->where('category_id', $request->category_id)),
             ],
 
             'title' => [
@@ -295,6 +301,8 @@ class ReleaseAdminController extends Controller
                 'required',
                 'integer',
                 'min:1',
+                // <--- 8. ПРОВЕРКА УНИКАЛЬНОСТИ ПРИ ОБНОВЛЕНИИ (игнорируем текущую запись)
+                Rule::unique('app_releases')->where(fn ($query) => $query->where('category_id', $request->category_id))->ignore($release->id),
             ],
 
             'title' => [

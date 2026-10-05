@@ -25,6 +25,7 @@
             margin-top: 30px;
             bottom: 0;
             color: #ffffff;
+            size: 1pt;
         }
 
         .scrollup {
@@ -40,18 +41,19 @@
 </style>
 <footer>
     <div class="footer">
-        <div class="icons">
+        {{-- <div class="icons">
             <div class="icons-img">
                 <a href="https://t.me/des_info_chat"><img src="/img/icons_ss/Telegram_white.svg" alt="" /></a>
             </div>
             {{-- <div class="icons-img">
                 <a href="https://vk.com/daodes_space"><img src="/img/icons_ss/VK_white.svg" alt="" /></a>
-            </div> --}}
-            <div class="icons-img">
-                <a href="https://youtu.be/ferfRPs7sEE?si=pX3sQeEhPpQ1UR_N"><img
-                        src="/img/icons_ss/Youtube_white.svg" alt="" /></a>
             </div>
-        </div>
+            <div class="icons-img">
+                <a href="https://youtu.be/ferfRPs7sEE?si=pX3sQeEhPpQ1UR_N">
+                    <img src="/img/icons_ss/Youtube_white.svg" alt="" />
+                </a>
+            </div>
+        </div> --}}
         <div class="copy">
             <h1>DAO DES 2026</h1>
         </div>

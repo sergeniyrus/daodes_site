@@ -999,6 +999,125 @@
     box-shadow: none;
 }
 
+/* Общая обертка */
+.release-sha256-wrapper {
+    margin-top: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    background-color: #f8fafc;
+    overflow: hidden;
+}
+
+/* Заголовок-переключатель */
+.release-sha256-toggle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.2s ease;
+}
+
+.release-sha256-toggle:hover {
+    background-color: #f1f5f9;
+}
+
+.release-sha256-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #64748b; /* Приглушенный серый */
+}
+
+.release-sha256-title i {
+    color: #94a3b8;
+}
+
+.release-sha256-arrow {
+    color: #94a3b8;
+    font-size: 0.75rem;
+    transition: transform 0.25s ease;
+}
+
+/* Поворот стрелки при открытии */
+.release-sha256-arrow.rotated {
+    transform: rotate(180deg);
+}
+
+/* Скрываемый контент (по умолчанию скрыт) */
+.release-sha256-content {
+    display: none;
+    padding: 8px 12px;
+    border-top: 1px solid #e2e8f0;
+    background-color: #ffffff;
+}
+
+/* Класс для отображения в одну строку */
+.release-sha256-content.show {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* Текст хеша */
+.release-sha256-text {
+    flex: 1; /* Занимает все доступное пространство */
+    font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+    font-size: 0.8rem;
+    color: #475569;
+    background: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+    word-break: break-all; /* Гарантирует перенос, если экран очень узкий */
+    line-height: 1.4;
+}
+
+/* Кнопка копирования */
+.release-sha256-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background-color: transparent;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    color: #64748b;
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    flex-shrink: 0; /* Запрещаем кнопке сжиматься */
+}
+
+.release-sha256-btn:hover {
+    background-color: #f1f5f9;
+    color: #334155;
+    border-color: #cbd5e1;
+}
+
+/* Состояние "Скопировано" (мягкий, не яркий зеленый) */
+.release-sha256-btn.copied {
+    background-color: #dcfce7;
+    border-color: #bbf7d0;
+    color: #15803d;
+}
+
+/* Управление иконками внутри кнопки */
+.release-sha256-btn .btn-icon-check {
+    display: none;
+}
+
+.release-sha256-btn.copied .btn-icon-copy {
+    display: none;
+}
+
+.release-sha256-btn.copied .btn-icon-check {
+    display: inline-block;
+}
 
 /* =========================================================
    MOBILE

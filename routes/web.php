@@ -76,14 +76,14 @@ Route::middleware([
             'index',
         ])->name('index');
 
-        // Создание релиза
-        Route::get('/create', [
+        // Создание релиза (добавлен параметр {organization})
+        Route::get('/create/{organization}', [
             ReleaseAdminController::class,
             'create',
         ])->name('create');
 
-        // Сохранение релиза
-        Route::post('/', [
+        // Сохранение релиза (добавлен параметр {organization})
+        Route::post('/{organization}', [
             ReleaseAdminController::class,
             'store',
         ])->name('store');
